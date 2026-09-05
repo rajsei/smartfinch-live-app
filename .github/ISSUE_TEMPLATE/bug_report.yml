@@ -1,12 +1,12 @@
 name: Bug Report
-description: Report a reproducible problem in BirdNET Live
+description: Report a reproducible problem in Smartfinch
 labels:
   - bug
 body:
   - type: markdown
     attributes:
       value: |
-        Thanks for helping improve BirdNET Live.
+        Thanks for helping improve Smartfinch.
 
         Please provide a clear, reproducible report. Well-structured reports are triaged much faster.
 
@@ -17,11 +17,12 @@ body:
       description: Which part of the app is impacted?
       options:
         - Live Mode
-        - Point Count Mode
-        - Survey Mode
-        - File Analysis
-        - Explore
-        - History / Session Review
+        - Explore (Erkunden)
+        - Collection (Sammlung)
+        - Scoring / stars
+        - Journal (Tagebuch)
+        - Badges / achievements
+        - Audio clips / playback
         - Settings
         - Onboarding / Home
         - Build / CI / Tooling
@@ -125,8 +126,8 @@ body:
       label: Scope and regression check
       description: Did you test related features or alternate paths?
       placeholder: |
-        - Also tested File Analysis with same recording.
-        - Issue appears only in Survey Mode.
+        - Also happens with announcements switched off.
+        - Issue appears only after the app has been running a while.
 
   - type: checkboxes
     id: confirmations

@@ -1,5 +1,5 @@
 name: Feature Request
-description: Propose an improvement or new capability for BirdNET Live
+description: Propose an improvement or new capability for Smartfinch
 labels:
   - enhancement
 body:
@@ -17,11 +17,12 @@ body:
       description: Where should this feature apply?
       options:
         - Live Mode
-        - Point Count Mode
-        - Survey Mode
-        - File Analysis
-        - Explore
-        - History / Session Review
+        - Explore (Erkunden)
+        - Collection (Sammlung)
+        - Scoring / stars
+        - Journal (Tagebuch)
+        - Badges / achievements
+        - Audio clips / playback
         - Settings
         - Data Export
         - Performance / Battery
