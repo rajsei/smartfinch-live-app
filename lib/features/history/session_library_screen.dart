@@ -34,14 +34,10 @@ import '../../shared/widgets/empty_view.dart';
 import '../../shared/widgets/error_view.dart';
 import '../../shared/widgets/loading_view.dart';
 import '../../shared/widgets/stat_chip.dart';
-import '../aru/aru_setup_screen.dart';
 import '../explore/explore_providers.dart';
-import '../file_analysis/file_analysis_screen.dart';
 import '../live/live_providers.dart';
 import '../live/live_screen.dart';
 import '../live/live_session.dart';
-import '../point_count/point_count_setup_screen.dart';
-import '../survey/survey_setup_screen.dart';
 import 'export_metadata_helper.dart';
 import 'session_export.dart';
 import 'session_review_screen.dart';
@@ -753,26 +749,12 @@ class _SessionLibraryScreenState extends ConsumerState<SessionLibraryScreen> {
   /// the new session lands on whatever was below the library (typically
   /// the home screen) rather than this same library list.
   void _startNewSession(SessionType mode) {
-    final navigator = Navigator.of(context);
-    final route = switch (mode) {
-      SessionType.live => MaterialPageRoute<void>(
-        builder: (_) => const LiveScreen(),
-      ),
-      SessionType.pointCount => MaterialPageRoute<void>(
-        builder: (_) => const PointCountSetupScreen(),
-      ),
-      SessionType.survey => MaterialPageRoute<void>(
-        builder: (_) => const SurveySetupScreen(),
-      ),
-      SessionType.fileUpload => MaterialPageRoute<void>(
-        builder: (_) => const FileAnalysisScreen(),
-      ),
-      SessionType.aru => MaterialPageRoute<void>(
-        builder: (_) => const AruSetupScreen(),
-      ),
-      SessionType.batchAnalysis => throw UnsupportedError('Coming soon'),
-    };
-    navigator.pushReplacement(route);
+    // Live is the only mode left (transition 0.3). Legacy sessions on disk can
+    // still carry another type, so this takes any type and always opens Live
+    // rather than switching on one — the picker below offers nothing else.
+    Navigator.of(context).pushReplacement(
+      MaterialPageRoute<void>(builder: (_) => const LiveScreen()),
+    );
   }
 
   /// Show a bottom sheet with the four session-type options. Tapping a
@@ -786,26 +768,6 @@ class _SessionLibraryScreenState extends ConsumerState<SessionLibraryScreen> {
         type: SessionType.live,
         label: l10n.liveMode,
         description: l10n.liveModeDescription,
-      ),
-      _ModeOption(
-        type: SessionType.pointCount,
-        label: l10n.pointCountMode,
-        description: l10n.pointCountModeDescription,
-      ),
-      _ModeOption(
-        type: SessionType.survey,
-        label: l10n.surveyMode,
-        description: l10n.surveyModeDescription,
-      ),
-      _ModeOption(
-        type: SessionType.fileUpload,
-        label: l10n.fileAnalysisMode,
-        description: l10n.fileAnalysisModeDescription,
-      ),
-      _ModeOption(
-        type: SessionType.aru,
-        label: l10n.aruMode,
-        description: l10n.aruModeDescription,
       ),
     ];
 

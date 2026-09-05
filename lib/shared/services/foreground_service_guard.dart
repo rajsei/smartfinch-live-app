@@ -2,16 +2,34 @@
 // Foreground Service Guard - mutual exclusion for the shared Android service
 // =============================================================================
 //
-// ARU (serviceId 512) and Survey (serviceId 256) are both backed by the single
-// `ForegroundService` declaration in AndroidManifest.xml. Only one mode may own
-// that service at a time; starting a second mode while the first is still
-// running would contend over the same foreground service.
+// Every mode that needs background operation is backed by the single
+// `ForegroundService` declaration in AndroidManifest.xml. Only one may own that
+// service at a time; starting a second while the first is still running would
+// contend over the same foreground service.
 //
 // Each notification controller must [tryClaim] before `startService` and
 // [release] after `stopService` (or when a start attempt fails).
+//
+// **Transition note:** [ForegroundServiceOwner.survey] and
+// [ForegroundServiceOwner.aru] disappear with their modes (transition step
+// 0.3), leaving [ForegroundServiceOwner.recording] as the only owner. At that
+// point this guard can be reduced to a single boolean or deleted outright —
+// arbitrating between one participant is not arbitration. It is kept for now
+// so the modes still compile until they are removed.
 
 /// The mode currently holding the shared Android foreground service.
-enum ForegroundServiceOwner { survey, aru }
+enum ForegroundServiceOwner {
+  /// Background recording for Live mode
+  /// (`shared/services/background_recording/`). The only owner that survives
+  /// the transition.
+  recording,
+
+  /// Legacy: survey mode. Removed in transition step 0.3.
+  survey,
+
+  /// Legacy: ARU mode. Removed in transition step 0.3.
+  aru,
+}
 
 /// Process-wide tracker that enforces single ownership of the shared Android
 /// foreground service across ARU and Survey.

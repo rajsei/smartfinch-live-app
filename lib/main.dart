@@ -8,20 +8,18 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'app.dart';
 import 'core/constants/app_constants.dart';
-import 'features/aru/aru_notification.dart';
-import 'features/survey/survey_notification.dart';
 import 'shared/providers/app_providers.dart';
 import 'shared/services/quick_action_service.dart';
-import 'shared/services/shared_media_service.dart';
 import 'shared/widgets/open_street_map_tile_layer.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize foreground task communication for survey background service.
+  // Foreground-task communication port. The background recording service in
+  // shared/services/background_recording/ is not wired up yet (transition
+  // 0.2), but the port has to be open before any foreground-service isolate
+  // could send data back to the main isolate.
   FlutterForegroundTask.initCommunicationPort();
-  await SurveyNotificationService.init();
-  await AruNotificationService.init();
 
   // Edge-to-edge: set once at startup so the system bars stay transparent
   // on every screen without triggering flicker on rebuilds.
@@ -34,12 +32,10 @@ Future<void> main() async {
     ),
   );
 
-  // A share or a Quick Listen widget tap that launched the app is read before
-  // the first frame, so the app can open straight into the screen it is being
-  // sent to instead of painting Home and immediately navigating away from it.
-  // Started here and awaited just below so the channel round trips overlap the
-  // preference work.
-  final launchShareRead = _readLaunchShare();
+  // A Quick Listen widget tap that launched the app is read before the first
+  // frame, so the app can open straight into Live mode instead of painting
+  // Home and immediately navigating away from it. Started here and awaited
+  // just below so the channel round trip overlaps the preference work.
   final launchQuickActionRead = _readLaunchQuickAction();
 
   // Initialize SharedPreferences before running the app.
@@ -89,36 +85,20 @@ Future<void> main() async {
     );
   }
 
-  final launchSharedFile = await launchShareRead;
   final launchQuickAction = await launchQuickActionRead;
 
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: App(
-        launchSharedFile: launchSharedFile,
-        launchQuickAction: launchQuickAction,
-      ),
+      child: App(launchQuickAction: launchQuickAction),
     ),
   );
 }
 
-/// Reads a share that launched the app, if there is one.
-///
-/// Never throws: a failure here only means the in-app listener delivers the
-/// file the ordinary way, one frame later, instead of the app opening on it.
-Future<SharedAudioFile?> _readLaunchShare() async {
-  try {
-    return await SharedMediaService.takePendingSharedFile();
-  } catch (error, stackTrace) {
-    debugPrint('Could not read the launch share: $error\n$stackTrace');
-    return null;
-  }
-}
-
 /// Reads a Quick Listen widget tap that launched the app, if there is one.
 ///
-/// Never throws, for the same reason as [_readLaunchShare].
+/// Never throws: a failure here only means the in-app listener delivers the
+/// tap the ordinary way, one frame later, instead of the app opening on it.
 Future<String?> _readLaunchQuickAction() async {
   try {
     return await QuickActionService.takePendingNativeAction();

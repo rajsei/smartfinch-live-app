@@ -8,20 +8,13 @@ import 'package:birdnet_live/shared/utils/app_icons.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../about/about_screen.dart';
-import '../aru/aru_active_screen.dart';
-import '../aru/aru_controller.dart';
-import '../aru/aru_providers.dart';
-import '../aru/aru_setup_screen.dart';
 import '../explore/explore_screen.dart';
 import '../explore/explore_providers.dart';
 import '../history/session_library_screen.dart';
 import '../live/live_screen.dart';
 import '../live/live_providers.dart';
-import '../file_analysis/file_analysis_screen.dart';
 import '../live/live_session.dart';
-import '../point_count/point_count_setup_screen.dart';
 import '../settings/settings_screen.dart';
-import '../survey/survey_setup_screen.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../../shared/utils/session_type_visuals.dart';
 import 'help_screen.dart';
@@ -444,82 +437,10 @@ class _ModeCarouselState extends ConsumerState<_ModeCarousel> {
                             isTablet: widget.isTablet,
                             onTap: () => _openLive(context),
                           ),
-                          _ModeCard(
-                            icon: sessionTypeIcon(SessionType.pointCount),
-                            label: widget.l10n.pointCountMode,
-                            description: widget.l10n.pointCountModeDescription,
-                            accentColor: sessionTypeAccentColor(
-                              widget.theme,
-                              SessionType.pointCount,
-                            ),
-                            isTablet: widget.isTablet,
-                            onTap: () => _openPointCount(context),
-                          ),
-                          _ModeCard(
-                            icon: sessionTypeIcon(SessionType.survey),
-                            label: widget.l10n.surveyMode,
-                            description: widget.l10n.surveyModeDescription,
-                            accentColor: sessionTypeAccentColor(
-                              widget.theme,
-                              SessionType.survey,
-                            ),
-                            isTablet: widget.isTablet,
-                            onTap: () => _openSurvey(context),
-                          ),
-                          _ModeCard(
-                            icon: sessionTypeIcon(SessionType.aru),
-                            label: widget.l10n.aruMode,
-                            description: widget.l10n.aruModeDescription,
-                            accentColor: sessionTypeAccentColor(
-                              widget.theme,
-                              SessionType.aru,
-                            ),
-                            isTablet: widget.isTablet,
-                            onTap: () => _openAru(context, ref),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // Page 2 — File workflows
-                    Padding(
-                      padding: pageMargin,
-                      child: GridView.count(
-                        padding: EdgeInsets.zero,
-                        crossAxisCount: 2,
-                        crossAxisSpacing: spacing,
-                        mainAxisSpacing: spacing,
-                        physics: const NeverScrollableScrollPhysics(),
-                        childAspectRatio: aspectRatio,
-                        children: [
-                          _ModeCard(
-                            icon: sessionTypeIcon(SessionType.fileUpload),
-                            label: widget.l10n.fileAnalysisMode,
-                            description:
-                                widget.l10n.fileAnalysisModeDescription,
-                            accentColor: sessionTypeAccentColor(
-                              widget.theme,
-                              SessionType.fileUpload,
-                            ),
-                            isTablet: widget.isTablet,
-                            onTap: () => _openFileAnalysis(context),
-                          ),
-                          _ModeCard(
-                            icon: sessionTypeIcon(SessionType.batchAnalysis),
-                            label: widget.l10n.batchAnalysisMode,
-                            description:
-                                widget.l10n.batchAnalysisModeDescription,
-                            accentColor: sessionTypeAccentColor(
-                              widget.theme,
-                              SessionType.batchAnalysis,
-                            ),
-                            isTablet: widget.isTablet,
-                            comingSoon: true,
-                            onTap:
-                                () => _showComingSoonSnackBar(
-                                  context,
-                                  widget.l10n.batchAnalysisMode,
-                                ),
-                          ),
+                          // Point Count, Survey, ARU, File Analysis and Batch
+                          // Analysis were removed in transition step 0.3. The
+                          // page carousel is kept for now; it becomes a single
+                          // large Live tile plus secondary tiles in HOME-04.
                         ],
                       ),
                     ),
@@ -560,51 +481,6 @@ class _ModeCarouselState extends ConsumerState<_ModeCarousel> {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(builder: (_) => const LiveScreen()));
-  }
-
-  void _openPointCount(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const PointCountSetupScreen()),
-    );
-  }
-
-  void _openSurvey(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const SurveySetupScreen()));
-  }
-
-  void _openFileAnalysis(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const FileAnalysisScreen()));
-  }
-
-  void _openAru(BuildContext context, WidgetRef ref) {
-    final session = ref.read(aruSessionProvider);
-    final state = ref.read(aruStateProvider);
-    if (session != null &&
-        state != AruControllerState.completed &&
-        state != AruControllerState.idle) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const AruActiveScreen()));
-    } else {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const AruSetupScreen()));
-    }
-  }
-
-  void _showComingSoonSnackBar(BuildContext context, String modeLabel) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$modeLabel: ${widget.l10n.comingSoon}'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 }
 
@@ -648,56 +524,8 @@ class _LandscapeModeGrid extends ConsumerWidget {
             isTablet: isTablet,
             compact: true,
             onTap: () => _openLive(context),
-          ),
-          _ModeCard(
-            icon: sessionTypeIcon(SessionType.pointCount),
-            label: l10n.pointCountMode,
-            description: l10n.pointCountModeDescription,
-            accentColor: sessionTypeAccentColor(theme, SessionType.pointCount),
-            isTablet: isTablet,
-            compact: true,
-            onTap: () => _openPointCount(context),
-          ),
-          _ModeCard(
-            icon: sessionTypeIcon(SessionType.survey),
-            label: l10n.surveyMode,
-            description: l10n.surveyModeDescription,
-            accentColor: sessionTypeAccentColor(theme, SessionType.survey),
-            isTablet: isTablet,
-            compact: true,
-            onTap: () => _openSurvey(context),
-          ),
-          _ModeCard(
-            icon: sessionTypeIcon(SessionType.aru),
-            label: l10n.aruMode,
-            description: l10n.aruModeDescription,
-            accentColor: sessionTypeAccentColor(theme, SessionType.aru),
-            isTablet: isTablet,
-            compact: true,
-            onTap: () => _openAru(context, ref),
-          ),
-          _ModeCard(
-            icon: sessionTypeIcon(SessionType.fileUpload),
-            label: l10n.fileAnalysisMode,
-            description: l10n.fileAnalysisModeDescription,
-            accentColor: sessionTypeAccentColor(theme, SessionType.fileUpload),
-            isTablet: isTablet,
-            compact: true,
-            onTap: () => _openFileAnalysis(context),
-          ),
-          _ModeCard(
-            icon: sessionTypeIcon(SessionType.batchAnalysis),
-            label: l10n.batchAnalysisMode,
-            description: l10n.batchAnalysisModeDescription,
-            accentColor: sessionTypeAccentColor(
-              theme,
-              SessionType.batchAnalysis,
-            ),
-            isTablet: isTablet,
-            compact: true,
-            comingSoon: true,
-            onTap:
-                () => _showComingSoonSnackBar(context, l10n.batchAnalysisMode),
+            // Point Count, Survey, ARU, File Analysis and Batch Analysis were
+            // removed in transition step 0.3.
           ),
         ],
       ),
@@ -708,51 +536,6 @@ class _LandscapeModeGrid extends ConsumerWidget {
     Navigator.of(
       context,
     ).push(MaterialPageRoute<void>(builder: (_) => const LiveScreen()));
-  }
-
-  void _openPointCount(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(builder: (_) => const PointCountSetupScreen()),
-    );
-  }
-
-  void _openSurvey(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const SurveySetupScreen()));
-  }
-
-  void _openFileAnalysis(BuildContext context) {
-    Navigator.of(
-      context,
-    ).push(MaterialPageRoute<void>(builder: (_) => const FileAnalysisScreen()));
-  }
-
-  void _openAru(BuildContext context, WidgetRef ref) {
-    final session = ref.read(aruSessionProvider);
-    final state = ref.read(aruStateProvider);
-    if (session != null &&
-        state != AruControllerState.completed &&
-        state != AruControllerState.idle) {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const AruActiveScreen()));
-    } else {
-      Navigator.of(
-        context,
-      ).push(MaterialPageRoute<void>(builder: (_) => const AruSetupScreen()));
-    }
-  }
-
-  void _showComingSoonSnackBar(BuildContext context, String modeLabel) {
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text('$modeLabel: ${l10n.comingSoon}'),
-        behavior: SnackBarBehavior.floating,
-        duration: const Duration(seconds: 2),
-      ),
-    );
   }
 }
 

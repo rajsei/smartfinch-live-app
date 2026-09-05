@@ -7,13 +7,11 @@
 // MainActivity with a native intent extra; MainActivity captures it and
 // either forwards it immediately (app already running — "warm" case) or
 // queues it for [takePendingNativeAction] to pick up once Dart starts
-// listening (app was killed — "cold" case). Mirrors
-// `features/aru/aru_notification.dart`'s native-action bridge.
+// listening (app was killed — "cold" case).
 // =============================================================================
 
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
 abstract final class QuickActionService {
@@ -48,37 +46,5 @@ abstract final class QuickActionService {
         await _intentChannel.invokeMethod<void>('clearPendingAction', action);
       }
     });
-  }
-}
-
-enum QuickListenSessionOwner { pointCount, survey, fileAnalysis }
-
-/// Tracks recording screens that Quick Listen must not replace.
-///
-/// Owner tokens make registration idempotent and remain correct while routes
-/// overlap during a transition.
-abstract final class QuickListenSafety {
-  static final Map<Object, QuickListenSessionOwner> _incompatibleSessionOwners =
-      <Object, QuickListenSessionOwner>{};
-
-  static QuickListenSessionOwner? get activeSessionOwner {
-    if (_incompatibleSessionOwners.isEmpty) return null;
-    return _incompatibleSessionOwners.values.last;
-  }
-
-  static void registerIncompatibleSessionOwner(
-    Object owner,
-    QuickListenSessionOwner mode,
-  ) {
-    _incompatibleSessionOwners[owner] = mode;
-  }
-
-  static void unregisterIncompatibleSessionOwner(Object owner) {
-    _incompatibleSessionOwners.remove(owner);
-  }
-
-  @visibleForTesting
-  static void reset() {
-    _incompatibleSessionOwners.clear();
   }
 }
