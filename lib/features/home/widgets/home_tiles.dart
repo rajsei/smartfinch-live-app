@@ -29,7 +29,7 @@ import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../explore/explore_screen.dart';
-import '../../history/session_library_screen.dart';
+import '../../journal/journal_screen.dart';
 import '../../live/live_screen.dart';
 import '../../settings/settings_screen.dart';
 
@@ -57,7 +57,7 @@ const List<_HomeTile> _secondaryTiles = [
   _HomeTile(
     icon: AppIcons.libraryMusic,
     label: _journalLabel,
-    builder: SessionLibraryScreen.new,
+    builder: JournalScreen.new,
   ),
   // Punkte (Points) belongs here — 2.7.
   _HomeTile(

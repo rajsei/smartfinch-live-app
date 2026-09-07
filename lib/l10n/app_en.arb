@@ -4914,5 +4914,113 @@
   "homeTileJournal": "Journal",
   "@homeTileJournal": {
     "description": "Label of the Journal tile on the home screen (HOME-04)"
+  },
+  "journalTitle": "Journal",
+  "@journalTitle": {
+    "description": "Title of the journal screen (LOG-01)"
+  },
+  "journalToday": "Today",
+  "@journalToday": {
+    "description": "Day card heading for today"
+  },
+  "journalYesterday": "Yesterday",
+  "@journalYesterday": {
+    "description": "Day card heading for yesterday"
+  },
+  "journalDaySpecies": "{count, plural, =0{no species} =1{1 species} other{{count} species}}",
+  "@journalDaySpecies": {
+    "description": "Species count on a day card (LOG-02)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "journalMoreOutsideScoring": "{count, plural, =1{1 more outside scoring} other{{count} more outside scoring}}",
+  "@journalMoreOutsideScoring": {
+    "description": "LOG-15: second line on a day card counting what did not score. A note, not a warning",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "journalOutsideScoringTitle": "{count, plural, =1{1 species outside scoring} other{{count} species outside scoring}}",
+  "@journalOutsideScoringTitle": {
+    "description": "LOG-15: header of the outside-scoring list in the day detail",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "journalOutsideScoringExplainer": "Heard while scoring was off. The recordings are kept — they just did not count.",
+  "@journalOutsideScoringExplainer": {
+    "description": "LOG-15: one line saying why these did not count and that they are kept"
+  },
+  "journalOutsideScoringShort": "no stars",
+  "@journalOutsideScoringShort": {
+    "description": "LOG-15: short trailing label on a species that did not score"
+  },
+  "journalCollected": "Collected",
+  "@journalCollected": {
+    "description": "Section label above the species that scored, in the day detail"
+  },
+  "journalDayBonuses": "Bonuses for the day",
+  "@journalDayBonuses": {
+    "description": "Section label above the day-level bonuses in the day detail"
+  },
+  "journalHeardTimes": "heard {count} times",
+  "@journalHeardTimes": {
+    "description": "How often a species was heard on a day",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "journalEmptyTitle": "Nothing here yet",
+  "@journalEmptyTitle": {
+    "description": "Empty state of the journal"
+  },
+  "journalEmptySubtitle": "Every day you listen shows up here.",
+  "@journalEmptySubtitle": {
+    "description": "Empty state of the journal, second line"
+  },
+  "journalUnavailable": "The journal could not be opened.",
+  "@journalUnavailable": {
+    "description": "Shown when the journal cannot be read"
+  },
+  "journalNamePlacePrompt": "Name this place",
+  "@journalNamePlacePrompt": {
+    "description": "LOG-13: button label when a recording has no place name yet"
+  },
+  "journalNamePlaceTitle": "Where were you?",
+  "@journalNamePlaceTitle": {
+    "description": "LOG-13: title of the place-name dialog"
+  },
+  "journalNamePlaceHint": "Grandma, Holiday, Way to school…",
+  "@journalNamePlaceHint": {
+    "description": "LOG-13: placeholder inside the place-name field, with example names a child would use"
+  },
+  "journalNamePlaceUsedBefore": "Used before:",
+  "@journalNamePlaceUsedBefore": {
+    "description": "LOG-14: label above the chips of previously used place names"
+  },
+  "bonusVariety": "Many different species",
+  "@bonusVariety": {
+    "description": "Name of the variety bonus in the day detail (2.6)"
+  },
+  "bonusEarlyRiser": "Early riser",
+  "@bonusEarlyRiser": {
+    "description": "Name of the early-riser bonus in the day detail (2.6)"
+  },
+  "bonusNewPlace": "A new place",
+  "@bonusNewPlace": {
+    "description": "Name of the new-place bonus in the day detail (2.6)"
+  },
+  "bonusWeekWrapUp": "A good week",
+  "@bonusWeekWrapUp": {
+    "description": "Name of the week wrap-up bonus in the day detail (2.6)"
   }
 }

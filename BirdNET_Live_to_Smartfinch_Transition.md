@@ -463,7 +463,21 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 *One thing to decide, not a blocker:* the Live tile is labelled **"Live"** in all twelve locales. `AGENTS.md` explicitly retired the old rule that kept *Live Mode* in English — it "belonged to a research tool" — so this wants a German word. It is the app's central noun, though, and renaming it touches a lot of strings, so it is worth choosing deliberately rather than in passing.
 
-**2.5 · The Journal** (`LOG-01/02/03/09/13/15`) — the largest single UI job. Day cards, day detail with per-species points and the applied multiplier, ✨ NEW markers, child-written place names, and out-of-scoring detections shown with their note.
+**2.5 · The Journal** (`LOG-01/02/03/09/13/15`) — the largest single UI job. Day cards, day detail with per-species points and the applied multiplier, ✨ NEW markers, child-written place names, and out-of-scoring detections shown with their note. ✅ *Done — `features/journal/`, 41 tests.*
+
+**A second repository, deliberately.** `JournalRepository` reads; `ScoringRepository` writes. Putting the journal's queries in the scoring repository would have buried its one real guarantee — that every path into `LifeSpecies` runs through one method in one file (`DAT-11`) — under three hundred lines of `SELECT`. Nothing in the journal layer can award a star.
+
+**A day comes from two sources.** Days with stars come from `ScoreEvents`; days that produced only paused detections come from `Detections`. Reading only the first would make an afternoon of test-mode listening vanish, which is exactly what `LOG-15` promises cannot happen — so there is a test for a day whose entire content is unscored.
+
+**Two lists, not one list with a flag.** `JournalDayDetail` keeps `scored` and `outsideScoring` apart in the *data*, so a screen cannot accidentally total them in. The day card follows: "8 species · ⭐ 450" with "3 more outside scoring" underneath, and the second line is a note rather than a warning — a test asserts the banner is not `errorContainer`, the same guard `LIVE-18` got.
+
+**✨ NEW is read from the life list, not from the day.** First time *ever*, not first time today — so reopening a day next month still marks the right species. Three tests cover that, including the one that matters: the original day keeps its marker after the species is heard again weeks later.
+
+**`LOG-13` is editable, which is the point.** A walk gets named in the evening, when there is time to think of a name for it; during the walk the child is looking at birds. The dialog also offers names used before (`LOG-14`, ahead of schedule) — one tap for "Oma", and the same place keeps the same spelling, which is what makes a per-place view possible later.
+
+**Sessions left navigation** (`LOG-01`). The home tile and the post-session hand-off both point at the Journal now; the session library has no entry point left. It and `session_review_screen` stay in the tree because §3.4 keeps what they carry (export writers, clip playback), and removing them is its own step rather than a side effect of this one.
+
+*Still open from chapter LOG:* `LOG-04` (day/week/month/year), `LOG-05` (sticky month header), `LOG-07` (expandable individual detections) and `LOG-11` (share a day as one image) are all P1 and none of them are load-bearing for the field test.
 
 **2.6 · The Collection** (`SAM-02`…`SAM-05`, `SAM-17`) as its own area: found species only, all taxon groups by default with a group filter, the placeholder for open ones, progress counter. **Per-species silhouettes are P1** (`SAM-04b`), so this step needs no pipeline work — but it does need the species bundle to have been built at least once, or every cell shows the placeholder and the Collection looks broken.
 

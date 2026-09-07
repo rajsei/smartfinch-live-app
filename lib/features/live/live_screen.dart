@@ -17,7 +17,8 @@ import '../audio/audio_capture_service.dart';
 import '../audio/audio_providers.dart';
 import '../explore/explore_providers.dart';
 import '../explore/widgets/species_info_overlay.dart';
-import '../history/session_library_screen.dart';
+import '../journal/journal_providers.dart';
+import '../journal/journal_screen.dart';
 import '../history/session_review_screen.dart';
 import '../inference/advanced_pooling_params.dart';
 import '../recording/recording_service.dart';
@@ -495,6 +496,15 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
     } catch (e, st) {
       debugPrint('[LiveScreen] closing the scoring session failed: $e\n$st');
     }
+
+    // The Journal is where this screen hands over to, and it caches. Without
+    // this the child would land on a day list that does not yet contain the
+    // session they just finished.
+    if (mounted) {
+      ref
+        ..invalidate(journalDaysProvider)
+        ..invalidate(journalDayProvider);
+    }
   }
 
   void _detachScoreBoard() {
@@ -764,17 +774,21 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         ref.invalidate(sessionListProvider);
       }
 
-      // Replace the live screen with the session library (instantly,
-      // no transition) and then push the review screen on top with the
-      // normal page animation. The user sees `live → review`; closing
-      // review pops back to the library instead of the home screen.
+      // Replace the live screen with the Journal (instantly, no transition)
+      // and then push the review screen on top with the normal page
+      // animation. The user sees `live → review`; closing review lands in the
+      // Journal rather than back on the home screen.
+      //
+      // It used to land in the session library. `LOG-01` retires that: the
+      // child navigates by day, and the day they just spent listening is the
+      // one they want to see.
       if (mounted) {
         final navigator = Navigator.of(context);
         navigator.pushReplacement(
           PageRouteBuilder<void>(
             transitionDuration: Duration.zero,
             reverseTransitionDuration: Duration.zero,
-            pageBuilder: (a, b, c) => const SessionLibraryScreen(),
+            pageBuilder: (a, b, c) => const JournalScreen(),
           ),
         );
         navigator.push(
