@@ -399,9 +399,15 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 *On versioning: `version` is recorded on every `ScoreEvent` so a day stays explainable ("scored under rules v1"). It is **not** a way to re-score old events under old rules — `recomputeAllScores` re-derives multipliers and bonuses under the current rules and never touches the frozen base value (`PKT-15`). That is the point: a rebalance should apply retroactively, or badges earned under the old rules could never be recomputed (`AUS-12`).*
 
-**1.4 · The scoring engine** — pure Dart, no Flutter imports, no UI. `PKT-01`…`PKT-08`, `PKT-15`, `PKT-20`. Awards on the first window over threshold, writes peak confidence back on close (D15). Freezes base value, level, `geoWeek`, cell, applied threshold. Writes nothing to the scoring layer while paused.
+**1.4 · The scoring engine** — pure Dart, no Flutter imports, no UI. `PKT-01`…`PKT-08`, `PKT-15`, `PKT-20`. Awards on the first window over threshold, writes peak confidence back on close (D15). Freezes base value, level, `geoWeek`, cell, applied threshold. Writes nothing to the scoring layer while paused. ✅ *Done — `features/scoring/scoring_engine.dart`, 46 tests.*
+
+*The engine decides; it never writes. `ScoringOutcome` carries `addToLifeList` / `addToYearList` as flags for the caller rather than performing the write itself, because writing a life-list row for a detection that did not score burns that species' first-find ×3 permanently (`DAT-11`) — and nothing in the app could later explain to a child why their real first find was worth 100 instead of 300. Keeping the decision and the write apart makes that a testable property instead of a hope.*
+
+*A note on the test scales: tiers are **rank-relative**, so a scale built from a handful of species does not populate all six bands — the bottom species becomes the scarce edge and `rare` stays empty. The first draft of the tests did exactly that, and its two ceiling assertions passed while testing nothing. The scales now hold 40 species and every worked example asserts its tier alongside its star count.*
 
 **1.5 · The test suite** (`NFA-14`, `NFA-06`). Chapter 2's worked examples as a table-driven test, plus: the once-per-day rule, highest-multiplier-only stacking, cumulative variety bonuses, `dayKey`/`isoWeek` across timezone and DST edges, and — separately — that a paused detection touches neither the life list nor `DaySpecies`, and that `recomputeAllScores()` respects the flag and never rewrites a frozen base value.
+
+*Mostly covered by 1.3 and 1.4 (74 tests across the two files): all nine §2.7 worked examples with their tiers pinned, week coupling (the same blackcap at 100 in May and 600 in January), the ×3 ceiling under every multiplier combination, `dayKey` across midnight and both 2026 DST transitions, and each `ScoringSkipReason`. What remains needs the persistence layer and therefore belongs with 2.1: that a paused detection leaves `LifeSpecies` and `DaySpecies` untouched **on disk**, and that `recomputeAllScores()` honours `Detections.scoringPaused` and never rewrites a frozen base value.*
 
 > **Phase 1 is done when the tests pass, not when something is visible.** Resisting the urge to build UI here is the difference between a scoring system you can rebalance in an afternoon and one you cannot change at all.
 

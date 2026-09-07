@@ -85,6 +85,10 @@ dependencies:
   flutter_map_marker_cluster: ^8.2.2
   drift: ^2.34.4
   sqlite3: ^3.5.2
+
+  # Annotations only (@immutable); lets the scoring engine stay pure Dart
+  # instead of importing flutter/foundation just for one annotation.
+  meta: ^1.19.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
