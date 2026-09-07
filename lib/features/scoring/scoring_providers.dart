@@ -96,3 +96,14 @@ final liveScoringConditionsProvider = Provider<LiveScoringConditions>((ref) {
 final totalStarsProvider = FutureProvider<int>((ref) async {
   return ref.watch(scoringRepositoryProvider).totalStars();
 });
+
+/// The three numbers in the home screen's star header (HOME-01, HOME-02).
+///
+/// Invalidated together with [totalStarsProvider] whenever a detection scores,
+/// so a child who comes back from a session finds the header already right
+/// rather than one frame behind.
+final starTotalsProvider = FutureProvider<StarTotals>((ref) async {
+  // Depends on the running total so one invalidation refreshes both.
+  await ref.watch(totalStarsProvider.future);
+  return ref.watch(scoringRepositoryProvider).starTotals(now: DateTime.now());
+});

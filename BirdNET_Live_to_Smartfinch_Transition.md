@@ -451,7 +451,17 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 **2.3 · The scoring-paused surface** — `LIVE-18` in live mode and on the home star header, `SET-13` at both settings. Suppresses the first-find celebration while paused. *Mostly done ahead of schedule: `SET-13` shipped with 0.5, and `LIVE-18` plus the suppressed celebration with 2.2 — the paused case was cheaper to build alongside each surface than to retrofit. **What remains is the home star header**, which 2.4 builds; `ScoringPausedNotice` is already public and takes a `compact` flag for it.*
 
-**2.4 · Home screen** (`HOME-01/02/03/08`): star header with total, last 30 days and today; one large Live tile; secondary tiles for Sammlung, Erkunden, Tagebuch, Punkte, Einstellungen.
+**2.4 · Home screen** (`HOME-01/02/03/08`): star header with total, last 30 days and today; one large Live tile; secondary tiles for Sammlung, Erkunden, Tagebuch, Punkte, Einstellungen. ✅ *Done — `star_header.dart`, `home_tiles.dart`, 12 tests plus 7 on the repository queries.*
+
+**The carousel is gone.** It made sense with six modes; 0.3 deleted five and left a carousel of one card with two page-indicator dots under it — the clearest example yet of the 0.4 rule about deleting what is *wrong in front of a user*. What replaces it says what the app says: one large Live tile, then equal secondary tiles. `home_screen.dart` went from 796 to 462 lines, and Journal, Explore and Settings moved out of the footer into the grid, leaving Help and About behind.
+
+**Three numbers, three questions.** The **total** is what a child has built, the **last 30 days** is whether they are still building it, and **today** is the only one that can still be changed before bedtime. A test asserts the total renders larger than the 30-day figure, because "total large, small beside it" is the requirement and a later restyle could satisfy the words while inverting the point. An empty header shows `0` rather than a spinner: a child arriving at a fresh home screen should see a number they understand.
+
+**Two tiles are deliberately missing.** Collection and Points arrive with 2.6 and 2.7, and until then they are **absent rather than greyed out** — a disabled tile is not something an eight-year-old reads as "later", and one that opens an empty screen is a broken promise. A test asserts they are not there, so adding each one is a single entry in `_secondaryTiles` and a one-line test change.
+
+**`LIVE-18` reached its second surface.** The home header shows the identical notice live mode does, from the same widget, so the two cannot drift apart. That completes 2.3.
+
+*One thing to decide, not a blocker:* the Live tile is labelled **"Live"** in all twelve locales. `AGENTS.md` explicitly retired the old rule that kept *Live Mode* in English — it "belonged to a research tool" — so this wants a German word. It is the app's central noun, though, and renaming it touches a lot of strings, so it is worth choosing deliberately rather than in passing.
 
 **2.5 · The Journal** (`LOG-01/02/03/09/13/15`) — the largest single UI job. Day cards, day detail with per-species points and the applied multiplier, ✨ NEW markers, child-written place names, and out-of-scoring detections shown with their note.
 

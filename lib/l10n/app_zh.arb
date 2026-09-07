@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "已加入你的收藏。",
   "liveTestModeTitle": "测试模式——没有星星，不收集任何东西",
   "liveTestModeHowToFix": "在高级设置中：打开物种筛选，并将置信度设为至少 35 %。",
-  "liveTestModeRecordingsKept": "听到的一切仍会录下并保留在日记里。"
+  "liveTestModeRecordingsKept": "听到的一切仍会录下并保留在日记里。",
+  "homeStarsLast30Days": "过去 30 天 {stars} 颗",
+  "homeStarsToday": "今天：⭐ {stars}",
+  "homeStarsTodayWithSpecies": "今天：⭐ {stars} · {species} 个物种",
+  "homeStarHeaderA11y": "总共 {total} 颗星，过去 30 天 {last30} 颗，今天 {today} 颗",
+  "homeLiveTileSubtitle": "聆听并收集鸟类",
+  "homeTileJournal": "日记"
 }

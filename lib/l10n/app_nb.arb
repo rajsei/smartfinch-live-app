@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Lagt til i samlingen din.",
   "liveTestModeTitle": "Testmodus — ingen stjerner, ingenting samles",
   "liveTestModeHowToFix": "I avanserte innstillinger: slå på artsfilteret og sett sikkerheten til minst 35 %.",
-  "liveTestModeRecordingsKept": "Alt som høres blir likevel tatt opp og blir i dagboka."
+  "liveTestModeRecordingsKept": "Alt som høres blir likevel tatt opp og blir i dagboka.",
+  "homeStarsLast30Days": "{stars} de siste 30 dagene",
+  "homeStarsToday": "I dag: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "I dag: ⭐ {stars} · {species, plural, =1{1 art} other{{species} arter}}",
+  "homeStarHeaderA11y": "{total} stjerner totalt, {last30} de siste 30 dagene, {today} i dag",
+  "homeLiveTileSubtitle": "Lytt og samle fugler",
+  "homeTileJournal": "Dagbok"
 }

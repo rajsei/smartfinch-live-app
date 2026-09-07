@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Toegevoegd aan je verzameling.",
   "liveTestModeTitle": "Testmodus — geen sterren, niets wordt verzameld",
   "liveTestModeHowToFix": "Bij geavanceerde instellingen: zet het soortenfilter aan en de zekerheid op minstens 35 %.",
-  "liveTestModeRecordingsKept": "Alles wat gehoord wordt, wordt toch opgenomen en blijft in je dagboek."
+  "liveTestModeRecordingsKept": "Alles wat gehoord wordt, wordt toch opgenomen en blijft in je dagboek.",
+  "homeStarsLast30Days": "{stars} in de laatste 30 dagen",
+  "homeStarsToday": "Vandaag: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Vandaag: ⭐ {stars} · {species, plural, =1{1 soort} other{{species} soorten}}",
+  "homeStarHeaderA11y": "{total} sterren in totaal, {last30} in de laatste 30 dagen, {today} vandaag",
+  "homeLiveTileSubtitle": "Luister en verzamel vogels",
+  "homeTileJournal": "Dagboek"
 }

@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Aggiunta alla tua collezione.",
   "liveTestModeTitle": "Modalità test — niente stelle, non si raccoglie nulla",
   "liveTestModeHowToFix": "Nelle impostazioni avanzate: attiva il filtro specie e imposta la confidenza ad almeno 35 %.",
-  "liveTestModeRecordingsKept": "Tutto ciò che si sente viene comunque registrato e resta nel diario."
+  "liveTestModeRecordingsKept": "Tutto ciò che si sente viene comunque registrato e resta nel diario.",
+  "homeStarsLast30Days": "{stars} negli ultimi 30 giorni",
+  "homeStarsToday": "Oggi: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Oggi: ⭐ {stars} · {species, plural, =1{1 specie} other{{species} specie}}",
+  "homeStarHeaderA11y": "{total} stelle in totale, {last30} negli ultimi 30 giorni, {today} oggi",
+  "homeLiveTileSubtitle": "Ascolta e colleziona uccelli",
+  "homeTileJournal": "Diario"
 }

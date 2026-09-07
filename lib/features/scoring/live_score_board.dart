@@ -78,6 +78,34 @@ class DaySummary {
   );
 }
 
+/// The three numbers in the home screen's star header (HOME-01, HOME-02).
+///
+/// Each answers a different question, which is why there are three rather than
+/// one: the **total** is what a child has built, the **last 30 days** is
+/// whether they are still building it, and **today** is the only one that can
+/// still be changed before bedtime.
+@immutable
+class StarTotals {
+  const StarTotals({
+    this.total = 0,
+    this.last30Days = 0,
+    this.today = 0,
+    this.todaySpecies = 0,
+  });
+
+  /// Every star ever earned. The pride value.
+  final int total;
+
+  /// Stars in the last 30 days, today included. The living value.
+  final int last30Days;
+
+  /// Today's stars — the number that gets a child outside.
+  final int today;
+
+  /// Distinct species that scored today.
+  final int todaySpecies;
+}
+
 /// The live screen's view of today's scoring.
 @immutable
 class LiveScoreBoardState {

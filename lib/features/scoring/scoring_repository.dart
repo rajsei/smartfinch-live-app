@@ -214,6 +214,43 @@ class ScoringRepository {
     );
   }
 
+  /// The three numbers the home screen's star header carries (HOME-01/02).
+  ///
+  /// Read in one pass over the events rather than three queries: the totals
+  /// are the first thing the home screen paints, and a child opening the app
+  /// should not watch them appear one after another.
+  Future<StarTotals> starTotals({required DateTime now}) async {
+    final today = dayKeyFor(now);
+    // 30 days *including* today, so the window a child sees matches the one
+    // the label promises.
+    final windowStart = dayKeyFor(
+      DateTime(now.year, now.month, now.day).subtract(const Duration(days: 29)),
+    );
+
+    final events =
+        await (_db.select(_db.scoreEvents)
+          ..where((e) => e.profileId.equals(profileId))).get();
+
+    var total = 0;
+    var last30Days = 0;
+    var todayStars = 0;
+
+    for (final event in events) {
+      total += event.total;
+      if (event.dayKey.compareTo(windowStart) >= 0) {
+        last30Days += event.total;
+      }
+      if (event.dayKey == today) todayStars += event.total;
+    }
+
+    return StarTotals(
+      total: total,
+      last30Days: last30Days,
+      today: todayStars,
+      todaySpecies: await speciesCountOn(today),
+    );
+  }
+
   /// Species that scored on [dayKey], and what each earned.
   Future<Map<String, int>> speciesScoredOn(String dayKey) async {
     final rows =

@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Добавлено в твою коллекцию.",
   "liveTestModeTitle": "Тестовый режим — без звёзд, ничего не собирается",
   "liveTestModeHowToFix": "В расширенных настройках: включи фильтр видов и поставь уверенность не ниже 35 %.",
-  "liveTestModeRecordingsKept": "Всё услышанное всё равно записывается и остаётся в дневнике."
+  "liveTestModeRecordingsKept": "Всё услышанное всё равно записывается и остаётся в дневнике.",
+  "homeStarsLast30Days": "{stars} за последние 30 дней",
+  "homeStarsToday": "Сегодня: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Сегодня: ⭐ {stars} · {species, plural, =1{1 вид} few{{species} вида} other{{species} видов}}",
+  "homeStarHeaderA11y": "Всего {total} звёзд, {last30} за последние 30 дней, {today} сегодня",
+  "homeLiveTileSubtitle": "Слушай и собирай птиц",
+  "homeTileJournal": "Дневник"
 }

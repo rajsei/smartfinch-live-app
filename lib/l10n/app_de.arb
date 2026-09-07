@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "In deine Sammlung aufgenommen.",
   "liveTestModeTitle": "Testmodus — keine Sterne, nichts wird gesammelt",
   "liveTestModeHowToFix": "In den erweiterten Einstellungen: Artenfilter anschalten und Konfidenz auf mindestens 35 % stellen.",
-  "liveTestModeRecordingsKept": "Alles Gehörte wird trotzdem aufgenommen und bleibt im Tagebuch."
+  "liveTestModeRecordingsKept": "Alles Gehörte wird trotzdem aufgenommen und bleibt im Tagebuch.",
+  "homeStarsLast30Days": "{stars} in den letzten 30 Tagen",
+  "homeStarsToday": "Heute: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Heute: ⭐ {stars} · {species, plural, =1{1 Art} other{{species} Arten}}",
+  "homeStarHeaderA11y": "{total} Sterne insgesamt, {last30} in den letzten 30 Tagen, {today} heute",
+  "homeLiveTileSubtitle": "Zuhören und Vögel sammeln",
+  "homeTileJournal": "Tagebuch"
 }

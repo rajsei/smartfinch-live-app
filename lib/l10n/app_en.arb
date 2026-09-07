@@ -4861,5 +4861,58 @@
   "liveTestModeRecordingsKept": "Everything heard is still recorded and kept in your journal.",
   "@liveTestModeRecordingsKept": {
     "description": "LIVE-18: one line reassuring that nothing is thrown away"
+  },
+  "homeStarsLast30Days": "{stars} in the last 30 days",
+  "@homeStarsLast30Days": {
+    "description": "Small figure beside the total in the home star header (HOME-01)",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStarsToday": "Today: ⭐ {stars}",
+  "@homeStarsToday": {
+    "description": "Today's stars on the home screen (HOME-02)",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStarsTodayWithSpecies": "Today: ⭐ {stars} · {species, plural, =1{1 species} other{{species} species}}",
+  "@homeStarsTodayWithSpecies": {
+    "description": "Today's stars plus species count on the home screen (HOME-02)",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      },
+      "species": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStarHeaderA11y": "{total} stars in total, {last30} in the last 30 days, {today} today",
+  "@homeStarHeaderA11y": {
+    "description": "Screen-reader label for the home star header",
+    "placeholders": {
+      "total": {
+        "type": "int"
+      },
+      "last30": {
+        "type": "int"
+      },
+      "today": {
+        "type": "int"
+      }
+    }
+  },
+  "homeLiveTileSubtitle": "Listen and collect birds",
+  "@homeLiveTileSubtitle": {
+    "description": "One line under the large Live tile saying what it does (HOME-08)"
+  },
+  "homeTileJournal": "Journal",
+  "@homeTileJournal": {
+    "description": "Label of the Journal tile on the home screen (HOME-04)"
   }
 }

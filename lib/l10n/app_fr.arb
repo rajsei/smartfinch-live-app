@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Ajoutée à ta collection.",
   "liveTestModeTitle": "Mode test — pas d'étoiles, rien n'est collecté",
   "liveTestModeHowToFix": "Dans les paramètres avancés : active le filtre d'espèces et mets la confiance à au moins 35 %.",
-  "liveTestModeRecordingsKept": "Tout ce qui est entendu est quand même enregistré et reste dans ton journal."
+  "liveTestModeRecordingsKept": "Tout ce qui est entendu est quand même enregistré et reste dans ton journal.",
+  "homeStarsLast30Days": "{stars} sur les 30 derniers jours",
+  "homeStarsToday": "Aujourd'hui : ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Aujourd'hui : ⭐ {stars} · {species, plural, =1{1 espèce} other{{species} espèces}}",
+  "homeStarHeaderA11y": "{total} étoiles au total, {last30} sur les 30 derniers jours, {today} aujourd'hui",
+  "homeLiveTileSubtitle": "Écoute et collectionne des oiseaux",
+  "homeTileJournal": "Journal"
 }

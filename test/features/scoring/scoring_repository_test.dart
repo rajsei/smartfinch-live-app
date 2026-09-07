@@ -502,6 +502,112 @@ void main() {
     });
   });
 
+  group('HOME-01 · the three star totals', () {
+    /// Scores one species on [day], using a history that avoids multipliers so
+    /// the arithmetic in these tests stays legible.
+    Future<void> scoreOn(DateTime day, String name) => repo.recordDetection(
+      sessionId: sessionId,
+      scientificName: name,
+      confidence: 0.9,
+      context: contextAt(day),
+      history: const SpeciesHistory(isOnLifeList: true, isOnYearList: true),
+    );
+
+    test('total, last 30 days and today are three different numbers', () async {
+      await scoreOn(may4.subtract(const Duration(days: 60)), 'Turdus merula');
+      await scoreOn(may4.subtract(const Duration(days: 10)), 'Sitta europaea');
+      await scoreOn(may4, 'Erithacus rubecula');
+
+      final totals = await repo.starTotals(now: may4);
+
+      expect(totals.total, 50 + 200 + 100);
+      expect(totals.last30Days, 200 + 100, reason: 'the 60-day-old one is out');
+      expect(totals.today, 100);
+      expect(totals.todaySpecies, 1);
+    });
+
+    test('the 30-day window includes today and the 30th day back', () async {
+      // Off by one here would quietly drop or add a whole day of a child's
+      // month, and nothing on screen would look wrong.
+      await scoreOn(may4.subtract(const Duration(days: 29)), 'Turdus merula');
+      await scoreOn(may4.subtract(const Duration(days: 30)), 'Sitta europaea');
+
+      final totals = await repo.starTotals(now: may4);
+
+      expect(totals.total, 250);
+      expect(totals.last30Days, 50, reason: 'day 30 is outside the window');
+    });
+
+    test('a paused detection is in none of them', () async {
+      await repo.recordDetection(
+        sessionId: sessionId,
+        scientificName: 'Turdus merula',
+        confidence: 0.9,
+        context: contextAt(may4, filterEnabled: false),
+      );
+
+      final totals = await repo.starTotals(now: may4);
+      expect(totals.total, 0);
+      expect(totals.today, 0);
+      expect(totals.todaySpecies, 0);
+    });
+
+    test('day bonuses count towards all three', () async {
+      for (final name in [
+        'Fillerus sp2',
+        'Fillerus sp3',
+        'Fillerus sp4',
+        'Fillerus sp6',
+        'Fillerus sp7',
+      ]) {
+        await record(name);
+      }
+
+      final totals = await repo.starTotals(now: may4);
+      final fromSpecies = await repo.speciesScoredOn('2026-05-04');
+
+      expect(
+        totals.today,
+        fromSpecies.values.fold(0, (sum, stars) => sum + stars) + 50,
+        reason: 'the variety bonus has no species of its own',
+      );
+    });
+
+    test('an empty database is all zeroes, not an error', () async {
+      final totals = await repo.starTotals(now: may4);
+
+      expect(totals.total, 0);
+      expect(totals.last30Days, 0);
+      expect(totals.today, 0);
+    });
+  });
+
+  group('the day summary', () {
+    test('counts the bonuses the species rows do not carry', () async {
+      for (final name in [
+        'Fillerus sp2',
+        'Fillerus sp3',
+        'Fillerus sp4',
+        'Fillerus sp6',
+        'Fillerus sp7',
+      ]) {
+        await record(name);
+      }
+
+      final summary = await repo.summaryFor('2026-05-04');
+      expect(summary.speciesCount, 5);
+      expect(await repo.totalStars(), summary.stars);
+    });
+
+    test('a day with nothing on it is empty, not missing', () async {
+      final summary = await repo.summaryFor('2020-01-01');
+
+      expect(summary.dayKey, '2020-01-01');
+      expect(summary.stars, 0);
+      expect(summary.speciesCount, 0);
+    });
+  });
+
   group('sessions', () {
     test('a session stores its cell but never a precise coordinate', () async {
       final id = await repo.startSession(startedAt: may4, cell: cell);

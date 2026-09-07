@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Přidáno do tvé sbírky.",
   "liveTestModeTitle": "Testovací režim — žádné hvězdy, nic se nesbírá",
   "liveTestModeHowToFix": "V pokročilých nastaveních: zapni filtr druhů a nastav jistotu alespoň na 35 %.",
-  "liveTestModeRecordingsKept": "Vše slyšené se přesto nahrává a zůstává v deníku."
+  "liveTestModeRecordingsKept": "Vše slyšené se přesto nahrává a zůstává v deníku.",
+  "homeStarsLast30Days": "{stars} za posledních 30 dní",
+  "homeStarsToday": "Dnes: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Dnes: ⭐ {stars} · {species, plural, =1{1 druh} few{{species} druhy} other{{species} druhů}}",
+  "homeStarHeaderA11y": "Celkem {total} hvězd, {last30} za posledních 30 dní, {today} dnes",
+  "homeLiveTileSubtitle": "Poslouchej a sbírej ptáky",
+  "homeTileJournal": "Deník"
 }

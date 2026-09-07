@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Dodano do twojej kolekcji.",
   "liveTestModeTitle": "Tryb testowy — bez gwiazdek, nic się nie zbiera",
   "liveTestModeHowToFix": "W ustawieniach zaawansowanych: włącz filtr gatunków i ustaw pewność na co najmniej 35 %.",
-  "liveTestModeRecordingsKept": "Wszystko, co usłyszane, i tak jest nagrywane i zostaje w dzienniku."
+  "liveTestModeRecordingsKept": "Wszystko, co usłyszane, i tak jest nagrywane i zostaje w dzienniku.",
+  "homeStarsLast30Days": "{stars} w ostatnich 30 dniach",
+  "homeStarsToday": "Dziś: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Dziś: ⭐ {stars} · {species, plural, =1{1 gatunek} few{{species} gatunki} other{{species} gatunków}}",
+  "homeStarHeaderA11y": "Łącznie {total} gwiazdek, {last30} w ostatnich 30 dniach, {today} dziś",
+  "homeLiveTileSubtitle": "Słuchaj i zbieraj ptaki",
+  "homeTileJournal": "Dziennik"
 }

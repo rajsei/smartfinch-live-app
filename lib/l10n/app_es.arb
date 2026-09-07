@@ -1131,5 +1131,11 @@
   "liveNewSpeciesSubtitle": "Añadida a tu colección.",
   "liveTestModeTitle": "Modo de prueba: sin estrellas, no se recoge nada",
   "liveTestModeHowToFix": "En Ajustes avanzados: activa el filtro de especies y pon la confianza en al menos 35 %.",
-  "liveTestModeRecordingsKept": "Todo lo que se oye se graba igualmente y queda en tu diario."
+  "liveTestModeRecordingsKept": "Todo lo que se oye se graba igualmente y queda en tu diario.",
+  "homeStarsLast30Days": "{stars} en los últimos 30 días",
+  "homeStarsToday": "Hoy: ⭐ {stars}",
+  "homeStarsTodayWithSpecies": "Hoy: ⭐ {stars} · {species, plural, =1{1 especie} other{{species} especies}}",
+  "homeStarHeaderA11y": "{total} estrellas en total, {last30} en los últimos 30 días, {today} hoy",
+  "homeLiveTileSubtitle": "Escucha y colecciona aves",
+  "homeTileJournal": "Diario"
 }
