@@ -103,6 +103,10 @@ dev_dependencies:
   drift_dev: ^2.34.6
   build_runner: ^2.16.1
 
+  # Lets a test elapse six seconds of celebration timing without taking six
+  # seconds to run.
+  fake_async: ^1.3.3
+
 flutter:
   uses-material-design: true
   generate: true

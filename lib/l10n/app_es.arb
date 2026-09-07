@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Mientras esto esté apagado no hay estrellas, no se añade nada a tu colección y el día no cuenta para tu racha.\n\nLa detección sigue funcionando y las grabaciones se conservan: las encontrarás en tu diario, marcadas como no contabilizadas. Todo lo que ya has coleccionado se queda.",
   "settingsScoringPauseConfirm": "Apagar de todos modos",
   "settingsScoringFloorHint": "Por debajo del {floor} % no hay estrellas. Subir siempre está permitido.",
-  "settingsScoringPausedNow": "Ahora mismo no hay estrellas. La detección sigue funcionando y las grabaciones se conservan."
+  "settingsScoringPausedNow": "Ahora mismo no hay estrellas. La detección sigue funcionando y las grabaciones se conservan.",
+  "liveDayTotalLabel": "Hoy",
+  "liveDaySpeciesCount": "{count, plural, =0{aún ninguna especie} =1{1 especie} other{{count} especies}}",
+  "liveDayTotalA11y": "Hoy: {stars} estrellas de {species} especies",
+  "liveStarsEarnedA11y": "{stars} estrellas conseguidas",
+  "liveAlreadyCollectedToday": "ya recogida hoy ✓",
+  "liveHeardAgain": "oída de nuevo",
+  "multiplierFirstFind": "NUEVA",
+  "multiplierRegular": "HABITUAL",
+  "multiplierPermanentGuest": "SIEMPRE AQUÍ",
+  "multiplierYearFirst": "PRIMERA DEL AÑO",
+  "liveNewSpeciesSingle": "¡Especie nueva!",
+  "liveNewSpeciesCombined": "¡{count} especies nuevas!",
+  "liveNewSpeciesSubtitle": "Añadida a tu colección.",
+  "liveTestModeTitle": "Modo de prueba: sin estrellas, no se recoge nada",
+  "liveTestModeHowToFix": "En Ajustes avanzados: activa el filtro de especies y pon la confianza en al menos 35 %.",
+  "liveTestModeRecordingsKept": "Todo lo que se oye se graba igualmente y queda en tu diario."
 }

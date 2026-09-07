@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Dopóki to jest wyłączone, nie ma gwiazdek, nic nie trafia do twojej kolekcji, a dzień nie liczy się do twojej serii.\n\nRozpoznawanie działa dalej, a nagrania zostają — znajdziesz je w dzienniku z adnotacją, że się nie liczą. Wszystko, co już zebrałeś, zostaje.",
   "settingsScoringPauseConfirm": "Wyłącz mimo to",
   "settingsScoringFloorHint": "Poniżej {floor} % nie ma gwiazdek. Wyżej zawsze wolno.",
-  "settingsScoringPausedNow": "Teraz nie ma gwiazdek. Rozpoznawanie działa dalej, a nagrania zostają."
+  "settingsScoringPausedNow": "Teraz nie ma gwiazdek. Rozpoznawanie działa dalej, a nagrania zostają.",
+  "liveDayTotalLabel": "Dziś",
+  "liveDaySpeciesCount": "{count, plural, =0{jeszcze żadnych gatunków} =1{1 gatunek} few{{count} gatunki} other{{count} gatunków}}",
+  "liveDayTotalA11y": "Dziś: {stars} gwiazdek od {species} gatunków",
+  "liveStarsEarnedA11y": "Zdobyto {stars} gwiazdek",
+  "liveAlreadyCollectedToday": "dziś już zebrane ✓",
+  "liveHeardAgain": "znów usłyszane",
+  "multiplierFirstFind": "NOWY",
+  "multiplierRegular": "STAŁY GOŚĆ",
+  "multiplierPermanentGuest": "ZAWSZE TU",
+  "multiplierYearFirst": "PIERWSZY W ROKU",
+  "liveNewSpeciesSingle": "Nowy gatunek!",
+  "liveNewSpeciesCombined": "{count} nowych gatunków!",
+  "liveNewSpeciesSubtitle": "Dodano do twojej kolekcji.",
+  "liveTestModeTitle": "Tryb testowy — bez gwiazdek, nic się nie zbiera",
+  "liveTestModeHowToFix": "W ustawieniach zaawansowanych: włącz filtr gatunków i ustaw pewność na co najmniej 35 %.",
+  "liveTestModeRecordingsKept": "Wszystko, co usłyszane, i tak jest nagrywane i zostaje w dzienniku."
 }

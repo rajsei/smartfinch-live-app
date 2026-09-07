@@ -33,6 +33,7 @@ import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/tables.dart';
 import '../../core/services/grid_cell.dart';
+import 'live_score_board.dart';
 import 'scoring_engine.dart';
 
 /// What happened to one detection: the row that was written, and what the
@@ -192,6 +193,34 @@ class ScoringRepository {
           (d) => d.profileId.equals(profileId) & d.dayKey.equals(dayKey),
         )).get();
     return rows.length;
+  }
+
+  /// Today's totals for the live and home headers (LIVE-08).
+  ///
+  /// Stars come from `ScoreEvents` rather than from `DaySpecies.awardedPoints`,
+  /// because the day bonuses (2.6) have no species and live only in the event
+  /// journal — summing the species rows would quietly under-report a day by
+  /// however much variety the child found.
+  Future<DaySummary> summaryFor(String dayKey) async {
+    final events =
+        await (_db.select(_db.scoreEvents)..where(
+          (e) => e.profileId.equals(profileId) & e.dayKey.equals(dayKey),
+        )).get();
+
+    return DaySummary(
+      dayKey: dayKey,
+      stars: events.fold(0, (sum, event) => sum + event.total),
+      speciesCount: await speciesCountOn(dayKey),
+    );
+  }
+
+  /// Species that scored on [dayKey], and what each earned.
+  Future<Map<String, int>> speciesScoredOn(String dayKey) async {
+    final rows =
+        await (_db.select(_db.daySpecies)..where(
+          (d) => d.profileId.equals(profileId) & d.dayKey.equals(dayKey),
+        )).get();
+    return {for (final row in rows) row.scientificName: row.awardedPoints};
   }
 
   /// Whether the early-riser bonus has already been awarded on [dayKey].

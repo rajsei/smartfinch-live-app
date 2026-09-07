@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Tant que c'est désactivé, il n'y a pas d'étoiles, rien ne s'ajoute à ta collection et la journée ne compte pas pour ta série.\n\nLa détection continue et les enregistrements sont conservés — tu les trouveras dans ton journal, marqués comme ne comptant pas. Tout ce que tu as déjà collecté reste.",
   "settingsScoringPauseConfirm": "Désactiver quand même",
   "settingsScoringFloorHint": "En dessous de {floor} %, il n'y a pas d'étoiles. Plus haut est toujours permis.",
-  "settingsScoringPausedNow": "Pour l'instant, pas d'étoiles. La détection continue et les enregistrements sont conservés."
+  "settingsScoringPausedNow": "Pour l'instant, pas d'étoiles. La détection continue et les enregistrements sont conservés.",
+  "liveDayTotalLabel": "Aujourd'hui",
+  "liveDaySpeciesCount": "{count, plural, =0{pas encore d'espèces} =1{1 espèce} other{{count} espèces}}",
+  "liveDayTotalA11y": "Aujourd'hui : {stars} étoiles de {species} espèces",
+  "liveStarsEarnedA11y": "{stars} étoiles gagnées",
+  "liveAlreadyCollectedToday": "déjà collectée aujourd'hui ✓",
+  "liveHeardAgain": "entendue à nouveau",
+  "multiplierFirstFind": "NOUVEAU",
+  "multiplierRegular": "HABITUÉ",
+  "multiplierPermanentGuest": "TOUJOURS LÀ",
+  "multiplierYearFirst": "PREMIÈRE DE L'ANNÉE",
+  "liveNewSpeciesSingle": "Nouvelle espèce !",
+  "liveNewSpeciesCombined": "{count} nouvelles espèces !",
+  "liveNewSpeciesSubtitle": "Ajoutée à ta collection.",
+  "liveTestModeTitle": "Mode test — pas d'étoiles, rien n'est collecté",
+  "liveTestModeHowToFix": "Dans les paramètres avancés : active le filtre d'espèces et mets la confiance à au moins 35 %.",
+  "liveTestModeRecordingsKept": "Tout ce qui est entendu est quand même enregistré et reste dans ton journal."
 }

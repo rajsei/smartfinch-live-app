@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Zolang dit uit staat zijn er geen sterren, komt er niets in je verzameling en telt de dag niet mee voor je reeks.\n\nDe herkenning blijft werken en de opnamen blijven bewaard — je vindt ze in je dagboek, met de aantekening dat ze niet meetellen. Alles wat je al hebt verzameld blijft.",
   "settingsScoringPauseConfirm": "Toch uitschakelen",
   "settingsScoringFloorHint": "Onder {floor} % zijn er geen sterren. Hoger mag altijd.",
-  "settingsScoringPausedNow": "Op dit moment geen sterren. De herkenning blijft werken en de opnamen blijven bewaard."
+  "settingsScoringPausedNow": "Op dit moment geen sterren. De herkenning blijft werken en de opnamen blijven bewaard.",
+  "liveDayTotalLabel": "Vandaag",
+  "liveDaySpeciesCount": "{count, plural, =0{nog geen soorten} =1{1 soort} other{{count} soorten}}",
+  "liveDayTotalA11y": "Vandaag: {stars} sterren van {species} soorten",
+  "liveStarsEarnedA11y": "{stars} sterren verdiend",
+  "liveAlreadyCollectedToday": "vandaag al verzameld ✓",
+  "liveHeardAgain": "opnieuw gehoord",
+  "multiplierFirstFind": "NIEUW",
+  "multiplierRegular": "STAMGAST",
+  "multiplierPermanentGuest": "ALTIJD HIER",
+  "multiplierYearFirst": "EERSTE DIT JAAR",
+  "liveNewSpeciesSingle": "Nieuwe soort!",
+  "liveNewSpeciesCombined": "{count} nieuwe soorten!",
+  "liveNewSpeciesSubtitle": "Toegevoegd aan je verzameling.",
+  "liveTestModeTitle": "Testmodus — geen sterren, niets wordt verzameld",
+  "liveTestModeHowToFix": "Bij geavanceerde instellingen: zet het soortenfilter aan en de zekerheid op minstens 35 %.",
+  "liveTestModeRecordingsKept": "Alles wat gehoord wordt, wordt toch opgenomen en blijft in je dagboek."
 }

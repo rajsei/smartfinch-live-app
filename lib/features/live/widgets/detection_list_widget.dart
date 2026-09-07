@@ -24,8 +24,10 @@ import '../../../shared/services/taxonomy_service.dart';
 import '../../../shared/widgets/detection_evidence_badge.dart';
 import '../../explore/explore_providers.dart';
 import '../../history/widgets/detection_actions.dart';
+import '../../scoring/scoring_providers.dart';
 import '../live_session.dart';
 import 'live_tips.dart';
+import 'score_chips.dart';
 
 /// Displays a scrollable list of species detections.
 ///
@@ -44,10 +46,18 @@ class DetectionList extends StatelessWidget {
     this.emptyAlignment = Alignment.center,
     this.activeDetections,
     this.speciesDetectionCounts,
+    this.showScore = false,
   });
 
   /// Detections to display (newest first).
   final List<DetectionRecord> detections;
+
+  /// Whether each row carries today's points (LIVE-02, LIVE-03, LIVE-04).
+  ///
+  /// Off by default and switched on only by live mode. The score board is a
+  /// view of **today**, so showing it on a session from last Tuesday would
+  /// label those rows with points they never earned.
+  final bool showScore;
 
   /// Whether the session is actively running.
   final bool isActive;
@@ -117,6 +127,7 @@ class DetectionList extends StatelessWidget {
           actions: actions,
           showConfidence: isActivelyDetected,
           detectionCount: speciesDetectionCounts?[det.scientificName],
+          showScore: showScore,
         );
         // When the host wires a delete action, also expose it as a
         // horizontal swipe shortcut. The host's undo SnackBar covers
@@ -165,10 +176,14 @@ class DetectionTile extends ConsumerWidget {
     this.actions,
     this.showConfidence = true,
     this.detectionCount,
+    this.showScore = false,
   });
 
   final DetectionRecord detection;
   final VoidCallback? onTap;
+
+  /// Whether to show today's points for this species (LIVE-02/03/04).
+  final bool showScore;
 
   /// Per-detection action contract. When provided, the tile renders an
   /// inline confirm icon (if [DetectionActions.onToggleConfirm] is set)
@@ -344,6 +359,17 @@ class DetectionTile extends ConsumerWidget {
                             _confidenceColor(detection.confidence, theme),
                           ),
                         ),
+                      ),
+                    ],
+                    // Points last, so the eye lands on the bird's name first
+                    // and the number second — the order the card is read in.
+                    if (showScore) ...[
+                      const SizedBox(height: 6),
+                      DetectionScoreChips(
+                        score: ref
+                            .watch(liveScoreBoardProvider)
+                            .state
+                            .scoreFor(detection.scientificName),
                       ),
                     ],
                   ],

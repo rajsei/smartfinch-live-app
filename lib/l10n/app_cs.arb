@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Dokud je to vypnuté, nejsou žádné hvězdy, nic se nepřidá do tvé sbírky a den se nepočítá do tvé série.\n\nRozpoznávání běží dál a nahrávky zůstávají — najdeš je v deníku s poznámkou, že se nepočítají. Všechno, co jsi už nasbíral, zůstává.",
   "settingsScoringPauseConfirm": "Přesto vypnout",
   "settingsScoringFloorHint": "Pod {floor} % nejsou žádné hvězdy. Výš je vždy povoleno.",
-  "settingsScoringPausedNow": "Právě teď nejsou žádné hvězdy. Rozpoznávání běží dál a nahrávky zůstávají."
+  "settingsScoringPausedNow": "Právě teď nejsou žádné hvězdy. Rozpoznávání běží dál a nahrávky zůstávají.",
+  "liveDayTotalLabel": "Dnes",
+  "liveDaySpeciesCount": "{count, plural, =0{zatím žádné druhy} =1{1 druh} few{{count} druhy} other{{count} druhů}}",
+  "liveDayTotalA11y": "Dnes: {stars} hvězd od {species} druhů",
+  "liveStarsEarnedA11y": "Získáno {stars} hvězd",
+  "liveAlreadyCollectedToday": "dnes už nasbíráno ✓",
+  "liveHeardAgain": "znovu slyšeno",
+  "multiplierFirstFind": "NOVÝ",
+  "multiplierRegular": "STÁLÝ HOST",
+  "multiplierPermanentGuest": "TRVALÝ HOST",
+  "multiplierYearFirst": "PRVNÍ LETOS",
+  "liveNewSpeciesSingle": "Nový druh!",
+  "liveNewSpeciesCombined": "{count} nových druhů!",
+  "liveNewSpeciesSubtitle": "Přidáno do tvé sbírky.",
+  "liveTestModeTitle": "Testovací režim — žádné hvězdy, nic se nesbírá",
+  "liveTestModeHowToFix": "V pokročilých nastaveních: zapni filtr druhů a nastav jistotu alespoň na 35 %.",
+  "liveTestModeRecordingsKept": "Vše slyšené se přesto nahrává a zůstává v deníku."
 }

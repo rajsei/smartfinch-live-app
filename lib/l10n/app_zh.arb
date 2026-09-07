@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "关闭期间没有星星，不会有任何东西加入你的收藏，这一天也不计入你的连续记录。\n\n识别仍在运行，录音也会保留——你可以在日记里找到它们，并标注为不计分。你已经收集的一切都会保留。",
   "settingsScoringPauseConfirm": "仍然关闭",
   "settingsScoringFloorHint": "低于 {floor} % 就没有星星。调高始终可以。",
-  "settingsScoringPausedNow": "现在没有星星。识别仍在运行，录音也会保留。"
+  "settingsScoringPausedNow": "现在没有星星。识别仍在运行，录音也会保留。",
+  "liveDayTotalLabel": "今天",
+  "liveDaySpeciesCount": "{count, plural, =0{还没有物种} other{{count} 个物种}}",
+  "liveDayTotalA11y": "今天：来自 {species} 个物种的 {stars} 颗星",
+  "liveStarsEarnedA11y": "获得 {stars} 颗星",
+  "liveAlreadyCollectedToday": "今天已收集 ✓",
+  "liveHeardAgain": "再次听到",
+  "multiplierFirstFind": "新",
+  "multiplierRegular": "常客",
+  "multiplierPermanentGuest": "常驻",
+  "multiplierYearFirst": "今年首次",
+  "liveNewSpeciesSingle": "新物种！",
+  "liveNewSpeciesCombined": "{count} 个新物种！",
+  "liveNewSpeciesSubtitle": "已加入你的收藏。",
+  "liveTestModeTitle": "测试模式——没有星星，不收集任何东西",
+  "liveTestModeHowToFix": "在高级设置中：打开物种筛选，并将置信度设为至少 35 %。",
+  "liveTestModeRecordingsKept": "听到的一切仍会录下并保留在日记里。"
 }

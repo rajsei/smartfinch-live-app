@@ -21,15 +21,20 @@ import '../history/session_library_screen.dart';
 import '../history/session_review_screen.dart';
 import '../inference/advanced_pooling_params.dart';
 import '../recording/recording_service.dart';
+import '../scoring/live_score_board.dart';
 import '../scoring/live_scoring_coordinator.dart';
 import '../scoring/scoring_providers.dart';
+import '../scoring/scoring_repository.dart';
 import '../settings/settings_screen.dart';
 import '../spectrogram/spectrogram_widget.dart';
 import 'live_controller.dart';
 import 'live_detection_display.dart';
 import 'live_providers.dart';
 import 'live_session.dart';
+import 'widgets/celebration_queue.dart';
+import 'widgets/day_summary_bar.dart';
 import 'widgets/detection_list_widget.dart';
+import 'widgets/first_find_celebration.dart';
 
 // =============================================================================
 // Live Mode Screen — Edge-to-Edge Layout
@@ -125,6 +130,15 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   /// The scoring session that runs alongside this one, or null when scoring
   /// could not start — the session runs on regardless.
   LiveScoringCoordinator? _scoringCoordinator;
+
+  /// Cached board reference, so [dispose] can detach without touching [ref].
+  LiveScoreBoard? _scoreBoard;
+  bool _listeningToScoreBoard = false;
+
+  /// At most one first-find card at a time (LIVE-07).
+  late final CelebrationQueue _celebrations = CelebrationQueue(
+    present: _presentCelebration,
+  );
 
   /// Duration after which a warning dialog is shown to the user.
   static const _warningDuration = Duration(minutes: 10);
@@ -445,12 +459,22 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   Future<void> _beginScoring() async {
     try {
       final coordinator = await ref.read(liveScoringCoordinatorProvider.future);
+      final repository = ref.read(scoringRepositoryProvider);
+      final board = ref.read(liveScoreBoardProvider);
 
       await coordinator.beginSession(
         startedAt: DateTime.now(),
         cell: ref.read(liveScoringConditionsProvider).cell,
       );
 
+      // A second outing on the same day opens with the morning's total rather
+      // than at zero, and the blackbird from before breakfast still says
+      // "already collected today" (LIVE-03).
+      await board.reloadFrom(repository, dayKeyFor(DateTime.now()));
+
+      _scoreBoard = board;
+      _listeningToScoreBoard = true;
+      board.addListener(_onScoreBoardChanged);
       _liveController?.onDetectionCycle = coordinator.submitCycle;
       _scoringCoordinator = coordinator;
     } catch (e, st) {
@@ -465,11 +489,69 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
 
     _liveController?.onDetectionCycle = null;
     _scoringCoordinator = null;
+    _detachScoreBoard();
     try {
       await coordinator.endSession(endedAt: DateTime.now());
     } catch (e, st) {
       debugPrint('[LiveScreen] closing the scoring session failed: $e\n$st');
     }
+  }
+
+  void _detachScoreBoard() {
+    if (!_listeningToScoreBoard) return;
+    _listeningToScoreBoard = false;
+    _scoreBoard?.removeListener(_onScoreBoardChanged);
+    _celebrations.dispose();
+  }
+
+  /// Hands newly found species to the celebration queue (LIVE-05…LIVE-07).
+  ///
+  /// Reads through the board rather than the coordinator, because the board is
+  /// the thing that knows a find was a *first* find **and** that it actually
+  /// scored — a first find made while scoring was paused must never be
+  /// celebrated as though it had counted (LIVE-18).
+  void _onScoreBoardChanged() {
+    final board = _scoreBoard;
+    if (board == null || !mounted) return;
+
+    final names = board.takePendingCelebrations();
+    if (names.isEmpty) return;
+
+    final taxonomy = ref.read(taxonomyServiceProvider).value;
+    final locale = ref.read(effectiveSpeciesLocaleProvider);
+
+    _celebrations.add([
+      for (final scientificName in names)
+        taxonomy?.lookup(scientificName)?.commonNameForLocale(locale) ??
+            scientificName,
+    ]);
+  }
+
+  /// Shows one celebration and completes when it has gone away.
+  Future<void> _presentCelebration(FirstFindAnnouncement announcement) async {
+    if (!mounted) return;
+
+    // Confetti first and independently: it plays over the live screen while
+    // the card comes up, and it never blocks a tap (LIVE-05).
+    if (!MediaQuery.of(context).disableAnimations) {
+      _showConfetti();
+    }
+
+    await FirstFindCard.show(context, announcement);
+  }
+
+  void _showConfetti() {
+    final overlay = Overlay.maybeOf(context);
+    if (overlay == null) return;
+
+    late final OverlayEntry entry;
+    entry = OverlayEntry(
+      builder:
+          (_) => Positioned.fill(
+            child: ConfettiBurst(onFinished: () => entry.remove()),
+          ),
+    );
+    overlay.insert(entry);
   }
 
   /// Show confirmation dialog, then finalize and navigate to review.
@@ -503,6 +585,11 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         controller.onStateChanged == _onControllerStateChanged) {
       controller.onStateChanged = null;
     }
+
+    // The scoring session deliberately keeps running — it belongs to the
+    // session, not to this screen. Only the celebration UI goes away, because
+    // there is no longer a screen to celebrate on.
+    _detachScoreBoard();
 
     // Ensure screen lock is released when leaving the live screen.
     WakelockService.disable();
@@ -844,6 +931,11 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         liveState == LiveState.error
             ? _StatusBanner(liveState: liveState, ref: ref)
             : null;
+    // Above the spectrogram in both orientations: the day total is the number
+    // a child checks between birds, and it must not be something you scroll to
+    // (LIVE-08). While scoring is paused the same bar carries the notice
+    // instead (LIVE-18).
+    final daySummary = (isActive || isPaused) ? const DaySummaryBar() : null;
     final spectrogram = Container(
       color: theme.colorScheme.surfaceContainerLowest,
       child: _LiveSpectrogram(isCapturing: isCapturing),
@@ -861,6 +953,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
           detections: detections,
           isActive: isActive || isPaused,
           showTips: true,
+          showScore: true,
           activeDetections: activeDetections,
           speciesDetectionCounts: speciesDetectionCounts,
           onDetectionTap: (detection) {
@@ -880,6 +973,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         children: [
           statusBar,
           if (errorBanner != null) errorBanner,
+          if (daySummary != null) daySummary,
           Expanded(
             child: Row(
               children: [
@@ -905,6 +999,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
       children: [
         statusBar,
         if (errorBanner != null) errorBanner,
+        if (daySummary != null) daySummary,
         Expanded(flex: 2, child: spectrogram),
         sessionInfo,
         Expanded(flex: 3, child: detectionList),

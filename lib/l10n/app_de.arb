@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Solange das ausgeschaltet ist, gibt es keine Sterne, es kommt nichts in deine Sammlung, und der Tag zählt nicht für deine Serie.\n\nDie Erkennung läuft weiter und die Aufnahmen bleiben — du findest sie im Tagebuch, mit dem Hinweis, dass sie nicht zählen. Alles, was du schon gesammelt hast, bleibt.",
   "settingsScoringPauseConfirm": "Trotzdem ausschalten",
   "settingsScoringFloorHint": "Unter {floor} % gibt es keine Sterne. Höher ist immer erlaubt.",
-  "settingsScoringPausedNow": "Gerade gibt es keine Sterne. Die Erkennung läuft weiter und die Aufnahmen bleiben."
+  "settingsScoringPausedNow": "Gerade gibt es keine Sterne. Die Erkennung läuft weiter und die Aufnahmen bleiben.",
+  "liveDayTotalLabel": "Heute",
+  "liveDaySpeciesCount": "{count, plural, =0{noch keine Arten} =1{1 Art} other{{count} Arten}}",
+  "liveDayTotalA11y": "Heute: {stars} Sterne von {species} Arten",
+  "liveStarsEarnedA11y": "{stars} Sterne bekommen",
+  "liveAlreadyCollectedToday": "heute schon gesammelt ✓",
+  "liveHeardAgain": "wieder gehört",
+  "multiplierFirstFind": "NEU",
+  "multiplierRegular": "STAMMGAST",
+  "multiplierPermanentGuest": "DAUERGAST",
+  "multiplierYearFirst": "ERSTE DIES JAHR",
+  "liveNewSpeciesSingle": "Neue Art!",
+  "liveNewSpeciesCombined": "{count} neue Arten!",
+  "liveNewSpeciesSubtitle": "In deine Sammlung aufgenommen.",
+  "liveTestModeTitle": "Testmodus — keine Sterne, nichts wird gesammelt",
+  "liveTestModeHowToFix": "In den erweiterten Einstellungen: Artenfilter anschalten und Konfidenz auf mindestens 35 % stellen.",
+  "liveTestModeRecordingsKept": "Alles Gehörte wird trotzdem aufgenommen und bleibt im Tagebuch."
 }

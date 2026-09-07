@@ -10,11 +10,13 @@
 // =============================================================================
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/legacy.dart';
 
 import '../../core/database/app_database.dart';
 import '../../core/services/grid_cell.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../explore/explore_providers.dart';
+import 'live_score_board.dart';
 import 'live_scoring_coordinator.dart';
 import 'rarity_scale_provider.dart';
 import 'scoring_repository.dart';
@@ -53,8 +55,21 @@ final liveScoringCoordinatorProvider = FutureProvider<LiveScoringCoordinator>((
     conditions: () => ref.read(liveScoringConditionsProvider),
   );
 
-  coordinator.onScored = (_) => ref.invalidate(totalStarsProvider);
+  final board = ref.watch(liveScoreBoardProvider);
+  coordinator.onScored = (scored) {
+    board.record(scored.record.scientificName, scored.result);
+    ref.invalidate(totalStarsProvider);
+  };
   return coordinator;
+});
+
+/// Today's scoring, as the live screen sees it.
+///
+/// A `ChangeNotifier` rather than a provider that rebuilds: the detection list
+/// redraws on every inference cycle, and a card asking the database what a
+/// species earned would be a query per row per second.
+final liveScoreBoardProvider = ChangeNotifierProvider<LiveScoreBoard>((ref) {
+  return LiveScoreBoard.forDay(dayKeyFor(DateTime.now()));
 });
 
 /// The conditions in force right now: threshold, filter, and where we are.

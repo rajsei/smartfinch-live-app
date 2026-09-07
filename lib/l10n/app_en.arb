@@ -4774,5 +4774,92 @@
   "settingsScoringPausedNow": "No stars at the moment. Detection keeps working and the recordings are kept.",
   "@settingsScoringPausedNow": {
     "description": "Hint under the confidence slider while scoring is paused"
+  },
+  "liveDayTotalLabel": "Today",
+  "@liveDayTotalLabel": {
+    "description": "Label before the running day star total in live mode (LIVE-08)"
+  },
+  "liveDaySpeciesCount": "{count, plural, =0{no species yet} =1{1 species} other{{count} species}}",
+  "@liveDaySpeciesCount": {
+    "description": "Species count next to the day star total (LIVE-08)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "liveDayTotalA11y": "Today: {stars} stars from {species} species",
+  "@liveDayTotalA11y": {
+    "description": "Screen-reader label for the day total bar",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      },
+      "species": {
+        "type": "int"
+      }
+    }
+  },
+  "liveStarsEarnedA11y": "{stars} stars earned",
+  "@liveStarsEarnedA11y": {
+    "description": "Screen-reader label for the stars chip on a detection card",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "liveAlreadyCollectedToday": "already collected today ✓",
+  "@liveAlreadyCollectedToday": {
+    "description": "Shown on a detection card for a species that already scored today (LIVE-03)"
+  },
+  "liveHeardAgain": "heard again",
+  "@liveHeardAgain": {
+    "description": "Shown for a repeat of a species that never scored today, e.g. one first heard while scoring was paused"
+  },
+  "multiplierFirstFind": "NEW",
+  "@multiplierFirstFind": {
+    "description": "Multiplier chip for a species never detected before (LIVE-04)"
+  },
+  "multiplierRegular": "REGULAR",
+  "@multiplierRegular": {
+    "description": "Multiplier chip for the 3rd day this week with a species (LIVE-04)"
+  },
+  "multiplierPermanentGuest": "ALWAYS HERE",
+  "@multiplierPermanentGuest": {
+    "description": "Multiplier chip for the 6th day this week with a species (LIVE-04)"
+  },
+  "multiplierYearFirst": "FIRST THIS YEAR",
+  "@multiplierYearFirst": {
+    "description": "Multiplier chip for the first detection of a species this year (LIVE-04)"
+  },
+  "liveNewSpeciesSingle": "New species!",
+  "@liveNewSpeciesSingle": {
+    "description": "Headline of the first-find card for one species (LIVE-06)"
+  },
+  "liveNewSpeciesCombined": "{count} new species!",
+  "@liveNewSpeciesCombined": {
+    "description": "Headline of the first-find card when several arrived together (LIVE-07)",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "liveNewSpeciesSubtitle": "Added to your collection.",
+  "@liveNewSpeciesSubtitle": {
+    "description": "One line under the first-find card saying where the species went"
+  },
+  "liveTestModeTitle": "Test mode — no stars, nothing collected",
+  "@liveTestModeTitle": {
+    "description": "LIVE-18: permanent notice replacing the day total while scoring is paused"
+  },
+  "liveTestModeHowToFix": "In Advanced settings: turn the species filter on and set confidence to at least 35 %.",
+  "@liveTestModeHowToFix": {
+    "description": "LIVE-18: one line saying what to change to get stars back"
+  },
+  "liveTestModeRecordingsKept": "Everything heard is still recorded and kept in your journal.",
+  "@liveTestModeRecordingsKept": {
+    "description": "LIVE-18: one line reassuring that nothing is thrown away"
   }
 }

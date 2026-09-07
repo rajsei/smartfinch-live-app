@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Så lenge dette er slått av får du ingen stjerner, ingenting legges til i samlingen din, og dagen teller ikke for rekken din.\n\nGjenkjenningen går videre og opptakene beholdes — du finner dem i dagboka, merket som at de ikke teller. Alt du allerede har samlet, blir værende.",
   "settingsScoringPauseConfirm": "Slå av likevel",
   "settingsScoringFloorHint": "Under {floor} % får du ingen stjerner. Høyere er alltid lov.",
-  "settingsScoringPausedNow": "Ingen stjerner akkurat nå. Gjenkjenningen går videre og opptakene beholdes."
+  "settingsScoringPausedNow": "Ingen stjerner akkurat nå. Gjenkjenningen går videre og opptakene beholdes.",
+  "liveDayTotalLabel": "I dag",
+  "liveDaySpeciesCount": "{count, plural, =0{ingen arter ennå} =1{1 art} other{{count} arter}}",
+  "liveDayTotalA11y": "I dag: {stars} stjerner fra {species} arter",
+  "liveStarsEarnedA11y": "{stars} stjerner tjent",
+  "liveAlreadyCollectedToday": "allerede samlet i dag ✓",
+  "liveHeardAgain": "hørt igjen",
+  "multiplierFirstFind": "NY",
+  "multiplierRegular": "STAMGJEST",
+  "multiplierPermanentGuest": "ALLTID HER",
+  "multiplierYearFirst": "FØRSTE I ÅR",
+  "liveNewSpeciesSingle": "Ny art!",
+  "liveNewSpeciesCombined": "{count} nye arter!",
+  "liveNewSpeciesSubtitle": "Lagt til i samlingen din.",
+  "liveTestModeTitle": "Testmodus — ingen stjerner, ingenting samles",
+  "liveTestModeHowToFix": "I avanserte innstillinger: slå på artsfilteret og sett sikkerheten til minst 35 %.",
+  "liveTestModeRecordingsKept": "Alt som høres blir likevel tatt opp og blir i dagboka."
 }

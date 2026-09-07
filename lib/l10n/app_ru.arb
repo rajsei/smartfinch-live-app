@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Пока это выключено, звёзд нет, в коллекцию ничего не добавляется, и день не засчитывается в серию.\n\nРаспознавание продолжает работать, а записи сохраняются — ты найдёшь их в дневнике с пометкой, что они не считаются. Всё, что ты уже собрал, останется.",
   "settingsScoringPauseConfirm": "Всё равно выключить",
   "settingsScoringFloorHint": "Ниже {floor} % звёзд нет. Выше — всегда можно.",
-  "settingsScoringPausedNow": "Сейчас звёзд нет. Распознавание продолжает работать, записи сохраняются."
+  "settingsScoringPausedNow": "Сейчас звёзд нет. Распознавание продолжает работать, записи сохраняются.",
+  "liveDayTotalLabel": "Сегодня",
+  "liveDaySpeciesCount": "{count, plural, =0{пока нет видов} =1{1 вид} few{{count} вида} other{{count} видов}}",
+  "liveDayTotalA11y": "Сегодня: {stars} звёзд от {species} видов",
+  "liveStarsEarnedA11y": "Получено {stars} звёзд",
+  "liveAlreadyCollectedToday": "сегодня уже собрано ✓",
+  "liveHeardAgain": "услышано снова",
+  "multiplierFirstFind": "НОВЫЙ",
+  "multiplierRegular": "ЗАВСЕГДАТАЙ",
+  "multiplierPermanentGuest": "ВСЕГДА ЗДЕСЬ",
+  "multiplierYearFirst": "ПЕРВЫЙ В ГОДУ",
+  "liveNewSpeciesSingle": "Новый вид!",
+  "liveNewSpeciesCombined": "{count} новых вида!",
+  "liveNewSpeciesSubtitle": "Добавлено в твою коллекцию.",
+  "liveTestModeTitle": "Тестовый режим — без звёзд, ничего не собирается",
+  "liveTestModeHowToFix": "В расширенных настройках: включи фильтр видов и поставь уверенность не ниже 35 %.",
+  "liveTestModeRecordingsKept": "Всё услышанное всё равно записывается и остаётся в дневнике."
 }

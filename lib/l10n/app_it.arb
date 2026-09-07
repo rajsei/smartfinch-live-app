@@ -1115,5 +1115,21 @@
   "settingsScoringPauseBody": "Finché questo è spento non ci sono stelle, non viene aggiunto nulla alla tua collezione e il giorno non conta per la tua serie.\n\nIl rilevamento continua e le registrazioni restano: le trovi nel diario, contrassegnate come non valide. Tutto quello che hai già raccolto rimane.",
   "settingsScoringPauseConfirm": "Spegni comunque",
   "settingsScoringFloorHint": "Sotto il {floor} % non ci sono stelle. Più in alto è sempre permesso.",
-  "settingsScoringPausedNow": "In questo momento non ci sono stelle. Il rilevamento continua e le registrazioni restano."
+  "settingsScoringPausedNow": "In questo momento non ci sono stelle. Il rilevamento continua e le registrazioni restano.",
+  "liveDayTotalLabel": "Oggi",
+  "liveDaySpeciesCount": "{count, plural, =0{ancora nessuna specie} =1{1 specie} other{{count} specie}}",
+  "liveDayTotalA11y": "Oggi: {stars} stelle da {species} specie",
+  "liveStarsEarnedA11y": "{stars} stelle guadagnate",
+  "liveAlreadyCollectedToday": "già raccolta oggi ✓",
+  "liveHeardAgain": "sentita di nuovo",
+  "multiplierFirstFind": "NUOVA",
+  "multiplierRegular": "ABITUALE",
+  "multiplierPermanentGuest": "SEMPRE QUI",
+  "multiplierYearFirst": "PRIMA DELL'ANNO",
+  "liveNewSpeciesSingle": "Nuova specie!",
+  "liveNewSpeciesCombined": "{count} nuove specie!",
+  "liveNewSpeciesSubtitle": "Aggiunta alla tua collezione.",
+  "liveTestModeTitle": "Modalità test — niente stelle, non si raccoglie nulla",
+  "liveTestModeHowToFix": "Nelle impostazioni avanzate: attiva il filtro specie e imposta la confidenza ad almeno 35 %.",
+  "liveTestModeRecordingsKept": "Tutto ciò che si sente viene comunque registrato e resta nel diario."
 }
