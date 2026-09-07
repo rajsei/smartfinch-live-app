@@ -947,12 +947,7 @@ class _CompactStatusBar extends StatelessWidget {
             constraints: const BoxConstraints(minWidth: 40, minHeight: 40),
             onPressed: () {
               Navigator.of(context).push(
-                MaterialPageRoute<void>(
-                  builder:
-                      (_) => const SettingsScreen(
-                        settingsContext: SettingsContext.live,
-                      ),
-                ),
+                MaterialPageRoute<void>(builder: (_) => const SettingsScreen()),
               );
             },
             tooltip: l10n.settings,

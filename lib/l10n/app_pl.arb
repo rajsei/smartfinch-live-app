@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Kontynuuj",
   "openInAppleMaps": "Otwórz w Mapach Apple",
   "aruCombinedSessionWarningTitle": "Pełny konflikt audio",
-  "aruCombinedSessionWarningBody": "Sesje łączone nie obsługują pełnego dźwięku. System przełączy się wtedy na zapisywanie fragmentów z próbkowaniem Smart. Przejdź do poprzedniego ekranu, aby zmienić ustawienia nagrywania, jeśli chcesz to zmodyfikować."
+  "aruCombinedSessionWarningBody": "Sesje łączone nie obsługują pełnego dźwięku. System przełączy się wtedy na zapisywanie fragmentów z próbkowaniem Smart. Przejdź do poprzedniego ekranu, aby zmienić ustawienia nagrywania, jeśli chcesz to zmodyfikować.",
+  "settingsAdvanced": "Ustawienia zaawansowane",
+  "settingsAdvancedDescription": "Dźwięk, rozpoznawanie, spektrogram, nagrania i eksport",
+  "settingsAdvancedNotice": "Niektóre ustawienia zmieniają to, co liczy się jako rozpoznanie. Jeśli zatrzyma to gwiazdki, dowiesz się wcześniej.",
+  "settingsSpeciesFilterSectionDescription": "Jakich gatunków aplikacja nasłuchuje w twojej okolicy",
+  "settingsScoringPauseTitle": "Wtedy nie ma gwiazdek",
+  "settingsScoringPauseBody": "Dopóki to jest wyłączone, nie ma gwiazdek, nic nie trafia do twojej kolekcji, a dzień nie liczy się do twojej serii.\n\nRozpoznawanie działa dalej, a nagrania zostają — znajdziesz je w dzienniku z adnotacją, że się nie liczą. Wszystko, co już zebrałeś, zostaje.",
+  "settingsScoringPauseConfirm": "Wyłącz mimo to",
+  "settingsScoringFloorHint": "Poniżej {floor} % nie ma gwiazdek. Wyżej zawsze wolno.",
+  "settingsScoringPausedNow": "Teraz nie ma gwiazdek. Rozpoznawanie działa dalej, a nagrania zostają."
 }

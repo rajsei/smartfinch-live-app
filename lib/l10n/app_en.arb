@@ -4733,5 +4733,46 @@
   "aruCombinedSessionWarningBody": "Combined sessions do not support Full Audio. The system will fall back to saving clips with Smart sampling. Go to the previous screen to review recording settings if you wish to change this.",
   "@aruCombinedSessionWarningBody": {
     "description": "Body of the warning shown when a combined ARU session is configured with full audio recording mode"
+  },
+  "settingsAdvanced": "Advanced settings",
+  "@settingsAdvanced": {
+    "description": "Title of the advanced settings screen and of the tile that opens it"
+  },
+  "settingsAdvancedDescription": "Audio, detection, spectrogram, recordings and export",
+  "@settingsAdvancedDescription": {
+    "description": "Subtitle of the tile that opens advanced settings"
+  },
+  "settingsAdvancedNotice": "Some settings here change what counts as a detection. Where that stops the stars, it says so before anything changes.",
+  "@settingsAdvancedNotice": {
+    "description": "Notice at the top of the advanced settings screen"
+  },
+  "settingsSpeciesFilterSectionDescription": "Which species the app listens for at your location",
+  "@settingsSpeciesFilterSectionDescription": {
+    "description": "Subtitle of the species filter section in advanced settings"
+  },
+  "settingsScoringPauseTitle": "Then there are no stars",
+  "@settingsScoringPauseTitle": {
+    "description": "Title of the confirmation shown before a setting pauses scoring (SET-13)"
+  },
+  "settingsScoringPauseBody": "While this is switched off there are no stars, nothing is added to your collection, and the day does not count towards your streak.\n\nDetection keeps working and the recordings are kept — you will find them in your journal, marked as not counting. Everything you have already collected stays.",
+  "@settingsScoringPauseBody": {
+    "description": "Body of the confirmation shown before a setting pauses scoring (SET-13)"
+  },
+  "settingsScoringPauseConfirm": "Switch off anyway",
+  "@settingsScoringPauseConfirm": {
+    "description": "Confirm button of the scoring pause warning"
+  },
+  "settingsScoringFloorHint": "Below {floor} % there are no stars. Higher is always allowed.",
+  "@settingsScoringFloorHint": {
+    "description": "Hint under the confidence slider naming the scoring floor",
+    "placeholders": {
+      "floor": {
+        "type": "int"
+      }
+    }
+  },
+  "settingsScoringPausedNow": "No stars at the moment. Detection keeps working and the recordings are kept.",
+  "@settingsScoringPausedNow": {
+    "description": "Hint under the confidence slider while scoring is paused"
   }
 }

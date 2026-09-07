@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Pokračovat",
   "openInAppleMaps": "Otevřít v Apple Maps",
   "aruCombinedSessionWarningTitle": "Konflikt s plným zvukem",
-  "aruCombinedSessionWarningBody": "Kombinované Sessions nepodporují plný zvuk. Systém se vrátí k ukládání klipů s inteligentním vzorkováním (Smart). Chcete-li to změnit, přejděte na předchozí obrazovku a zkontrolujte nastavení nahrávání."
+  "aruCombinedSessionWarningBody": "Kombinované Sessions nepodporují plný zvuk. Systém se vrátí k ukládání klipů s inteligentním vzorkováním (Smart). Chcete-li to změnit, přejděte na předchozí obrazovku a zkontrolujte nastavení nahrávání.",
+  "settingsAdvanced": "Pokročilá nastavení",
+  "settingsAdvancedDescription": "Zvuk, rozpoznávání, spektrogram, nahrávky a export",
+  "settingsAdvancedNotice": "Některá nastavení zde mění, co se počítá jako rozpoznání. Pokud to zastaví hvězdy, dozvíš se to předem.",
+  "settingsSpeciesFilterSectionDescription": "Na které druhy aplikace ve tvé lokalitě poslouchá",
+  "settingsScoringPauseTitle": "Pak nebudou žádné hvězdy",
+  "settingsScoringPauseBody": "Dokud je to vypnuté, nejsou žádné hvězdy, nic se nepřidá do tvé sbírky a den se nepočítá do tvé série.\n\nRozpoznávání běží dál a nahrávky zůstávají — najdeš je v deníku s poznámkou, že se nepočítají. Všechno, co jsi už nasbíral, zůstává.",
+  "settingsScoringPauseConfirm": "Přesto vypnout",
+  "settingsScoringFloorHint": "Pod {floor} % nejsou žádné hvězdy. Výš je vždy povoleno.",
+  "settingsScoringPausedNow": "Právě teď nejsou žádné hvězdy. Rozpoznávání běží dál a nahrávky zůstávají."
 }

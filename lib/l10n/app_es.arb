@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Continuar",
   "openInAppleMaps": "Abrir en Apple Maps",
   "aruCombinedSessionWarningTitle": "Conflicto con audio completo",
-  "aruCombinedSessionWarningBody": "Las Sessions combinadas no admiten audio completo. El sistema guardará clips con muestreo Smart. Vuelve a la pantalla anterior para revisar los ajustes de grabación si quieres cambiar esto."
+  "aruCombinedSessionWarningBody": "Las Sessions combinadas no admiten audio completo. El sistema guardará clips con muestreo Smart. Vuelve a la pantalla anterior para revisar los ajustes de grabación si quieres cambiar esto.",
+  "settingsAdvanced": "Ajustes avanzados",
+  "settingsAdvancedDescription": "Audio, detección, espectrograma, grabaciones y exportación",
+  "settingsAdvancedNotice": "Algunos ajustes de aquí cambian lo que cuenta como detección. Si eso detiene las estrellas, se avisa antes.",
+  "settingsSpeciesFilterSectionDescription": "Qué especies escucha la aplicación en tu ubicación",
+  "settingsScoringPauseTitle": "Entonces no hay estrellas",
+  "settingsScoringPauseBody": "Mientras esto esté apagado no hay estrellas, no se añade nada a tu colección y el día no cuenta para tu racha.\n\nLa detección sigue funcionando y las grabaciones se conservan: las encontrarás en tu diario, marcadas como no contabilizadas. Todo lo que ya has coleccionado se queda.",
+  "settingsScoringPauseConfirm": "Apagar de todos modos",
+  "settingsScoringFloorHint": "Por debajo del {floor} % no hay estrellas. Subir siempre está permitido.",
+  "settingsScoringPausedNow": "Ahora mismo no hay estrellas. La detección sigue funcionando y las grabaciones se conservan."
 }

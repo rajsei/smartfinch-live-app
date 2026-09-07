@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Continuer",
   "openInAppleMaps": "Ouvrir dans Apple Maps",
   "aruCombinedSessionWarningTitle": "Conflit avec audio complet",
-  "aruCombinedSessionWarningBody": "Les sessions combinées ne prennent pas en charge l'audio complet. Le système enregistrera des clips avec échantillonnage intelligent (Smart). Veuillez revenir à l'écran précédent pour vérifier vos paramètres d'enregistrement si vous souhaitez modifier cela."
+  "aruCombinedSessionWarningBody": "Les sessions combinées ne prennent pas en charge l'audio complet. Le système enregistrera des clips avec échantillonnage intelligent (Smart). Veuillez revenir à l'écran précédent pour vérifier vos paramètres d'enregistrement si vous souhaitez modifier cela.",
+  "settingsAdvanced": "Paramètres avancés",
+  "settingsAdvancedDescription": "Audio, détection, spectrogramme, enregistrements et export",
+  "settingsAdvancedNotice": "Certains réglages ici changent ce qui compte comme détection. Si cela arrête les étoiles, tu es prévenu avant.",
+  "settingsSpeciesFilterSectionDescription": "Les espèces que l'application écoute à ton emplacement",
+  "settingsScoringPauseTitle": "Alors il n'y a pas d'étoiles",
+  "settingsScoringPauseBody": "Tant que c'est désactivé, il n'y a pas d'étoiles, rien ne s'ajoute à ta collection et la journée ne compte pas pour ta série.\n\nLa détection continue et les enregistrements sont conservés — tu les trouveras dans ton journal, marqués comme ne comptant pas. Tout ce que tu as déjà collecté reste.",
+  "settingsScoringPauseConfirm": "Désactiver quand même",
+  "settingsScoringFloorHint": "En dessous de {floor} %, il n'y a pas d'étoiles. Plus haut est toujours permis.",
+  "settingsScoringPausedNow": "Pour l'instant, pas d'étoiles. La détection continue et les enregistrements sont conservés."
 }

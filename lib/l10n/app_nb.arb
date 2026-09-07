@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Fortsett",
   "openInAppleMaps": "Åpne i Apple Maps",
   "aruCombinedSessionWarningTitle": "Konflikt med full lyd",
-  "aruCombinedSessionWarningBody": "Kombinerte økter støtter ikke full lyd. Systemet lagrer i stedet et Smart-utvalg av klipp. Gå til forrige skjerm hvis du vil endre opptaksinnstillingene."
+  "aruCombinedSessionWarningBody": "Kombinerte økter støtter ikke full lyd. Systemet lagrer i stedet et Smart-utvalg av klipp. Gå til forrige skjerm hvis du vil endre opptaksinnstillingene.",
+  "settingsAdvanced": "Avanserte innstillinger",
+  "settingsAdvancedDescription": "Lyd, gjenkjenning, spektrogram, opptak og eksport",
+  "settingsAdvancedNotice": "Noen innstillinger her endrer hva som teller som et funn. Hvis det stopper stjernene, står det der på forhånd.",
+  "settingsSpeciesFilterSectionDescription": "Hvilke arter appen lytter etter der du er",
+  "settingsScoringPauseTitle": "Da får du ingen stjerner",
+  "settingsScoringPauseBody": "Så lenge dette er slått av får du ingen stjerner, ingenting legges til i samlingen din, og dagen teller ikke for rekken din.\n\nGjenkjenningen går videre og opptakene beholdes — du finner dem i dagboka, merket som at de ikke teller. Alt du allerede har samlet, blir værende.",
+  "settingsScoringPauseConfirm": "Slå av likevel",
+  "settingsScoringFloorHint": "Under {floor} % får du ingen stjerner. Høyere er alltid lov.",
+  "settingsScoringPausedNow": "Ingen stjerner akkurat nå. Gjenkjenningen går videre og opptakene beholdes."
 }

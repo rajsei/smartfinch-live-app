@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Weiter",
   "openInAppleMaps": "In Apple Maps öffnen",
   "aruCombinedSessionWarningTitle": "Voll-Audio-Konflikt",
-  "aruCombinedSessionWarningBody": "Kombinierte Sessions unterstützen kein Voll-Audio. Das System speichert stattdessen Clips mit Smart-Sampling. Bitte gehen Sie zum vorherigen Bildschirm zurück, um Ihre Aufnahmeeinstellungen zu überprüfen, falls Sie dies ändern möchten."
+  "aruCombinedSessionWarningBody": "Kombinierte Sessions unterstützen kein Voll-Audio. Das System speichert stattdessen Clips mit Smart-Sampling. Bitte gehen Sie zum vorherigen Bildschirm zurück, um Ihre Aufnahmeeinstellungen zu überprüfen, falls Sie dies ändern möchten.",
+  "settingsAdvanced": "Erweiterte Einstellungen",
+  "settingsAdvancedDescription": "Ton, Erkennung, Spektrogramm, Aufnahmen und Export",
+  "settingsAdvancedNotice": "Manche Einstellungen hier ändern, was als Erkennung zählt. Wenn es dadurch keine Sterne mehr gibt, steht das vorher da.",
+  "settingsSpeciesFilterSectionDescription": "Auf welche Arten die App an deinem Ort hört",
+  "settingsScoringPauseTitle": "Dann gibt es keine Sterne",
+  "settingsScoringPauseBody": "Solange das ausgeschaltet ist, gibt es keine Sterne, es kommt nichts in deine Sammlung, und der Tag zählt nicht für deine Serie.\n\nDie Erkennung läuft weiter und die Aufnahmen bleiben — du findest sie im Tagebuch, mit dem Hinweis, dass sie nicht zählen. Alles, was du schon gesammelt hast, bleibt.",
+  "settingsScoringPauseConfirm": "Trotzdem ausschalten",
+  "settingsScoringFloorHint": "Unter {floor} % gibt es keine Sterne. Höher ist immer erlaubt.",
+  "settingsScoringPausedNow": "Gerade gibt es keine Sterne. Die Erkennung läuft weiter und die Aufnahmen bleiben."
 }

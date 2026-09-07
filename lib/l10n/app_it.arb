@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Continua",
   "openInAppleMaps": "Apri in Apple Maps",
   "aruCombinedSessionWarningTitle": "Conflitto con audio completo",
-  "aruCombinedSessionWarningBody": "Le Sessions combinate non supportano l'audio completo. Il sistema tornerà a salvare clip con campionamento intelligente (Smart). Torna alla schermata precedente per controllare le impostazioni di registrazione se desideri modificarlo."
+  "aruCombinedSessionWarningBody": "Le Sessions combinate non supportano l'audio completo. Il sistema tornerà a salvare clip con campionamento intelligente (Smart). Torna alla schermata precedente per controllare le impostazioni di registrazione se desideri modificarlo.",
+  "settingsAdvanced": "Impostazioni avanzate",
+  "settingsAdvancedDescription": "Audio, rilevamento, spettrogramma, registrazioni ed esportazione",
+  "settingsAdvancedNotice": "Alcune impostazioni qui cambiano cosa conta come rilevamento. Se questo ferma le stelle, viene detto prima.",
+  "settingsSpeciesFilterSectionDescription": "Quali specie l'app ascolta nella tua posizione",
+  "settingsScoringPauseTitle": "Allora niente stelle",
+  "settingsScoringPauseBody": "Finché questo è spento non ci sono stelle, non viene aggiunto nulla alla tua collezione e il giorno non conta per la tua serie.\n\nIl rilevamento continua e le registrazioni restano: le trovi nel diario, contrassegnate come non valide. Tutto quello che hai già raccolto rimane.",
+  "settingsScoringPauseConfirm": "Spegni comunque",
+  "settingsScoringFloorHint": "Sotto il {floor} % non ci sono stelle. Più in alto è sempre permesso.",
+  "settingsScoringPausedNow": "In questo momento non ci sono stelle. Il rilevamento continua e le registrazioni restano."
 }

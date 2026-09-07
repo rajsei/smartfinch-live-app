@@ -15,31 +15,39 @@ import '../about/about_screen.dart';
 import '../announcements/widgets/announcements_settings_section.dart';
 import '../audio/widgets/audio_source_tile.dart';
 import '../explore/explore_providers.dart';
+import '../scoring/scoring_rules.dart';
 import '../spectrogram/color_maps.dart';
 import 'offline_map_download_tile.dart';
 
 bool get _showOfflineMapDownloadSetting => false;
 
-/// Master switch for the experimental "Advanced pooling" block in the
-/// Inference section. Flip to `true` to expose the tuning knobs again; while
-/// `false` the block is hidden but every setting stays wired, persisted, and
-/// recorded in the exported JSON metadata. See [_AdvancedInferenceTuning].
-///
-/// Current shipped default — what runs when the block is hidden and the user
-/// has not overridden anything:
-///
-/// **Score pooling mode `adaptive_lme_peak`** — Log-Mean-Exp pooling at *all*
-/// inference rates (alpha 5.0), displaying the recent per-window peak as the
-/// confidence, guarded by:
-///   * **Temporal support gate** — a new detection needs ≥ 2 recent windows at
-///     or above the per-window support threshold (confidence × 0.6, floored at
-///     0.25), unless a single window hits the 0.98 immediate-bypass score.
-///   * **Pooling window + time gate** — up to 5 recent windows, dropping any
-///     older than 10 s of real time.
-///
-/// These mirror `temporalPooling` in `assets/models/model_config.json` and the
-/// `scorePooling*Provider` defaults in `settings_providers.dart`.
-const bool _showAdvancedInferenceSettings = false;
+// ---------------------------------------------------------------------------
+// The expert inference controls are gone (SET-01)
+// ---------------------------------------------------------------------------
+//
+// Pooling parameters, sensitivity and the species ignore list used to live in
+// the Inference section. They are the **one genuine deletion** in the settings
+// reorganisation, and unlike everything else here they are not merely hidden:
+// they change what counts as a detection, and a settings screen that can be
+// used to arrange your own collection has no place in a scoring app.
+//
+// Every provider stays wired, persisted and exported — only the controls are
+// gone, so the pipeline runs on the shipped defaults:
+//
+// **Score pooling `adaptive_lme_peak`** — Log-Mean-Exp pooling at all inference
+// rates (alpha 5.0), displaying the recent per-window peak as the confidence,
+// guarded by:
+//   * **Temporal support gate** — a new detection needs >= 2 recent windows at
+//     or above the per-window support threshold (confidence x 0.6, floored at
+//     0.25), unless a single window hits the 0.98 immediate-bypass score.
+//   * **Pooling window + time gate** — up to 5 recent windows, dropping any
+//     older than 10 s of real time.
+//
+// **Sensitivity 1.0** and **nothing ignored** — no taxon group suppressed, no
+// common-species cutoff.
+//
+// These mirror `temporalPooling` in `assets/models/model_config.json` and the
+// provider defaults in `settings_providers.dart`. Change them there, not here.
 
 String _detectedSpeciesSortHelp(AppLocalizations l10n, String sortMode) {
   switch (DetectedSpeciesSortMode.normalize(sortMode)) {
@@ -56,129 +64,64 @@ String _detectedSpeciesSortHelp(AppLocalizations l10n, String sortMode) {
 }
 
 // ---------------------------------------------------------------------------
-// Settings context — determines which settings are visible
+// Plain and Advanced — which settings appear where (SET-01, D13)
 // ---------------------------------------------------------------------------
 
-/// The screen context from which settings are opened.
+/// Which half of the settings a [SettingsScreen] instance renders.
 ///
-/// Each settings section is tagged with a set of contexts it belongs to.
-/// When the settings screen is opened from a specific screen, only relevant
-/// sections are shown.
-enum SettingsContext {
-  /// Show all settings (e.g. from a global settings entry point).
-  all,
+/// This replaces the old per-mode `SettingsContext`, which tagged every section
+/// with the research modes it belonged to (Survey, ARU, Point Count, File
+/// Analysis). Those modes are gone, so every section applied to every context
+/// and the mechanism filtered nothing.
+///
+/// The split it does now is the one SET-01 asks for: **reorganised, not cut
+/// back**. Nothing is lost for the adult who wants it; nothing is in the way of
+/// the child who does not.
+enum SettingsView {
+  /// What a child or a parent actually touches: appearance, language,
+  /// announcements, location, privacy, storage.
+  plain,
 
-  /// Live monitoring mode.
-  live,
-
-  /// Survey mode (future).
-  survey,
-
-  /// ARU (autonomous recording unit) deployment mode.
-  ///
-  /// Currently mirrors [survey]'s settings surface, but is kept distinct so
-  /// ARU and Survey can diverge without leaking each other's context.
-  aru,
-
-  /// Point-count mode (future).
-  pointCount,
-
-  /// File / recording analysis mode (future).
-  fileAnalysis,
+  /// Everything else, one tap away — audio, inference, spectrogram, recording,
+  /// playback, the species filter and export.
+  advanced,
 }
 
 /// Settings screen with categorized preferences.
 ///
-/// Pass a [settingsContext] to filter sections to only those relevant for
-/// the given screen.  Defaults to [SettingsContext.all] which shows
-/// everything.
-///
-/// Categories: General, Audio, Inference, Spectrogram, Recording, Export,
-/// About.
+/// Renders either half of the settings depending on [view]; the plain screen
+/// carries a tile that pushes the advanced one.
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key, this.settingsContext = SettingsContext.all});
+  const SettingsScreen({super.key, this.view = SettingsView.plain});
 
-  /// Which screen opened this settings page — controls section visibility.
-  final SettingsContext settingsContext;
+  /// Which half to render.
+  final SettingsView view;
 
-  /// Mapping from section tag to the set of contexts it appears in.
+  /// Which view each section belongs to.
   ///
-  /// [SettingsContext.all] is implicitly included for every section —
-  /// when the screen is opened with [SettingsContext.all] everything shows.
-  static const Map<String, Set<SettingsContext>> _sectionContexts = {
-    'general': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-      SettingsContext.fileAnalysis,
-    },
-    'audio': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-    },
-    'inference': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-      SettingsContext.fileAnalysis,
-    },
-    'spectrogram': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-    },
-    'recording': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-    },
-    'playback': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-      SettingsContext.fileAnalysis,
-    },
-    'export': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-      SettingsContext.fileAnalysis,
-    },
-    'location': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-    },
-    'privacy': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-      SettingsContext.fileAnalysis,
-    },
-    'announcements': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-    },
-    'about': {
-      SettingsContext.live,
-      SettingsContext.survey,
-      SettingsContext.pointCount,
-      SettingsContext.fileAnalysis,
-    },
+  /// One entry per section, so a section can never be silently missing from
+  /// both screens — the thing the old context map could not guarantee. Public
+  /// because that property is worth asserting: SET-01's promise is
+  /// *reorganised, not cut back*, and a section on neither screen breaks it
+  /// without anything visibly failing.
+  static const Map<String, SettingsView> sectionViews = {
+    'general': SettingsView.plain,
+    'announcements': SettingsView.plain,
+    'location': SettingsView.plain,
+    'privacy': SettingsView.plain,
+    'about': SettingsView.plain,
+    'danger': SettingsView.plain,
+    'audio': SettingsView.advanced,
+    'inference': SettingsView.advanced,
+    'spectrogram': SettingsView.advanced,
+    'recording': SettingsView.advanced,
+    'playback': SettingsView.advanced,
+    'speciesFilter': SettingsView.advanced,
+    'export': SettingsView.advanced,
   };
 
-  /// Returns `true` if [section] should be visible for the current context.
-  bool _showSection(String section) {
-    if (settingsContext == SettingsContext.all) return true;
-    // ARU currently shares Survey's settings surface.
-    final effective =
-        settingsContext == SettingsContext.aru
-            ? SettingsContext.survey
-            : settingsContext;
-    return _sectionContexts[section]?.contains(effective) ?? true;
-  }
+  /// Returns `true` if [section] belongs on the screen being built.
+  bool _showSection(String section) => sectionViews[section] == view;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -186,10 +129,45 @@ class SettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(title: Text(l10n.settings)),
+      appBar: AppBar(
+        title: Text(
+          view == SettingsView.advanced ? l10n.settingsAdvanced : l10n.settings,
+        ),
+      ),
       body: ContentWidthConstraint(
         child: ListView(
           children: [
+            // A standing reminder rather than a one-off warning: the screen is
+            // reachable at any time, and the settings on it change what the app
+            // counts as a detection.
+            if (view == SettingsView.advanced)
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+                child: Card(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  elevation: 0,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Icon(
+                          AppIcons.infoOutline,
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            l10n.settingsAdvancedNotice,
+                            style: theme.textTheme.bodyMedium,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+
             // --- General ---
             if (_showSection('general')) ...[
               _SectionHeader(
@@ -227,51 +205,45 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged:
                     (v) => ref.read(showSciNamesProvider.notifier).set(v),
               ),
-              if (settingsContext == SettingsContext.live ||
-                  settingsContext == SettingsContext.pointCount ||
-                  settingsContext == SettingsContext.all) ...[
-                SwitchListTile(
-                  title: _TitleWithHelp(
-                    title: l10n.settingsShowAllDetectedSpecies,
-                    helpBody: l10n.settingsHelpShowAllDetectedSpecies,
+              SwitchListTile(
+                title: _TitleWithHelp(
+                  title: l10n.settingsShowAllDetectedSpecies,
+                  helpBody: l10n.settingsHelpShowAllDetectedSpecies,
+                ),
+                subtitle: Text(l10n.settingsShowAllDetectedSpeciesDescription),
+                value: ref.watch(showAllDetectedSpeciesProvider),
+                onChanged:
+                    (v) => ref
+                        .read(showAllDetectedSpeciesProvider.notifier)
+                        .set(v),
+              ),
+              if (ref.watch(showAllDetectedSpeciesProvider))
+                _ChoiceTile<String>(
+                  title: l10n.settingsDetectedSpeciesSortMode,
+                  value: ref.watch(detectedSpeciesSortModeProvider),
+                  options: {
+                    DetectedSpeciesSortMode.newest:
+                        l10n.settingsDetectedSpeciesSortNewest,
+                    DetectedSpeciesSortMode.confidence:
+                        l10n.settingsDetectedSpeciesSortConfidence,
+                    DetectedSpeciesSortMode.alphabetical:
+                        l10n.settingsDetectedSpeciesSortAlphabetical,
+                    DetectedSpeciesSortMode.occurrences:
+                        l10n.settingsDetectedSpeciesSortOccurrences,
+                  },
+                  subtitle: _detectedSpeciesSortHelp(
+                    l10n,
+                    ref.watch(detectedSpeciesSortModeProvider),
                   ),
-                  subtitle: Text(
-                    l10n.settingsShowAllDetectedSpeciesDescription,
+                  helpBody: _detectedSpeciesSortHelp(
+                    l10n,
+                    ref.watch(detectedSpeciesSortModeProvider),
                   ),
-                  value: ref.watch(showAllDetectedSpeciesProvider),
                   onChanged:
                       (v) => ref
-                          .read(showAllDetectedSpeciesProvider.notifier)
+                          .read(detectedSpeciesSortModeProvider.notifier)
                           .set(v),
                 ),
-                if (ref.watch(showAllDetectedSpeciesProvider))
-                  _ChoiceTile<String>(
-                    title: l10n.settingsDetectedSpeciesSortMode,
-                    value: ref.watch(detectedSpeciesSortModeProvider),
-                    options: {
-                      DetectedSpeciesSortMode.newest:
-                          l10n.settingsDetectedSpeciesSortNewest,
-                      DetectedSpeciesSortMode.confidence:
-                          l10n.settingsDetectedSpeciesSortConfidence,
-                      DetectedSpeciesSortMode.alphabetical:
-                          l10n.settingsDetectedSpeciesSortAlphabetical,
-                      DetectedSpeciesSortMode.occurrences:
-                          l10n.settingsDetectedSpeciesSortOccurrences,
-                    },
-                    subtitle: _detectedSpeciesSortHelp(
-                      l10n,
-                      ref.watch(detectedSpeciesSortModeProvider),
-                    ),
-                    helpBody: _detectedSpeciesSortHelp(
-                      l10n,
-                      ref.watch(detectedSpeciesSortModeProvider),
-                    ),
-                    onChanged:
-                        (v) => ref
-                            .read(detectedSpeciesSortModeProvider.notifier)
-                            .set(v),
-                  ),
-              ],
               ListTile(
                 title: _TitleWithHelp(
                   title: l10n.settingsTimestampDisplayMode,
@@ -375,29 +347,7 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged:
                     (v) => ref.read(windowDurationProvider.notifier).set(v),
               ),
-              _SliderTile(
-                title: l10n.settingsConfidenceThreshold,
-                helpBody: l10n.settingsHelpConfidenceThreshold,
-                value: ref.watch(confidenceThresholdProvider).toDouble(),
-                min: 0,
-                max: 100,
-                divisions: 100,
-                format: (v) => '${v.toInt()}%',
-                onChanged:
-                    (v) => ref
-                        .read(confidenceThresholdProvider.notifier)
-                        .set(v.toInt()),
-              ),
-              _SliderTile(
-                title: l10n.settingsSensitivity,
-                helpBody: l10n.settingsHelpSensitivity,
-                value: ref.watch(sensitivityProvider),
-                min: 0.5,
-                max: 1.5,
-                divisions: 20,
-                format: (v) => v.toStringAsFixed(2),
-                onChanged: (v) => ref.read(sensitivityProvider.notifier).set(v),
-              ),
+              const _ConfidenceThresholdTile(),
               _DiscreteSliderTile<double>(
                 title: l10n.settingsInferenceRate,
                 helpBody: l10n.settingsHelpInferenceRate,
@@ -407,17 +357,6 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged:
                     (v) => ref.read(inferenceRateProvider.notifier).set(v),
               ),
-              ListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsIgnoreSpecies,
-                  helpBody: l10n.settingsHelpIgnoreSpecies,
-                ),
-                subtitle: Text(l10n.settingsIgnoreSpeciesDescription),
-                trailing: const Icon(AppIcons.chevronRight),
-                onTap: () => showIgnoreSpeciesSettingsSheet(context, ref),
-              ),
-              if (_showAdvancedInferenceSettings)
-                const _AdvancedInferenceTuning(),
               const Divider(),
             ],
 
@@ -565,44 +504,30 @@ class SettingsScreen extends ConsumerWidget {
                   onChanged:
                       (v) => ref.read(recordingFormatProvider.notifier).set(v),
                 ),
-              // Auto-save tile applies to the attended field modes that use
-              // these Recording settings (Live + Point Count). Survey and ARU
-              // deployments always auto-save — losing a long unattended run by
-              // forgetting to save would be costly — so the toggle is hidden
-              // for those contexts.
-              if (settingsContext == SettingsContext.live ||
-                  settingsContext == SettingsContext.pointCount ||
-                  settingsContext == SettingsContext.all)
-                SwitchListTile(
-                  title: _TitleWithHelp(
-                    title: l10n.settingsSaveSessionAutomatically,
-                    helpBody: l10n.settingsHelpSaveSessionAutomatically,
-                  ),
-                  subtitle: Text(
-                    l10n.settingsSaveSessionAutomaticallyDescription,
-                  ),
-                  value: ref.watch(saveSessionAutomaticallyProvider),
-                  onChanged:
-                      (v) => ref
-                          .read(saveSessionAutomaticallyProvider.notifier)
-                          .set(v),
+              SwitchListTile(
+                title: _TitleWithHelp(
+                  title: l10n.settingsSaveSessionAutomatically,
+                  helpBody: l10n.settingsHelpSaveSessionAutomatically,
                 ),
-              // Auto-start tile is Live-only — the survey / point-count
-              // setup wizards already gate session start behind their own
-              // multi-step flows where an auto-start would skip required
-              // configuration.
-              if (settingsContext == SettingsContext.live ||
-                  settingsContext == SettingsContext.all)
-                SwitchListTile(
-                  title: _TitleWithHelp(
-                    title: l10n.settingsLiveAutoStart,
-                    helpBody: l10n.settingsHelpLiveAutoStart,
-                  ),
-                  subtitle: Text(l10n.settingsLiveAutoStartDescription),
-                  value: ref.watch(liveAutoStartProvider),
-                  onChanged:
-                      (v) => ref.read(liveAutoStartProvider.notifier).set(v),
+                subtitle: Text(
+                  l10n.settingsSaveSessionAutomaticallyDescription,
                 ),
+                value: ref.watch(saveSessionAutomaticallyProvider),
+                onChanged:
+                    (v) => ref
+                        .read(saveSessionAutomaticallyProvider.notifier)
+                        .set(v),
+              ),
+              SwitchListTile(
+                title: _TitleWithHelp(
+                  title: l10n.settingsLiveAutoStart,
+                  helpBody: l10n.settingsHelpLiveAutoStart,
+                ),
+                subtitle: Text(l10n.settingsLiveAutoStartDescription),
+                value: ref.watch(liveAutoStartProvider),
+                onChanged:
+                    (v) => ref.read(liveAutoStartProvider.notifier).set(v),
+              ),
               const Divider(),
             ],
 
@@ -683,6 +608,25 @@ class SettingsScreen extends ConsumerWidget {
               if (ref.watch(useGpsProvider)) const _GpsRefreshTile(),
               if (_showOfflineMapDownloadSetting && ref.watch(useGpsProvider))
                 const OfflineMapDownloadTile(),
+              const Divider(),
+            ],
+
+            // --- Species filter (advanced) ---
+            //
+            // Split out of the Location section: the GPS switch belongs on the
+            // plain screen — without a position there is no rarity level and
+            // therefore no stars (SET-09) — while the filter mode changes what
+            // counts as a detection and belongs behind Advanced with the
+            // SET-13 warning.
+            if (_showSection('speciesFilter')) ...[
+              // Headed "Location" rather than "Species filter" so the header
+              // does not simply repeat the tile beneath it — and because that
+              // names where the section came from, which is where an adult
+              // will look for it.
+              _SectionHeader(
+                title: l10n.settingsLocation,
+                subtitle: l10n.settingsSpeciesFilterSectionDescription,
+              ),
               _ChoiceTile<String>(
                 title: l10n.settingsSpeciesFilter,
                 helpBody: l10n.settingsHelpSpeciesFilter,
@@ -693,8 +637,16 @@ class SettingsScreen extends ConsumerWidget {
                   'geoAdaptive': l10n.settingsFilterGeoAdaptive,
                   'geoMerge': l10n.settingsFilterGeoMerge,
                 },
-                onChanged:
-                    (v) => ref.read(speciesFilterModeProvider.notifier).set(v),
+                onChanged: (v) async {
+                  // Turning the filter off pauses scoring entirely (PKT-20),
+                  // so it is confirmed before it takes effect rather than
+                  // explained afterwards.
+                  if (v == 'off' &&
+                      !await confirmScoringPause(context, ref, l10n)) {
+                    return;
+                  }
+                  ref.read(speciesFilterModeProvider.notifier).set(v);
+                },
               ),
               // Adaptive mode derives its own bar from the local score
               // distribution, so the manual threshold does not apply there.
@@ -816,11 +768,27 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
             ],
 
-            // --- Announcements ---
-            // Section moved up: it now renders right after Spectrogram
-            // (see above). Kept the comment marker here as a redirect
-            // breadcrumb so future readers searching for it find the
-            // new location.
+            // --- Advanced settings ---
+            //
+            // The door to everything the plain screen does not carry. One tap,
+            // not a hidden gesture: nothing here is secret, it is only out of
+            // the way (SET-01).
+            if (view == SettingsView.plain)
+              ListTile(
+                leading: const Icon(AppIcons.tune),
+                title: Text(l10n.settingsAdvanced),
+                subtitle: Text(l10n.settingsAdvancedDescription),
+                trailing: const Icon(AppIcons.chevronRight),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder:
+                          (_) =>
+                              const SettingsScreen(view: SettingsView.advanced),
+                    ),
+                  );
+                },
+              ),
 
             // --- About ---
             if (_showSection('about'))
@@ -837,7 +805,7 @@ class SettingsScreen extends ConsumerWidget {
               ),
 
             // --- Danger Zone ---
-            if (_showSection('general')) ...[
+            if (_showSection('danger')) ...[
               const Divider(),
               _SectionHeader(
                 title: l10n.settingsDangerZone,
@@ -1032,147 +1000,166 @@ class SettingsScreen extends ConsumerWidget {
   }
 }
 
-/// Open the inference-time species filters in the same modal overlay style as
-/// the other multi-control settings pickers.
-Future<void> showIgnoreSpeciesSettingsSheet(
+// ---------------------------------------------------------------------------
+// SET-13 — the warning on the settings that stop scoring
+// ---------------------------------------------------------------------------
+
+/// Asks whether the user really wants to pause scoring, and returns `true` if
+/// the change should go ahead.
+///
+/// The species filter and the confidence threshold both change what counts as
+/// a detection, so rather than locking them the app pauses the whole scoring
+/// layer while they sit outside the scoring range (`PKT-20`). That trade is
+/// shown **at the moment of change**, not buried in a help text, because it is
+/// reachable by an adult experimenting on a child's device.
+///
+/// The wording has to carry four things and every one of them matters:
+///
+///   * the honest cost — no stars, nothing added to the collection;
+///   * **the streak**, which follows from `STAT-06`'s definition of an active
+///     day and would otherwise be discovered days later as a mystery;
+///   * that recordings are kept and still appear in the journal (`LOG-15`), so
+///     nothing is thrown away;
+///   * that everything already collected stays untouched.
+Future<bool> confirmScoringPause(
   BuildContext context,
   WidgetRef ref,
-) {
-  // Count against a fresh current position each time the overlay opens. The
-  // resulting raw geo scores stay cached while the user adjusts the controls.
-  ref.invalidate(currentLocationProvider);
-  return showModalBottomSheet<void>(
+  AppLocalizations l10n,
+) async {
+  final confirmed = await showDialog<bool>(
     context: context,
-    showDragHandle: true,
-    isScrollControlled: true,
-    useSafeArea: true,
-    builder: (_) => const _IgnoreSpeciesSettingsSheet(),
+    builder:
+        (context) => AlertDialog(
+          icon: const Icon(AppIcons.warningAmberRounded),
+          title: Text(l10n.settingsScoringPauseTitle),
+          content: Text(l10n.settingsScoringPauseBody),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(l10n.settingsScoringPauseConfirm),
+            ),
+          ],
+        ),
   );
+  return confirmed ?? false;
 }
 
-class _IgnoreSpeciesSettingsSheet extends ConsumerWidget {
-  const _IgnoreSpeciesSettingsSheet();
+/// The confidence threshold, with the scoring floor drawn on its track.
+///
+/// Two things separate this from a plain [_SliderTile]:
+///
+///   * **The floor is visible before the drag**, not only in the warning
+///     afterwards — `SET-13` asks for it as a marked point on the track, and a
+///     mark you can see is worth more than a dialog you have to read.
+///   * **The confirmation fires once, on release.** A slider reports every
+///     intermediate value, so confirming in `onChanged` would open a dialog the
+///     instant the thumb crossed 35 and again on the way back. The value is
+///     therefore held locally while dragging and committed in `onChangeEnd`.
+class _ConfidenceThresholdTile extends ConsumerStatefulWidget {
+  const _ConfidenceThresholdTile();
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ConfidenceThresholdTile> createState() =>
+      _ConfidenceThresholdTileState();
+}
+
+class _ConfidenceThresholdTileState
+    extends ConsumerState<_ConfidenceThresholdTile> {
+  /// Non-null only while the thumb is being dragged.
+  double? _dragging;
+
+  Future<void> _commit(double value) async {
     final l10n = AppLocalizations.of(context)!;
-    final ignoredSpeciesNames = ref.watch(ignoredSpeciesNamesProvider);
-    return SafeArea(
-      child: ConstrainedBox(
-        constraints: BoxConstraints(
-          maxHeight: MediaQuery.sizeOf(context).height * 0.85,
+    final threshold = value.toInt();
+    final floor = ScoringRules.current.scoringThresholdFloor;
+    final wasScoring = ref.read(confidenceThresholdProvider) >= floor;
+
+    // Only the crossing is confirmed. Moving from 20 to 25 is already paused
+    // and asking again would be noise; raising the bar never asks at all,
+    // because a stricter threshold produces fewer and safer detections and
+    // cannot be abused.
+    if (wasScoring && threshold < floor) {
+      final ok = await confirmScoringPause(context, ref, l10n);
+      if (!ok) {
+        setState(() => _dragging = null);
+        return;
+      }
+    }
+
+    ref.read(confidenceThresholdProvider.notifier).set(threshold);
+    if (mounted) setState(() => _dragging = null);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final floor = ScoringRules.current.scoringThresholdFloor;
+    final value =
+        _dragging ?? ref.watch(confidenceThresholdProvider).toDouble();
+    final paused = value < floor;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          title: _TitleWithHelp(
+            title: l10n.settingsConfidenceThreshold,
+            helpBody: l10n.settingsHelpConfidenceThreshold,
+          ),
+          subtitle: Semantics(
+            label: l10n.settingsConfidenceThreshold,
+            value: '${value.toInt()}%',
+            child: Slider(
+              value: value,
+              min: 0,
+              max: 100,
+              divisions: 100,
+              label: '${value.toInt()}%',
+              // The floor as a real division on the track, so the point where
+              // scoring stops is part of the control rather than a footnote.
+              secondaryTrackValue: floor.toDouble(),
+              onChanged: (v) => setState(() => _dragging = v),
+              onChangeEnd: _commit,
+            ),
+          ),
+          trailing: Text('${value.toInt()}%', style: theme.textTheme.bodySmall),
         ),
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
+              Icon(
+                paused ? AppIcons.warningAmberRounded : AppIcons.infoOutline,
+                size: 18,
+                color:
+                    paused
+                        ? theme.colorScheme.error
+                        : theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
                 child: Text(
-                  l10n.settingsIgnoreSpecies,
-                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 0, 24, 8),
-                child: Text(
-                  l10n.settingsIgnoreSpeciesDescription,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(24, 8, 24, 8),
-                child: Row(
-                  children: [
-                    const Icon(AppIcons.filterList, size: 20),
-                    const SizedBox(width: 12),
-                    Expanded(
-                      child: ignoredSpeciesNames.when(
-                        data:
-                            (names) => Text(
-                              l10n.settingsIgnoredSpeciesCount(names.length),
-                              style: Theme.of(context).textTheme.titleSmall,
-                            ),
-                        loading:
-                            () => Text(l10n.settingsIgnoredSpeciesCountLoading),
-                        error:
-                            (_, _) => Text(
-                              l10n.settingsIgnoredSpeciesCountUnavailable,
-                            ),
-                      ),
-                    ),
-                    if (ignoredSpeciesNames.isLoading)
-                      const SizedBox.square(
-                        dimension: 18,
-                        child: CircularProgressIndicator(strokeWidth: 2),
-                      ),
-                  ],
-                ),
-              ),
-              CheckboxListTile(
-                title: Text(l10n.taxonGroupAves),
-                value: ref.watch(ignoreBirdsProvider),
-                onChanged:
-                    (value) => ref
-                        .read(ignoreBirdsProvider.notifier)
-                        .set(value ?? false),
-              ),
-              CheckboxListTile(
-                title: Text(l10n.taxonGroupMammalia),
-                value: ref.watch(ignoreMammalsProvider),
-                onChanged:
-                    (value) => ref
-                        .read(ignoreMammalsProvider.notifier)
-                        .set(value ?? false),
-              ),
-              CheckboxListTile(
-                title: Text(l10n.taxonGroupAmphibia),
-                value: ref.watch(ignoreAmphibiansProvider),
-                onChanged:
-                    (value) => ref
-                        .read(ignoreAmphibiansProvider.notifier)
-                        .set(value ?? false),
-              ),
-              CheckboxListTile(
-                title: Text(l10n.taxonGroupInsecta),
-                value: ref.watch(ignoreInsectsProvider),
-                onChanged:
-                    (value) => ref
-                        .read(ignoreInsectsProvider.notifier)
-                        .set(value ?? false),
-              ),
-              const Divider(),
-              _SliderTile(
-                title: l10n.settingsIgnoreCommonSpecies,
-                helpBody: l10n.settingsHelpIgnoreCommonSpecies,
-                value: ref.watch(ignoreCommonGeoScoreCutoffProvider),
-                min: 0.8,
-                max: 1.0,
-                divisions: 20,
-                format: (value) => '${(value * 100).round()}%',
-                onChanged:
-                    (value) => ref
-                        .read(ignoreCommonGeoScoreCutoffProvider.notifier)
-                        .set(value),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 24),
-                child: Text(
-                  l10n.settingsIgnoreCommonSpeciesDescription,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
+                  paused
+                      ? l10n.settingsScoringPausedNow
+                      : l10n.settingsScoringFloorHint(floor),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color:
+                        paused
+                            ? theme.colorScheme.error
+                            : theme.colorScheme.onSurfaceVariant,
                   ),
                 ),
               ),
             ],
           ),
         ),
-      ),
+      ],
     );
   }
 }
@@ -1848,202 +1835,6 @@ class _ChoiceTile<T> extends StatelessWidget {
           if (v != null) onChanged(v);
         },
       ),
-    );
-  }
-}
-
-/// Experimental advanced tuning for temporal score pooling and the LME
-/// support gate. Collapsed by default; gated behind
-/// [_showAdvancedInferenceSettings] so the whole feature can be hidden by
-/// flipping one flag.
-///
-/// Strings here are intentionally hardcoded English rather than localized:
-/// these are developer-facing tuning knobs for an experimental section, not
-/// part of the polished localized settings surface. If this graduates to a
-/// shipped feature, migrate them to ARB entries.
-class _AdvancedInferenceTuning extends ConsumerWidget {
-  const _AdvancedInferenceTuning();
-
-  static const Set<String> _knownModes = {
-    'off',
-    'average',
-    'max',
-    'lme',
-    'adaptive_lme_peak',
-  };
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final rawMode = ref.watch(scorePoolingProvider);
-    final mode = _knownModes.contains(rawMode) ? rawMode : 'adaptive_lme_peak';
-    final pooling = mode != 'off';
-    // The support gate + LME alpha only affect the LME-family modes.
-    final gated = mode == 'lme' || mode == 'adaptive_lme_peak';
-
-    return ExpansionTile(
-      leading: const Icon(AppIcons.scienceOutlined),
-      title: const Text('Advanced pooling (experimental)'),
-      subtitle: const Text(
-        'Tune temporal score pooling and the LME support gate. Applies to all '
-        'modes; changes take effect on the next inference cycle.',
-      ),
-      childrenPadding: const EdgeInsets.only(bottom: 8),
-      children: [
-        _ChoiceTile<String>(
-          title: 'Pooling mode',
-          helpBody:
-              'How scores from consecutive inference windows are combined. '
-              'off = single window (no pooling); average / max = simple '
-              'pooling; lme = log-mean-exp (peak-preserving); '
-              'adaptive_lme_peak = LME plus recent-peak display confidence. '
-              'The support gate and time gate below apply to the lme and '
-              'adaptive_lme_peak modes only.',
-          value: mode,
-          options: const {
-            'off': 'Off (single window)',
-            'average': 'Average',
-            'max': 'Max',
-            'lme': 'LME',
-            'adaptive_lme_peak': 'Adaptive LME + peak',
-          },
-          onChanged: (v) => ref.read(scorePoolingProvider.notifier).set(v),
-        ),
-        if (pooling) ...[
-          _DiscreteSliderTile<int>(
-            title: 'Pool windows',
-            helpBody:
-                'Number of recent inference windows pooled together. Larger '
-                'values smooth over a longer time horizon.',
-            value: ref.watch(scorePoolingWindowsProvider),
-            values: const [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
-            format: (v) => '$v',
-            onChanged:
-                (v) => ref.read(scorePoolingWindowsProvider.notifier).set(v),
-          ),
-          _SliderTile(
-            title: 'Time gate',
-            helpBody:
-                'Windows older than this (real-time age) are dropped from '
-                'pooling, so a pause or gap does not pollute the pooled score.',
-            value: ref.watch(scorePoolingMaxAgeSecondsProvider),
-            min: 1,
-            max: 30,
-            divisions: 29,
-            format: (v) => '${v.toStringAsFixed(0)}s',
-            onChanged:
-                (v) =>
-                    ref.read(scorePoolingMaxAgeSecondsProvider.notifier).set(v),
-          ),
-        ],
-        if (gated) ...[
-          _SliderTile(
-            title: 'LME alpha',
-            helpBody:
-                'Higher alpha weights recent peaks more heavily (closer to '
-                'max pooling); lower alpha is closer to average pooling.',
-            value: ref.watch(scorePoolingAlphaProvider),
-            min: 1,
-            max: 15,
-            divisions: 28,
-            format: (v) => v.toStringAsFixed(1),
-            onChanged:
-                (v) => ref.read(scorePoolingAlphaProvider.notifier).set(v),
-          ),
-          _DiscreteSliderTile<int>(
-            title: 'Support gate — min windows',
-            helpBody:
-                'A new detection must clear the per-window support threshold '
-                'in at least this many recent windows before it appears. Set '
-                'to 1 to disable the gate entirely.',
-            value: ref.watch(scorePoolingMinSupportWindowsProvider),
-            values: const [1, 2, 3, 4, 5],
-            format: (v) => v == 1 ? '1 (off)' : '$v',
-            onChanged:
-                (v) => ref
-                    .read(scorePoolingMinSupportWindowsProvider.notifier)
-                    .set(v),
-          ),
-          _SliderTile(
-            title: 'Support threshold fraction',
-            helpBody:
-                'Per-window support threshold = confidence threshold × this '
-                'fraction, then raised to the floor below.',
-            value: ref.watch(scorePoolingSupportThresholdFractionProvider),
-            min: 0,
-            max: 1,
-            divisions: 20,
-            format: (v) => v.toStringAsFixed(2),
-            onChanged:
-                (v) => ref
-                    .read(scorePoolingSupportThresholdFractionProvider.notifier)
-                    .set(v),
-          ),
-          _SliderTile(
-            title: 'Support threshold floor',
-            helpBody:
-                'Lower bound on the per-window support threshold. Lower lets '
-                'fainter birds clear the gate (more sensitive, more false '
-                'positives).',
-            value: ref.watch(scorePoolingSupportThresholdFloorProvider),
-            min: 0,
-            max: 1,
-            divisions: 20,
-            format: (v) => v.toStringAsFixed(2),
-            onChanged:
-                (v) => ref
-                    .read(scorePoolingSupportThresholdFloorProvider.notifier)
-                    .set(v),
-          ),
-          _SliderTile(
-            title: 'Very-high immediate threshold',
-            helpBody:
-                'A single current window at or above this raw score bypasses '
-                'the multi-window support requirement, so unmistakable calls '
-                'appear instantly.',
-            value: ref.watch(scorePoolingVeryHighImmediateThresholdProvider),
-            min: 0.5,
-            max: 1,
-            divisions: 25,
-            format: (v) => v.toStringAsFixed(2),
-            onChanged:
-                (v) => ref
-                    .read(
-                      scorePoolingVeryHighImmediateThresholdProvider.notifier,
-                    )
-                    .set(v),
-          ),
-        ],
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 4, 16, 8),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              icon: const Icon(AppIcons.restartAlt),
-              label: const Text('Reset advanced pooling to defaults'),
-              onPressed: () {
-                ref
-                    .read(scorePoolingProvider.notifier)
-                    .set('adaptive_lme_peak');
-                ref.read(scorePoolingWindowsProvider.notifier).set(5);
-                ref.read(scorePoolingMaxAgeSecondsProvider.notifier).set(10.0);
-                ref.read(scorePoolingAlphaProvider.notifier).set(5.0);
-                ref.read(scorePoolingMinSupportWindowsProvider.notifier).set(2);
-                ref
-                    .read(scorePoolingSupportThresholdFractionProvider.notifier)
-                    .set(0.6);
-                ref
-                    .read(scorePoolingSupportThresholdFloorProvider.notifier)
-                    .set(0.25);
-                ref
-                    .read(
-                      scorePoolingVeryHighImmediateThresholdProvider.notifier,
-                    )
-                    .set(0.98);
-              },
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

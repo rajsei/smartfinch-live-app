@@ -330,7 +330,17 @@ Two things the deletion exposed, both now gone: `app.dart`'s `_AudioWorkflowProb
 
 **The general rule this produced, worth applying to the rest of Phase 0:** delete what is *wrong in front of a user* now; leave what is merely *unused* to the rebuild that removes it anyway.
 
-**0.5 · Reorganise Settings** (D13). Plain first screen: appearance, sounds and haptics, location, privacy, storage. Everything else behind **Advanced settings**. Delete only the expert inference block. The species-filter mode and the confidence slider both land in Advanced and both need the `SET-13` warning — which means `PKT-20` has to exist by then, so either do 0.5 after Phase 1 or ship the settings move first and the warning with the engine.
+**0.5 · Reorganise Settings** (D13). Plain first screen: appearance, sounds and haptics, location, privacy, storage. Everything else behind **Advanced settings**. Delete only the expert inference block. The species-filter mode and the confidence slider both land in Advanced and both need the `SET-13` warning — which means `PKT-20` has to exist by then, so either do 0.5 after Phase 1 or ship the settings move first and the warning with the engine. ✅ *Done after Phase 1, so the warning shipped with the move rather than after it — 13 tests.*
+
+**The split.** `SettingsScreen` renders either half, chosen by a new `SettingsView`. Plain: general, announcements, location, privacy, about, danger zone, plus the tile that opens the other half. Advanced: audio, inference, spectrogram, recording, playback, the species filter and export. The Location section split in two — the GPS switch stays on the plain screen, because without a position there is no rarity level and therefore no stars (`SET-09`), while the filter mode changes what counts as a detection and belongs behind Advanced.
+
+*This replaced `SettingsContext`, which tagged every section with the research modes it belonged to. With those modes gone every section applied to every remaining context, so the mechanism filtered nothing. The map is now one entry per section, and a test asserts that both views are populated — a section on neither screen would otherwise break SET-01's "nothing is lost" promise without anything visibly failing.*
+
+**The deletion.** Sensitivity, the pooling block and the species ignore list are gone, along with the ignore-species sheet and its test. Every provider stays wired, persisted and exported, so the pipeline runs on the shipped defaults — the header comment in `settings_screen.dart` now records what those are, since there is no longer a UI that shows them.
+
+**`SET-13`.** Both settings confirm before they pause scoring, and the dialog says all four things the requirement asks for, including the streak consequence. Two details worth keeping: the confidence slider draws the floor on its own track (`secondaryTrackValue`), so 35 is visible *before* the drag rather than only in the warning afterwards; and the confirmation fires on release, not on change — a slider reports every intermediate value, so confirming in `onChanged` would open a dialog the instant the thumb crossed 35 and again on the way back. Raising the threshold never asks, and a threshold already below the floor does not ask again.
+
+*Still open from `PKT-20`: `LIVE-18`, the indicator in Live mode saying scoring is paused, and `LOG-15`, the journal entries flagged as outside scoring. Both need screens that phase 2 builds.*
 
 **0.6 · Platform cleanup.** ✅ *Done, and it turned up a half-finished deletion from 0.3.*
 

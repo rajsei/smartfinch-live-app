@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "继续",
   "openInAppleMaps": "在 Apple 地图中打开",
   "aruCombinedSessionWarningTitle": "完整音频冲突",
-  "aruCombinedSessionWarningBody": "合并 Session 不支持完整音频。系统将退回为使用 Smart 采样保存片段。如需更改，请返回上一界面调整录音设置。"
+  "aruCombinedSessionWarningBody": "合并 Session 不支持完整音频。系统将退回为使用 Smart 采样保存片段。如需更改，请返回上一界面调整录音设置。",
+  "settingsAdvanced": "高级设置",
+  "settingsAdvancedDescription": "音频、识别、声谱图、录音和导出",
+  "settingsAdvancedNotice": "这里的一些设置会改变什么算作识别。如果因此停止获得星星，会事先说明。",
+  "settingsSpeciesFilterSectionDescription": "应用在你所在位置聆听哪些物种",
+  "settingsScoringPauseTitle": "那就没有星星了",
+  "settingsScoringPauseBody": "关闭期间没有星星，不会有任何东西加入你的收藏，这一天也不计入你的连续记录。\n\n识别仍在运行，录音也会保留——你可以在日记里找到它们，并标注为不计分。你已经收集的一切都会保留。",
+  "settingsScoringPauseConfirm": "仍然关闭",
+  "settingsScoringFloorHint": "低于 {floor} % 就没有星星。调高始终可以。",
+  "settingsScoringPausedNow": "现在没有星星。识别仍在运行，录音也会保留。"
 }

@@ -1106,5 +1106,14 @@
   "permissionRequestIOS": "Doorgaan",
   "openInAppleMaps": "Openen in Apple Maps",
   "aruCombinedSessionWarningTitle": "Volledig audioconflict",
-  "aruCombinedSessionWarningBody": "Gecombineerde sessies ondersteunen geen volledige audio. Het systeem valt dan terug op het opslaan van fragmenten met Smart-sampling. Ga naar het vorige scherm om de opname-instellingen aan te passen als je dit wilt wijzigen."
+  "aruCombinedSessionWarningBody": "Gecombineerde sessies ondersteunen geen volledige audio. Het systeem valt dan terug op het opslaan van fragmenten met Smart-sampling. Ga naar het vorige scherm om de opname-instellingen aan te passen als je dit wilt wijzigen.",
+  "settingsAdvanced": "Geavanceerde instellingen",
+  "settingsAdvancedDescription": "Audio, herkenning, spectrogram, opnamen en export",
+  "settingsAdvancedNotice": "Sommige instellingen hier veranderen wat als waarneming telt. Als dat de sterren stopt, staat het er vooraf bij.",
+  "settingsSpeciesFilterSectionDescription": "Naar welke soorten de app op jouw locatie luistert",
+  "settingsScoringPauseTitle": "Dan zijn er geen sterren",
+  "settingsScoringPauseBody": "Zolang dit uit staat zijn er geen sterren, komt er niets in je verzameling en telt de dag niet mee voor je reeks.\n\nDe herkenning blijft werken en de opnamen blijven bewaard — je vindt ze in je dagboek, met de aantekening dat ze niet meetellen. Alles wat je al hebt verzameld blijft.",
+  "settingsScoringPauseConfirm": "Toch uitschakelen",
+  "settingsScoringFloorHint": "Onder {floor} % zijn er geen sterren. Hoger mag altijd.",
+  "settingsScoringPausedNow": "Op dit moment geen sterren. De herkenning blijft werken en de opnamen blijven bewaard."
 }
