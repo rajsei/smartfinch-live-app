@@ -363,8 +363,19 @@ The application ID is deliberately a *new* one, so Smartfinch installs alongside
 
 *Nothing here is visible to a child, and none of it can be retrofitted later.*
 
-**1.1 · The Drift schema → blocks everything else in this phase.**
-`Detection`, `ScoreEvent`, `DaySpecies`, `YearSpecies`, `Achievement`, `UserProfile`. Include from the very first migration: `profileId` (`DAT-07`), `updatedAt` / `syncState` / stable UUIDs (`DAT-08`), the `UNIQUE(dayKey, speciesId)` constraint that makes double-awarding impossible (`PKT-03`), the scoring-paused flag on `Detection` (`DAT-11`), and `highestLevelReached` on `UserProfile` (levels ratchet). Detections persist immediately, not at session end (`NFA-11`).
+**1.1 · The Drift schema.** ✅ *Done — `lib/core/database/`, 8 tables, 12 tests.*
+
+Eight tables in two layers: **raw** (`Sessions`, `Detections`) written always, **scoring** (`ScoreEvents`, `DaySpecies`, `YearSpecies`, `LifeSpecies`, `Achievements`, `UserProfiles`) written only while scoring is active (`DAT-11`). Species names, images and rarity levels are **not** in the database — they come from `taxonomy.csv` and the geo model, which already ship; §6.2 of the specification listed them as entities, but that sketch predates the codebase review.
+
+All six unretrofittable fields are in schema version 1: `profileId` (`DAT-07`), `updatedAt` + `syncState` + UUID primary keys (`DAT-08`), `scoringPaused` on `Detections` (`DAT-11`), and `highestLevelReached` on `UserProfiles` (levels ratchet).
+
+**The rules are constraints, not code.** `UNIQUE(profileId, dayKey, scientificName)` makes double-awarding impossible (`PKT-03`) — the database refuses the second insert, so it is not a bug a later refactor can reintroduce. Same for the life list and the year list. `PRAGMA foreign_keys = ON` in `beforeOpen`, because SQLite leaves them off and a journal referencing a deleted detection would otherwise be silently possible.
+
+Two things the tests pin down that are easy to break later: a **paused detection leaves every scoring table empty** (especially `LifeSpecies` — writing there burns the first-find ×3 forever), and a **`ScoreEvent` round-trips all six frozen fields** including the applied threshold, without which moving the settings slider would rewrite what the history meant (`D16`, `NFA-06`).
+
+*Generated code (`*.g.dart`) is gitignored, like the l10n output — it would conflict on every upstream merge. Run `dart run build_runner build` after changing a table.*
+
+*Side fix: `assets/species_data/` now has a tracked `.gitkeep`. Without the directory `flutter test` and `flutter build` fail outright on a fresh clone, which looks like a bug rather than a missing bundle build.*
 
 **1.2 · Extract the rarity scale** (`DAT-10`). Move `ExploreTierScale` construction out of `exploreSpeciesProvider` into a shared provider keyed `(gridCell, geoWeek)`. Grid cell is 0.1° — `(lat * 10).round() / 10`, the same rounding the weather cache already uses. Rebuild only on cell change, in an isolate, keeping the current scale live until the new one is ready, with a small LRU cache. Position re-checked roughly every 5 minutes at coarse accuracy.
 
