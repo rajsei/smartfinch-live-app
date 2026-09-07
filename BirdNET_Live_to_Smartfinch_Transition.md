@@ -389,7 +389,15 @@ Two things the tests pin down that are easy to break later: a **paused detection
 
 *Two corrections while building: `rarityScaleCacheProvider` is a `FutureProvider` rather than a synchronous one that throws when the geo model is not loaded — pretending the dependency is not there only moves the wait somewhere less obvious. And the position re-check every few minutes belongs with the Live integration in 2.1; the cache is ready for it, but nothing polls yet.*
 
-**1.3 · `ScoringRules` as a versioned configuration object** (`DAT-04`). The level→points table, the multipliers, the bonus thresholds, the scoring floor of 35 — all data, none of it constants scattered through the code. Carries a `ruleVersion` that every `ScoreEvent` records.
+**1.3 · `ScoringRules` as a versioned configuration object** (`DAT-04`). ✅ *Done — `features/scoring/scoring_rules.dart`, 28 tests.*
+
+Every number from chapter 2 in one `const` object: the tier→stars table, the four multipliers with the highest-wins rule (`PKT-07`), the five cumulative variety bonuses, early riser, new place, week wrap-up, the loyalty days, and the scoring floor of 35. Entries at P1 and P2 are defined too — an unused number costs nothing, and having it written down is what makes the later step an edit rather than a design discussion.
+
+**The trap worth naming:** `ExploreTier` runs `rare` (index 0) → `abundant` (index 5), while §2.3's table lists common first. Reversed, every blackbird is a sensation and every hoopoe worthless — and it looks entirely plausible in a debug print. Three tests pin the direction down, including one that walks the tiers and asserts values rise monotonically as species get rarer.
+
+**§2.8's worked examples are now tests**: an ordinary May garden day comes to exactly 1,500 stars, the same day as a very first day to 4,100. If a later rebalance moves those, it moves them deliberately.
+
+*On versioning: `version` is recorded on every `ScoreEvent` so a day stays explainable ("scored under rules v1"). It is **not** a way to re-score old events under old rules — `recomputeAllScores` re-derives multipliers and bonuses under the current rules and never touches the frozen base value (`PKT-15`). That is the point: a rebalance should apply retroactively, or badges earned under the old rules could never be recomputed (`AUS-12`).*
 
 **1.4 · The scoring engine** — pure Dart, no Flutter imports, no UI. `PKT-01`…`PKT-08`, `PKT-15`, `PKT-20`. Awards on the first window over threshold, writes peak confidence back on close (D15). Freezes base value, level, `geoWeek`, cell, applied threshold. Writes nothing to the scoring layer while paused.
 
