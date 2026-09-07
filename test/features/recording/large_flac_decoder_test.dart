@@ -11,7 +11,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
 
 void main() {
   const fixturePath = 'dev/SSW_020_20170304_070004Z.flac';

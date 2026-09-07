@@ -3,7 +3,7 @@ import 'dart:math' as math;
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/spectrogram/fft_processor.dart';
+import 'package:smartfinch/features/spectrogram/fft_processor.dart';
 
 void main() {
   group('FftProcessor', () {

@@ -15,7 +15,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../l10n/app_localizations.dart';
 import '../models/weather_snapshot.dart';

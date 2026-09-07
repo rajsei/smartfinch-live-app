@@ -1,8 +1,8 @@
-import 'package:birdnet_live/core/constants/app_constants.dart';
-import 'package:birdnet_live/features/settings/settings_screen.dart';
-import 'package:birdnet_live/features/explore/explore_providers.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
-import 'package:birdnet_live/shared/providers/app_providers.dart';
+import 'package:smartfinch/core/constants/app_constants.dart';
+import 'package:smartfinch/features/settings/settings_screen.dart';
+import 'package:smartfinch/features/explore/explore_providers.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/providers/app_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';

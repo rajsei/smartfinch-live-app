@@ -21,12 +21,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:birdnet_live/core/services/asset_pack_service.dart';
-import 'package:birdnet_live/features/inference/detection_accumulator.dart';
-import 'package:birdnet_live/features/inference/inference_service.dart';
-import 'package:birdnet_live/features/inference/model_config.dart';
-import 'package:birdnet_live/features/inference/realtime_inference_scheduler.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
+import 'package:smartfinch/core/services/asset_pack_service.dart';
+import 'package:smartfinch/features/inference/detection_accumulator.dart';
+import 'package:smartfinch/features/inference/inference_service.dart';
+import 'package:smartfinch/features/inference/model_config.dart';
+import 'package:smartfinch/features/inference/realtime_inference_scheduler.dart';
+import 'package:smartfinch/features/live/live_session.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

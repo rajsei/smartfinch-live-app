@@ -1,6 +1,6 @@
 // Tests for the distribution-adaptive Explore abundance tiers.
 
-import 'package:birdnet_live/features/explore/explore_tier.dart';
+import 'package:smartfinch/features/explore/explore_tier.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

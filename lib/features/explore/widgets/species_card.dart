@@ -12,7 +12,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
 
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/score_colors.dart';

@@ -7,7 +7,7 @@
 // needs a running Flutter host.
 // =============================================================================
 
-import 'package:birdnet_live/features/inference/custom_species_list.dart';
+import 'package:smartfinch/features/inference/custom_species_list.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

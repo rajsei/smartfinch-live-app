@@ -16,7 +16,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../core/theme/app_semantic_colors.dart';
 import '../../core/theme/app_theme.dart';

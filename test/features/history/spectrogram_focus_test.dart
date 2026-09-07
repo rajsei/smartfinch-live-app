@@ -12,7 +12,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/history/session_review_screen.dart';
+import 'package:smartfinch/features/history/session_review_screen.dart';
 
 const double _min = 1.0;
 const double _max = 60.0;

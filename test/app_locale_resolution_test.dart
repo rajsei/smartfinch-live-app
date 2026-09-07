@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/app.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
+import 'package:smartfinch/app.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
 
 void main() {
   group('resolveAppLocale', () {

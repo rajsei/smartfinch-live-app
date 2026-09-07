@@ -21,11 +21,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:birdnet_live/features/inference/classifier_model.dart';
-import 'package:birdnet_live/features/inference/label_parser.dart';
-import 'package:birdnet_live/features/inference/model_config.dart';
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/inference/post_processor.dart';
+import 'package:smartfinch/features/inference/classifier_model.dart';
+import 'package:smartfinch/features/inference/label_parser.dart';
+import 'package:smartfinch/features/inference/model_config.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/inference/post_processor.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

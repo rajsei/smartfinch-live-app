@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'dart:typed_data';
 
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
-import 'package:birdnet_live/features/inference/inference_window_driver.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
+import 'package:smartfinch/features/inference/inference_window_driver.dart';
 
 void main() {
   const sampleRate = 100;

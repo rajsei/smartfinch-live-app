@@ -7,12 +7,12 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:birdnet_live/features/history/session_export.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
-import 'package:birdnet_live/features/recording/flac_encoder.dart';
-import 'package:birdnet_live/features/recording/wav_writer.dart';
-import 'package:birdnet_live/shared/services/taxonomy_service.dart';
+import 'package:smartfinch/features/history/session_export.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/recording/flac_encoder.dart';
+import 'package:smartfinch/features/recording/wav_writer.dart';
+import 'package:smartfinch/shared/services/taxonomy_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;

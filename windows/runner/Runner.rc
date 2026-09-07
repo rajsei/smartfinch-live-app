@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "de.tu_chemnitz.mi.kahst" "\0"
-            VALUE "FileDescription", "birdnet_live" "\0"
+            VALUE "FileDescription", "smartfinch" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "birdnet_live" "\0"
+            VALUE "InternalName", "smartfinch" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2026 de.tu_chemnitz.mi.kahst. All rights reserved." "\0"
-            VALUE "OriginalFilename", "birdnet_live.exe" "\0"
-            VALUE "ProductName", "birdnet_live" "\0"
+            VALUE "OriginalFilename", "smartfinch.exe" "\0"
+            VALUE "ProductName", "smartfinch" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

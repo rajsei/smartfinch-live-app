@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/history/session_review_screen.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
+import 'package:smartfinch/features/history/session_review_screen.dart';
+import 'package:smartfinch/features/live/live_session.dart';
 
 DetectionRecord _record({
   required String scientificName,

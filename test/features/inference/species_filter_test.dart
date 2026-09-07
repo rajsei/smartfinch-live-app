@@ -7,10 +7,10 @@
 // model or platform dependencies.
 // =============================================================================
 
-import 'package:birdnet_live/features/inference/geo_abundance.dart';
-import 'package:birdnet_live/features/inference/models/detection.dart';
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/inference/species_filter.dart';
+import 'package:smartfinch/features/inference/geo_abundance.dart';
+import 'package:smartfinch/features/inference/models/detection.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/inference/species_filter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Build a test species.

@@ -2,7 +2,7 @@
 // GpsPoint Tests — Serialization and equality
 // =============================================================================
 
-import 'package:birdnet_live/shared/models/gps_point.dart';
+import 'package:smartfinch/shared/models/gps_point.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

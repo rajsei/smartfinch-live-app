@@ -1,4 +1,4 @@
-import 'package:birdnet_live/shared/services/species_description_service.dart';
+import 'package:smartfinch/shared/services/species_description_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

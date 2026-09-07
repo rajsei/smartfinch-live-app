@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/core/theme/app_semantic_colors.dart';
-import 'package:birdnet_live/core/theme/app_theme.dart';
-import 'package:birdnet_live/core/theme/score_colors.dart';
+import 'package:smartfinch/core/theme/app_semantic_colors.dart';
+import 'package:smartfinch/core/theme/app_theme.dart';
+import 'package:smartfinch/core/theme/score_colors.dart';
 
 void main() {
   group('AppTheme variants', () {

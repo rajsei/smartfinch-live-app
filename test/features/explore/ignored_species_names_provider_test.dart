@@ -1,6 +1,6 @@
-import 'package:birdnet_live/features/explore/explore_providers.dart';
-import 'package:birdnet_live/shared/providers/app_providers.dart';
-import 'package:birdnet_live/shared/providers/settings_providers.dart';
+import 'package:smartfinch/features/explore/explore_providers.dart';
+import 'package:smartfinch/shared/providers/app_providers.dart';
+import 'package:smartfinch/shared/providers/settings_providers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';

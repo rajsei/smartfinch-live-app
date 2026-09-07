@@ -17,8 +17,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/shared/services/background_recording/background_recording_service.dart';
-import 'package:birdnet_live/shared/services/foreground_service_guard.dart';
+import 'package:smartfinch/shared/services/background_recording/background_recording_service.dart';
+import 'package:smartfinch/shared/services/foreground_service_guard.dart';
 
 void main() {
   setUp(() {

@@ -6,9 +6,9 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/inference/models/detection.dart';
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
+import 'package:smartfinch/features/inference/models/detection.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/live/live_session.dart';
 
 void main() {
   // ── Test data ──────────────────────────────────────────────────────────

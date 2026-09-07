@@ -9,7 +9,7 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:birdnet_live/shared/services/taxonomy_service.dart';
+import 'package:smartfinch/shared/services/taxonomy_service.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Minimal CSV matching the real taxonomy format.

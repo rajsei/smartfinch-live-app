@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/shared/models/weather_snapshot.dart';
+import 'package:smartfinch/shared/models/weather_snapshot.dart';
 
 void main() {
   group('WeatherSnapshot serialization', () {

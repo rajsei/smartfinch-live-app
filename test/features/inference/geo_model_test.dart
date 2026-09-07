@@ -7,7 +7,7 @@
 // require the real model file — see integration_test/ for those.
 // =============================================================================
 
-import 'package:birdnet_live/features/inference/geo_model.dart';
+import 'package:smartfinch/features/inference/geo_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Minimal tab-delimited labels (same format as geomodel labels file).

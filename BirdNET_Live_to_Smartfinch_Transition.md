@@ -332,9 +332,32 @@ Two things the deletion exposed, both now gone: `app.dart`'s `_AudioWorkflowProb
 
 **0.5 · Reorganise Settings** (D13). Plain first screen: appearance, sounds and haptics, location, privacy, storage. Everything else behind **Advanced settings**. Delete only the expert inference block. The species-filter mode and the confidence slider both land in Advanced and both need the `SET-13` warning — which means `PKT-20` has to exist by then, so either do 0.5 after Phase 1 or ship the settings move first and the warning with the engine.
 
-**0.6 · Platform cleanup.** Drop `ACCESS_BACKGROUND_LOCATION` and `FOREGROUND_SERVICE_LOCATION` from the manifest (keep `FOREGROUND_SERVICE_MICROPHONE` — 0.2 rescued the service). Replace `LocationAccuracy.high` in `core/services/location_service.dart` with the ~1 km class. Prune the ARBs across 12 locales for everything deleted.
+**0.6 · Platform cleanup.** ✅ *Done, and it turned up a half-finished deletion from 0.3.*
 
-**0.7 · Rebrand identifiers.** Dart package name in `pubspec.yaml` (touches every `package:birdnet_live/…` import), a **new** Android application ID and iOS bundle ID so Smartfinch installs alongside BirdNET Live, app icon, launcher-icon regeneration, app name in 12 locales. **Keep the BirdNET model licence and the Cornell / TU Chemnitz credit visible in About** — not optional.
+**The native side had been left behind.** 0.3 removed the Dart half of File Analysis and ARU but not the platform half: the Android manifest still advertised the app as an `ACTION_SEND` / `ACTION_VIEW` target for `audio/*`, `MainActivity.kt` still served `com.birdnet/shared_media` and the two ARU notification channels, and iOS still declared `CFBundleDocumentTypes` with an `AppDelegate` that answered on a channel **no Dart code listens to any more**. Share an audio file with the app and it would have appeared in the share sheet and then done nothing. A children's app has no business being a general audio import target either. All of it is gone: `MainActivity.kt` 595 → 319 lines, `AppDelegate.swift` 374 → 93.
+
+**Permissions.** `ACCESS_BACKGROUND_LOCATION` and `FOREGROUND_SERVICE_LOCATION` removed; `foregroundServiceType` narrowed from `microphone|location` to `microphone`; iOS `UIBackgroundModes` lost `location`. `FOREGROUND_SERVICE_MICROPHONE` and the `audio` background mode stay — 0.2 rescued the service they belong to. `ACCESS_FINE_LOCATION` stays because Geolocator needs it to reach GPS at all.
+
+**Accuracy.** `buildLocationSettings` now defaults to `LocationAccuracy.low` instead of `.high`. A 0.1° cell is 7–11 km across, so metre-level precision was being discarded by the rounding while costing a GPS wake-up; `low` also lets the platform answer from a cached or network fix. GPS stays the source — only the request changed.
+
+**ARB pruning: deliberately deferred.** 422 of 1,107 keys in `app_en.arb` are unused — a third of the file, and 12 locales deep. Removing them now is half premature: phase 2 rebuilds Home, the Journal, the Collection and Settings, which will retire more keys and add others. Tote keys are invisible to a user, so by the rule from 0.4 they wait for the rebuild that touches them anyway. **Do it once, after phase 2**, and preferably with a script rather than by hand.
+
+**0.7 · Rebrand identifiers.** ✅ *Done for everything that ships in the binary.*
+
+| What | From | To |
+|---|---|---|
+| Dart package | `birdnet_live` | `smartfinch` — 250 import lines across 109 files |
+| Android `applicationId` **and** `namespace` | `de.tu_chemnitz.mi.kahst.birdnet_live` / `com.birdnet.birdnet_live` | `de.tu_chemnitz.mi.rajs.smartfinch` |
+| Kotlin package path | `kotlin/com/birdnet/birdnet_live/` | `kotlin/de/tu_chemnitz/mi/rajs/smartfinch/` (directory move + `package` declarations + the asset pack's manifest) |
+| iOS bundle ID | `de.tu-chemnitz.mi.kahst.birdnet-live` | `de.tu-chemnitz.mi.rajs.smartfinch` (6 occurrences incl. RunnerTests) |
+| Display name | "BirdNET Live" | **Smartfinch** — Android label, `CFBundleDisplayName`, `appTitle` in all 12 ARBs, Windows window title |
+| Windows | `birdnet_live` project/binary | `smartfinch`, plus a **fresh installer `AppId` GUID** so it does not present itself as an update to an installed BirdNET Live |
+
+The application ID is deliberately a *new* one, so Smartfinch installs alongside BirdNET Live rather than replacing it on a researcher's phone — and it keeps its own institutional namespace (`…mi.rajs…`) rather than inheriting `kahst`.
+
+**Left alone on purpose:** the platform channel names (`com.birdnet/wakelock`, `com.birdnet/audio_decoder`, the `com.birdnet.live.notification_icon` meta-data). They are internal contracts that must match on both sides of the bridge, they are invisible to users, and renaming them is risk without benefit. Rename them whenever the native code is touched for another reason.
+
+**Still open:** the **app icon** is still BirdNET Live's (`assets/images/app-icon.png` + the adaptive background), so `flutter_launcher_icons` has nothing new to generate from. Store metadata in `dev/store/`, the mockups in `dev/mockups/`, `README.md`, `mkdocs.yml` and the 154 files in `docs/user/` also still say BirdNET Live — none of it ships in the binary, so it does not block anything, but it should be done before any release. **`MODEL_LICENSE` and the Cornell / TU Chemnitz credit in About stay untouched** — those obligations do not go away with a rename.
 
 ### Phase 1 — Foundations, no UI
 

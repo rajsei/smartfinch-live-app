@@ -8,7 +8,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
-import 'package:birdnet_live/shared/utils/timestamp_format.dart';
+import 'package:smartfinch/shared/utils/timestamp_format.dart';
 
 Future<void> main() async {
   TestWidgetsFlutterBinding.ensureInitialized();

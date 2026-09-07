@@ -3,8 +3,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../core/theme/app_theme.dart';
 import '../about/about_screen.dart';

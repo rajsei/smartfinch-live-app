@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
 
 void main() {
   group('RingBuffer', () {

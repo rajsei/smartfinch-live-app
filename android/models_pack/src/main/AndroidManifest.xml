@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:dist="http://schemas.android.com/apk/distribution"
-    package="com.birdnet.birdnet_live.models_pack">
+    package="de.tu_chemnitz.mi.rajs.smartfinch.models_pack">
 
     <dist:module
         dist:type="asset-pack">

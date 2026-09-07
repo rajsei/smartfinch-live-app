@@ -8,8 +8,8 @@
 // All tests use synthetic data — no model or platform dependencies.
 // =============================================================================
 
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/inference/post_processor.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/inference/post_processor.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 /// Helper to build a list of dummy [Species] for testing.

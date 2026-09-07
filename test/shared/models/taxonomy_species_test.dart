@@ -6,7 +6,7 @@
 // convenience getters (URLs, descriptions, common names), and equality.
 // =============================================================================
 
-import 'package:birdnet_live/shared/models/taxonomy_species.dart';
+import 'package:smartfinch/shared/models/taxonomy_species.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

@@ -1,15 +1,20 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- Location is read only to place the child in a ~0.1° cell for the
+         rarity scale (NFA-08), never tracked. ACCESS_BACKGROUND_LOCATION and
+         FOREGROUND_SERVICE_LOCATION went with survey mode's GPS tracking in
+         transition step 0.6 — for a children's app, a background-location
+         permission is one you do not want to have to justify to a reviewer.
+         ACCESS_FINE_LOCATION is still declared because Geolocator needs it to
+         reach GPS at all; the app requests only coarse accuracy. -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MICROPHONE" />
-    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.VIBRATE" />
     <application
-        android:label="BirdNET Live"
+        android:label="Smartfinch"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher"
         android:enableOnBackInvokedCallback="true">
@@ -38,9 +43,6 @@
               android:name="io.flutter.embedding.android.NormalTheme"
               android:resource="@style/NormalTheme"
               />
-            <!-- Audio ACTION_VIEW intents are handled by MainActivity's
-                 shared-media channel, not Flutter's URL router. Without this,
-                 the embedding treats content:// audio URIs as named routes. -->
             <meta-data
               android:name="flutter_deeplinking_enabled"
               android:value="false"
@@ -49,25 +51,12 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-            <!-- "Share with BirdNET Live" for audio files: the share sheet of a
-                 recorder, file manager, or messaging app hands us a content://
-                 URI, MainActivity copies it into the cache, and Dart opens File
-                 Analysis on it. Deliberately limited to audio/*: file managers
-                 that share every file as application/octet-stream would
-                 otherwise put us in the share sheet for PDFs and ZIPs too. -->
-            <intent-filter>
-                <action android:name="android.intent.action.SEND"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="audio/*"/>
-            </intent-filter>
-            <!-- "Open with BirdNET Live" from a file manager. Same handling as
-                 the share above. No BROWSABLE category: a web page must not be
-                 able to launch File Analysis. -->
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:mimeType="audio/*"/>
-            </intent-filter>
+            <!-- The audio ACTION_SEND / ACTION_VIEW filters went with File
+                 Analysis (transition 0.6). They advertised the app as a target
+                 for "share an audio file with…", and the Dart side that handled
+                 that hand-off no longer exists — so the app would have appeared
+                 in the share sheet and then done nothing. A children's app has
+                 no business being a general audio import target either. -->
         </activity>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
@@ -87,13 +76,13 @@
         <meta-data
             android:name="com.birdnet.live.notification_icon"
             android:resource="@drawable/ic_notification" />
-        <!-- Foreground service for background recording.
-             TODO(transition 0.3): drop "location" from foregroundServiceType
-             once survey mode is deleted. Background recording only listens;
-             the location permissions go with survey's GPS tracking (NFA-08). -->
+        <!-- Foreground service for background recording. Type is "microphone"
+             only: background recording listens, it does not track position
+             (transition 0.6). Not wired up yet — see
+             lib/shared/services/background_recording/. -->
         <service
             android:name="com.pravera.flutter_foreground_task.service.ForegroundService"
-            android:foregroundServiceType="microphone|location"
+            android:foregroundServiceType="microphone"
             android:stopWithTask="true"
             android:exported="false" />
         <!-- Home-screen "Quick Listen" widget. See QuickListenWidgetProvider.kt. -->

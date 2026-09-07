@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
-import 'package:birdnet_live/features/live/live_controller.dart';
-import 'package:birdnet_live/features/recording/recording_service.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
+import 'package:smartfinch/features/live/live_controller.dart';
+import 'package:smartfinch/features/recording/recording_service.dart';
 
 // =============================================================================
 // LiveController.loadModel() — concurrency contract

@@ -47,8 +47,18 @@ import 'package:permission_handler/permission_handler.dart';
 /// The trade-off is a slower first fix indoors and no fused sensor blending.
 /// Both are irrelevant for field recording, and [LocationService] already
 /// falls back to the OS last-known position when a fix times out.
+/// **Accuracy is deliberately coarse** (transition 0.6, `NFA-08`). Position is
+/// only ever used to place the user in a ~0.1° cell — 11 km of latitude, ~7 km
+/// of longitude here — so metre-level precision would be discarded by the
+/// rounding while costing battery and a GPS wake-up. Asking for `low` also
+/// lets the platform answer from a cached or network fix when one is good
+/// enough. GPS remains the source; only the request changed.
+///
+/// A caller that genuinely needs a finer fix can still pass one, but nothing
+/// in Smartfinch does — and for a children's app, not asking for a precision
+/// you have no use for is the better posture.
 LocationSettings buildLocationSettings({
-  LocationAccuracy accuracy = LocationAccuracy.high,
+  LocationAccuracy accuracy = LocationAccuracy.low,
   int distanceFilter = 0,
   Duration? timeLimit,
   Duration? intervalDuration,

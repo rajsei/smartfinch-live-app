@@ -15,11 +15,11 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:birdnet_live/features/history/services/detection_sharing_service.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
-import 'package:birdnet_live/features/recording/flac_encoder.dart';
-import 'package:birdnet_live/features/recording/wav_writer.dart';
+import 'package:smartfinch/features/history/services/detection_sharing_service.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/recording/flac_encoder.dart';
+import 'package:smartfinch/features/recording/wav_writer.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;

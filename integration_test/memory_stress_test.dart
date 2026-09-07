@@ -24,15 +24,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:path_provider/path_provider.dart';
 
-import 'package:birdnet_live/core/services/memory_monitor.dart';
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
-import 'package:birdnet_live/features/inference/classifier_model.dart';
-import 'package:birdnet_live/features/inference/geo_model.dart';
-import 'package:birdnet_live/features/inference/label_parser.dart';
-import 'package:birdnet_live/features/inference/model_config.dart';
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/inference/post_processor.dart';
-import 'package:birdnet_live/features/recording/flac_encoder.dart';
+import 'package:smartfinch/core/services/memory_monitor.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
+import 'package:smartfinch/features/inference/classifier_model.dart';
+import 'package:smartfinch/features/inference/geo_model.dart';
+import 'package:smartfinch/features/inference/label_parser.dart';
+import 'package:smartfinch/features/inference/model_config.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/inference/post_processor.dart';
+import 'package:smartfinch/features/recording/flac_encoder.dart';
 
 void main() {
   IntegrationTestWidgetsFlutterBinding.ensureInitialized();

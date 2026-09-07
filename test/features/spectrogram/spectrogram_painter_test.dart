@@ -2,7 +2,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/spectrogram/spectrogram_painter.dart';
+import 'package:smartfinch/features/spectrogram/spectrogram_painter.dart';
 
 void main() {
   group('SpectrogramPainter', () {

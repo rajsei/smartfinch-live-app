@@ -4,10 +4,10 @@ import 'dart:typed_data';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:record/record.dart';
 
-import 'package:birdnet_live/core/constants/app_constants.dart';
-import 'package:birdnet_live/features/audio/audio_capture_service.dart';
-import 'package:birdnet_live/features/audio/audio_providers.dart';
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
+import 'package:smartfinch/core/constants/app_constants.dart';
+import 'package:smartfinch/features/audio/audio_capture_service.dart';
+import 'package:smartfinch/features/audio/audio_providers.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
 
 /// Stand-in for the `record` platform channel that enforces the one native
 /// invariant we crashed on: `startStream` must never reach a recorder that is

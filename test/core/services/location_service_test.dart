@@ -6,7 +6,7 @@
 // GPS integration tests are skipped (platform-dependent).
 // =============================================================================
 
-import 'package:birdnet_live/core/services/location_service.dart';
+import 'package:smartfinch/core/services/location_service.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:geolocator/geolocator.dart';

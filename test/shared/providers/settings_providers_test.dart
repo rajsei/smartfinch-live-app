@@ -4,9 +4,9 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:birdnet_live/core/constants/app_constants.dart';
-import 'package:birdnet_live/shared/providers/app_providers.dart';
-import 'package:birdnet_live/shared/providers/settings_providers.dart';
+import 'package:smartfinch/core/constants/app_constants.dart';
+import 'package:smartfinch/shared/providers/app_providers.dart';
+import 'package:smartfinch/shared/providers/settings_providers.dart';
 
 void main() {
   group('Settings providers default values', () {

@@ -7,13 +7,13 @@ import 'package:path_provider_platform_interface/path_provider_platform_interfac
 // ignore: depend_on_referenced_packages
 import 'package:plugin_platform_interface/plugin_platform_interface.dart';
 
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
-import 'package:birdnet_live/features/inference/detection_accumulator.dart';
-import 'package:birdnet_live/features/inference/detection_clip_writer.dart';
-import 'package:birdnet_live/features/inference/models/detection.dart';
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/features/recording/recording_service.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
+import 'package:smartfinch/features/inference/detection_accumulator.dart';
+import 'package:smartfinch/features/inference/detection_clip_writer.dart';
+import 'package:smartfinch/features/inference/models/detection.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/features/recording/recording_service.dart';
 
 class _FakePathProvider extends PathProviderPlatform
     with MockPlatformInterfaceMixin {

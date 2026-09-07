@@ -3,7 +3,7 @@ import 'dart:ui' show Color;
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/spectrogram/color_maps.dart';
+import 'package:smartfinch/features/spectrogram/color_maps.dart';
 
 void main() {
   group('SpectrogramColorMap', () {

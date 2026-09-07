@@ -21,7 +21,7 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:birdnet_live/l10n/app_localizations.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
 
 /// A share action that needs the anchor rect of the control that
 /// triggered it. Widgets that own the control compute the rect with

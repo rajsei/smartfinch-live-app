@@ -16,7 +16,7 @@
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:birdnet_live/features/inference/classifier_model.dart';
+import 'package:smartfinch/features/inference/classifier_model.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

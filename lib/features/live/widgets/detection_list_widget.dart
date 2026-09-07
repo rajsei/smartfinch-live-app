@@ -13,8 +13,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/theme/app_semantic_colors.dart';

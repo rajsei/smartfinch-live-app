@@ -1,9 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/history/html_report.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/shared/models/gps_point.dart';
-import 'package:birdnet_live/shared/models/weather_snapshot.dart';
+import 'package:smartfinch/features/history/html_report.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/shared/models/gps_point.dart';
+import 'package:smartfinch/shared/models/weather_snapshot.dart';
 
 LiveSession _sessionWithDetections() {
   final session = LiveSession(

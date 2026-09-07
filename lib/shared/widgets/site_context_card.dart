@@ -30,7 +30,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../core/services/reverse_geocoding_service.dart';
 import '../../l10n/app_localizations.dart';

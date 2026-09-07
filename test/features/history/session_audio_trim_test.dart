@@ -10,11 +10,11 @@ import 'dart:io';
 import 'dart:math' as math;
 import 'dart:typed_data';
 
-import 'package:birdnet_live/features/history/services/session_audio_trim.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
-import 'package:birdnet_live/features/recording/flac_encoder.dart';
-import 'package:birdnet_live/features/recording/wav_writer.dart';
+import 'package:smartfinch/features/history/services/session_audio_trim.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/recording/flac_encoder.dart';
+import 'package:smartfinch/features/recording/wav_writer.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 const int _rate = 32000;

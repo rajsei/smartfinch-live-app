@@ -21,8 +21,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
-import 'package:birdnet_live/features/recording/native_audio_decoder.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/recording/native_audio_decoder.dart';
 
 const _fixturePath =
     '/data/local/tmp/test_fixtures/XC561949_soundscape_head.mp3';

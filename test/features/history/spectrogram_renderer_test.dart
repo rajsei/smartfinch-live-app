@@ -15,9 +15,9 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/history/services/spectrogram_renderer.dart';
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
-import 'package:birdnet_live/features/spectrogram/color_maps.dart';
+import 'package:smartfinch/features/history/services/spectrogram_renderer.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/spectrogram/color_maps.dart';
 
 const int _targetRate = 32000;
 const int _fftSize = 2048;

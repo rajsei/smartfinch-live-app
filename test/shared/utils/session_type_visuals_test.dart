@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/core/theme/app_theme.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
-import 'package:birdnet_live/shared/utils/session_type_visuals.dart';
+import 'package:smartfinch/core/theme/app_theme.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/session_type_visuals.dart';
 
 void main() {
   group('sessionTypeIcon', () {

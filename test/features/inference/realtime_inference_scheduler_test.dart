@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/inference/realtime_inference_scheduler.dart';
+import 'package:smartfinch/features/inference/realtime_inference_scheduler.dart';
 
 void main() {
   final start = DateTime.utc(2026, 8, 6, 12);

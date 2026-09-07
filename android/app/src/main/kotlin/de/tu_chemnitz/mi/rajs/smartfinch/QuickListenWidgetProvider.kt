@@ -1,4 +1,4 @@
-package com.birdnet.birdnet_live
+package de.tu_chemnitz.mi.rajs.smartfinch
 
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager

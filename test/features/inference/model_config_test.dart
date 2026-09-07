@@ -13,7 +13,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:birdnet_live/features/inference/model_config.dart';
+import 'package:smartfinch/features/inference/model_config.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

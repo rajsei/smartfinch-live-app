@@ -15,8 +15,8 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 import '../../shared/services/link_launcher.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

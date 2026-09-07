@@ -11,7 +11,7 @@
 // MP3, OGG Vorbis, AAC (M4A), OPUS, AMR, FLAC, WAV, and more.
 // =============================================================================
 
-package com.birdnet.birdnet_live
+package de.tu_chemnitz.mi.rajs.smartfinch
 
 import android.media.MediaCodec
 import android.media.MediaExtractor

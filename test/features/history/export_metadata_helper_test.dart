@@ -2,10 +2,10 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:birdnet_live/core/constants/app_constants.dart';
-import 'package:birdnet_live/features/history/export_metadata_helper.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/shared/models/gps_point.dart';
+import 'package:smartfinch/core/constants/app_constants.dart';
+import 'package:smartfinch/features/history/export_metadata_helper.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/shared/models/gps_point.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

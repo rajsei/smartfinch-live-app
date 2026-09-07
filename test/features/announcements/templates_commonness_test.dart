@@ -13,8 +13,8 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/announcements/domain/announcement_signals.dart';
-import 'package:birdnet_live/features/explore/explore_tier.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_signals.dart';
+import 'package:smartfinch/features/explore/explore_tier.dart';
 
 void main() {
   const locales = [

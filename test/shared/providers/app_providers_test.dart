@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 
-import 'package:birdnet_live/shared/providers/app_providers.dart';
+import 'package:smartfinch/shared/providers/app_providers.dart';
 
 void main() {
   group('ThemeModeNotifier', () {

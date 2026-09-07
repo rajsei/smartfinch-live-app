@@ -27,9 +27,9 @@
 
 import 'package:flutter/material.dart';
 
-import 'package:birdnet_live/l10n/app_localizations.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
-import 'package:birdnet_live/shared/utils/share_sheet.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/share_sheet.dart';
 
 /// Bundle of optional per-detection action callbacks.
 ///

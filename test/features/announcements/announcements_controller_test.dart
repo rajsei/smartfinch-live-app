@@ -3,13 +3,13 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/audio/ring_buffer.dart';
-import 'package:birdnet_live/features/announcements/announcements_controller.dart';
-import 'package:birdnet_live/features/announcements/domain/announcement_presets.dart';
-import 'package:birdnet_live/features/announcements/phrasing/phrasing_engine.dart';
-import 'package:birdnet_live/features/announcements/phrasing/template_library.dart';
-import 'package:birdnet_live/features/announcements/platform/routing_service.dart';
-import 'package:birdnet_live/features/announcements/platform/tts_engine.dart';
+import 'package:smartfinch/features/audio/ring_buffer.dart';
+import 'package:smartfinch/features/announcements/announcements_controller.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_presets.dart';
+import 'package:smartfinch/features/announcements/phrasing/phrasing_engine.dart';
+import 'package:smartfinch/features/announcements/phrasing/template_library.dart';
+import 'package:smartfinch/features/announcements/platform/routing_service.dart';
+import 'package:smartfinch/features/announcements/platform/tts_engine.dart';
 
 class _FakeTts implements TtsEngine {
   final List<String> spoken = <String>[];

@@ -15,7 +15,7 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 /// Centered error placeholder with an optional retry action.
 ///

@@ -1,8 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:birdnet_live/core/constants/app_constants.dart';
-import 'package:birdnet_live/core/services/reverse_geocoding_service.dart';
+import 'package:smartfinch/core/constants/app_constants.dart';
+import 'package:smartfinch/core/services/reverse_geocoding_service.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

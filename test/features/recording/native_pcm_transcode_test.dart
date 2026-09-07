@@ -15,7 +15,7 @@ import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/recording/native_audio_decoder.dart';
+import 'package:smartfinch/features/recording/native_audio_decoder.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();

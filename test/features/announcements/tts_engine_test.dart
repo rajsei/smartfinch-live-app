@@ -1,4 +1,4 @@
-import 'package:birdnet_live/features/announcements/platform/tts_engine.dart';
+import 'package:smartfinch/features/announcements/platform/tts_engine.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 

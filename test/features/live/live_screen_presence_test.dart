@@ -9,7 +9,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter/widgets.dart';
 
-import 'package:birdnet_live/features/live/live_screen.dart';
+import 'package:smartfinch/features/live/live_screen.dart';
 
 void main() {
   group('LiveScreenPresence', () {

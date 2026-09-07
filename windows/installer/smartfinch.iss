@@ -1,6 +1,6 @@
-#define MyAppName "BirdNET Live"
-#define MyAppPublisher "BirdNET Team"
-#define MyAppExeName "birdnet_live.exe"
+#define MyAppName "Smartfinch"
+#define MyAppPublisher "Smartfinch"
+#define MyAppExeName "smartfinch.exe"
 
 #ifndef MyAppVersion
   #define MyAppVersion "0.0.0"
@@ -15,19 +15,19 @@
 #endif
 
 #ifndef MyOutputBaseFilename
-  #define MyOutputBaseFilename "BirdNET_Live_v" + MyAppVersion + "_windows_x64_setup"
+  #define MyOutputBaseFilename "Smartfinch_v" + MyAppVersion + "_windows_x64_setup"
 #endif
 
 [Setup]
-AppId={{A26F9469-032F-48BB-949C-7C7087CFAE87}
+AppId={{9B4D67AB-8EAA-F69D-7D47-91EB47C43439}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-AppPublisherURL=https://github.com/birdnet-team/birdnet-live-app
-AppSupportURL=https://github.com/birdnet-team/birdnet-live-app/issues
-AppUpdatesURL=https://github.com/birdnet-team/birdnet-live-app/releases
-DefaultDirName={autopf}\BirdNET Live
-DefaultGroupName=BirdNET Live
+AppPublisherURL=https://github.com/rajsei/smartfinch-live-app
+AppSupportURL=https://github.com/rajsei/smartfinch-live-app/issues
+AppUpdatesURL=https://github.com/rajsei/smartfinch-live-app/releases
+DefaultDirName={autopf}\Smartfinch
+DefaultGroupName=Smartfinch
 DisableProgramGroupPage=yes
 PrivilegesRequired=lowest
 PrivilegesRequiredOverridesAllowed=dialog
@@ -51,9 +51,9 @@ Name: "desktopicon"; Description: "Create a desktop shortcut"; GroupDescription:
 Source: "{#MySourceDir}\\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\BirdNET Live"; Filename: "{app}\{#MyAppExeName}"
-Name: "{group}\Uninstall BirdNET Live"; Filename: "{uninstallexe}"
-Name: "{autodesktop}\BirdNET Live"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
+Name: "{group}\Smartfinch"; Filename: "{app}\{#MyAppExeName}"
+Name: "{group}\Uninstall Smartfinch"; Filename: "{uninstallexe}"
+Name: "{autodesktop}\Smartfinch"; Filename: "{app}\{#MyAppExeName}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "Launch BirdNET Live"; Flags: nowait postinstall skipifsilent
+Filename: "{app}\{#MyAppExeName}"; Description: "Launch Smartfinch"; Flags: nowait postinstall skipifsilent

@@ -1,4 +1,4 @@
-import 'package:birdnet_live/features/explore/widgets/pick_wikipedia_url.dart';
+import 'package:smartfinch/features/explore/widgets/pick_wikipedia_url.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

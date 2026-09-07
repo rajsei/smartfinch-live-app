@@ -23,9 +23,9 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/recording/audio_decoder.dart';
-import 'package:birdnet_live/features/recording/flac_encoder.dart';
-import 'package:birdnet_live/features/recording/wav_writer.dart';
+import 'package:smartfinch/features/recording/audio_decoder.dart';
+import 'package:smartfinch/features/recording/flac_encoder.dart';
+import 'package:smartfinch/features/recording/wav_writer.dart';
 
 const int _sr = 32000;
 

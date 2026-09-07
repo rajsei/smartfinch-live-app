@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/announcements/domain/announcement_buckets.dart';
-import 'package:birdnet_live/features/announcements/domain/announcement_signals.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_buckets.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_signals.dart';
 
 void main() {
   group('confidenceBinFor', () {

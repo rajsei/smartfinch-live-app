@@ -31,7 +31,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../core/services/location_service.dart';
 import '../../features/explore/explore_providers.dart';

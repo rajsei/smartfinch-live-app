@@ -1,13 +1,13 @@
 // Tests for the Phase 1 shared widgets and the ScoreColors theme extension.
 
-import 'package:birdnet_live/core/theme/app_theme.dart';
-import 'package:birdnet_live/core/theme/score_colors.dart';
-import 'package:birdnet_live/shared/widgets/confirm_destructive.dart';
-import 'package:birdnet_live/shared/widgets/empty_view.dart';
-import 'package:birdnet_live/shared/widgets/error_view.dart';
-import 'package:birdnet_live/shared/widgets/loading_view.dart';
-import 'package:birdnet_live/shared/widgets/stat_chip.dart';
-import 'package:birdnet_live/shared/utils/app_icons.dart';
+import 'package:smartfinch/core/theme/app_theme.dart';
+import 'package:smartfinch/core/theme/score_colors.dart';
+import 'package:smartfinch/shared/widgets/confirm_destructive.dart';
+import 'package:smartfinch/shared/widgets/empty_view.dart';
+import 'package:smartfinch/shared/widgets/error_view.dart';
+import 'package:smartfinch/shared/widgets/loading_view.dart';
+import 'package:smartfinch/shared/widgets/stat_chip.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 

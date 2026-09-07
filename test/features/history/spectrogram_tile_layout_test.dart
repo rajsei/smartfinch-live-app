@@ -12,7 +12,7 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/history/session_review_screen.dart';
+import 'package:smartfinch/features/history/session_review_screen.dart';
 
 /// Sample rate the strip renders against, and the finest hop it uses.
 const int _sampleRate = 32000;

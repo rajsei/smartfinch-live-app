@@ -1,6 +1,6 @@
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/spectrogram/spectrogram_widget.dart';
+import 'package:smartfinch/features/spectrogram/spectrogram_widget.dart';
 
 // =============================================================================
 // SpectrogramTimebase — Unit tests

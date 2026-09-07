@@ -1,5 +1,5 @@
-import 'package:birdnet_live/features/inference/models/species.dart';
-import 'package:birdnet_live/features/inference/species_ignore_filter.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
+import 'package:smartfinch/features/inference/species_ignore_filter.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

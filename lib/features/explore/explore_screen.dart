@@ -20,7 +20,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:birdnet_live/l10n/app_localizations.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
 
 import '../../core/services/reverse_geocoding_service.dart';
 import '../../shared/models/taxonomy_species.dart';

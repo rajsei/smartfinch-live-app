@@ -24,7 +24,7 @@ if (keystorePropertiesFile.exists()) {
 }
 
 android {
-    namespace = "com.birdnet.birdnet_live"
+    namespace = "de.tu_chemnitz.mi.rajs.smartfinch"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
@@ -75,7 +75,7 @@ android {
         // Application ID identifying the published app on the Play Store /
         // device. Kept stable across releases — changing it after publish
         // produces a different installable app.
-        applicationId = "de.tu_chemnitz.mi.kahst.birdnet_live"
+        applicationId = "de.tu_chemnitz.mi.rajs.smartfinch"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
         minSdkVersion = flutter.minSdkVersion

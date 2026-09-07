@@ -1,6 +1,6 @@
-import 'package:birdnet_live/features/live/live_detection_display.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
-import 'package:birdnet_live/shared/providers/settings_providers.dart';
+import 'package:smartfinch/features/live/live_detection_display.dart';
+import 'package:smartfinch/features/live/live_session.dart';
+import 'package:smartfinch/shared/providers/settings_providers.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

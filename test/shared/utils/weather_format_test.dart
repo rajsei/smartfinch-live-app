@@ -1,9 +1,9 @@
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/l10n/app_localizations.dart';
-import 'package:birdnet_live/shared/models/weather_snapshot.dart';
-import 'package:birdnet_live/shared/utils/weather_format.dart';
+import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/models/weather_snapshot.dart';
+import 'package:smartfinch/shared/utils/weather_format.dart';
 
 void main() {
   group('weatherConditionFromCode', () {

@@ -11,8 +11,8 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/history/services/detection_audio_window.dart';
-import 'package:birdnet_live/features/live/live_session.dart';
+import 'package:smartfinch/features/history/services/detection_audio_window.dart';
+import 'package:smartfinch/features/live/live_session.dart';
 
 void main() {
   final sessionStart = DateTime.utc(2026, 2, 28, 14, 0, 0);

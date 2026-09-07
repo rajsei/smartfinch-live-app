@@ -13,9 +13,9 @@
 
 import 'dart:io';
 
-import 'package:birdnet_live/features/inference/label_parser.dart';
-import 'package:birdnet_live/features/inference/model_config.dart';
-import 'package:birdnet_live/features/inference/models/species.dart';
+import 'package:smartfinch/features/inference/label_parser.dart';
+import 'package:smartfinch/features/inference/model_config.dart';
+import 'package:smartfinch/features/inference/models/species.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

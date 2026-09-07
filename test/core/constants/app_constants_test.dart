@@ -5,7 +5,7 @@
 // These tests lock in that split so a future edit can't silently send, say, a
 // Dutch user to the English privacy page.
 
-import 'package:birdnet_live/core/constants/app_constants.dart';
+import 'package:smartfinch/core/constants/app_constants.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {

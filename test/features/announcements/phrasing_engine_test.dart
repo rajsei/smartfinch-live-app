@@ -2,11 +2,11 @@ import 'dart:math';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:birdnet_live/features/announcements/domain/announcement_buckets.dart';
-import 'package:birdnet_live/features/announcements/domain/announcement_presets.dart';
-import 'package:birdnet_live/features/announcements/domain/announcement_signals.dart';
-import 'package:birdnet_live/features/announcements/phrasing/phrasing_engine.dart';
-import 'package:birdnet_live/features/announcements/phrasing/template_library.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_buckets.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_presets.dart';
+import 'package:smartfinch/features/announcements/domain/announcement_signals.dart';
+import 'package:smartfinch/features/announcements/phrasing/phrasing_engine.dart';
+import 'package:smartfinch/features/announcements/phrasing/template_library.dart';
 
 TemplateBundle _bundle({Map<String, List<String>>? overrides}) {
   // Three balanced + one chatty per non-H bucket; one of each for the
