@@ -40,8 +40,10 @@ import '../../shared/providers/settings_providers.dart';
 import '../../shared/services/species_description_service.dart';
 import '../../shared/services/taxonomy_service.dart';
 import '../../core/services/location_service.dart';
+import '../../core/services/grid_cell.dart';
 import '../inference/geo_model.dart';
 import '../inference/species_ignore_filter.dart';
+import '../scoring/rarity_scale_provider.dart';
 import 'explore_tier.dart';
 
 // ---------------------------------------------------------------------------
@@ -292,7 +294,14 @@ final exploreSpeciesProvider = FutureProvider<List<ExploreSpecies>>((
 
   final currentWeek = GeoModel.dateTimeToWeek(DateTime.now());
 
-  // Run all 48 weeks directly (no isolate — small model, fast inference).
+  // Explore still needs the full 48-week curves for the annual cycle bar
+  // (SAM-15), which the shared cache does not keep — it stores only the
+  // current week's scores, because that is all scoring needs.
+  //
+  // The *tier boundaries*, however, come from the shared scale below (DAT-10).
+  // Explore and Live must never disagree about what a bird is worth: the
+  // Collection saying 200 stars while the detection card awards 350 breaks
+  // principle 6 loudly, and in front of the child.
   final allWeeks = await geoModel.predictAllWeeks(
     latitude: location.latitude,
     longitude: location.longitude,
@@ -334,12 +343,21 @@ final exploreSpeciesProvider = FutureProvider<List<ExploreSpecies>>((
   // Sort by current-week probability (descending).
   results.sort((a, b) => b.geoScore.compareTo(a.geoScore));
 
-  // Distribution-adaptive abundance tiers, calibrated from the raw scores of
-  // this location/week so the tier boundaries reflect how many species are
-  // high-scoring here (see [ExploreTierScale]).
-  final tierScale = ExploreTierScale.fromScores(
-    results.map((r) => r.rawGeoScore),
+  // The shared rarity scale (DAT-10) — the same object the scoring engine
+  // reads, keyed on the coarsened cell and the geo week, so a bird's tier here
+  // is by construction the tier it scores with.
+  //
+  // Built from the cell rather than from `location` directly: two children a
+  // few hundred metres apart must see the same list, and the cache would
+  // otherwise rebuild on every GPS jitter.
+  final cache = await ref.watch(rarityScaleCacheProvider.future);
+  final sharedScale = await cache.get(
+    RarityScaleKey.at(
+      GridCell.fromCoordinates(location.latitude, location.longitude),
+      DateTime.now(),
+    ),
   );
+  final tierScale = sharedScale.scale;
 
   // Normalize scores against the top species (max score = 100.0) for the mini
   // bar chart, while preserving the raw score and assigning the adaptive tier.

@@ -377,7 +377,17 @@ Two things the tests pin down that are easy to break later: a **paused detection
 
 *Side fix: `assets/species_data/` now has a tracked `.gitkeep`. Without the directory `flutter test` and `flutter build` fail outright on a fresh clone, which looks like a bug rather than a missing bundle build.*
 
-**1.2 · Extract the rarity scale** (`DAT-10`). Move `ExploreTierScale` construction out of `exploreSpeciesProvider` into a shared provider keyed `(gridCell, geoWeek)`. Grid cell is 0.1° — `(lat * 10).round() / 10`, the same rounding the weather cache already uses. Rebuild only on cell change, in an isolate, keeping the current scale live until the new one is ready, with a small LRU cache. Position re-checked roughly every 5 minutes at coarse accuracy.
+**1.2 · Extract the rarity scale** (`DAT-10`). ✅ *Done — `core/services/grid_cell.dart`, `features/scoring/rarity_scale_provider.dart`, 23 tests.*
+
+`GridCell` is now the app's one notion of "roughly here": 0.1°, stored as integer tenths rather than doubles so equality is exact — `0.1 * 508` is not `50.8` in binary floating point, and a cache key that compares unequal to itself would rebuild the scale on every lookup.
+
+`RarityScaleCache` builds and caches scales keyed `(GridCell, geoWeek)`, with an LRU of 6 — enough for a home cell, a school route that crosses a boundary, and a weekend trip. **`peek()` is the method a detection uses**: synchronous, never triggers work, returns null rather than blocking the audio pipeline on 48 inferences. In-flight requests are shared, so Explore and a detection asking at the same moment cost one inference run rather than two.
+
+**Explore now reads the same scale** — the actual point of `DAT-10`. It still runs `predictAllWeeks()` itself for the annual cycle bar (`SAM-15`), which the cache does not keep because scoring only needs the current week; but the *tier boundaries* come from the shared object, so a bird's tier in the Collection is by construction the tier it scores with.
+
+`RarityScale.tierFor()` returns **null for a species below the inclusion threshold**, not the top tier — the off-list rule that awarded full points was removed in D20, and this is where rule and filter finally say the same thing.
+
+*Two corrections while building: `rarityScaleCacheProvider` is a `FutureProvider` rather than a synchronous one that throws when the geo model is not loaded — pretending the dependency is not there only moves the wait somewhere less obvious. And the position re-check every few minutes belongs with the Live integration in 2.1; the cache is ready for it, but nothing polls yet.*
 
 **1.3 · `ScoringRules` as a versioned configuration object** (`DAT-04`). The level→points table, the multipliers, the bonus thresholds, the scoring floor of 35 — all data, none of it constants scattered through the code. Carries a `ruleVersion` that every `ScoreEvent` records.
 
