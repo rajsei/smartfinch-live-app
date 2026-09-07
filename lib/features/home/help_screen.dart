@@ -50,11 +50,11 @@ class HelpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // ── 2. What you can do (the four core capture modes) ──
-            // The user's primary intent on opening the app is to record
-            // and identify something — so the four capture modes come
-            // first, in order of increasing structure / commitment:
-            //   Live  → Point Count → Survey → File Analysis
+            // ── 2. What you can do ──
+            // The user's primary intent on opening the app is to listen and
+            // find out what is singing, so Live comes first. Point Count,
+            // Survey, File Analysis, Batch Analysis and ARU were removed in
+            // transition step 0.3; their help sections went with them.
             _SectionHeader(
               icon: AppIcons.micNoneOutlined,
               title: l10n.helpModesTitle,
@@ -72,80 +72,6 @@ class HelpScreen extends StatelessWidget {
                       : sessionTypeContainerColor(theme, SessionType.live),
               title: l10n.helpLiveTitle,
               body: l10n.helpLiveBody,
-            ),
-            _HelpSection(
-              icon: sessionTypeIcon(SessionType.pointCount),
-              color: sessionTypeAccentColor(theme, SessionType.pointCount),
-              containerColor:
-                  isBrandTheme
-                      ? sessionTypeAccentColor(
-                        theme,
-                        SessionType.pointCount,
-                      ).withAlpha(30)
-                      : sessionTypeContainerColor(
-                        theme,
-                        SessionType.pointCount,
-                      ),
-              title: l10n.helpPointCountTitle,
-              body: l10n.helpPointCountBody,
-            ),
-            _HelpSection(
-              icon: sessionTypeIcon(SessionType.survey),
-              color: sessionTypeAccentColor(theme, SessionType.survey),
-              containerColor:
-                  isBrandTheme
-                      ? sessionTypeAccentColor(
-                        theme,
-                        SessionType.survey,
-                      ).withAlpha(30)
-                      : sessionTypeContainerColor(theme, SessionType.survey),
-              title: l10n.helpSurveyTitle,
-              body: l10n.helpSurveyBody,
-            ),
-            _HelpSection(
-              icon: sessionTypeIcon(SessionType.fileUpload),
-              color: sessionTypeAccentColor(theme, SessionType.fileUpload),
-              containerColor:
-                  isBrandTheme
-                      ? sessionTypeAccentColor(
-                        theme,
-                        SessionType.fileUpload,
-                      ).withAlpha(30)
-                      : sessionTypeContainerColor(
-                        theme,
-                        SessionType.fileUpload,
-                      ),
-              title: l10n.helpFileAnalysisTitle,
-              body: l10n.helpFileAnalysisBody,
-            ),
-            _HelpSection(
-              icon: sessionTypeIcon(SessionType.batchAnalysis),
-              color: sessionTypeAccentColor(theme, SessionType.batchAnalysis),
-              containerColor:
-                  isBrandTheme
-                      ? sessionTypeAccentColor(
-                        theme,
-                        SessionType.batchAnalysis,
-                      ).withAlpha(30)
-                      : sessionTypeContainerColor(
-                        theme,
-                        SessionType.batchAnalysis,
-                      ),
-              title: l10n.helpBatchAnalysisTitle,
-              body: l10n.helpBatchAnalysisBody,
-            ),
-            _HelpSection(
-              icon: sessionTypeIcon(SessionType.aru),
-              color: sessionTypeAccentColor(theme, SessionType.aru),
-              containerColor:
-                  isBrandTheme
-                      ? sessionTypeAccentColor(
-                        theme,
-                        SessionType.aru,
-                      ).withAlpha(30)
-                      : sessionTypeContainerColor(theme, SessionType.aru),
-              title: l10n.helpAruTitle,
-              body: l10n.helpAruBody,
             ),
             const SizedBox(height: 20),
 

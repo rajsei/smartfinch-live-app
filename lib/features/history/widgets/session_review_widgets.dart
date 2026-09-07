@@ -1469,7 +1469,6 @@ class _SpeciesTile extends ConsumerStatefulWidget {
     this.windowSec = 3,
     this.isSurvey = false,
     this.audioAvailable = false,
-    this.onShowOnMap,
   });
 
   final _SpeciesGroup group;
@@ -1521,7 +1520,6 @@ class _SpeciesTile extends ConsumerStatefulWidget {
 
   /// Delete the voice memo attached to the cluster's first record.
   final ValueChanged<_DetectionCluster> onDeleteVoiceMemoCluster;
-  final ValueChanged<DetectionRecord>? onShowOnMap;
 
   /// Called when the user taps the play affordance on a row that is
   /// currently being played (i.e. [isActive] is true). When `null`, the
@@ -2112,10 +2110,6 @@ class _SpeciesTileState extends ConsumerState<_SpeciesTile> {
       onDeleteVoiceMemo: () => widget.onDeleteVoiceMemoCluster(cluster),
       isSurvey: widget.isSurvey,
       audioAvailable: widget.audioAvailable,
-      onShowOnMap:
-          widget.onShowOnMap != null
-              ? () => widget.onShowOnMap!(cluster.records.first)
-              : null,
     );
   }
 
@@ -2210,7 +2204,6 @@ class _ClusterRow extends ConsumerWidget {
     this.isActive = false,
     this.isSurvey = false,
     this.audioAvailable = false,
-    this.onShowOnMap,
   });
 
   final _DetectionCluster cluster;
@@ -2248,7 +2241,6 @@ class _ClusterRow extends ConsumerWidget {
   final bool isActive;
   final bool isSurvey;
   final bool audioAvailable;
-  final VoidCallback? onShowOnMap;
 
   /// Wall-clock span of this cluster's detection clip, or null when the row
   /// should show the detection span instead.
@@ -2493,19 +2485,6 @@ class _ClusterRow extends ConsumerWidget {
               ),
             ),
             const SizedBox(width: 4),
-            if (isSurvey && onShowOnMap != null)
-              InkWell(
-                onTap: onShowOnMap,
-                borderRadius: BorderRadius.circular(24),
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Icon(
-                    AppIcons.map,
-                    size: 24,
-                    color: _reviewOnSurface(theme, 100),
-                  ),
-                ),
-              ),
             Tooltip(
               message:
                   confirmed

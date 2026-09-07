@@ -75,9 +75,10 @@ class _SessionLibraryScreenState extends ConsumerState<SessionLibraryScreen> {
   _SortMode _sortMode = _SortMode.dateDesc;
   _ViewMode _viewMode = _ViewMode.detailed;
 
-  /// Active session-type filters. Empty means "all types". Multiple
-  /// selections combine as a logical OR (e.g. Live + Survey shows both).
-  final Set<SessionType> _typeFilters = <SessionType>{};
+  // The session-type filter was removed in transition step 0.4: with Live as
+  // the only mode, a filter offering one option filters nothing. Legacy
+  // sessions of another type still list normally, they just cannot be
+  // singled out.
 
   /// Mode the "new session" FAB will start when tapped. Persisted across
   /// app launches so the FAB remembers the user's last pick.
@@ -323,34 +324,6 @@ class _SessionLibraryScreenState extends ConsumerState<SessionLibraryScreen> {
                           unawaited(_persistViewMode(m));
                         },
                       ),
-                      const SizedBox(height: 16),
-                      _sheetSectionHeader(l10n.sessionLibraryFilterTooltip),
-                      _sheetMultiChips<SessionType>(
-                        current: _typeFilters,
-                        options: [
-                          (SessionType.live, l10n.sessionTypeLive),
-                          (SessionType.pointCount, l10n.sessionTypePointCount),
-                          (SessionType.fileUpload, l10n.sessionTypeFileUpload),
-                          (SessionType.survey, l10n.sessionTypeSurvey),
-                          (
-                            SessionType.batchAnalysis,
-                            l10n.sessionTypeBatchAnalysis,
-                          ),
-                          (SessionType.aru, l10n.sessionTypeAru),
-                        ],
-                        onToggle: (t) {
-                          if (!_typeFilters.add(t)) _typeFilters.remove(t);
-                          update(() {});
-                        },
-                        onClear:
-                            _typeFilters.isEmpty
-                                ? null
-                                : () {
-                                  _typeFilters.clear();
-                                  update(() {});
-                                },
-                        clearLabel: l10n.exploreFilterAll,
-                      ),
                     ],
                   ),
                 ),
@@ -389,34 +362,6 @@ class _SessionLibraryScreenState extends ConsumerState<SessionLibraryScreen> {
             label: Text(label),
             selected: current == value,
             onSelected: (_) => onSelected(value),
-          ),
-      ],
-    );
-  }
-
-  /// Multi-select chip row. Selections combine as a logical OR; a leading
-  /// chip clears the selection ("All").
-  Widget _sheetMultiChips<T>({
-    required Set<T> current,
-    required List<(T, String)> options,
-    required ValueChanged<T> onToggle,
-    required VoidCallback? onClear,
-    required String clearLabel,
-  }) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 8,
-      children: [
-        ChoiceChip(
-          label: Text(clearLabel),
-          selected: current.isEmpty,
-          onSelected: (_) => onClear?.call(),
-        ),
-        for (final (value, label) in options)
-          FilterChip(
-            label: Text(label),
-            selected: current.contains(value),
-            onSelected: (_) => onToggle(value),
           ),
       ],
     );
@@ -461,9 +406,6 @@ class _SessionLibraryScreenState extends ConsumerState<SessionLibraryScreen> {
     final query = _searchController.text.trim();
     final matched =
         sessions.where((s) {
-          if (_typeFilters.isNotEmpty && !_typeFilters.contains(s.type)) {
-            return false;
-          }
           if (query.isEmpty) return true;
           return _matchesQuery(s, query, l10n, taxonomy, speciesLocale);
         }).toList();

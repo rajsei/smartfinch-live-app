@@ -547,7 +547,6 @@ class _ModeCard extends StatelessWidget {
     required this.accentColor,
     this.isTablet = false,
     this.compact = false,
-    this.comingSoon = false,
     this.onTap,
   });
 
@@ -557,7 +556,6 @@ class _ModeCard extends StatelessWidget {
   final Color accentColor;
   final bool isTablet;
   final bool compact;
-  final bool comingSoon;
   final VoidCallback? onTap;
 
   @override
@@ -583,8 +581,6 @@ class _ModeCard extends StatelessWidget {
                 color: theme.colorScheme.outlineVariant.withAlpha(140),
               ),
     );
-
-    final l10n = AppLocalizations.of(context)!;
 
     return Material(
       color: cardColor,
@@ -623,25 +619,6 @@ class _ModeCard extends StatelessWidget {
                       size: isTablet ? 28 : 24,
                     ),
                   ),
-                  if (comingSoon)
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 4,
-                      ),
-                      decoration: BoxDecoration(
-                        color: theme.colorScheme.secondaryContainer,
-                        borderRadius: BorderRadius.circular(compact ? 10 : 12),
-                      ),
-                      child: Text(
-                        l10n.comingSoon,
-                        style: theme.textTheme.labelSmall?.copyWith(
-                          color: theme.colorScheme.onSecondaryContainer,
-                          fontWeight: FontWeight.bold,
-                          fontSize: isTablet ? 11 : 9,
-                        ),
-                      ),
-                    ),
                 ],
               ),
               SizedBox(
@@ -655,7 +632,7 @@ class _ModeCard extends StatelessWidget {
                       highContrast
                           ? theme.colorScheme.onSurface
                           : theme.colorScheme.onSurface.withAlpha(
-                            comingSoon ? 150 : 255,
+                            255,
                           ),
                   fontSize:
                       compact ? (isTablet ? 13 : 12) : (isTablet ? 14 : null),
@@ -672,7 +649,7 @@ class _ModeCard extends StatelessWidget {
                         highContrast
                             ? theme.colorScheme.onSurface
                             : theme.colorScheme.onSurface.withAlpha(
-                              comingSoon ? 80 : 100,
+                              100,
                             ),
                     fontSize:
                         compact ? (isTablet ? 11 : 10) : (isTablet ? 12 : 11),

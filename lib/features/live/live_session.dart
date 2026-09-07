@@ -18,9 +18,38 @@ import 'package:intl/intl.dart';
 import '../../shared/models/weather_snapshot.dart';
 
 import '../../shared/models/gps_point.dart';
-import '../aru/aru_schedule.dart';
 import '../inference/models/detection.dart';
 import '../inference/models/species.dart';
+
+/// Legacy: the diel restriction an ARU deployment was scheduled with.
+///
+/// ARU mode was removed in transition step 0.3, and this enum came back with
+/// it — not because anything schedules deployments any more, but because the
+/// value is **written into session files by name** (`"dielPattern": "dayOnly"`)
+/// and [AruDeploymentMetadata.fromJson] has to keep resolving it. Deleting the
+/// enum would make every legacy ARU session fail to parse.
+///
+/// Goes away with the Drift schema (transition 1.1), which has no ARU metadata
+/// at all.
+enum AruDielPattern {
+  /// No diel restriction; repeat windows run around the clock.
+  anyTime,
+
+  /// Daylight-only windows.
+  dayOnly,
+
+  /// Night-only windows.
+  nightOnly,
+
+  /// Windows around local sunrise.
+  aroundSunrise,
+
+  /// Windows around local sunset.
+  aroundSunset,
+
+  /// Windows around local sunrise and sunset.
+  aroundSunriseAndSunset,
+}
 
 /// A snapshot of inference settings active when a session was started.
 class SessionSettings {
@@ -91,10 +120,15 @@ class SessionSettings {
   /// continuous file (live, point count, file analysis).
   final int clipContextSeconds;
 
-  // ── Survey species alerts (v0.7.0+) ─────────────────────────────────
-  // All snapshot fields default to safe values so legacy sessions
-  // deserialized from disk produce a fully-populated `SessionSettings`
-  // and the export bundle's metadata.json is always self-describing.
+  // ── Legacy: survey species alerts (v0.7.0+) ─────────────────────────
+  //
+  // Survey mode was removed in transition step 0.3, so nothing sets these any
+  // more — every session written from now on carries the defaults below. They
+  // stay for one reason: a session file written before that step still has the
+  // keys, and `fromJson` must keep reading it rather than treating it as
+  // corrupt. `toJson` already omits the null ones, so nothing new is written.
+  //
+  // Do not build on these. They go with the Drift schema (transition 1.1).
 
   /// Alert mode index. See `AlertMode` (0=off, 1=session, 2=ever, 3=rare,
   /// 4=watchlist).
@@ -309,23 +343,36 @@ class SessionSettings {
 }
 
 /// The type of session (maps to one of the four app modes).
+/// How a session was recorded.
+///
+/// **Only [live] is ever produced.** The other values are kept because they are
+/// the on-disk serialization format: a session file written before transition
+/// step 0.3 can still carry `"type": "survey"`, and it must keep deserializing
+/// rather than being skipped as corrupt. Nothing creates them, no screen offers
+/// them, and no filter distinguishes them.
+///
+/// They disappear for good with the Drift schema (transition 1.1), where the
+/// session table has no type column at all — so do not spend effort collapsing
+/// the branches that still switch on them in `features/history`. That layer is
+/// rebuilt as the Journal in phase 2.5.
 enum SessionType {
-  /// Real-time microphone-based identification session.
+  /// Real-time microphone-based identification session. The only live value.
   live,
 
-  /// Offline analysis of an uploaded audio file.
+  /// Legacy: offline analysis of an uploaded audio file.
   fileUpload,
 
-  /// Timed point-count survey at a fixed location.
+  /// Legacy: timed point-count survey at a fixed location.
   pointCount,
 
-  /// Background survey session with GPS tracking.
+  /// Legacy: background survey session with GPS tracking.
   survey,
 
-  /// Bulk processing of audio files.
+  /// Legacy: bulk processing of audio files. Never shipped beyond a
+  /// "coming soon" tile.
   batchAnalysis,
 
-  /// Autonomous Recording Unit mode.
+  /// Legacy: Autonomous Recording Unit mode.
   aru,
 }
 
@@ -924,21 +971,6 @@ class AruDeploymentMetadata {
   final bool testCycleEnabled;
   final bool eachCycleIsSession;
   final List<AruCycleMetadata> cycles;
-
-  AruScheduleConfig toScheduleConfig() {
-    return AruScheduleConfig(
-      startTime: scheduleStart,
-      cycleDuration: Duration(seconds: cycleDurationSeconds),
-      repeatInterval: Duration(seconds: repeatIntervalSeconds),
-      endTime: scheduleEnd,
-      maxCycles: maxCycles,
-      lowBatteryStopPercent: lowBatteryStopPercent,
-      dielPattern: dielPattern,
-      testCycleEnabled: testCycleEnabled,
-      latitude: latitude,
-      longitude: longitude,
-    );
-  }
 
   factory AruDeploymentMetadata.fromJson(Map<String, dynamic> json) {
     return AruDeploymentMetadata(

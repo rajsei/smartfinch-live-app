@@ -64,14 +64,12 @@ import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_semantic_colors.dart';
 import '../../core/theme/app_theme.dart';
 import '../../core/theme/score_colors.dart';
-import '../../shared/models/gps_point.dart';
 import '../../shared/models/taxonomy_species.dart';
 import '../../shared/models/weather_snapshot.dart';
 import 'services/spectrogram_renderer.dart';
 import '../../shared/services/weather_service.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../../shared/services/taxonomy_service.dart';
-import '../../shared/services/link_launcher.dart';
 import '../../shared/utils/app_icons.dart';
 import '../../shared/utils/locale_time_format.dart';
 import '../../shared/utils/share_sheet.dart';
@@ -97,8 +95,6 @@ import 'widgets/clip_player_sheet.dart';
 import 'widgets/detection_actions.dart';
 import 'widgets/voice_memo_overlay.dart';
 import '../settings/settings_screen.dart';
-import '../survey/survey_live_screen.dart';
-import '../survey/widgets/survey_map_widget.dart';
 import '../../core/services/reverse_geocoding_service.dart';
 import 'services/detection_sharing_service.dart';
 import 'services/session_audio_trim.dart';
@@ -836,7 +832,6 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
   String? _locationName;
 
   /// Detection highlighted on the map (set by tapping a species/cluster).
-  DetectionRecord? _highlightedDetection;
 
   /// Current visible map bounds (updated by camera move callback).
   /// When non-null, the species list is filtered to only show detections
@@ -2459,64 +2454,6 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
     if (mounted) Navigator.of(context).pop();
   }
 
-  /// Whether this session may be resumed ("Continue survey").
-  ///
-  /// Only survey sessions qualify, and only when they were NOT recorded in
-  /// full-audio mode. Full-audio recordings are a single continuous file that
-  /// cannot be safely concatenated across a stop/resume (the FLAC stream is
-  /// already finalized), so resuming them would desync the audio timeline
-  /// from the detections. Clip-subsampling and no-recording sessions have no
-  /// such continuous file and resume cleanly.
-  bool get _canContinueSurvey {
-    if (widget.session.type != SessionType.survey) return false;
-    return switch (widget.session.settings.recordingMode) {
-      'detections' || 'detectionsOnly' || 'off' => true,
-      // A legacy session without a recording-mode snapshot is safe to resume
-      // only when it has no associated audio. An existing path may point to a
-      // finalized full recording, which must not be overwritten.
-      null => widget.session.recordingPath == null,
-      _ => false,
-    };
-  }
-
-  /// Resume an unfinished survey session (after user confirmation).
-  Future<void> _continueSurvey() async {
-    final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder:
-          (ctx) => AlertDialog(
-            title: Text(l10n.surveyResumeTitle),
-            content: Text(l10n.surveyResumeMessage),
-            actions: [
-              TextButton(
-                onPressed: () => Navigator.of(ctx).pop(false),
-                child: Text(l10n.cancel),
-              ),
-              FilledButton(
-                onPressed: () => Navigator.of(ctx).pop(true),
-                child: Text(l10n.surveyResumeConfirm),
-              ),
-            ],
-          ),
-    );
-    if (confirmed != true || !mounted) return;
-
-    Navigator.of(context).pushReplacement(
-      MaterialPageRoute<void>(
-        builder:
-            (_) => SurveyLiveScreen(
-              customName: widget.session.customName,
-              transectId: widget.session.transectId,
-              observerName: widget.session.observerName,
-              startLatitude: widget.session.latitude,
-              startLongitude: widget.session.longitude,
-              resumeSession: widget.session,
-            ),
-      ),
-    );
-  }
-
   /// Wraps a share future so a platform rejection surfaces as a snack bar
   /// instead of an unhandled async error nobody sees.
   void _reportShareFailure(Future<Object?> share) {
@@ -2988,47 +2925,10 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
       context: context,
       isScrollControlled: true,
       useSafeArea: true,
-      builder: (_) => _SessionHelpSheet(showContinueSurvey: _canContinueSurvey),
+      builder: (_) => const _SessionHelpSheet(showContinueSurvey: false),
     );
   }
 
-  /// Open fullscreen survey track map with all detections.
-  void _openFullscreenSurveyMap(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute<void>(
-        builder:
-            (_) => _FullscreenSurveyMapScreen(
-              session: widget.session,
-              gpsTrack: widget.session.gpsTrack,
-              detections: _detections,
-              initialHighlight: _highlightedDetection,
-              onConfirmChanged: () {
-                // Detections were mutated in place from the in-sheet
-                // checkmark; mark dirty so save/discard prompts trigger
-                // and rebuild so species rows + badges refresh.
-                if (mounted) setState(() => _isDirty = true);
-              },
-              onNoteChanged: () {
-                if (mounted) setState(() => _isDirty = true);
-              },
-              onVoiceMemoChanged: () {
-                if (mounted) setState(() => _isDirty = true);
-              },
-              onDeleteDetection: (record) {
-                _deleteDetectionWithUndo(_DetectionCluster([record]));
-              },
-            ),
-      ),
-    );
-  }
-
-  /// Highlight a detection on the map and scroll to show it.
-  void _showDetectionOnMap(DetectionRecord detection) {
-    if (detection.latitude == null || detection.longitude == null) return;
-    setState(() {
-      _highlightedDetection = detection;
-    });
-  }
 
   /// Filter species groups to only include detections visible on the map.
   List<_SpeciesGroup> get _filteredSpeciesGroups {
@@ -4241,15 +4141,6 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
             tooltip: l10n.sessionDiscard,
             onPressed: _discard,
           ),
-          if (_canContinueSurvey)
-            IconButton(
-              icon: Icon(
-                AppIcons.playArrowRounded,
-                color: theme.colorScheme.primary,
-              ),
-              tooltip: l10n.surveyContinue,
-              onPressed: _continueSurvey,
-            ),
         ],
       ),
     );
@@ -4268,9 +4159,10 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
     ThemeData theme,
     AppLocalizations l10n,
   ) {
-    final mapPanel = _buildSurveyMapPanel(context);
+    // The survey track map went with survey mode (transition 0.3). A legacy
+    // survey session still lists and plays back normally; it just no longer
+    // draws its GPS track.
     final audioPanel = _buildAudioPanel();
-    final useTabs = mapPanel != null && audioPanel != null;
 
     return [
       _SummaryHeader(
@@ -4299,20 +4191,10 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
           body: l10n.sessionReviewAudioShortBody,
           onDismiss: _dismissAudioWarning,
         ),
-      if (useTabs)
-        _MediaTabPanel(
-          map: mapPanel,
-          spectrogram: audioPanel,
-          trimming: _trimMode,
-        )
-      else ...[
-        if (mapPanel != null)
-          SizedBox(
-            height: MediaQuery.of(context).size.height * 0.18,
-            child: mapPanel,
-          ),
-        if (audioPanel != null) audioPanel,
-      ],
+      // With the survey track map gone (transition 0.3) there is only ever the
+      // audio panel, so the map/spectrogram tab switch has nothing to switch
+      // between.
+      if (audioPanel != null) audioPanel,
       if (_trimMode)
         Padding(
           padding: const EdgeInsets.fromLTRB(12, 6, 12, 4),
@@ -4380,56 +4262,6 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
   /// Returned unsized so the caller can decide the height — standalone it
   /// gets a share of the screen, inside [_MediaTabPanel] it matches the
   /// spectrogram strip.
-  Widget? _buildSurveyMapPanel(BuildContext context) {
-    final hasLocation =
-        widget.session.gpsTrack.isNotEmpty ||
-        (widget.session.latitude != null && widget.session.longitude != null);
-    if (widget.session.type != SessionType.survey || !hasLocation) return null;
-
-    return Stack(
-      children: [
-        Positioned.fill(
-          child: ClipRRect(
-            child: SurveyMapWidget(
-              gpsTrack: widget.session.gpsTrack,
-              detections: _detections,
-              autoFollow: false,
-              fitAllPoints: widget.session.gpsTrack.length >= 2,
-              highlightedDetection: _highlightedDetection,
-              initialCenter:
-                  widget.session.latitude != null &&
-                          widget.session.longitude != null
-                      ? LatLng(
-                        widget.session.latitude!,
-                        widget.session.longitude!,
-                      )
-                      : null,
-            ),
-          ),
-        ),
-        Positioned(
-          top: 8,
-          right: 8,
-          child: Material(
-            color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.8),
-            shape: const CircleBorder(),
-            child: InkWell(
-              customBorder: const CircleBorder(),
-              onTap: () => _openFullscreenSurveyMap(context),
-              child: Padding(
-                padding: const EdgeInsets.all(6),
-                child: Icon(
-                  AppIcons.fullscreen,
-                  size: 20,
-                  color: Theme.of(context).colorScheme.onSurface,
-                ),
-              ),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
 
   /// The spectrogram strip (or the trim editor while trimming), or null when
   /// this session has no continuous recording.
@@ -4716,7 +4548,6 @@ class _SessionReviewScreenState extends ConsumerState<SessionReviewScreen> {
             onEditNoteCluster: _editClusterNote,
             onEditVoiceMemoCluster: _editClusterVoiceMemo,
             onDeleteVoiceMemoCluster: _deleteClusterVoiceMemo,
-            onShowOnMap: _showDetectionOnMap,
           );
         },
       );
@@ -4931,358 +4762,6 @@ const double _defaultConfidenceFloor = 0.1;
 /// hosts a filter button that opens a bottom sheet for restricting which
 /// detections are shown (audio only, manual additions, minimum
 /// confidence, single species).
-class _FullscreenSurveyMapScreen extends ConsumerStatefulWidget {
-  const _FullscreenSurveyMapScreen({
-    required this.session,
-    required this.gpsTrack,
-    required this.detections,
-    this.initialHighlight,
-    this.onConfirmChanged,
-    this.onNoteChanged,
-    this.onVoiceMemoChanged,
-    this.onDeleteDetection,
-  });
-
-  /// Host session — forwarded to the clip player sheet so its share
-  /// button can fall back to slicing the full recording when a marker
-  /// has no per-detection clip of its own.
-  final LiveSession session;
-
-  final List<GpsPoint> gpsTrack;
-  final List<DetectionRecord> detections;
-
-  /// Invoked after the in-sheet confirm checkmark mutates a detection's
-  /// [DetectionRecord.confirmedAt]. The host uses this hook to mark the
-  /// session dirty and refresh derived UI (species rows, marker badges).
-  final VoidCallback? onConfirmChanged;
-  final VoidCallback? onNoteChanged;
-  final VoidCallback? onVoiceMemoChanged;
-
-  /// Invoked when the user picks `Delete detection` from the clip
-  /// player sheet's overflow menu. The host removes the record from
-  /// the session and surfaces the undo SnackBar; this screen rebuilds
-  /// so the corresponding marker disappears immediately.
-  final ValueChanged<DetectionRecord>? onDeleteDetection;
-
-  /// Detection that the inline review map was currently focused on. When
-  /// non-null the fullscreen map opens centered and zoomed in on this
-  /// detection instead of fitting the whole track — keeps the user's
-  /// place when expanding from the small map.
-  final DetectionRecord? initialHighlight;
-
-  @override
-  ConsumerState<_FullscreenSurveyMapScreen> createState() =>
-      _FullscreenSurveyMapScreenState();
-}
-
-class _FullscreenSurveyMapScreenState
-    extends ConsumerState<_FullscreenSurveyMapScreen> {
-  DetectionRecord? _highlight;
-  _MapFilterMode _mode = _MapFilterMode.all;
-  double _minConfidence = _defaultConfidenceFloor;
-  String? _speciesFilter; // scientific name, or null for "all species"
-
-  @override
-  void initState() {
-    super.initState();
-    // Carry the inline map's focus into the fullscreen view so users land
-    // on the same detection they were inspecting instead of being yanked
-    // back out to a whole-track fit.
-    _highlight = widget.initialHighlight;
-  }
-
-  bool get _isFilterActive =>
-      _mode != _MapFilterMode.all ||
-      _speciesFilter != null ||
-      _minConfidence > _defaultConfidenceFloor;
-
-  /// Localized one-line summary for the persistent filter chip — pinpoints
-  /// what's currently hidden so users don't have to open the sheet to find
-  /// out why some markers vanished. Order of precedence: species > mode >
-  /// confidence > inactive.
-  String _filterChipSummary(AppLocalizations l10n) {
-    if (!_isFilterActive) return l10n.surveyMapFilterChipAll;
-    if (_speciesFilter != null) {
-      // Find any record with that scientific name to recover a display name.
-      final match = widget.detections.firstWhere(
-        (d) => d.scientificName == _speciesFilter,
-        orElse: () => widget.detections.first,
-      );
-      return _localizedName(match.scientificName, match.commonName);
-    }
-    switch (_mode) {
-      case _MapFilterMode.withAudio:
-        return l10n.surveyMapFilterWithAudio;
-      case _MapFilterMode.manual:
-        return l10n.surveyMapFilterManual;
-      case _MapFilterMode.all:
-        // Only the confidence floor differs — show the threshold.
-        return '≥ ${(_minConfidence * 100).round()}%';
-    }
-  }
-
-  /// Localized common name for [sciName]. Falls back to the record's stored
-  /// common name when the taxonomy hasn't loaded yet.
-  String _localizedName(String sciName, String fallback) {
-    final taxonomy = ref.watch(taxonomyServiceProvider).value;
-    final speciesLocale = ref.watch(effectiveSpeciesLocaleProvider);
-    return taxonomy?.lookup(sciName)?.commonNameForLocale(speciesLocale) ??
-        fallback;
-  }
-
-  List<DetectionRecord> get _filtered {
-    return widget.detections.where((d) {
-      switch (_mode) {
-        case _MapFilterMode.all:
-          break;
-        case _MapFilterMode.withAudio:
-          final p = d.audioClipPath;
-          if (p == null || !File(p).existsSync()) return false;
-          break;
-        case _MapFilterMode.manual:
-          if (d.source != DetectionSource.manual &&
-              d.source != DetectionSource.manualGlobal &&
-              d.source != DetectionSource.userSpecified) {
-            return false;
-          }
-          break;
-      }
-      if (d.confidence < _minConfidence) return false;
-      if (_speciesFilter != null && d.scientificName != _speciesFilter) {
-        return false;
-      }
-      return true;
-    }).toList();
-  }
-
-  Future<void> _onMarkerTap(DetectionRecord detection) async {
-    // Only play markers whose own clip is still on disk. The map widget
-    // already prefers the audio-bearing record when grouping, so a tap on
-    // a "play badge" marker reaches us here with [audioClipPath] set; a
-    // tap on a no-audio marker is a silent no-op.
-    final path = detection.audioClipPath;
-    if (path == null || !File(path).existsSync()) return;
-
-    setState(() => _highlight = detection);
-
-    // Build the prev/next neighbors from the *currently filtered* list,
-    // restricted to detections that still have a playable clip on disk
-    // \u2014 otherwise the skip button would open onto an empty sheet.
-    // Ordered by timestamp so "next" / "prev" matches the user's mental
-    // model of stepping forward / backward in time.
-    final playable =
-        _filtered.where((d) {
-            final p = d.audioClipPath;
-            return p != null && File(p).existsSync();
-          }).toList()
-          ..sort((a, b) => a.timestamp.compareTo(b.timestamp));
-    final idx = playable.indexOf(detection);
-    final prev = idx > 0 ? playable[idx - 1] : null;
-    final next =
-        idx >= 0 && idx < playable.length - 1 ? playable[idx + 1] : null;
-
-    await showClipPlayerSheet(
-      context,
-      detection: detection,
-      session: widget.session,
-      onPrevious:
-          prev == null
-              ? null
-              : () {
-                if (mounted) _onMarkerTap(prev);
-              },
-      onNext:
-          next == null
-              ? null
-              : () {
-                if (mounted) _onMarkerTap(next);
-              },
-      onConfirmChanged: () {
-        // Rebuild this screen so the marker's confirmed badge updates
-        // immediately, then forward to the host so the session is marked
-        // dirty and the inline review screen refreshes on pop.
-        if (mounted) setState(() {});
-        widget.onConfirmChanged?.call();
-      },
-      onNoteChanged: () {
-        if (mounted) setState(() {});
-        widget.onNoteChanged?.call();
-      },
-      onVoiceMemoChanged: () {
-        if (mounted) setState(() {});
-        widget.onVoiceMemoChanged?.call();
-      },
-      onDelete:
-          widget.onDeleteDetection == null
-              ? null
-              : () {
-                widget.onDeleteDetection!(detection);
-                if (mounted) setState(() => _highlight = null);
-              },
-    );
-    if (mounted) setState(() => _highlight = null);
-  }
-
-  Future<void> _openFilterSheet() async {
-    final l10n = AppLocalizations.of(context)!;
-
-    // Build a localized, deduplicated species list once. Each entry
-    // captures the scientific name (the filter key), the localized
-    // display name, and a max-confidence value used to grey out species
-    // that the current confidence floor would already exclude.
-    final byScientific = <String, _SpeciesPickerEntry>{};
-    for (final d in widget.detections) {
-      final existing = byScientific[d.scientificName];
-      final localized = _localizedName(d.scientificName, d.commonName);
-      if (existing == null) {
-        byScientific[d.scientificName] = _SpeciesPickerEntry(
-          scientificName: d.scientificName,
-          displayName: localized,
-          maxConfidence: d.confidence,
-        );
-      } else if (d.confidence > existing.maxConfidence) {
-        byScientific[d.scientificName] = existing.copyWith(
-          maxConfidence: d.confidence,
-        );
-      }
-    }
-    final speciesEntries =
-        byScientific.values.toList()..sort(
-          (a, b) => a.displayName.toLowerCase().compareTo(
-            b.displayName.toLowerCase(),
-          ),
-        );
-
-    // Live-apply changes as the user interacts (#33). Each chip /
-    // slider / species tap fires `onChanged` and we update map state
-    // immediately so the user can see markers appear/disappear without
-    // hunting for an Apply button. Slider drags are debounced inside
-    // the sheet so we don't rebuild the map on every pixel.
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
-      useSafeArea: true,
-      builder: (sheetContext) {
-        return _MapFilterSheet(
-          initialMode: _mode,
-          initialMinConfidence: _minConfidence,
-          initialSpecies: _speciesFilter,
-          speciesEntries: speciesEntries,
-          l10n: l10n,
-          onChanged: (choice) {
-            if (!mounted) return;
-            setState(() {
-              _mode = choice.mode;
-              _minConfidence = choice.minConfidence;
-              _speciesFilter = choice.species;
-            });
-          },
-        );
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final theme = Theme.of(context);
-    final filtered = _filtered;
-    return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text(l10n.surveyTrackMap),
-            if (_isFilterActive)
-              Text(
-                l10n.surveyMapMatchCount(filtered.length),
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurface.withAlpha(170),
-                ),
-              ),
-          ],
-        ),
-        actions: [
-          if (Platform.isIOS)
-            IconButton(
-              icon: const Icon(AppIcons.openInNew),
-              tooltip: l10n.openInAppleMaps,
-              onPressed: () {
-                final lat =
-                    widget.session.latitude ??
-                    (widget.gpsTrack.isNotEmpty
-                        ? widget.gpsTrack.first.latitude
-                        : null);
-                final lng =
-                    widget.session.longitude ??
-                    (widget.gpsTrack.isNotEmpty
-                        ? widget.gpsTrack.first.longitude
-                        : null);
-                if (lat != null && lng != null) {
-                  openExternalUrl(
-                    context,
-                    'https://maps.apple.com/?q=$lat,$lng',
-                  );
-                }
-              },
-            ),
-        ],
-      ),
-      body: Stack(
-        children: [
-          SurveyMapWidget(
-            gpsTrack: widget.gpsTrack,
-            detections: filtered,
-            autoFollow: false,
-            fitAllPoints: true,
-            highlightedDetection: _highlight,
-            onMarkerTap: _onMarkerTap,
-            // Tapping a marker opens the clip player sheet over the bottom
-            // half of the screen. Raise the focused detection above center
-            // so the sheet never covers the marker being played.
-            highlightVerticalBias: 0.25,
-          ),
-          // Persistent filter chip — promotes the AppBar action to a
-          // first-class on-map affordance so the filter is discoverable
-          // (#33: users were missing the AppBar icon entirely). The chip
-          // shows the active filter summary so users can see at a glance
-          // what's hiding markers.
-          Positioned(
-            top: 12,
-            right: 12,
-            child: SafeArea(
-              child: _MapFilterChip(
-                isActive: _isFilterActive,
-                summary: _filterChipSummary(l10n),
-                onTap: _openFilterSheet,
-              ),
-            ),
-          ),
-          if (filtered.isEmpty)
-            Positioned(
-              left: 16,
-              right: 16,
-              bottom: 24,
-              child: Card(
-                color: theme.colorScheme.surfaceContainerHighest,
-                child: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: Row(
-                    children: [
-                      const Icon(AppIcons.infoOutline),
-                      const SizedBox(width: 12),
-                      Expanded(child: Text(l10n.surveyMapFilterEmpty)),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-        ],
-      ),
-    );
-  }
-}
 
 /// Captured state for one species in the filter sheet's picker.
 class _SpeciesPickerEntry {
@@ -5662,69 +5141,3 @@ class _MapFilterChoice {
   final String? species;
 }
 
-// -----------------------------------------------------------------------------
-// _MapFilterChip � persistent on-map filter affordance.
-//
-// Promotes the filter from a hidden AppBar action to a chip overlay anchored
-// top-right of the fullscreen survey map. Solves the discoverability problem
-// reported in #33: users were missing the AppBar icon entirely. The chip
-// also serves as a status read-out � its label always shows what the active
-// filter is (All species, = 50%, Owl species, etc.) so users don't
-// have to open the sheet to find out why some markers vanished.
-// -----------------------------------------------------------------------------
-
-class _MapFilterChip extends StatelessWidget {
-  const _MapFilterChip({
-    required this.isActive,
-    required this.summary,
-    required this.onTap,
-  });
-
-  final bool isActive;
-  final String summary;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final bg =
-        isActive
-            ? theme.colorScheme.primary
-            : theme.colorScheme.surface.withAlpha(230);
-    final fg =
-        isActive ? theme.colorScheme.onPrimary : theme.colorScheme.onSurface;
-    return Material(
-      color: bg,
-      elevation: 4,
-      borderRadius: BorderRadius.circular(20),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(20),
-        onTap: onTap,
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 220),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Icon(AppIcons.filterList, size: 18, color: fg),
-                const SizedBox(width: 6),
-                Flexible(
-                  child: Text(
-                    summary,
-                    style: theme.textTheme.labelLarge?.copyWith(
-                      color: fg,
-                      fontWeight: FontWeight.w600,
-                    ),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-}
