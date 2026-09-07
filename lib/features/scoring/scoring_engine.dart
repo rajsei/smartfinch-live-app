@@ -134,9 +134,9 @@ class ScoringContext {
 
   /// Whether scoring is active at all (PKT-20).
   bool get isScoring => rules.isScoring(
-        threshold: appliedThreshold,
-        filterEnabled: filterEnabled,
-      );
+    threshold: appliedThreshold,
+    filterEnabled: filterEnabled,
+  );
 }
 
 /// What the caller should do about one detection.
@@ -311,15 +311,12 @@ class ScoringEngine {
     for (final entry in rules.varietyBonuses.entries) {
       final threshold = entry.key;
       if (speciesCountBefore < threshold && speciesCountAfter >= threshold) {
-        bonuses.add(
-          DayBonus(key: entry.value.key, stars: entry.value.stars),
-        );
+        bonuses.add(DayBonus(key: entry.value.key, stars: entry.value.stars));
       }
     }
 
     // Once per day, not per species.
-    if (!earlyRiserAlreadyAwarded &&
-        rules.qualifiesAsEarlyRiser(context.now)) {
+    if (!earlyRiserAlreadyAwarded && rules.qualifiesAsEarlyRiser(context.now)) {
       bonuses.add(
         DayBonus(
           key: rules.earlyRiserBonus.key,

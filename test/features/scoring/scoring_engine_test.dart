@@ -96,14 +96,13 @@ void main() {
     bool filterEnabled = true,
     RarityScale? scale,
     GridCell? atCell = cell,
-  }) =>
-      ScoringContext(
-        now: when,
-        appliedThreshold: threshold,
-        filterEnabled: filterEnabled,
-        scale: scale ?? mayScale,
-        cell: atCell,
-      );
+  }) => ScoringContext(
+    now: when,
+    appliedThreshold: threshold,
+    filterEnabled: filterEnabled,
+    scale: scale ?? mayScale,
+    cell: atCell,
+  );
 
   final may4 = DateTime(2026, 5, 4, 14, 30);
   final january12 = DateTime(2026, 1, 12, 14, 30);
@@ -302,15 +301,18 @@ void main() {
       // "Same bird, same rule, six times the value — because in January it has
       // no business being here." The clearest statement of what the whole
       // rank-relative scale is for.
-      int starsUnder(RarityScale scale, DateTime when) => engine
-          .scoreDetection(
-            scientificName: 'Sylvia atricapilla',
-            confidence: 0.9,
-            context: contextAt(when, scale: scale),
-            history:
-                const SpeciesHistory(isOnLifeList: true, isOnYearList: true),
-          )
-          .stars;
+      int starsUnder(RarityScale scale, DateTime when) =>
+          engine
+              .scoreDetection(
+                scientificName: 'Sylvia atricapilla',
+                confidence: 0.9,
+                context: contextAt(when, scale: scale),
+                history: const SpeciesHistory(
+                  isOnLifeList: true,
+                  isOnYearList: true,
+                ),
+              )
+              .stars;
 
       final may = starsUnder(mayScale, may4);
       final january = starsUnder(januaryScale, january12);
@@ -641,11 +643,11 @@ void main() {
   group('NFA-06 · deterministic', () {
     test('the same inputs always give the same result', () {
       ScoringOutcome run() => engine.scoreDetection(
-            scientificName: 'Hirundo rustica',
-            confidence: 0.77,
-            context: contextAt(may4),
-            history: const SpeciesHistory(daysThisIsoWeekWithSpecies: 3),
-          );
+        scientificName: 'Hirundo rustica',
+        confidence: 0.77,
+        context: contextAt(may4),
+        history: const SpeciesHistory(daysThisIsoWeekWithSpecies: 3),
+      );
 
       final a = run();
       final b = run();
@@ -681,7 +683,8 @@ void main() {
         DateTime(2026, 10, 25, 1, 30),
         DateTime(2026, 10, 25, 4, 30),
       ]) {
-        final expected = '${day.year}-'
+        final expected =
+            '${day.year}-'
             '${day.month.toString().padLeft(2, '0')}-'
             '${day.day.toString().padLeft(2, '0')}';
         expect(contextAt(day).dayKey, expected);

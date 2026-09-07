@@ -425,7 +425,17 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 *This is what a real child uses for two weeks.*
 
-**2.1 · Wire the engine into Live.** Detection → `ScoreEvent`, using the shared scale from 1.2.
+**2.1 · Wire the engine into Live.** Detection → `ScoreEvent`, using the shared scale from 1.2. ✅ *Done — `scoring_repository.dart`, `live_scoring_coordinator.dart`, `scoring_providers.dart`, 48 tests.*
+
+**Three pieces, and the split is the safety property.** `ScoringEngine` decides, `ScoringRepository` writes, `LiveScoringCoordinator` carries values between them and decides nothing. That means **every write to `LifeSpecies` goes through one method in one file** — the rule that protects the first-find ×3 has exactly one place it can be broken (`DAT-11`), and a test asserts it holds for both pause triggers.
+
+**Two transactions, not one.** The `Detection` row is written first and on its own, because it is the single source of truth (`DAT-02`); the scoring layer follows atomically. A failure in the second half then costs the child some stars, not their morning — and there is no way to leave a `LifeSpecies` row standing without the `ScoreEvent` that justifies it.
+
+**The seam was already there.** `DetectionAccumulator` publishes exactly D15's two moments: `isNew` is the first window over threshold, so that is when the species scores; `closedRecords` is when the peak confidence is written back. The controller got one new callback and nothing else changed in the inference loop.
+
+**Serial, not concurrent.** Scoring is four queries; inference must not wait (`NFA-13`). Detections are queued and drained one at a time — not for tidiness, but because two concurrent detections of one species would both read "not scored today" and both try to insert the same `DaySpecies` row. The constraint would hold, but the child would see a detection fail for no reason they could understand.
+
+*Two things caught while wiring, both about lifetime.* A live session **outlives its screen** — leaving Live mode keeps recording — so the first version's callback, which captured the screen's `ref`, would have thrown partway through a walk and quietly stopped scoring the rest of it. The coordinator now reads its conditions through the provider's own `ref`. And it reads them **per cycle rather than at session start**, so an adult who switches the species filter back on mid-walk does not have to restart the session for the child to start earning again.
 
 **2.2 · Live mode UI** (`LIVE-02`…`LIVE-08`), laid out **around** the full-size spectrogram (D7): star chip per card, "already collected today ✓" on repeats, multiplier chip, day total in the header. Then the celebration layer: confetti and the non-modal species card, with the queue from `LIVE-07` so a walk in the woods cannot stack five popups.
 

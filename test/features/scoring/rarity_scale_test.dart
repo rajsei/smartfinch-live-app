@@ -166,14 +166,16 @@ void main() {
       expect(scale.tierFor('Turdus merula'), ExploreTier.abundant);
     });
 
-    test('a species below the inclusion threshold has no tier at all',
-        () async {
-      final scale = await cache.get(const RarityScaleKey(cellA, 18));
+    test(
+      'a species below the inclusion threshold has no tier at all',
+      () async {
+        final scale = await cache.get(const RarityScaleKey(cellA, 18));
 
-      // Null means "scores nothing" (2.3, D20) — not "top tier". The off-list
-      // rule that awarded full points is gone; rule and filter now agree.
-      expect(scale.tierFor('Upupa epops'), isNull);
-    });
+        // Null means "scores nothing" (2.3, D20) — not "top tier". The off-list
+        // rule that awarded full points is gone; rule and filter now agree.
+        expect(scale.tierFor('Upupa epops'), isNull);
+      },
+    );
 
     test('an unknown species has no tier', () async {
       final scale = await cache.get(const RarityScaleKey(cellA, 18));

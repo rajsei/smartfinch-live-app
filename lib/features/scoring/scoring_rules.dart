@@ -141,11 +141,7 @@ class ScoringRules {
     // 09:00, not 07:00: a reliable morning reward every walk to school earns,
     // rather than a feat that is unreachable on a school day. Kept small at +50
     // so its frequency is not inflationary.
-    earlyRiserBonus: ScoreBonus(
-      key: 'early_riser',
-      stars: 50,
-      priority: 'P1',
-    ),
+    earlyRiserBonus: ScoreBonus(key: 'early_riser', stars: 50, priority: 'P1'),
     earlyRiserBefore: 9,
 
     newPlaceBonus: ScoreBonus(key: 'new_place', stars: 200, priority: 'P2'),

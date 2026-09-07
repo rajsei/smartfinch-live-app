@@ -60,9 +60,7 @@ class RarityScaleKey {
 
   @override
   bool operator ==(Object other) =>
-      other is RarityScaleKey &&
-      other.cell == cell &&
-      other.geoWeek == geoWeek;
+      other is RarityScaleKey && other.cell == cell && other.geoWeek == geoWeek;
 
   @override
   int get hashCode => Object.hash(cell, geoWeek);

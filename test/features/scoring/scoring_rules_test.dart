@@ -109,10 +109,10 @@ void main() {
 
     test('loyalty applies on the 3rd and 6th day, not in between', () {
       ScoreMultiplier onDay(int day) => rules.multiplierFor(
-            isFirstFind: false,
-            isYearFirst: false,
-            daysThisWeekWithSpecies: day,
-          );
+        isFirstFind: false,
+        isYearFirst: false,
+        daysThisWeekWithSpecies: day,
+      );
 
       // The rising shape 1, 1, ×2, 1, 1, ×3, 1 builds towards the weekend
       // rather than peaking mid-week.
@@ -174,7 +174,8 @@ void main() {
     test('a garden day in May comes to 1,500 stars', () {
       // The specification's worked example: 45 minutes, 14 species —
       // 6 × L1, 6 × L2, 2 × L3 in that week.
-      final base = 6 * rules.starsFor(ExploreTier.abundant) +
+      final base =
+          6 * rules.starsFor(ExploreTier.abundant) +
           6 * rules.starsFor(ExploreTier.common) +
           2 * rules.starsFor(ExploreTier.frequent);
       final variety = rules.varietyBonusFor(14);
@@ -187,7 +188,8 @@ void main() {
     test('the same day as a very first day comes to 4,100', () {
       // Every species ×3, and the variety bonus is not multiplied — that is
       // the inflation guard in 2.6.
-      final base = 6 * rules.starsFor(ExploreTier.abundant) +
+      final base =
+          6 * rules.starsFor(ExploreTier.abundant) +
           6 * rules.starsFor(ExploreTier.common) +
           2 * rules.starsFor(ExploreTier.frequent);
 
@@ -197,10 +199,7 @@ void main() {
 
   group('early riser (B6)', () {
     test('applies before 09:00', () {
-      expect(
-        rules.qualifiesAsEarlyRiser(DateTime(2026, 5, 4, 8, 59)),
-        isTrue,
-      );
+      expect(rules.qualifiesAsEarlyRiser(DateTime(2026, 5, 4, 8, 59)), isTrue);
     });
 
     test('does not apply at 09:00 or later', () {

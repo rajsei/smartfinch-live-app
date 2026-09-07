@@ -21,6 +21,8 @@ import '../history/session_library_screen.dart';
 import '../history/session_review_screen.dart';
 import '../inference/advanced_pooling_params.dart';
 import '../recording/recording_service.dart';
+import '../scoring/live_scoring_coordinator.dart';
+import '../scoring/scoring_providers.dart';
 import '../settings/settings_screen.dart';
 import '../spectrogram/spectrogram_widget.dart';
 import 'live_controller.dart';
@@ -119,6 +121,10 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   /// Cached reference to the long-lived controller so [dispose] can detach
   /// its callback without touching [ref] after the widget is unmounted.
   LiveController? _liveController;
+
+  /// The scoring session that runs alongside this one, or null when scoring
+  /// could not start — the session runs on regardless.
+  LiveScoringCoordinator? _scoringCoordinator;
 
   /// Duration after which a warning dialog is shown to the user.
   static const _warningDuration = Duration(minutes: 10);
@@ -413,9 +419,56 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         longitude: startLon,
       );
 
+      await _beginScoring();
+
       _isStarting = false;
       _onControllerStateChanged();
       _startSessionTimer();
+    }
+  }
+
+  /// Opens the scoring session and connects it to the inference loop.
+  ///
+  /// Awaited so the geo model and the scale cache are resolved before the
+  /// first detection arrives; after this every detection uses the synchronous
+  /// cache and nothing waits on inference (NFA-13).
+  ///
+  /// A failure here must not stop a session. Detection and recording work
+  /// without the scoring layer — the child would lose stars for that outing,
+  /// which is worth far less than the outing.
+  ///
+  /// The callback handed to the controller is the coordinator's own method,
+  /// with nothing from this screen captured in it. A live session outlives its
+  /// screen — leaving Live mode keeps recording — so a closure reaching back
+  /// into a disposed widget's `ref` would silently stop scoring the rest of
+  /// the walk.
+  Future<void> _beginScoring() async {
+    try {
+      final coordinator = await ref.read(liveScoringCoordinatorProvider.future);
+
+      await coordinator.beginSession(
+        startedAt: DateTime.now(),
+        cell: ref.read(liveScoringConditionsProvider).cell,
+      );
+
+      _liveController?.onDetectionCycle = coordinator.submitCycle;
+      _scoringCoordinator = coordinator;
+    } catch (e, st) {
+      debugPrint('[LiveScreen] scoring unavailable: $e\n$st');
+    }
+  }
+
+  /// Closes the scoring session once every queued detection is written.
+  Future<void> _endScoring() async {
+    final coordinator = _scoringCoordinator;
+    if (coordinator == null) return;
+
+    _liveController?.onDetectionCycle = null;
+    _scoringCoordinator = null;
+    try {
+      await coordinator.endSession(endedAt: DateTime.now());
+    } catch (e, st) {
+      debugPrint('[LiveScreen] closing the scoring session failed: $e\n$st');
     }
   }
 
@@ -590,6 +643,11 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
 
     // Finalize the session (works from both active and paused states).
     final session = await controller.finalizeSession();
+
+    // After finalize, so the accumulator's closing records — and with them the
+    // last peak confidences (D15) — reach the queue before it is drained.
+    await _endScoring();
+
     _onControllerStateChanged();
 
     if (session != null && mounted) {

@@ -253,6 +253,16 @@ class LiveController {
   /// (startup grace, anti-repeat, etc.).
   void Function()? onSessionStarted;
 
+  /// Called once per inference cycle with the accumulator's own view of it:
+  /// which detections began, which changed, and which ended.
+  ///
+  /// This is what the scoring layer listens to, because those are exactly the
+  /// two moments it cares about — a detection appearing on screen is when it
+  /// scores, and a detection ending is when its peak confidence is written
+  /// back (D15). Errors thrown by the callback are caught and ignored;
+  /// scoring must never interrupt listening (principle 7).
+  void Function(DetectionCycleResult cycle)? onDetectionCycle;
+
   // ── Model loading ─────────────────────────────────────────────────────
 
   /// Load the model from Flutter assets.
@@ -558,7 +568,8 @@ class LiveController {
     _windowDriver.cancelPendingWakeup();
 
     _sessionGeneration++;
-    for (final closed in _accumulator?.closeAll() ?? const <DetectionRecord>[]) {
+    for (final closed
+        in _accumulator?.closeAll() ?? const <DetectionRecord>[]) {
       _clipWriter.forget(closed);
     }
     _syncSessionDetections();
@@ -832,6 +843,17 @@ class LiveController {
           _clipWriter.forget(closed);
         }
         _syncSessionDetections();
+
+        // Hand the cycle to the scoring layer. It queues the work and returns
+        // immediately, so the inference cadence is untouched.
+        final onCycle = onDetectionCycle;
+        if (onCycle != null) {
+          try {
+            onCycle(cycle);
+          } catch (e, st) {
+            debugPrint('[LiveController] scoring callback ERROR: $e\n$st');
+          }
+        }
 
         // Detection existence, score, and timestamps are now published before
         // post-roll capture or file encoding begins. Recording can enrich the

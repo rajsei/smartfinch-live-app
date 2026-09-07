@@ -86,6 +86,10 @@ dependencies:
   drift: ^2.34.4
   sqlite3: ^3.5.2
 
+  # Row identity across devices: UUID v4 primary keys, so two phones that
+  # later sync cannot both mint the same row (DAT-08).
+  uuid: ^4.6.0
+
   # Annotations only (@immutable); lets the scoring engine stay pure Dart
   # instead of importing flutter/foundation just for one annotation.
   meta: ^1.19.0
