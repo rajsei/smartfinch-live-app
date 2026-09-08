@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "没有地点，应用就不知道这里有哪些动物——那就不会有星星。改成在地图上选你家吧。",
   "onboardingHomeRegionPicked": "你的家已经设置好了。以后可以在设置里改。",
   "onboardingHomeRegionPick": "在地图上选择",
-  "onboardingHomeRegionChange": "更改"
+  "onboardingHomeRegionChange": "更改",
+  "collectionScopeAll": "全部",
+  "collectionScopeThisYear": "今年",
+  "collectionProgressThisYear": "今年 {total} 个物种中的 {collected} 个",
+  "collectionEmptyThisYearTitle": "今年还没有",
+  "collectionEmptyThisYearSubtitle": "年度清单每年一月重新开始。你的收藏会保留一切。",
+  "achievementYearList": "年度清单 {tier}",
+  "achievementYearListCondition": "一年内 {count} 个物种",
+  "achievementAllYearRound": "全年无休",
+  "achievementAllYearRoundCondition": "一年中每个月都听到过",
+  "achievementTheReturners": "归来者",
+  "achievementTheReturnersCondition": "春天首次听到 10 个物种",
+  "achievementWinterVisitors": "冬季访客",
+  "achievementWinterVisitorsCondition": "十二月或一月有 5 个物种",
+  "pointsTabYear": "今年",
+  "pointsSectionCollector": "总计"
 }

@@ -57,6 +57,7 @@ class PointsScreen extends ConsumerWidget {
                     _BadgesTab(badges: data.badges),
                     _AchievementsTab(
                       earned: data.achievements,
+                      year: data.yearAchievements,
                       speciesOverall: data.figures.speciesOverall,
                     ),
                   ],
@@ -285,9 +286,17 @@ class BadgeTile extends ConsumerWidget {
 
 /// The Collector ladder (`AUS-03`).
 class _AchievementsTab extends StatelessWidget {
-  const _AchievementsTab({required this.earned, required this.speciesOverall});
+  const _AchievementsTab({
+    required this.earned,
+    required this.year,
+    required this.speciesOverall,
+  });
 
   final List<AchievementTier> earned;
+
+  /// Year-list achievements (`AUS-13`), kept in their own section.
+  final List<YearAchievement> year;
+
   final int speciesOverall;
 
   @override
@@ -295,7 +304,7 @@ class _AchievementsTab extends StatelessWidget {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    if (earned.isEmpty) {
+    if (earned.isEmpty && year.isEmpty) {
       return _EmptyTab(
         emoji: '🥉',
         title: l10n.pointsNoAchievementsTitle,
@@ -313,34 +322,79 @@ class _AchievementsTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       children: [
-        for (final tier in earned)
-          Card(
-            margin: const EdgeInsets.only(bottom: 8),
-            child: ListTile(
-              leading: Text(tier.emoji, style: theme.textTheme.headlineSmall),
-              title: Text(
-                _tierName(l10n, tier.key),
-                style: theme.textTheme.titleSmall?.copyWith(
-                  fontWeight: FontWeight.w700,
+        if (earned.isNotEmpty) ...[
+          _SectionLabel(text: l10n.pointsSectionCollector),
+          for (final tier in earned)
+            Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: ListTile(
+                leading: Text(tier.emoji, style: theme.textTheme.headlineSmall),
+                title: Text(
+                  _tierName(l10n, tier.key),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                subtitle: Text(
+                  l10n.achievementSpeciesCollected(tier.threshold),
                 ),
               ),
-              subtitle: Text(l10n.achievementSpeciesCollected(tier.threshold)),
             ),
-          ),
-        if (next.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: Text(
-              l10n.pointsNextTier(next.first.threshold - speciesOverall),
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+          if (next.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 4, bottom: 8),
+              child: Text(
+                l10n.pointsNextTier(next.first.threshold - speciesOverall),
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
-          ),
+        ],
+
+        // Its own section, because it means something different: the Collector
+        // ladder only ever grows, the year list starts again every January.
+        // Mixed together they would suggest the second can be lost (3.4).
+        if (year.isNotEmpty) ...[
+          const SizedBox(height: 12),
+          _SectionLabel(text: l10n.pointsTabYear),
+          for (final achievement in year)
+            Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: ListTile(
+                leading: Text(
+                  achievement.emoji,
+                  style: theme.textTheme.headlineSmall,
+                ),
+                title: Text(
+                  _yearName(l10n, achievement),
+                  style: theme.textTheme.titleSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
+                ),
+                subtitle: Text(_yearCondition(l10n, achievement)),
+              ),
+            ),
+        ],
       ],
     );
   }
+
+  String _yearName(AppLocalizations l10n, YearAchievement a) => switch (a.key) {
+    'yearList' => l10n.achievementYearList(a.tierLabel ?? ''),
+    'allYearRound' => l10n.achievementAllYearRound,
+    'theReturners' => l10n.achievementTheReturners,
+    _ => l10n.achievementWinterVisitors,
+  };
+
+  String _yearCondition(AppLocalizations l10n, YearAchievement a) => switch (a
+      .key) {
+    'yearList' => l10n.achievementYearListCondition(a.threshold ?? 0),
+    'allYearRound' => l10n.achievementAllYearRoundCondition,
+    'theReturners' => l10n.achievementTheReturnersCondition,
+    _ => l10n.achievementWinterVisitorsCondition,
+  };
 
   String _tierName(AppLocalizations l10n, String key) => switch (key) {
     'firstSteps' => l10n.achievementFirstSteps,
@@ -352,6 +406,28 @@ class _AchievementsTab extends StatelessWidget {
     'earsLikeALynx' => l10n.achievementEarsLikeALynx,
     _ => l10n.achievementOrnithologist,
   };
+}
+
+class _SectionLabel extends StatelessWidget {
+  const _SectionLabel({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 0, 4, 6),
+      child: Text(
+        text,
+        style: theme.textTheme.titleSmall?.copyWith(
+          color: theme.colorScheme.primary,
+          fontWeight: FontWeight.w700,
+        ),
+      ),
+    );
+  }
 }
 
 class _EmptyTab extends StatelessWidget {

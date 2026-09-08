@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Bez místa aplikace neví, jaká zvířata tu žijí — a pak nejsou ani hvězdy. Najdi místo toho svůj domov na mapě.",
   "onboardingHomeRegionPicked": "Tvůj domov je nastavený. Později ho můžeš změnit v nastavení.",
   "onboardingHomeRegionPick": "Vybrat na mapě",
-  "onboardingHomeRegionChange": "Změnit"
+  "onboardingHomeRegionChange": "Změnit",
+  "collectionScopeAll": "Vše",
+  "collectionScopeThisYear": "Letos",
+  "collectionProgressThisYear": "{collected} z {total} druhů letos",
+  "collectionEmptyThisYearTitle": "Letos zatím nic",
+  "collectionEmptyThisYearSubtitle": "Roční seznam začíná každý leden znovu. Tvá sbírka si nechá všechno.",
+  "achievementYearList": "Roční seznam {tier}",
+  "achievementYearListCondition": "{count} druhů za jeden rok",
+  "achievementAllYearRound": "Celý rok",
+  "achievementAllYearRoundCondition": "V každém měsíci roku něco slyšeno",
+  "achievementTheReturners": "Navrátilci",
+  "achievementTheReturnersCondition": "10 druhů poprvé slyšeno na jaře",
+  "achievementWinterVisitors": "Zimní hosté",
+  "achievementWinterVisitorsCondition": "5 druhů v prosinci nebo lednu",
+  "pointsTabYear": "Letos",
+  "pointsSectionCollector": "Celkově"
 }

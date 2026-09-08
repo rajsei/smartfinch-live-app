@@ -5361,5 +5361,83 @@
   "onboardingHomeRegionChange": "Change",
   "@onboardingHomeRegionChange": {
     "description": "SET-09: button reopening the map picker once a home is set"
+  },
+  "collectionScopeAll": "All",
+  "@collectionScopeAll": {
+    "description": "SAM-16: the album scope showing everything that occurs here"
+  },
+  "collectionScopeThisYear": "This year",
+  "@collectionScopeThisYear": {
+    "description": "SAM-16: the year list as a second collection (3.4)"
+  },
+  "collectionProgressThisYear": "{collected} of {total} species this year",
+  "@collectionProgressThisYear": {
+    "description": "SAM-16: progress in the year view — a different number from the life list",
+    "placeholders": {
+      "collected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionEmptyThisYearTitle": "Nothing this year yet",
+  "@collectionEmptyThisYearTitle": {
+    "description": "SAM-16: empty year view — deliberately different from the empty life list"
+  },
+  "collectionEmptyThisYearSubtitle": "The year list starts again every January. Your collection keeps everything.",
+  "@collectionEmptyThisYearSubtitle": {
+    "description": "SAM-16: explains that the year list resets and the collection does not"
+  },
+  "achievementYearList": "Year list {tier}",
+  "@achievementYearList": {
+    "description": "AUS-13: Year list I / II / III (3.3)",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "achievementYearListCondition": "{count} species in one year",
+  "@achievementYearListCondition": {
+    "description": "AUS-13: condition of a Year list tier",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achievementAllYearRound": "All year round",
+  "@achievementAllYearRound": {
+    "description": "AUS-13: at least one detection in every month of a year (3.3)"
+  },
+  "achievementAllYearRoundCondition": "Something heard in every month of a year",
+  "@achievementAllYearRoundCondition": {
+    "description": "AUS-13 condition"
+  },
+  "achievementTheReturners": "The returners",
+  "@achievementTheReturners": {
+    "description": "AUS-13: 10 species first detected in spring (3.3)"
+  },
+  "achievementTheReturnersCondition": "10 species first heard in spring",
+  "@achievementTheReturnersCondition": {
+    "description": "AUS-13 condition"
+  },
+  "achievementWinterVisitors": "Winter visitors",
+  "@achievementWinterVisitors": {
+    "description": "AUS-13: 5 species in December or January (3.3)"
+  },
+  "achievementWinterVisitorsCondition": "5 species in December or January",
+  "@achievementWinterVisitorsCondition": {
+    "description": "AUS-13 condition"
+  },
+  "pointsTabYear": "This year",
+  "@pointsTabYear": {
+    "description": "AUS-13: section label above the year-list achievements"
+  },
+  "pointsSectionCollector": "Overall",
+  "@pointsSectionCollector": {
+    "description": "Section label above the Collector ladder, once the year section exists beside it"
   }
 }

@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Без места приложение не знает, какие животные тут живут, — и тогда звёзд не будет. Выбери свой дом на карте.",
   "onboardingHomeRegionPicked": "Твой дом задан. Позже его можно поменять в настройках.",
   "onboardingHomeRegionPick": "Выбрать на карте",
-  "onboardingHomeRegionChange": "Изменить"
+  "onboardingHomeRegionChange": "Изменить",
+  "collectionScopeAll": "Все",
+  "collectionScopeThisYear": "В этом году",
+  "collectionProgressThisYear": "{collected} из {total} видов в этом году",
+  "collectionEmptyThisYearTitle": "В этом году пока ничего",
+  "collectionEmptyThisYearSubtitle": "Годовой список начинается заново каждый январь. Твоя коллекция сохраняет всё.",
+  "achievementYearList": "Годовой список {tier}",
+  "achievementYearListCondition": "{count} видов за год",
+  "achievementAllYearRound": "Круглый год",
+  "achievementAllYearRoundCondition": "Что-то услышано в каждом месяце года",
+  "achievementTheReturners": "Возвращенцы",
+  "achievementTheReturnersCondition": "10 видов впервые услышаны весной",
+  "achievementWinterVisitors": "Зимние гости",
+  "achievementWinterVisitorsCondition": "5 видов в декабре или январе",
+  "pointsTabYear": "В этом году",
+  "pointsSectionCollector": "Всего"
 }

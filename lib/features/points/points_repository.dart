@@ -11,6 +11,8 @@
 // leave a stale row behind for someone to find months later.
 // =============================================================================
 
+import 'package:drift/drift.dart';
+
 import '../../core/database/app_database.dart';
 import '../scoring/scoring_repository.dart';
 import 'points_models.dart';
@@ -39,6 +41,10 @@ class PointsRepository {
     final lifeList =
         await (_db.select(_db.lifeSpecies)
           ..where((l) => l.profileId.equals(profileId))).get();
+    final yearList =
+        await (_db.select(_db.yearSpecies)..where(
+          (y) => y.profileId.equals(profileId) & y.year.equals(now.year),
+        )).get();
 
     final starsByDay = <String, int>{};
     for (final event in events) {
@@ -67,7 +73,65 @@ class PointsRepository {
         for (final tier in kCollectorTiers.reversed)
           if (lifeList.length >= tier.threshold) tier,
       ],
+      yearAchievements: yearAchievementsFor(
+        yearList: yearList,
+        activeDayKeys: speciesByDay.keys,
+        year: now.year,
+      ),
     );
+  }
+
+  /// The year-list achievements earned in [year] (`AUS-13`, 3.3).
+  ///
+  /// Derived from `YearSpecies`, which is the table `PKT-12`'s ×2 checks — so
+  /// the medal and the multiplier can never disagree about what counted as a
+  /// year first.
+  ///
+  /// Public because the four rules are worth testing on their own; each has a
+  /// calendar edge that would be easy to get wrong and invisible when it was.
+  static List<YearAchievement> yearAchievementsFor({
+    required List<YearSpecy> yearList,
+    required Iterable<String> activeDayKeys,
+    required int year,
+  }) {
+    final earned = <YearAchievement>[];
+
+    // 📗📘📙 25 / 50 / 75 species in one calendar year, highest first.
+    for (final tier in kYearListTiers.reversed) {
+      if (yearList.length >= tier.threshold!) earned.add(tier);
+    }
+
+    // 🗓️ Something heard in every month of the year. Read from the *active
+    // days* rather than the year list: a month in which only species you
+    // already had that year were heard still counts as a month you went out.
+    final months = {
+      for (final dayKey in activeDayKeys)
+        if (dayKey.startsWith('$year-')) dayKey.substring(5, 7),
+    };
+    if (months.length == 12) earned.add(kAllYearRound);
+
+    // 🐦 Ten species first heard in spring — March to May, the arrival of the
+    // migrants. First heard *this year*, which is what makes it a phenology
+    // achievement rather than a counting one.
+    final springArrivals =
+        yearList.where((row) {
+          final month = row.firstSeenAt.month;
+          return month >= 3 && month <= 5;
+        }).length;
+    if (springArrivals >= 10) earned.add(kTheReturners);
+
+    // ❄️ Five species in December or January. The two months straddle a year
+    // boundary on purpose — that is one winter, whatever the calendar says —
+    // but both halves are counted within the year being asked about, since a
+    // year list cannot see the previous December.
+    final winter =
+        yearList.where((row) {
+          final month = row.firstSeenAt.month;
+          return month == 12 || month == 1;
+        }).length;
+    if (winter >= 5) earned.add(kWinterVisitors);
+
+    return earned;
   }
 
   /// The last [days] days, oldest first, **including the empty ones**.

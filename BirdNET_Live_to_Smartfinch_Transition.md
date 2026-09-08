@@ -535,6 +535,22 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 The specification's P1, with one reordering: **pull the year list forward** (`PKT-12`, `SAM-16`, `AUS-13`). Since D20 removed the off-list case, the year list is the main way a child experiences the year changing (§5), and `PKT-12` is cheap enough to belong in P0 if there is room. Then `PKT-17` and `SAM-15` early, because until the app explains why points move, the movement reads as a bug.
 
+**The year list is done** ✅ — 39 tests. Three requirements, and the first turned out to be free.
+
+**`PKT-12`** was already complete. The ×2 and the `YearSpecies` write went in with phase 1, because at that point they cost one enum value and one insert — the recommendation to consider pulling it into P0 was right, and it happened without anyone deciding to.
+
+**`SAM-16` · the year list as a second collection.** The album's "only mine" toggle became a three-way scope: **All · Only mine · This year**. A segmented control rather than a third chip, because they are three views of one grid and only one can be true. The consequence worth naming: a species on the life list but not heard since January is **found** in the collection and **open** in the year view — that difference *is* the feature, and it is what makes every spring interesting again once the local region is largely exhausted (3.4).
+
+*Two small things follow from it.* The progress line says "1 of 2 species **this year**", not the life total — the number means something different and reusing the sentence would have made it wrong. And an empty year gets its own message: in January the life list is full and the year list is not, so telling a child their collection is empty would be plainly untrue. It also says *why*, so the reset reads as the game rather than as loss.
+
+**`AUS-13` · six achievements, derived like the rest.** From `YearSpecies` — the same table `PKT-12`'s ×2 checks, so the medal and the multiplier cannot disagree about what counted as a year first. Kept in their own section on the Achievements tab: the Collector ladder only ever grows, the year list starts again every January, and mixing them would suggest the second can be lost.
+
+*One rule reads from somewhere else on purpose.* **All year round** counts *active days*, not new species — a month in which only birds you already had that year were heard is still a month you went outside. Each of the four rules has a calendar edge (a month boundary, March–May, December-or-January, another year's days) that would be easy to get wrong and invisible when it was; there is a test per edge.
+
+*One test caught its own mistake:* the counted rungs were first written with 25 species in May, which also earns **The Returners**. The code was right and the expectation too narrow — moved to August, a month that is neither spring nor winter.
+
+**Next in this phase:** `PKT-17` (season hint on the detection card) and `SAM-15` (the 48-week annual cycle bar), which the plan pairs together — until the app explains *why* points move, the movement reads as a bug.
+
 **A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 
 ### What to watch during the two-week test

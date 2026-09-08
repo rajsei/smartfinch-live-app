@@ -143,6 +143,63 @@ const List<AchievementTier> kCollectorTiers = [
   AchievementTier(threshold: 250, emoji: '🏆', key: 'ornithologist'),
 ];
 
+/// A year-list achievement (`AUS-13`, 3.3).
+///
+/// Together with the year-first ×2 (`PKT-12`) these **replace the removed
+/// season bonus**. They reset on 1 January without the life list losing
+/// anything — which is what keeps every spring interesting once the local
+/// region has been largely exhausted (3.4).
+@immutable
+class YearAchievement {
+  const YearAchievement({
+    required this.key,
+    required this.emoji,
+    this.threshold,
+    this.tierLabel,
+  });
+
+  /// Stable identifier; also the l10n key suffix.
+  final String key;
+
+  final String emoji;
+
+  /// Species needed, for the three counted rungs.
+  final int? threshold;
+
+  /// `I`, `II`, `III` for the counted rungs; null for the named ones.
+  final String? tierLabel;
+}
+
+/// The three counted rungs of the year list (`AUS-13`).
+const List<YearAchievement> kYearListTiers = [
+  YearAchievement(key: 'yearList', emoji: '📗', threshold: 25, tierLabel: 'I'),
+  YearAchievement(key: 'yearList', emoji: '📘', threshold: 50, tierLabel: 'II'),
+  YearAchievement(
+    key: 'yearList',
+    emoji: '📙',
+    threshold: 75,
+    tierLabel: 'III',
+  ),
+];
+
+/// At least one detection in every month of a year.
+const YearAchievement kAllYearRound = YearAchievement(
+  key: 'allYearRound',
+  emoji: '🗓️',
+);
+
+/// Ten species first heard in spring — the arrival of the migrants.
+const YearAchievement kTheReturners = YearAchievement(
+  key: 'theReturners',
+  emoji: '🐦',
+);
+
+/// Five species in December or January.
+const YearAchievement kWinterVisitors = YearAchievement(
+  key: 'winterVisitors',
+  emoji: '❄️',
+);
+
 /// The badges this step implements — the P0 set (`AUS-01`, `AUS-02`).
 ///
 /// `AUS-04` and `AUS-05` fill in the rest of the day and week catalogue at P1;
@@ -173,6 +230,7 @@ class PointsOverview {
     this.dailyStars = const [],
     this.badges = const [],
     this.achievements = const [],
+    this.yearAchievements = const [],
   });
 
   final KeyFigures figures;
@@ -185,6 +243,13 @@ class PointsOverview {
 
   /// Earned Collector tiers, highest first (`AUS-03`).
   final List<AchievementTier> achievements;
+
+  /// Earned year-list achievements (`AUS-13`).
+  ///
+  /// Kept apart from [achievements] because they mean something different:
+  /// the Collector ladder only ever grows, the year list starts again every
+  /// January. Mixing them would suggest the second can be lost.
+  final List<YearAchievement> yearAchievements;
 
   /// The highest daily total in the chart window, for scaling the bars.
   int get peakDayStars =>

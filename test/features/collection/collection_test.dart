@@ -218,6 +218,7 @@ void main() {
     CollectionEntry entryFor(
       String name, {
       bool collected = false,
+      bool thisYear = false,
       int stars = 50,
       String group = 'Aves',
     }) => CollectionEntry(
@@ -227,6 +228,7 @@ void main() {
       stars: stars,
       taxonGroup: group,
       collectedAt: collected ? may4 : null,
+      collectedThisYearAt: thisYear ? may4 : null,
     );
 
     testWidgets('SAM-04 · open species are shown, not hidden', (tester) async {
@@ -314,7 +316,7 @@ void main() {
       }
     });
 
-    testWidgets('"only mine" is a filter, not the starting state', (
+    testWidgets('"only mine" is a scope, not the starting state', (
       tester,
     ) async {
       await pump(
@@ -356,6 +358,115 @@ void main() {
 
       expect(find.text('Nothing in this group here'), findsOneWidget);
       expect(find.text('Your collection is still empty'), findsNothing);
+    });
+  });
+
+  group('SAM-16 · the year list as a second collection', () {
+    CollectionEntry species(
+      String name, {
+      bool everCollected = false,
+      bool thisYear = false,
+    }) => CollectionEntry(
+      scientificName: name,
+      commonName: name,
+      tier: ExploreTier.abundant,
+      stars: 50,
+      taxonGroup: 'Aves',
+      collectedAt: everCollected ? DateTime(2025, 6) : null,
+      collectedThisYearAt: thisYear ? may4 : null,
+    );
+
+    Future<void> pumpAlbum(
+      WidgetTester tester,
+      List<CollectionEntry> entries,
+    ) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+
+      tester.view.physicalSize = const Size(1200, 2400);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            collectionEntriesProvider.overrideWith((ref) async => entries),
+          ],
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const CollectionScreen(),
+          ),
+        ),
+      );
+      await tester.pumpAndSettle();
+    }
+
+    test('the three scopes ask three different questions', () {
+      // A species on the life list but not heard since January is *found* in
+      // the collection and *open* in the year list. That difference is the
+      // whole feature.
+      final onlyLastYear = species('Blackcap', everCollected: true);
+
+      expect(onlyLastYear.isFoundIn(CollectionScope.mine), isTrue);
+      expect(onlyLastYear.isFoundIn(CollectionScope.thisYear), isFalse);
+    });
+
+    testWidgets('the album offers all three', (tester) async {
+      await pumpAlbum(tester, [species('Blackbird', everCollected: true)]);
+
+      expect(find.text('All'), findsOneWidget);
+      expect(find.text('Only mine'), findsOneWidget);
+      expect(find.text('This year'), findsOneWidget);
+    });
+
+    testWidgets('the year view shows only what was heard this year', (
+      tester,
+    ) async {
+      await pumpAlbum(tester, [
+        species('Blackcap', everCollected: true),
+        species('Blackbird', everCollected: true, thisYear: true),
+      ]);
+
+      await tester.tap(find.text('This year'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Blackbird'), findsOneWidget);
+      expect(find.text('Blackcap'), findsNothing);
+    });
+
+    testWidgets('its progress line says "this year", not the life total', (
+      tester,
+    ) async {
+      await pumpAlbum(tester, [
+        species('Blackcap', everCollected: true),
+        species('Blackbird', everCollected: true, thisYear: true),
+      ]);
+
+      expect(find.text('2 of 2 species in your region'), findsOneWidget);
+
+      await tester.tap(find.text('This year'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('1 of 2 species this year'), findsOneWidget);
+    });
+
+    testWidgets('an empty year does not claim the collection is empty', (
+      tester,
+    ) async {
+      // In January the life list is full and the year list is not. Telling a
+      // child their collection is empty would be plainly wrong.
+      await pumpAlbum(tester, [species('Blackcap', everCollected: true)]);
+
+      await tester.tap(find.text('This year'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Nothing this year yet'), findsOneWidget);
+      expect(find.text('Your collection is still empty'), findsNothing);
+      // And it says why, so the reset reads as the game rather than as loss.
+      expect(find.textContaining('starts again every January'), findsOneWidget);
     });
   });
 }

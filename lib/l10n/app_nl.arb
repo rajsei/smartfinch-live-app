@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Zonder plek weet de app niet welke dieren hier leven — en dan zijn er ook geen sterren. Zoek in plaats daarvan je huis op de kaart.",
   "onboardingHomeRegionPicked": "Je huis is ingesteld. Je kunt het later bij de instellingen veranderen.",
   "onboardingHomeRegionPick": "Kies op de kaart",
-  "onboardingHomeRegionChange": "Wijzigen"
+  "onboardingHomeRegionChange": "Wijzigen",
+  "collectionScopeAll": "Alle",
+  "collectionScopeThisYear": "Dit jaar",
+  "collectionProgressThisYear": "{collected} van {total} soorten dit jaar",
+  "collectionEmptyThisYearTitle": "Dit jaar nog niets",
+  "collectionEmptyThisYearSubtitle": "De jaarlijst begint elke januari opnieuw. Je verzameling houdt alles.",
+  "achievementYearList": "Jaarlijst {tier}",
+  "achievementYearListCondition": "{count} soorten in één jaar",
+  "achievementAllYearRound": "Het hele jaar door",
+  "achievementAllYearRoundCondition": "In elke maand van een jaar iets gehoord",
+  "achievementTheReturners": "De terugkeerders",
+  "achievementTheReturnersCondition": "10 soorten voor het eerst in de lente gehoord",
+  "achievementWinterVisitors": "Wintergasten",
+  "achievementWinterVisitorsCondition": "5 soorten in december of januari",
+  "pointsTabYear": "Dit jaar",
+  "pointsSectionCollector": "In totaal"
 }

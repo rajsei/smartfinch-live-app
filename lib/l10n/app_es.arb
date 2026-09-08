@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Sin un lugar la aplicación no sabe qué animales viven aquí, y entonces no hay estrellas. Busca tu casa en el mapa.",
   "onboardingHomeRegionPicked": "Tu casa está puesta. Puedes cambiarla luego en los ajustes.",
   "onboardingHomeRegionPick": "Elegir en el mapa",
-  "onboardingHomeRegionChange": "Cambiar"
+  "onboardingHomeRegionChange": "Cambiar",
+  "collectionScopeAll": "Todas",
+  "collectionScopeThisYear": "Este año",
+  "collectionProgressThisYear": "{collected} de {total} especies este año",
+  "collectionEmptyThisYearTitle": "Este año todavía nada",
+  "collectionEmptyThisYearSubtitle": "La lista del año vuelve a empezar cada enero. Tu colección lo guarda todo.",
+  "achievementYearList": "Lista del año {tier}",
+  "achievementYearListCondition": "{count} especies en un año",
+  "achievementAllYearRound": "Todo el año",
+  "achievementAllYearRoundCondition": "Algo oído en cada mes de un año",
+  "achievementTheReturners": "Los que vuelven",
+  "achievementTheReturnersCondition": "10 especies oídas por primera vez en primavera",
+  "achievementWinterVisitors": "Visitantes de invierno",
+  "achievementWinterVisitorsCondition": "5 especies en diciembre o enero",
+  "pointsTabYear": "Este año",
+  "pointsSectionCollector": "En total"
 }

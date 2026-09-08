@@ -68,7 +68,7 @@ class CollectionScreen extends ConsumerStatefulWidget {
 
 class _CollectionScreenState extends ConsumerState<CollectionScreen> {
   final Set<CollectionGroup> _groups = {};
-  bool _onlyCollected = false;
+  CollectionScope _scope = CollectionScope.everything;
 
   @override
   Widget build(BuildContext context) {
@@ -86,29 +86,31 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
               for (final entry in all)
                 if ((_groups.isEmpty ||
                         _groups.any((g) => g.csvValue == entry.taxonGroup)) &&
-                    (!_onlyCollected || entry.isCollected))
+                    (_scope == CollectionScope.everything ||
+                        entry.isFoundIn(_scope)))
                   entry,
             ];
 
             return Column(
               children: [
-                const CollectionProgressBar(),
-                _Filters(
+                CollectionProgressBar(scope: _scope),
+                _ScopeSelector(
+                  scope: _scope,
+                  onChanged: (scope) => setState(() => _scope = scope),
+                ),
+                _GroupFilters(
                   groups: _groups,
-                  onlyCollected: _onlyCollected,
-                  onToggleGroup:
+                  onToggle:
                       (group) => setState(() {
                         _groups.contains(group)
                             ? _groups.remove(group)
                             : _groups.add(group);
                       }),
-                  onToggleCollected:
-                      () => setState(() => _onlyCollected = !_onlyCollected),
                 ),
                 Expanded(
                   child:
                       visible.isEmpty
-                          ? _EmptyCollection(onlyCollected: _onlyCollected)
+                          ? _EmptyCollection(scope: _scope)
                           : GridView.builder(
                             padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
                             gridDelegate:
@@ -120,8 +122,10 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                                 ),
                             itemCount: visible.length,
                             itemBuilder:
-                                (context, index) =>
-                                    CollectionCard(entry: visible[index]),
+                                (context, index) => CollectionCard(
+                                  entry: visible[index],
+                                  scope: _scope,
+                                ),
                           ),
                 ),
               ],
@@ -133,16 +137,24 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
   }
 }
 
-/// "37 of 128 species in your region" (`SAM-05`).
+/// "37 of 128 species in your region" (`SAM-05`), or the year's count.
 class CollectionProgressBar extends ConsumerWidget {
-  const CollectionProgressBar({super.key});
+  const CollectionProgressBar({
+    super.key,
+    this.scope = CollectionScope.everything,
+  });
+
+  final CollectionScope scope;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final progress = ref.watch(collectionProgressProvider).value;
-    if (progress == null) return const SizedBox.shrink();
+    final entries = ref.watch(collectionEntriesProvider).value;
+    if (entries == null) return const SizedBox.shrink();
+
+    final total = entries.length;
+    final found = entries.where((e) => e.isFoundIn(scope)).length;
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -150,7 +162,11 @@ class CollectionProgressBar extends ConsumerWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            l10n.collectionProgress(progress.collected, progress.total),
+            // A different sentence in the year view, because the number means
+            // something different: this year, not ever.
+            scope == CollectionScope.thisYear
+                ? l10n.collectionProgressThisYear(found, total)
+                : l10n.collectionProgress(found, total),
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -159,7 +175,7 @@ class CollectionProgressBar extends ConsumerWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
-              value: progress.fraction,
+              value: total == 0 ? 0 : found / total,
               minHeight: 6,
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
             ),
@@ -170,18 +186,58 @@ class CollectionProgressBar extends ConsumerWidget {
   }
 }
 
-class _Filters extends StatelessWidget {
-  const _Filters({
-    required this.groups,
-    required this.onlyCollected,
-    required this.onToggleGroup,
-    required this.onToggleCollected,
-  });
+/// All species · My collection · This year (`SAM-16`, 3.4).
+///
+/// A segmented control rather than three chips: they are three views of the
+/// same grid, not three independent filters, and only one can be true at a
+/// time.
+class _ScopeSelector extends StatelessWidget {
+  const _ScopeSelector({required this.scope, required this.onChanged});
+
+  final CollectionScope scope;
+  final void Function(CollectionScope scope) onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(12, 6, 12, 2),
+      child: SizedBox(
+        width: double.infinity,
+        child: SegmentedButton<CollectionScope>(
+          segments: [
+            ButtonSegment(
+              value: CollectionScope.everything,
+              label: Text(l10n.collectionScopeAll),
+            ),
+            ButtonSegment(
+              value: CollectionScope.mine,
+              label: Text(l10n.collectionOnlyMine),
+            ),
+            ButtonSegment(
+              value: CollectionScope.thisYear,
+              label: Text(l10n.collectionScopeThisYear),
+            ),
+          ],
+          selected: {scope},
+          onSelectionChanged: (selected) => onChanged(selected.first),
+          showSelectedIcon: false,
+          style: const ButtonStyle(
+            visualDensity: VisualDensity.compact,
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+class _GroupFilters extends StatelessWidget {
+  const _GroupFilters({required this.groups, required this.onToggle});
 
   final Set<CollectionGroup> groups;
-  final bool onlyCollected;
-  final void Function(CollectionGroup group) onToggleGroup;
-  final VoidCallback onToggleCollected;
+  final void Function(CollectionGroup group) onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -193,17 +249,11 @@ class _Filters extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         padding: const EdgeInsets.symmetric(horizontal: 12),
         children: [
-          FilterChip(
-            label: Text(l10n.collectionOnlyMine),
-            selected: onlyCollected,
-            onSelected: (_) => onToggleCollected(),
-          ),
-          const SizedBox(width: 12),
           for (final group in CollectionGroup.values) ...[
             FilterChip(
               label: Text(group.label(l10n)),
               selected: groups.contains(group),
-              onSelected: (_) => onToggleGroup(group),
+              onSelected: (_) => onToggle(group),
             ),
             const SizedBox(width: 6),
           ],
@@ -215,19 +265,28 @@ class _Filters extends StatelessWidget {
 
 /// One species: a photo if it has been found, a placeholder if not (`SAM-04`).
 class CollectionCard extends ConsumerWidget {
-  const CollectionCard({super.key, required this.entry});
+  const CollectionCard({
+    super.key,
+    required this.entry,
+    this.scope = CollectionScope.everything,
+  });
 
   final CollectionEntry entry;
+
+  /// Which collection this card is part of — a species on the life list but
+  /// not yet heard this year reads as *open* in the year view (`SAM-16`).
+  final CollectionScope scope;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final found = entry.isFoundIn(scope);
 
     return Semantics(
       button: true,
       label:
-          entry.isCollected
+          found
               ? l10n.collectionCardCollectedA11y(entry.commonName, entry.stars)
               : l10n.collectionCardOpenA11y(entry.commonName, entry.stars),
       excludeSemantics: true,
@@ -245,7 +304,7 @@ class CollectionCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(child: _CardImage(entry: entry)),
+              Expanded(child: _CardImage(entry: entry, found: found)),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
                 child: Column(
@@ -260,7 +319,7 @@ class CollectionCard extends ConsumerWidget {
                       style: theme.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w600,
                         color:
-                            entry.isCollected
+                            found
                                 ? theme.colorScheme.onSurface
                                 : theme.colorScheme.onSurfaceVariant,
                       ),
@@ -287,15 +346,18 @@ class CollectionCard extends ConsumerWidget {
 }
 
 class _CardImage extends StatelessWidget {
-  const _CardImage({required this.entry});
+  const _CardImage({required this.entry, required this.found});
 
   final CollectionEntry entry;
+
+  /// Whether it counts as found in the current scope.
+  final bool found;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
 
-    if (!entry.isCollected) {
+    if (!found) {
       // The placeholder the app already ships — no pipeline work, no new
       // assets. SAM-04b replaces it with a per-species silhouette at P1, which
       // is what turns a grid of blanks into a wanted list.
@@ -350,15 +412,31 @@ class _CardImage extends StatelessWidget {
 }
 
 class _EmptyCollection extends StatelessWidget {
-  const _EmptyCollection({required this.onlyCollected});
+  const _EmptyCollection({required this.scope});
 
-  /// Whether the filter is what emptied it — a very different message.
-  final bool onlyCollected;
+  /// Which view is empty — three different facts needing three messages.
+  final CollectionScope scope;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+
+    // "You have nothing yet", "nothing yet this year" and "nothing in this
+    // group here" are three different facts. Telling a child the first when
+    // the third is true is discouraging for no reason — and telling them the
+    // first in January, when the life list is full, would be plainly wrong.
+    final (title, subtitle) = switch (scope) {
+      CollectionScope.mine => (
+        l10n.collectionEmptyTitle,
+        l10n.collectionEmptySubtitle,
+      ),
+      CollectionScope.thisYear => (
+        l10n.collectionEmptyThisYearTitle,
+        l10n.collectionEmptyThisYearSubtitle,
+      ),
+      CollectionScope.everything => (l10n.collectionNoMatches, null),
+    };
 
     return Center(
       child: Padding(
@@ -373,16 +451,14 @@ class _EmptyCollection extends StatelessWidget {
             ),
             const SizedBox(height: 12),
             Text(
-              onlyCollected
-                  ? l10n.collectionEmptyTitle
-                  : l10n.collectionNoMatches,
+              title,
               textAlign: TextAlign.center,
               style: theme.textTheme.titleMedium,
             ),
-            if (onlyCollected) ...[
+            if (subtitle != null) ...[
               const SizedBox(height: 6),
               Text(
-                l10n.collectionEmptySubtitle,
+                subtitle,
                 textAlign: TextAlign.center,
                 style: theme.textTheme.bodyMedium?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,

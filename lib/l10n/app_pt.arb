@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Sem um sítio a aplicação não sabe que animais vivem aqui — e então não há estrelas. Escolhe antes a tua casa no mapa.",
   "onboardingHomeRegionPicked": "A tua casa está definida. Podes mudá-la mais tarde nas definições.",
   "onboardingHomeRegionPick": "Escolher no mapa",
-  "onboardingHomeRegionChange": "Mudar"
+  "onboardingHomeRegionChange": "Mudar",
+  "collectionScopeAll": "Todas",
+  "collectionScopeThisYear": "Este ano",
+  "collectionProgressThisYear": "{collected} de {total} espécies este ano",
+  "collectionEmptyThisYearTitle": "Este ano ainda nada",
+  "collectionEmptyThisYearSubtitle": "A lista do ano recomeça em cada janeiro. A tua coleção guarda tudo.",
+  "achievementYearList": "Lista do ano {tier}",
+  "achievementYearListCondition": "{count} espécies num ano",
+  "achievementAllYearRound": "O ano todo",
+  "achievementAllYearRoundCondition": "Algo ouvido em cada mês de um ano",
+  "achievementTheReturners": "Os que regressam",
+  "achievementTheReturnersCondition": "10 espécies ouvidas pela primeira vez na primavera",
+  "achievementWinterVisitors": "Visitantes de inverno",
+  "achievementWinterVisitorsCondition": "5 espécies em dezembro ou janeiro",
+  "pointsTabYear": "Este ano",
+  "pointsSectionCollector": "No total"
 }

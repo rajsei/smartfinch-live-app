@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Ohne Ort weiß die App nicht, welche Tiere hier leben — dann gibt es auch keine Sterne. Such stattdessen dein Zuhause auf der Karte.",
   "onboardingHomeRegionPicked": "Dein Zuhause ist eingetragen. Du kannst es später in den Einstellungen ändern.",
   "onboardingHomeRegionPick": "Auf der Karte auswählen",
-  "onboardingHomeRegionChange": "Ändern"
+  "onboardingHomeRegionChange": "Ändern",
+  "collectionScopeAll": "Alle",
+  "collectionScopeThisYear": "Dieses Jahr",
+  "collectionProgressThisYear": "{collected} von {total} Arten dieses Jahr",
+  "collectionEmptyThisYearTitle": "Dieses Jahr noch nichts",
+  "collectionEmptyThisYearSubtitle": "Die Jahresliste fängt jeden Januar neu an. Deine Sammlung behält alles.",
+  "achievementYearList": "Jahresliste {tier}",
+  "achievementYearListCondition": "{count} Arten in einem Jahr",
+  "achievementAllYearRound": "Rund ums Jahr",
+  "achievementAllYearRoundCondition": "In jedem Monat eines Jahres etwas gehört",
+  "achievementTheReturners": "Die Heimkehrer",
+  "achievementTheReturnersCondition": "10 Arten zuerst im Frühling gehört",
+  "achievementWinterVisitors": "Wintergäste",
+  "achievementWinterVisitorsCondition": "5 Arten im Dezember oder Januar",
+  "pointsTabYear": "Dieses Jahr",
+  "pointsSectionCollector": "Insgesamt"
 }

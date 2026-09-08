@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Uten et sted vet ikke appen hvilke dyr som bor her — og da blir det ingen stjerner. Finn hjemmet ditt på kartet i stedet.",
   "onboardingHomeRegionPicked": "Hjemmet ditt er satt. Du kan endre det senere i innstillingene.",
   "onboardingHomeRegionPick": "Velg på kartet",
-  "onboardingHomeRegionChange": "Endre"
+  "onboardingHomeRegionChange": "Endre",
+  "collectionScopeAll": "Alle",
+  "collectionScopeThisYear": "I år",
+  "collectionProgressThisYear": "{collected} av {total} arter i år",
+  "collectionEmptyThisYearTitle": "Ingenting i år ennå",
+  "collectionEmptyThisYearSubtitle": "Årslista starter på nytt hver januar. Samlingen din beholder alt.",
+  "achievementYearList": "Årsliste {tier}",
+  "achievementYearListCondition": "{count} arter på ett år",
+  "achievementAllYearRound": "Året rundt",
+  "achievementAllYearRoundCondition": "Noe hørt hver måned i et år",
+  "achievementTheReturners": "Hjemvendte",
+  "achievementTheReturnersCondition": "10 arter først hørt om våren",
+  "achievementWinterVisitors": "Vintergjester",
+  "achievementWinterVisitorsCondition": "5 arter i desember eller januar",
+  "pointsTabYear": "I år",
+  "pointsSectionCollector": "Totalt"
 }

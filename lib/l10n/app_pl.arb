@@ -1230,5 +1230,20 @@
   "onboardingHomeRegionWhy": "Bez miejsca aplikacja nie wie, jakie zwierzęta tu żyją — a wtedy nie ma gwiazdek. Zamiast tego znajdź swój dom na mapie.",
   "onboardingHomeRegionPicked": "Twój dom jest ustawiony. Możesz to później zmienić w ustawieniach.",
   "onboardingHomeRegionPick": "Wybierz na mapie",
-  "onboardingHomeRegionChange": "Zmień"
+  "onboardingHomeRegionChange": "Zmień",
+  "collectionScopeAll": "Wszystkie",
+  "collectionScopeThisYear": "W tym roku",
+  "collectionProgressThisYear": "{collected} z {total} gatunków w tym roku",
+  "collectionEmptyThisYearTitle": "W tym roku jeszcze nic",
+  "collectionEmptyThisYearSubtitle": "Lista roczna zaczyna się od nowa każdego stycznia. Twoja kolekcja zachowuje wszystko.",
+  "achievementYearList": "Lista roczna {tier}",
+  "achievementYearListCondition": "{count} gatunków w jeden rok",
+  "achievementAllYearRound": "Przez cały rok",
+  "achievementAllYearRoundCondition": "W każdym miesiącu roku coś usłyszane",
+  "achievementTheReturners": "Powracający",
+  "achievementTheReturnersCondition": "10 gatunków po raz pierwszy usłyszanych wiosną",
+  "achievementWinterVisitors": "Zimowi goście",
+  "achievementWinterVisitorsCondition": "5 gatunków w grudniu lub styczniu",
+  "pointsTabYear": "W tym roku",
+  "pointsSectionCollector": "Łącznie"
 }
