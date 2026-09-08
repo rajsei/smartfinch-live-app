@@ -436,6 +436,7 @@ class ScoringRepository {
         total: outcome.stars,
         multiplier: outcome.multiplier.factor,
         now: now,
+        awardedAt: context.now,
       );
 
       for (final bonus in bonuses) {
@@ -446,6 +447,7 @@ class ScoringRepository {
           total: bonus.stars,
           bonus: bonus.stars,
           now: now,
+          awardedAt: context.now,
         );
       }
 
@@ -547,12 +549,22 @@ class ScoringRepository {
 
   // ── Internals ────────────────────────────────────────────────────────────
 
+  /// Writes one row of the star journal.
+  ///
+  /// [now] is the wall clock, for the sync field. [awardedAt] is **when the
+  /// bird was heard**, which is not the same thing: it comes from the
+  /// scoring context, so it agrees with the `dayKey` beside it. A detection at
+  /// 23:59 written a second later would otherwise carry yesterday's day and
+  /// today's time — and every rule that reads the clock off this row (the
+  /// `AUS-04` daily badges, `PKT-17`'s week) would be reading the moment the
+  /// row was inserted rather than the moment the bird sang.
   Future<void> _insertScoreEvent({
     required ScoreEventType type,
     required ScoringOutcome outcome,
     required String? scientificName,
     required int total,
     required DateTime now,
+    required DateTime awardedAt,
     int multiplier = 1,
     int bonus = 0,
   }) async {
@@ -564,7 +576,7 @@ class ScoringRepository {
             profileId: profileId,
             updatedAt: now,
             dayKey: outcome.dayKey,
-            awardedAt: now,
+            awardedAt: awardedAt,
             type: type,
             scientificName: Value(scientificName),
             levelAtDetection: Value(outcome.tier?.index),

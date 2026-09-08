@@ -16,24 +16,32 @@
 //
 // Pure Dart with an injected clock-free delay, so the burst behaviour can be
 // tested with `FakeAsync` instead of by watching a screen for six seconds.
+//
+// ### One queue, two kinds of celebration
+//
+// `AUS-08` asks for an unlock animation when a badge is earned, under "the
+// same queuing rule as LIVE-07". Rather than write that rule twice, the queue
+// is generic over what it is announcing: first finds carry species names,
+// badge unlocks carry badge definitions, and the *behaviour* — burst
+// collection, one at a time — is defined in exactly one place. Two copies
+// would eventually disagree about what "at most one" means, and the bug would
+// be a child watching four popups in a row.
 // =============================================================================
 
 import 'dart:async';
 
-import 'first_find_celebration.dart';
-
-/// Collects first finds and hands them out one card at a time.
-class CelebrationQueue {
+/// Collects things worth celebrating and hands them out one card at a time.
+class CelebrationQueue<T> {
   CelebrationQueue({
     required this.present,
     this.burstWindow = const Duration(milliseconds: 900),
   });
 
-  /// Shows one card and completes when it has gone away.
+  /// Shows one card for [items] and completes when it has gone away.
   ///
   /// The queue waits on this future, which is what keeps the "max 1 visible"
   /// rule true without the queue knowing anything about widgets.
-  final Future<void> Function(FirstFindAnnouncement announcement) present;
+  final Future<void> Function(List<T> items) present;
 
   /// How long to wait for more finds before showing the card.
   ///
@@ -41,25 +49,26 @@ class CelebrationQueue {
   /// catch the second and third bird of a burst.
   final Duration burstWindow;
 
-  final List<String> _waiting = [];
+  final List<T> _waiting = [];
   Timer? _burstTimer;
   bool _showing = false;
   bool _disposed = false;
 
-  /// Names currently waiting for a card. Tests and diagnostics.
-  List<String> get waiting => List.unmodifiable(_waiting);
+  /// Items currently waiting for a card. Tests and diagnostics.
+  List<T> get waiting => List.unmodifiable(_waiting);
 
   bool get isShowing => _showing;
 
-  /// Queues one or more newly found species.
+  /// Queues one or more things to celebrate.
   ///
   /// Duplicates are ignored: a species can only be found for the first time
-  /// once, and a rebuild that re-delivered it must not produce a second card.
-  void add(Iterable<String> displayNames) {
+  /// once and a badge unlocked once, and a rebuild that re-delivered either
+  /// must not produce a second card.
+  void add(Iterable<T> items) {
     if (_disposed) return;
 
-    for (final name in displayNames) {
-      if (!_waiting.contains(name)) _waiting.add(name);
+    for (final item in items) {
+      if (!_waiting.contains(item)) _waiting.add(item);
     }
     if (_waiting.isEmpty || _showing) return;
 
@@ -70,17 +79,12 @@ class CelebrationQueue {
   Future<void> _flush() async {
     if (_disposed || _showing || _waiting.isEmpty) return;
 
-    final names = List<String>.from(_waiting);
+    final items = List<T>.from(_waiting);
     _waiting.clear();
     _showing = true;
 
     try {
-      await present(
-        FirstFindAnnouncement(
-          names: names,
-          images: {for (final name in names) name: null},
-        ),
-      );
+      await present(items);
     } finally {
       _showing = false;
     }

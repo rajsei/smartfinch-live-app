@@ -5559,5 +5559,209 @@
         "type": "int"
       }
     }
+  },
+  "pointsSectionToday": "Today",
+  "@pointsSectionToday": {
+    "description": "AUS-04: heading of the daily badge catalogue"
+  },
+  "pointsSectionThisWeek": "This week",
+  "@pointsSectionThisWeek": {
+    "description": "AUS-05: heading of the weekly badge catalogue"
+  },
+  "pointsSectionLoyalty": "Your regulars",
+  "@pointsSectionLoyalty": {
+    "description": "AUS-02: heading of the per-species loyalty badges"
+  },
+  "pointsSectionRarity": "Rare finds",
+  "@pointsSectionRarity": {
+    "description": "AUS-06: heading of the rarity achievements"
+  },
+  "pointsSectionPersistence": "Staying power",
+  "@pointsSectionPersistence": {
+    "description": "AUS-07: heading of the persistence achievements"
+  },
+  "pointsBadgeEarned": "Earned",
+  "@pointsBadgeEarned": {
+    "description": "AUS-04: accessibility label on the tick of an earned badge"
+  },
+  "pointsBadgeOpen": "Still open",
+  "@pointsBadgeOpen": {
+    "description": "AUS-04: accessibility label on a badge not yet earned — an invitation, never a failure"
+  },
+  "badgeEarlyBird": "The early bird",
+  "@badgeEarlyBird": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeEarlyBirdCondition": "Heard something before 9 in the morning",
+  "@badgeEarlyBirdCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeEveningListener": "Evening listener",
+  "@badgeEveningListener": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeEveningListenerCondition": "Heard something after 6 in the evening",
+  "@badgeEveningListenerCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeDawnChorus": "Dawn chorus",
+  "@badgeDawnChorus": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeDawnChorusCondition": "5 different species between 5 and 9 in the morning",
+  "@badgeDawnChorusCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeDiscoveryDay": "Discovery day",
+  "@badgeDiscoveryDay": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeDiscoveryDayCondition": "Found a species for the first time ever",
+  "@badgeDiscoveryDayCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeRareGuest": "Rare guest",
+  "@badgeRareGuest": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeRareGuestCondition": "Heard one of the rarer birds around here",
+  "@badgeRareGuestCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeHeraldOfSpring": "Herald of spring",
+  "@badgeHeraldOfSpring": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeHeraldOfSpringCondition": "Heard a bird that is normally not here yet",
+  "@badgeHeraldOfSpringCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeNewGround": "New ground",
+  "@badgeNewGround": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeNewGroundCondition": "Listened somewhere you had never listened before",
+  "@badgeNewGroundCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeNightOwl": "Night owl",
+  "@badgeNightOwl": {
+    "description": "AUS-04 daily badge"
+  },
+  "badgeNightOwlCondition": "Heard something after 10 at night",
+  "@badgeNightOwlCondition": {
+    "description": "AUS-04 daily badge condition"
+  },
+  "badgeConsistent": "Consistent",
+  "@badgeConsistent": {
+    "description": "AUS-05 weekly badge"
+  },
+  "badgeConsistentCondition": "Listened on 4 days of one week",
+  "@badgeConsistentCondition": {
+    "description": "AUS-05 weekly badge condition"
+  },
+  "badgeWellTravelled": "Well travelled",
+  "@badgeWellTravelled": {
+    "description": "AUS-05 weekly badge"
+  },
+  "badgeWellTravelledCondition": "Listened in 3 different places in one week",
+  "@badgeWellTravelledCondition": {
+    "description": "AUS-05 weekly badge condition"
+  },
+  "badgeWeeklyTarget": "Weekly target",
+  "@badgeWeeklyTarget": {
+    "description": "AUS-05 weekly badge"
+  },
+  "badgeWeeklyTargetCondition": "5,000 stars in one week",
+  "@badgeWeeklyTargetCondition": {
+    "description": "AUS-05 weekly badge condition"
+  },
+  "achievementLuckyOne": "Lucky one",
+  "@achievementLuckyOne": {
+    "description": "AUS-06 rarity achievement"
+  },
+  "achievementLuckyOneCondition": "1 of the rarer birds found",
+  "@achievementLuckyOneCondition": {
+    "description": "AUS-06 rarity achievement condition"
+  },
+  "achievementTracker": "Tracker",
+  "@achievementTracker": {
+    "description": "AUS-06 rarity achievement"
+  },
+  "achievementTrackerCondition": "5 of the rarer birds found",
+  "@achievementTrackerCondition": {
+    "description": "AUS-06 rarity achievement condition"
+  },
+  "achievementRarityCollector": "Rarity collector",
+  "@achievementRarityCollector": {
+    "description": "AUS-06 rarity achievement"
+  },
+  "achievementRarityCollectorCondition": "10 of the rarer birds found",
+  "@achievementRarityCollectorCondition": {
+    "description": "AUS-06 rarity achievement condition"
+  },
+  "achievementSensation": "Sensation!",
+  "@achievementSensation": {
+    "description": "AUS-06 rarity achievement — the top of the scale"
+  },
+  "achievementSensationCondition": "One of the very rarest birds found",
+  "@achievementSensationCondition": {
+    "description": "AUS-06 rarity achievement condition"
+  },
+  "achievementWeekKeptUp": "A week kept up",
+  "@achievementWeekKeptUp": {
+    "description": "AUS-07 persistence achievement"
+  },
+  "achievementWeekKeptUpCondition": "Listened on 7 days in a row",
+  "@achievementWeekKeptUpCondition": {
+    "description": "AUS-07 persistence achievement condition"
+  },
+  "achievementMonthOfBirdEars": "A month of bird ears",
+  "@achievementMonthOfBirdEars": {
+    "description": "AUS-07 persistence achievement"
+  },
+  "achievementMonthOfBirdEarsCondition": "Listened on 30 days in a row",
+  "@achievementMonthOfBirdEarsCondition": {
+    "description": "AUS-07 persistence achievement condition"
+  },
+  "achievementHundredDaysOutdoors": "A hundred days outdoors",
+  "@achievementHundredDaysOutdoors": {
+    "description": "AUS-07 persistence achievement"
+  },
+  "achievementHundredDaysOutdoorsCondition": "Listened on 100 days altogether",
+  "@achievementHundredDaysOutdoorsCondition": {
+    "description": "AUS-07 persistence achievement condition"
+  },
+  "achievementStarCollector": "Star collector {tier}",
+  "@achievementStarCollector": {
+    "description": "AUS-07 persistence achievement, tier I, II or III",
+    "placeholders": {
+      "tier": {
+        "type": "String"
+      }
+    }
+  },
+  "achievementStarCollectorCondition": "{count} stars collected",
+  "@achievementStarCollectorCondition": {
+    "description": "AUS-07 persistence achievement condition",
+    "placeholders": {
+      "count": {
+        "type": "int",
+        "format": "decimalPattern"
+      }
+    }
+  },
+  "badgeUnlockedTitle": "Badge earned!",
+  "@badgeUnlockedTitle": {
+    "description": "AUS-08: heading of the unlock card when one badge is earned"
+  },
+  "badgeUnlockedTitleMany": "{count} badges earned!",
+  "@badgeUnlockedTitleMany": {
+    "description": "AUS-08: heading when a burst of badges lands together",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

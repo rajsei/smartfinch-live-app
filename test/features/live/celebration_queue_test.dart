@@ -11,13 +11,20 @@ import 'package:smartfinch/features/live/widgets/first_find_celebration.dart';
 void main() {
   const window = Duration(milliseconds: 900);
 
+  /// What the live screen builds from the names the queue hands back.
+  FirstFindAnnouncement announcementOf(List<String> names) =>
+      FirstFindAnnouncement(
+        names: names,
+        images: {for (final name in names) name: null},
+      );
+
   /// Runs [body] with a queue whose cards are recorded rather than shown.
   ///
   /// `cardVisibleFor` models how long the real bottom sheet stays up, so the
   /// "one at a time" rule is tested against something that actually takes time.
   void withQueue(
     void Function(
-      CelebrationQueue queue,
+      CelebrationQueue<String> queue,
       List<FirstFindAnnouncement> shown,
       FakeAsync async,
     )
@@ -26,10 +33,13 @@ void main() {
   }) {
     fakeAsync((async) {
       final shown = <FirstFindAnnouncement>[];
-      final queue = CelebrationQueue(
+      // The queue is generic since AUS-08 reused it for badge unlocks, so the
+      // announcement is built by the caller — exactly as the live screen
+      // does it, which is the point of testing through this shape.
+      final queue = CelebrationQueue<String>(
         burstWindow: window,
-        present: (announcement) async {
-          shown.add(announcement);
+        present: (names) async {
+          shown.add(announcementOf(names));
           await Future<void>.delayed(cardVisibleFor);
         },
       );
@@ -120,9 +130,9 @@ void main() {
     test('drops everything still waiting', () {
       fakeAsync((async) {
         final shown = <FirstFindAnnouncement>[];
-        final queue = CelebrationQueue(
+        final queue = CelebrationQueue<String>(
           burstWindow: window,
-          present: (a) async => shown.add(a),
+          present: (names) async => shown.add(announcementOf(names)),
         );
 
         queue.add(['Blackbird']);
@@ -136,9 +146,9 @@ void main() {
     test('a find after dispose is ignored', () {
       fakeAsync((async) {
         final shown = <FirstFindAnnouncement>[];
-        final queue = CelebrationQueue(
+        final queue = CelebrationQueue<String>(
           burstWindow: window,
-          present: (a) async => shown.add(a),
+          present: (names) async => shown.add(announcementOf(names)),
         );
 
         queue.dispose();

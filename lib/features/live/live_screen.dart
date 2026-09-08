@@ -33,6 +33,10 @@ import 'live_controller.dart';
 import 'live_detection_display.dart';
 import 'live_providers.dart';
 import 'live_session.dart';
+import '../points/badge_watcher.dart';
+import '../points/points_models.dart';
+import '../points/points_providers.dart';
+import 'widgets/badge_unlock_card.dart';
 import 'widgets/celebration_queue.dart';
 import 'widgets/day_summary_bar.dart';
 import 'widgets/detection_list_widget.dart';
@@ -138,9 +142,17 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   bool _listeningToScoreBoard = false;
 
   /// At most one first-find card at a time (LIVE-07).
-  late final CelebrationQueue _celebrations = CelebrationQueue(
+  late final CelebrationQueue<String> _celebrations = CelebrationQueue<String>(
     present: _presentCelebration,
   );
+
+  /// And at most one badge card at a time (AUS-08) — the same rule, a second
+  /// queue, so a first find and an unlock never fight for the screen.
+  late final CelebrationQueue<BadgeDefinition> _badgeUnlocks =
+      CelebrationQueue<BadgeDefinition>(present: _presentBadgeUnlock);
+
+  /// Notices when a badge that was not earned before is earned now.
+  final BadgeWatcher _badgeWatcher = BadgeWatcher();
 
   /// Duration after which a warning dialog is shown to the user.
   static const _warningDuration = Duration(minutes: 10);
@@ -521,6 +533,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
     _listeningToScoreBoard = false;
     _scoreBoard?.removeListener(_onScoreBoardChanged);
     _celebrations.dispose();
+    _badgeUnlocks.dispose();
   }
 
   /// Hands newly found species to the celebration queue (LIVE-05…LIVE-07).
@@ -532,6 +545,11 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   void _onScoreBoardChanged() {
     final board = _scoreBoard;
     if (board == null || !mounted) return;
+
+    // Badges first, and regardless: most of them are earned without a first
+    // find in sight (ten species in a day, four days of a week), so this
+    // cannot sit behind the early return below.
+    unawaited(_checkForBadges());
 
     final names = board.takePendingCelebrations();
     if (names.isEmpty) return;
@@ -551,7 +569,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   /// How much of it happens is `SET-02`'s to decide. What is *not* a setting:
   /// the find itself. At every level the life-list row is written, the ×3 is
   /// paid and the journal marks it ✨ NEW — only the celebration is optional.
-  Future<void> _presentCelebration(FirstFindAnnouncement announcement) async {
+  Future<void> _presentCelebration(List<String> names) async {
     if (!mounted) return;
     final level = animationLevelFor(context, ref);
 
@@ -560,7 +578,45 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
     if (level.allowsConfetti) _showConfetti();
 
     if (!level.allowsSpeciesCard) return;
-    await FirstFindCard.show(context, announcement);
+    await FirstFindCard.show(
+      context,
+      FirstFindAnnouncement(
+        names: names,
+        images: {for (final name in names) name: null},
+      ),
+    );
+  }
+
+  /// Shows one badge unlock (`AUS-08`).
+  ///
+  /// `SET-02` decides how much of it happens, exactly as for a first find —
+  /// and, exactly as for a first find, the badge itself is not a setting. At
+  /// every level it is earned, it is in the catalogue, and it stays there.
+  Future<void> _presentBadgeUnlock(List<BadgeDefinition> badges) async {
+    if (!mounted) return;
+    final level = animationLevelFor(context, ref);
+
+    if (level.allowsConfetti) _showConfetti();
+    if (!level.allowsSpeciesCard) return;
+    await BadgeUnlockCard.show(context, badges);
+  }
+
+  /// Re-derives the badges and celebrates anything new (`AUS-08`).
+  ///
+  /// Deliberately not per detection: the badge rules read the whole score
+  /// journal, and running them after every bird would put a year of history
+  /// through a query on the audio thread's heels. [BadgeWatcher] throttles it
+  /// instead — a badge that lands twenty seconds later is still a surprise,
+  /// unlike a first find, which has to be immediate.
+  Future<void> _checkForBadges() async {
+    if (!_badgeWatcher.isDue(DateTime.now())) return;
+
+    final overview = await ref
+        .read(pointsRepositoryProvider)
+        .overview(now: DateTime.now());
+    if (!mounted) return;
+
+    _badgeUnlocks.add(_badgeWatcher.newlyEarned(overview.badges));
   }
 
   void _showConfetti() {

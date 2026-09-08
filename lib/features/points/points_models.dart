@@ -200,10 +200,7 @@ const YearAchievement kWinterVisitors = YearAchievement(
   emoji: '❄️',
 );
 
-/// The badges this step implements — the P0 set (`AUS-01`, `AUS-02`).
-///
-/// `AUS-04` and `AUS-05` fill in the rest of the day and week catalogue at P1;
-/// each is a row here plus its two strings.
+/// 🔟 Ten different species in one day (`AUS-01`).
 const BadgeDefinition kTenInOneGo = BadgeDefinition(
   key: 'tenInOneGo',
   emoji: '🔟',
@@ -222,6 +219,237 @@ const BadgeDefinition kPermanentGuest = BadgeDefinition(
   kind: BadgeKind.loyalty,
 );
 
+/// The full daily catalogue (`AUS-04`, 3.2).
+///
+/// **All of them are shown, earned or not.** That is the difference between a
+/// badge and a loyalty badge: `AUS-02` keeps 🤝 and 🏠 hidden until earned
+/// because a permanent reminder of a species you have not been loyal to is
+/// meaningless, while an open *daily* badge is a suggestion for this
+/// afternoon. "Evening listener, not yet today" is an invitation; "Regular —
+/// blackbird, not yet" would be a reproach.
+///
+/// Ordered as they are in 3.2, which runs roughly from easiest to rarest.
+const List<BadgeDefinition> kDailyBadges = [
+  kEarlyBird,
+  kEveningListener,
+  kDawnChorus,
+  kTenInOneGo,
+  kDiscoveryDay,
+  kRareGuest,
+  kHeraldOfSpring,
+  kNewGround,
+  kNightOwl,
+];
+
+/// 🌅 At least one detection before 09:00.
+///
+/// Deliberately easy. It and [kEveningListener] are not feats but **rhythm
+/// setters** — once before school, once after — and that rhythm is the whole
+/// behaviour the app is trying to encourage (3.2).
+const BadgeDefinition kEarlyBird = BadgeDefinition(
+  key: 'earlyBird',
+  emoji: '🌅',
+  kind: BadgeKind.daily,
+);
+
+/// 🌆 At least one detection after 18:00.
+const BadgeDefinition kEveningListener = BadgeDefinition(
+  key: 'eveningListener',
+  emoji: '🌆',
+  kind: BadgeKind.daily,
+);
+
+/// 🎵 Five different species between 05:00 and 09:00.
+const BadgeDefinition kDawnChorus = BadgeDefinition(
+  key: 'dawnChorus',
+  emoji: '🎵',
+  kind: BadgeKind.daily,
+);
+
+/// ✨ At least one first find on this day.
+const BadgeDefinition kDiscoveryDay = BadgeDefinition(
+  key: 'discoveryDay',
+  emoji: '✨',
+  kind: BadgeKind.daily,
+);
+
+/// 🥇 A species from the upper half of the rarity levels.
+const BadgeDefinition kRareGuest = BadgeDefinition(
+  key: 'rareGuest',
+  emoji: '🥇',
+  kind: BadgeKind.daily,
+);
+
+/// 🌱 A species that is unusually scarce here this week.
+///
+/// The same judgement `PKT-17` puts on screen as a sentence — a bird heard in
+/// the early shoulder of its own season. Which makes this the one badge that
+/// cannot be derived from the database alone: it needs the species' 48-week
+/// curve, so the repository takes the curve as an argument.
+const BadgeDefinition kHeraldOfSpring = BadgeDefinition(
+  key: 'heraldOfSpring',
+  emoji: '🌱',
+  kind: BadgeKind.daily,
+);
+
+/// 🗺️ A detection in a grid cell never listened in before.
+const BadgeDefinition kNewGround = BadgeDefinition(
+  key: 'newGround',
+  emoji: '🗺️',
+  kind: BadgeKind.daily,
+);
+
+/// 🌙 At least one detection after 22:00.
+///
+/// 3.2 moved this from 18:00 to 22:00 on purpose: at 18:00 the name would
+/// simply be wrong in June, and at 22:00 it becomes a genuine rarity — owls
+/// and nightingales.
+const BadgeDefinition kNightOwl = BadgeDefinition(
+  key: 'nightOwl',
+  emoji: '🌙',
+  kind: BadgeKind.daily,
+);
+
+/// The full weekly catalogue (`AUS-05`, 3.2). Resets on Monday.
+const List<BadgeDefinition> kWeeklyBadges = [
+  kConsistent,
+  kWellTravelled,
+  kWeeklyTarget,
+];
+
+/// 📅 Listened on at least 4 days of the week.
+const BadgeDefinition kConsistent = BadgeDefinition(
+  key: 'consistent',
+  emoji: '📅',
+  kind: BadgeKind.weekly,
+);
+
+/// 🌍 Listened in at least 3 different places.
+///
+/// A place is a 0.1° grid cell, not a name the child typed: names are optional
+/// and a badge nobody can earn without labelling their walks would be a badge
+/// for bookkeeping (`NFA-08`, `LOG-13`).
+const BadgeDefinition kWellTravelled = BadgeDefinition(
+  key: 'wellTravelled',
+  emoji: '🌍',
+  kind: BadgeKind.weekly,
+);
+
+/// 🎯 5,000 stars in one week.
+const BadgeDefinition kWeeklyTarget = BadgeDefinition(
+  key: 'weeklyTarget',
+  emoji: '🎯',
+  kind: BadgeKind.weekly,
+);
+
+/// A permanent achievement that is not a rung of a ladder (`AUS-06`, `AUS-07`).
+///
+/// Separate from [AchievementTier] because those count one thing — species —
+/// and these count four different things. Sharing a class would have meant a
+/// `threshold` that means stars in one row and consecutive days in the next.
+@immutable
+class PermanentAchievement {
+  const PermanentAchievement({required this.key, required this.emoji});
+
+  /// Stable identifier; also the l10n key suffix.
+  final String key;
+
+  final String emoji;
+}
+
+/// Rarity achievements (`AUS-06`, 3.3).
+///
+/// ⚠️ Counted at the level **at the moment of detection** (`levelAtDetection`,
+/// a `PKT-15` frozen field), never at today's. The rarity scale is rebuilt per
+/// grid cell and per geo week, so a redwing that was rare in November is not
+/// un-earned by the same bird being common in January. Achievements that
+/// drifted with the seasons would be worse than no achievements.
+const List<PermanentAchievement> kRarityAchievements = [
+  kLuckyOne,
+  kTracker,
+  kRarityCollector,
+  kSensation,
+];
+
+const PermanentAchievement kLuckyOne = PermanentAchievement(
+  key: 'luckyOne',
+  emoji: '🍀',
+);
+const PermanentAchievement kTracker = PermanentAchievement(
+  key: 'tracker',
+  emoji: '👣',
+);
+const PermanentAchievement kRarityCollector = PermanentAchievement(
+  key: 'rarityCollector',
+  emoji: '💠',
+);
+
+/// One species at the very top of the scale.
+const PermanentAchievement kSensation = PermanentAchievement(
+  key: 'sensation',
+  emoji: '🎆',
+);
+
+/// How many distinct upper-half species each rarity rung needs.
+const Map<String, int> kRarityThresholds = {
+  'luckyOne': 1,
+  'tracker': 5,
+  'rarityCollector': 10,
+};
+
+/// Persistence achievements (`AUS-07`, 3.3).
+///
+/// ⚠️ A broken streak is **not** commented on — not marked, not coloured, not
+/// mentioned. These record the best run there has ever been, so there is
+/// nothing here that can be lost on the day a child misses (principle 1).
+const List<PermanentAchievement> kPersistenceAchievements = [
+  kWeekKeptUp,
+  kMonthOfBirdEars,
+  kHundredDaysOutdoors,
+  kStarCollectorI,
+  kStarCollectorII,
+  kStarCollectorIII,
+];
+
+const PermanentAchievement kWeekKeptUp = PermanentAchievement(
+  key: 'weekKeptUp',
+  emoji: '🔗',
+);
+const PermanentAchievement kMonthOfBirdEars = PermanentAchievement(
+  key: 'monthOfBirdEars',
+  emoji: '📆',
+);
+const PermanentAchievement kHundredDaysOutdoors = PermanentAchievement(
+  key: 'hundredDaysOutdoors',
+  emoji: '🥾',
+);
+const PermanentAchievement kStarCollectorI = PermanentAchievement(
+  key: 'starCollectorI',
+  emoji: '✨',
+);
+const PermanentAchievement kStarCollectorII = PermanentAchievement(
+  key: 'starCollectorII',
+  emoji: '🌟',
+);
+const PermanentAchievement kStarCollectorIII = PermanentAchievement(
+  key: 'starCollectorIII',
+  emoji: '💫',
+);
+
+/// Consecutive days needed for the two streak achievements.
+const int kWeekKeptUpDays = 7;
+const int kMonthOfBirdEarsDays = 30;
+
+/// Days outdoors in total, consecutive or not.
+const int kHundredDaysOutdoorsDays = 100;
+
+/// Stars needed for the three Star collector rungs.
+const Map<String, int> kStarCollectorThresholds = {
+  'starCollectorI': 10000,
+  'starCollectorII': 50000,
+  'starCollectorIII': 100000,
+};
+
 /// Everything the Points area shows.
 @immutable
 class PointsOverview {
@@ -231,6 +459,8 @@ class PointsOverview {
     this.badges = const [],
     this.achievements = const [],
     this.yearAchievements = const [],
+    this.rarityAchievements = const [],
+    this.persistenceAchievements = const [],
   });
 
   final KeyFigures figures;
@@ -251,7 +481,28 @@ class PointsOverview {
   /// January. Mixing them would suggest the second can be lost.
   final List<YearAchievement> yearAchievements;
 
+  /// Earned rarity achievements (`AUS-06`).
+  final List<PermanentAchievement> rarityAchievements;
+
+  /// Earned persistence achievements (`AUS-07`).
+  final List<PermanentAchievement> persistenceAchievements;
+
   /// The highest daily total in the chart window, for scaling the bars.
   int get peakDayStars =>
       dailyStars.fold(0, (best, day) => day.stars > best ? day.stars : best);
+
+  /// The earned entry for [key], or null when the badge is still open.
+  ///
+  /// What lets the badges tab render the whole catalogue and mark it, rather
+  /// than rendering only what has been earned (`AUS-04`, `AUS-05`).
+  EarnedBadge? badgeFor(String key) {
+    for (final badge in badges) {
+      if (badge.definition.key == key) return badge;
+    }
+    return null;
+  }
+
+  bool hasAchievement(String key) =>
+      rarityAchievements.any((a) => a.key == key) ||
+      persistenceAchievements.any((a) => a.key == key);
 }

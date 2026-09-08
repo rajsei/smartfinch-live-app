@@ -33,6 +33,15 @@ import 'package:smartfinch/features/scoring/scoring_engine.dart';
 import 'package:smartfinch/features/scoring/scoring_repository.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
+
+/// Only the loyalty badges, which are the ones AUS-02 keeps hidden until
+/// earned. The day and week catalogue is always earnable alongside them, so a
+/// claim about loyalty has to say so.
+List<EarnedBadge> loyaltyIn(PointsOverview overview) => [
+  for (final badge in overview.badges)
+    if (badge.definition.kind == BadgeKind.loyalty) badge,
+];
 
 void main() {
   const cell = GridCell(508, 129);
@@ -255,8 +264,10 @@ void main() {
         await hearMany(5);
         await hearMany(5, at: may4.add(const Duration(days: 1)), from: 20);
 
-        final badges = (await points.overview(now: may4)).badges;
-        expect(badges, isEmpty);
+        // Narrowed once AUS-04 filled the catalogue in: these days still
+        // earn 🌅 and ✨, and the claim was only ever about 🔟.
+        final overview = await points.overview(now: may4);
+        expect(overview.badgeFor(kTenInOneGo.key), isNull);
       });
     });
 
@@ -277,7 +288,7 @@ void main() {
           await hear('Species sp0', at: may4.add(Duration(days: day)));
         }
 
-        expect((await points.overview(now: may4)).badges, isEmpty);
+        expect(loyaltyIn(await points.overview(now: may4)), isEmpty);
       });
 
       test('six days earns the higher badge instead, not as well', () async {
@@ -300,7 +311,7 @@ void main() {
         await hear('Species sp0', at: may4.add(const Duration(days: 2)));
         await hear('Species sp0', at: may4.add(const Duration(days: 7)));
 
-        expect((await points.overview(now: may4)).badges, isEmpty);
+        expect(loyaltyIn(await points.overview(now: may4)), isEmpty);
       });
 
       test('each species earns its own', () async {
@@ -316,6 +327,413 @@ void main() {
                 .toSet();
 
         expect(subjects, {'Species sp0', 'Species sp1'});
+      });
+    });
+
+    // =======================================================================
+    // AUS-04 · the daily catalogue
+    // =======================================================================
+    //
+    // Read from `ScoreEvents`, so a badge means what a star means: listening
+    // with scoring paused is kept and is worth nothing, badges included.
+    // The clock rules are the ones most likely to drift, because an hour
+    // boundary off by one is invisible until a child complains in June.
+    // =======================================================================
+    group('AUS-04 · the daily badges', () {
+      final at0730 = DateTime(2026, 5, 4, 7, 30);
+      final at1900 = DateTime(2026, 5, 4, 19, 0);
+      final at2230 = DateTime(2026, 5, 4, 22, 30);
+
+      test('🌅 The early bird wants anything before 09:00', () async {
+        await hear('Species sp0', at: at0730);
+
+        final overview = await points.overview(now: may4);
+        expect(overview.badgeFor(kEarlyBird.key), isNotNull);
+      });
+
+      test('🌅 09:00 exactly is too late', () async {
+        await hear('Species sp0', at: DateTime(2026, 5, 4, 9, 0));
+
+        expect(
+          (await points.overview(now: may4)).badgeFor(kEarlyBird.key),
+          isNull,
+        );
+      });
+
+      test('🌆 Evening listener wants anything from 18:00', () async {
+        await hear('Species sp0', at: at1900);
+
+        final overview = await points.overview(now: may4);
+        expect(overview.badgeFor(kEveningListener.key), isNotNull);
+        // Two rhythm setters, not one badge with two names: an afternoon
+        // walk earns neither.
+        expect(overview.badgeFor(kEarlyBird.key), isNull);
+      });
+
+      test('🌙 Night owl needs 22:00, not the evening', () async {
+        // 3.2 moved this from 18:00 on purpose — at 18:00 the name would
+        // simply be wrong in June.
+        await hear('Species sp0', at: at1900);
+        expect(
+          (await points.overview(now: may4)).badgeFor(kNightOwl.key),
+          isNull,
+        );
+
+        await hear('Species sp1', at: at2230);
+        expect(
+          (await points.overview(now: may4)).badgeFor(kNightOwl.key),
+          isNotNull,
+        );
+      });
+
+      test('🎵 Dawn chorus wants five *different* species', () async {
+        for (var i = 0; i < 4; i++) {
+          await hear('Species sp$i', at: at0730);
+        }
+        expect(
+          (await points.overview(now: may4)).badgeFor(kDawnChorus.key),
+          isNull,
+        );
+
+        await hear('Species sp4', at: at0730);
+        expect(
+          (await points.overview(now: may4)).badgeFor(kDawnChorus.key),
+          isNotNull,
+        );
+      });
+
+      test('🎵 Dawn chorus starts at 05:00, not at midnight', () async {
+        for (var i = 0; i < 5; i++) {
+          await hear('Species sp$i', at: DateTime(2026, 5, 4, 3, 0));
+        }
+
+        expect(
+          (await points.overview(now: may4)).badgeFor(kDawnChorus.key),
+          isNull,
+        );
+      });
+
+      test('✨ Discovery day means a first find *ever*', () async {
+        await hear('Species sp0');
+        final first = await points.overview(now: may4);
+        expect(first.badgeFor(kDiscoveryDay.key)?.timesEarned, 1);
+
+        // The same bird tomorrow is not a discovery, however pleased the
+        // child is to hear it (LOG-09).
+        await hear('Species sp0', at: may4.add(const Duration(days: 1)));
+        final second = await points.overview(now: may4);
+        expect(second.badgeFor(kDiscoveryDay.key)?.timesEarned, 1);
+      });
+
+      test('🥇 Rare guest wants the rarer half of the scale', () async {
+        await hear('Species sp0'); // the most abundant bird there is
+        expect(
+          (await points.overview(now: may4)).badgeFor(kRareGuest.key),
+          isNull,
+        );
+
+        await hear('Species sp39'); // the rarest
+        expect(
+          (await points.overview(now: may4)).badgeFor(kRareGuest.key),
+          isNotNull,
+        );
+      });
+
+      test('🗺️ New ground is somewhere you have not been', () async {
+        // A home cell first — the setUp session has no location at all.
+        final home = await scoring.startSession(startedAt: may4, cell: cell);
+        await scoring.recordDetection(
+          sessionId: home,
+          scientificName: 'Species sp0',
+          confidence: 0.9,
+          context: contextAt(may4),
+        );
+
+        // The first cell is not new ground: everywhere is, the first time the
+        // app is opened, and a badge for that teaches nothing.
+        expect(
+          (await points.overview(now: may4)).badgeFor(kNewGround.key),
+          isNull,
+        );
+
+        final elsewhere = await scoring.startSession(
+          startedAt: may4.add(const Duration(days: 1)),
+          cell: const GridCell(511, 133),
+        );
+        await scoring.recordDetection(
+          sessionId: elsewhere,
+          scientificName: 'Species sp1',
+          confidence: 0.9,
+          context: contextAt(may4.add(const Duration(days: 1))),
+        );
+
+        expect(
+          (await points.overview(now: may4)).badgeFor(kNewGround.key),
+          isNotNull,
+        );
+      });
+
+      test('🌱 Herald of spring needs the curve, and says so', () async {
+        // Without a geo model there is no season to be early for, so the
+        // badge is simply unearnable rather than wrongly earned.
+        await hear('Species sp0', at: DateTime(2026, 2, 4, 10));
+
+        expect(
+          (await points.overview(now: may4)).badgeFor(kHeraldOfSpring.key),
+          isNull,
+        );
+      });
+
+      test('🌱 Herald of spring fires on a bird that is early', () async {
+        // A summer visitor — nothing until May, peak in July — heard in
+        // February. That is exactly the sentence PKT-17 puts on screen, and
+        // the badge must not disagree with it.
+        final summerVisitor = [
+          for (var week = 1; week <= 48; week++)
+            week >= 17 && week <= 36 ? 1.0 : 0.02,
+        ];
+
+        await hear('Species sp0', at: DateTime(2026, 2, 4, 10));
+
+        final overview = await points.overview(
+          now: may4,
+          weeklyScores: (name) => summerVisitor,
+        );
+        expect(overview.badgeFor(kHeraldOfSpring.key), isNotNull);
+      });
+
+      test('🌱 a resident is never early, which is the whole point', () async {
+        // A blackbird has no season to be early for. A badge that fired for
+        // one would teach a child something false.
+        final resident = [for (var week = 1; week <= 48; week++) 0.8];
+
+        await hear('Species sp0', at: DateTime(2026, 2, 4, 10));
+
+        final overview = await points.overview(
+          now: may4,
+          weeklyScores: (name) => resident,
+        );
+        expect(overview.badgeFor(kHeraldOfSpring.key), isNull);
+      });
+
+      test('a badge that resets can be earned again, and counts', () async {
+        await hear('Species sp0', at: at0730);
+        await hear('Species sp1', at: at0730.add(const Duration(days: 1)));
+
+        expect(
+          (await points.overview(
+            now: may4,
+          )).badgeFor(kEarlyBird.key)?.timesEarned,
+          2,
+        );
+      });
+
+      test('⚠️ a paused detection earns nothing', () async {
+        // PKT-20 and LOG-15: the recording is kept and is worth nothing. A
+        // badge is worth something, so it must follow the star.
+        await hear('Species sp39', at: at0730, filterEnabled: false);
+
+        final overview = await points.overview(now: may4);
+        expect(overview.badgeFor(kEarlyBird.key), isNull);
+        expect(overview.badgeFor(kRareGuest.key), isNull);
+      });
+    });
+
+    // =======================================================================
+    // AUS-05 · the weekly catalogue
+    // =======================================================================
+    group('AUS-05 · the weekly badges', () {
+      test('📅 Consistent wants four days of one week', () async {
+        for (var day = 0; day < 3; day++) {
+          await hear('Species sp0', at: may4.add(Duration(days: day)));
+        }
+        expect(
+          (await points.overview(now: may4)).badgeFor(kConsistent.key),
+          isNull,
+        );
+
+        await hear('Species sp0', at: may4.add(const Duration(days: 3)));
+        expect(
+          (await points.overview(now: may4)).badgeFor(kConsistent.key),
+          isNotNull,
+        );
+      });
+
+      test('📅 four days across two weeks is not consistency', () async {
+        // Monday, Tuesday, then Monday and Tuesday of the week after.
+        await hear('Species sp0', at: may4);
+        await hear('Species sp0', at: may4.add(const Duration(days: 1)));
+        await hear('Species sp0', at: may4.add(const Duration(days: 7)));
+        await hear('Species sp0', at: may4.add(const Duration(days: 8)));
+
+        expect(
+          (await points.overview(now: may4)).badgeFor(kConsistent.key),
+          isNull,
+        );
+      });
+
+      test('🌍 Well travelled counts places, not walks', () async {
+        Future<void> listenIn(GridCell cell, int dayOffset) async {
+          final session = await scoring.startSession(
+            startedAt: may4.add(Duration(days: dayOffset)),
+            cell: cell,
+          );
+          await scoring.recordDetection(
+            sessionId: session,
+            scientificName: 'Species sp0',
+            confidence: 0.9,
+            context: contextAt(may4.add(Duration(days: dayOffset))),
+          );
+        }
+
+        await listenIn(const GridCell(508, 129), 0);
+        await listenIn(const GridCell(508, 129), 1);
+        expect(
+          (await points.overview(now: may4)).badgeFor(kWellTravelled.key),
+          isNull,
+        );
+
+        await listenIn(const GridCell(509, 130), 2);
+        await listenIn(const GridCell(510, 131), 3);
+        expect(
+          (await points.overview(now: may4)).badgeFor(kWellTravelled.key),
+          isNotNull,
+        );
+      });
+
+      test('🎯 Weekly target is 5,000 stars in one week', () async {
+        // sp39 is the rarest tier: 1000 base, ×3 for the first find.
+        for (var i = 36; i < 40; i++) {
+          await hear('Species sp$i');
+        }
+
+        final overview = await points.overview(now: may4);
+        expect(overview.figures.totalStars, greaterThanOrEqualTo(5000));
+        expect(overview.badgeFor(kWeeklyTarget.key), isNotNull);
+      });
+    });
+
+    // =======================================================================
+    // AUS-06 · rarity achievements
+    // =======================================================================
+    //
+    // The one rule with a ⚠️ on it: counted at the level **frozen at the
+    // moment of detection** (`PKT-15`). The scale is rebuilt per cell and per
+    // geo week, so re-deriving it today would un-earn a redwing that was rare
+    // in November because the same bird is common in January.
+    // =======================================================================
+    group('AUS-06 · the rarity achievements', () {
+      test('one rare bird is a Lucky one', () async {
+        await hear('Species sp39');
+
+        final earned = (await points.overview(now: may4)).rarityAchievements;
+        expect(earned.map((a) => a.key), contains(kLuckyOne.key));
+      });
+
+      test('an abundant bird is not', () async {
+        await hear('Species sp0');
+
+        expect((await points.overview(now: may4)).rarityAchievements, isEmpty);
+      });
+
+      test('the rungs are distinct species, not detections', () async {
+        // The same rarity heard five times is one rare bird.
+        for (var day = 0; day < 5; day++) {
+          await hear('Species sp39', at: may4.add(Duration(days: day)));
+        }
+
+        final earned = (await points.overview(now: may4)).rarityAchievements;
+        expect(earned.map((a) => a.key), isNot(contains(kTracker.key)));
+      });
+
+      test('five different rare birds make a Tracker', () async {
+        for (var i = 29; i < 34; i++) {
+          await hear('Species sp$i');
+        }
+
+        final earned = (await points.overview(now: may4)).rarityAchievements;
+        expect(earned.map((a) => a.key), contains(kTracker.key));
+      });
+
+      test('🎆 Sensation! wants the very top of the scale', () async {
+        // Not "a rare-ish bird": the rarest tier there is.
+        await hear('Species sp29'); // scarce, upper half but not the top
+        var earned = (await points.overview(now: may4)).rarityAchievements;
+        expect(earned.map((a) => a.key), contains(kLuckyOne.key));
+        expect(earned.map((a) => a.key), isNot(contains(kSensation.key)));
+
+        await hear('Species sp39');
+        earned = (await points.overview(now: may4)).rarityAchievements;
+        expect(earned.map((a) => a.key), contains(kSensation.key));
+      });
+    });
+
+    // =======================================================================
+    // AUS-07 · persistence achievements
+    // =======================================================================
+    //
+    // ⚠️ Every one of these is a **record**. A broken streak is not commented
+    // on, not marked and not presented as a loss (principle 1), and the
+    // cheapest way to keep that promise is to have no number that can go down.
+    // =======================================================================
+    group('AUS-07 · the persistence achievements', () {
+      test('seven days in a row is a week kept up', () async {
+        for (var day = 0; day < 7; day++) {
+          await hear('Species sp0', at: may4.add(Duration(days: day)));
+        }
+
+        final earned =
+            (await points.overview(now: may4)).persistenceAchievements;
+        expect(earned.map((a) => a.key), contains(kWeekKeptUp.key));
+      });
+
+      test('six is not', () async {
+        for (var day = 0; day < 6; day++) {
+          await hear('Species sp0', at: may4.add(Duration(days: day)));
+        }
+
+        expect(
+          (await points.overview(now: may4)).persistenceAchievements,
+          isEmpty,
+        );
+      });
+
+      test('⚠️ a broken streak never takes the badge away', () async {
+        // The heart of principle 1. Seven days, then a gap, then two more —
+        // the record stands, and nothing anywhere says the run ended.
+        for (var day = 0; day < 7; day++) {
+          await hear('Species sp0', at: may4.add(Duration(days: day)));
+        }
+        await hear('Species sp0', at: may4.add(const Duration(days: 20)));
+        await hear('Species sp0', at: may4.add(const Duration(days: 21)));
+
+        final overview = await points.overview(now: may4);
+        expect(
+          overview.persistenceAchievements.map((a) => a.key),
+          contains(kWeekKeptUp.key),
+        );
+        expect(overview.figures.longestStreak, 7);
+      });
+
+      test('Star collector counts stars, not days', () async {
+        for (var i = 36; i < 40; i++) {
+          await hear('Species sp$i');
+        }
+
+        final overview = await points.overview(now: may4);
+        final earned = overview.persistenceAchievements.map((a) => a.key);
+        expect(
+          earned.contains(kStarCollectorI.key),
+          overview.figures.totalStars >= 10000,
+        );
+      });
+
+      test('an empty history earns nothing at all', () async {
+        final overview = await points.overview(now: may4);
+
+        expect(overview.persistenceAchievements, isEmpty);
+        expect(overview.rarityAchievements, isEmpty);
+        expect(overview.badges, isEmpty);
       });
     });
 
@@ -420,7 +838,7 @@ void main() {
       expect(find.text('Longest run'), findsOneWidget);
     });
 
-    testWidgets('AUS-02 · an unearned badge is not shown greyed out', (
+    testWidgets('AUS-02 · an unearned loyalty badge is not shown at all', (
       tester,
     ) async {
       await pump(tester, const PointsOverview(figures: KeyFigures()));
@@ -428,11 +846,123 @@ void main() {
       await tester.tap(find.text('Badges'));
       await tester.pumpAndSettle();
 
-      expect(find.text('No badges yet'), findsOneWidget);
-      // A permanent reminder of what you have not managed is the opposite of
-      // what this screen is for.
+      // A permanent reminder of a bird you have not been loyal to is the
+      // opposite of what this screen is for — so the loyalty section is not
+      // even there. The day and week catalogues *are* (AUS-04, AUS-05): an
+      // open daily badge is a suggestion for this afternoon.
       expect(find.text('Regular'), findsNothing);
       expect(find.text('Always here'), findsNothing);
+      expect(find.text('Your regulars'), findsNothing);
+      expect(find.text('The early bird'), findsOneWidget);
+    });
+
+    testWidgets('AUS-04 · the whole daily catalogue is on screen', (
+      tester,
+    ) async {
+      await pump(tester, const PointsOverview(figures: KeyFigures()));
+
+      await tester.tap(find.text('Badges'));
+      await tester.pumpAndSettle();
+
+      expect(
+        find.byType(BadgeTile),
+        findsNWidgets(kDailyBadges.length + kWeeklyBadges.length),
+      );
+      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('This week'), findsOneWidget);
+    });
+
+    testWidgets('AUS-04 · an open badge is marked open, not failed', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const PointsOverview(
+          figures: KeyFigures(),
+          badges: [EarnedBadge(definition: kEarlyBird)],
+        ),
+      );
+
+      await tester.tap(find.text('Badges'));
+      await tester.pumpAndSettle();
+
+      // One tick for the one earned badge; every other row carries the quiet
+      // "still open" mark rather than a cross.
+      expect(find.byIcon(AppIcons.checkCircle), findsOneWidget);
+      expect(
+        find.byIcon(AppIcons.lockOutline),
+        findsNWidgets(kDailyBadges.length + kWeeklyBadges.length - 1),
+      );
+    });
+
+    testWidgets('AUS-04 · a badge says what earns it, earned or not', (
+      tester,
+    ) async {
+      await pump(tester, const PointsOverview(figures: KeyFigures()));
+
+      await tester.tap(find.text('Badges'));
+      await tester.pumpAndSettle();
+
+      // The condition is the invitation. Without it an open badge is a
+      // mystery rather than a suggestion.
+      expect(find.text('Heard something after 10 at night'), findsOneWidget);
+      expect(find.text('5,000 stars in one week'), findsOneWidget);
+    });
+
+    testWidgets('AUS-06 · rarity achievements get their own section', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const PointsOverview(
+          figures: KeyFigures(),
+          rarityAchievements: [kLuckyOne, kSensation],
+        ),
+      );
+
+      await tester.tap(find.text('Achievements'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Rare finds'), findsOneWidget);
+      expect(find.text('Lucky one'), findsOneWidget);
+      expect(find.text('Sensation!'), findsOneWidget);
+    });
+
+    testWidgets('AUS-07 · persistence achievements do too', (tester) async {
+      await pump(
+        tester,
+        const PointsOverview(
+          figures: KeyFigures(),
+          persistenceAchievements: [kWeekKeptUp],
+        ),
+      );
+
+      await tester.tap(find.text('Achievements'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('Staying power'), findsOneWidget);
+      expect(find.text('A week kept up'), findsOneWidget);
+    });
+
+    testWidgets('⚠️ AUS-07 · nothing on this tab can be lost', (tester) async {
+      // Principle 1. Persistence achievements are records, so the tab has no
+      // vocabulary for a run that ended — no "current streak", no red, no
+      // "you lost it". If this ever fails, something on screen learnt how to
+      // take a badge away.
+      await pump(
+        tester,
+        const PointsOverview(
+          figures: KeyFigures(longestStreak: 7),
+          persistenceAchievements: [kWeekKeptUp],
+        ),
+      );
+
+      await tester.tap(find.text('Achievements'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('lost'), findsNothing);
+      expect(find.textContaining('broken'), findsNothing);
+      expect(find.text('A week kept up'), findsOneWidget);
     });
 
     testWidgets('an earned loyalty badge names its species', (tester) async {

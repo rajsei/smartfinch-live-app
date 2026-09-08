@@ -505,7 +505,7 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 **Loyalty badges are derived from the days, not from the multiplier.** The multiplier on a `ScoreEvent` records what was *paid*, and only the highest one ever is (`PKT-07`) — so a species that was a first find on the day it also became a Regular would have no ×2 to find. Counting the days directly is the only reading that cannot lose a badge.
 
-**`AUS-02` is honoured literally:** unearned badges are not shown greyed out. `AUS-04`/`AUS-05` bring the full day and week catalogue at P1, where an open badge reads as a goal rather than as a gap. The Achievements tab does show one line for the next medal, which is a goal without being a row of eight faded ones.
+**`AUS-02` is honoured literally:** unearned *loyalty* badges are not shown at all. `AUS-04`/`AUS-05` later brought the full day and week catalogue, which is shown open-and-all — the two rules coexist because an open daily badge is an invitation for this afternoon while a greyed "Regular · blackbird" would be a reproach about a bird. The Achievements tab does show one line for the next medal, which is a goal without being a row of eight faded ones.
 
 **The tile grid is complete.** Sammlung · Erkunden · Tagebuch · Punkte · Einstellungen, with a test per tile asserting it actually opens its screen.
 
@@ -612,6 +612,32 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 *Two small things.* The card is sized in logical pixels rather than to its parent, so a tablet does not produce a different picture from a phone. And `mimeTypeForSharedPath` had no `.png` case — without it chat apps offer the day as a file to download instead of showing the image, which defeats the point.
 
 *What is deliberately not reused:* the existing HTML report, which the specification named as the basis. It is a research artefact — full detection tables, timestamps, confidence columns, and a session's coordinates — and every one of those is either gone with the research modes or excluded here by name. The day card shares its purpose and none of its content.
+
+**`AUS-04` to `AUS-08` are done** ✅ — 45 tests. The badge catalogue, the rarity and persistence achievements, and the card that fires when one lands.
+
+**`AUS-04`/`AUS-05` · the catalogue is shown in full, and that is a different rule from `AUS-02`.** Nine daily badges and three weekly ones, every one of them on screen with a tick or a quiet "still open" mark. The loyalty badges stay hidden until earned, exactly as before. The distinction is worth stating because it looks like an inconsistency and is not: an open **daily** badge is a suggestion for this afternoon — "Evening listener, not yet today" is an invitation — while a permanently greyed "Regular · blackbird" would be a reproach about a bird. An open badge is marked open, never failed; there is no cross anywhere on the tab.
+
+*Each row says what earns it, earned or not.* Without the condition an open badge is a mystery rather than a suggestion, which would make the whole "show them all" decision pointless.
+
+**Two badges needed something the database does not hold.**
+
+🌱 **Herald of spring** is the same judgement `PKT-17` puts on screen as a sentence — a bird heard in the early shoulder of its own season — and that lives in the geo model's 48-week curve, not in any table. So `overview()` takes a `WeeklyScoresLookup`: the *rule* stays in the repository beside the other eleven, only the curve is injected. Without a lookup the badge is simply unearnable, which is honest — no curve, no season to be early for. The alternative, a second season rule computed in the widget layer, would have let the app award a badge for an arrival it simultaneously described as ordinary.
+
+🗺️ **New ground** reads `Sessions.gridCell` rather than the place names of `LOG-13`: a badge that needed labelled walks would be a badge for bookkeeping. The first cell is never new ground — everywhere is, the first time the app is opened.
+
+**A real bug fell out of writing the clock rules.** `ScoreEvents.awardedAt` was `DateTime.now()` at insert time rather than the moment of detection, so it could disagree with the `dayKey` sitting beside it — a bird heard at 23:59 and written a second later carried yesterday's day and today's time. Harmless while nothing read the hour off that row; not harmless now that six badges do. It is `context.now` now, like every other frozen field (`PKT-15`). `updatedAt` stays wall-clock, because that one really is about the row.
+
+**`AUS-06` · rarity, counted at the level frozen at detection.** `levelAtDetection`, never today's tier. The scale is rebuilt per grid cell *and* per geo week, so re-deriving it would un-earn a redwing that was rare in November because the same bird is common in January — achievements that drifted with the seasons would be worse than none. The other trap is the direction of "the upper half of the rarity levels": the field runs 0 = rare … 5 = abundant, so the rarer half is 0–2, and reading it the other way round would hand out the rarity medals for blackbirds. Both have a test.
+
+**`AUS-07` · persistence, and nothing here can be lost.** The streak rungs read the *longest* run there has ever been, so there is no number on the tab that falls on the day a child misses. That is `AUS-07` and principle 1 in the same sentence, and the cheapest way to keep the promise was to have nothing that can go down. There is a test that earns a week, breaks the streak, and asserts the badge is still there and the screen still says nothing about it.
+
+**`AUS-08` · one queue, two kinds of celebration.** The specification says "same queuing rule as `LIVE-07`", so rather than write that rule twice `CelebrationQueue` became generic: first finds carry species names, unlocks carry badge definitions, and burst-collection and one-at-a-time are defined once. Two copies would have eventually disagreed about what "at most one" means, and the bug would have been a child watching four popups in a row.
+
+*The card says what was earned and why* — "🌅 The early bird · Heard something before 9 in the morning" — because the moment the rule is satisfied is the one moment a child is guaranteed to be reading.
+
+*The two restraints are what the tests are about.* `BadgeWatcher` returns nothing on its first look: the badge list is derived from all of history (`AUS-12`), so a first derivation reports everything ever earned, and celebrating that would mean opening the app after a month away and watching forty popups. And it throttles — the rules read the whole score journal, so running them after every bird would put a year of history through a query on the audio thread's heels. A badge landing twenty seconds late is still a surprise; a first find has to be immediate, which is why that one is pushed by the score board rather than polled.
+
+*Not built:* 🌧️ **Bad weather hero**, the tenth row of 3.2's daily table. It is `AUS-11`'s, at a different priority, and it needs the weather consent gate — a child who declines weather simply never earns it. The catalogue is otherwise complete.
 
 **A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 
