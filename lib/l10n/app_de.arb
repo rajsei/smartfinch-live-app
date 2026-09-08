@@ -1245,5 +1245,7 @@
   "achievementWinterVisitors": "Wintergäste",
   "achievementWinterVisitorsCondition": "5 Arten im Dezember oder Januar",
   "pointsTabYear": "Dieses Jahr",
-  "pointsSectionCollector": "Insgesamt"
+  "pointsSectionCollector": "Insgesamt",
+  "seasonHintEarly": "Früh dran! Die {species} ist normalerweise erst ab {month} hier.",
+  "seasonHintLate": "Noch da! Die {species} ist normalerweise nach {month} weg."
 }

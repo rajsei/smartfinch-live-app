@@ -1245,5 +1245,7 @@
   "achievementWinterVisitors": "Зимние гости",
   "achievementWinterVisitorsCondition": "5 видов в декабре или январе",
   "pointsTabYear": "В этом году",
-  "pointsSectionCollector": "Всего"
+  "pointsSectionCollector": "Всего",
+  "seasonHintEarly": "Рано! {species} обычно бывает здесь только с {month}.",
+  "seasonHintLate": "Ещё здесь! {species} обычно улетает после {month}."
 }

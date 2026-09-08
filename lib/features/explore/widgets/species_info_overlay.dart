@@ -26,6 +26,7 @@ import '../../../shared/models/taxonomy_species.dart';
 import '../../../shared/providers/settings_providers.dart';
 import '../../../shared/services/link_launcher.dart';
 import '../../../shared/utils/app_icons.dart';
+import '../../scoring/widgets/season_hint_banner.dart';
 import '../explore_providers.dart';
 import '../explore_tier.dart';
 import '../../inference/geo_model.dart';
@@ -308,8 +309,16 @@ class _SpeciesInfoSheetState extends ConsumerState<_SpeciesInfoSheet> {
                     ),
                 ],
 
-                // ── 48-Week Probability Chart ──────────────────────────────
+                // ── 48-Week Probability Chart (SAM-15) ─────────────────────
                 _WeeklyProbabilityChart(scientificName: widget.scientificName),
+
+                // Directly under the curve, because it is the sentence that
+                // turns the curve into a lesson (PKT-17). Renders nothing for
+                // a species that is in season, which is most of them.
+                SeasonHintBanner(
+                  scientificName: widget.scientificName,
+                  commonName: widget.commonName,
+                ),
 
                 // ── External links ───────────────────────────────
                 if (_detail != null) ...[

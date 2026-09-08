@@ -25,6 +25,7 @@ import '../../../shared/widgets/detection_evidence_badge.dart';
 import '../../explore/explore_providers.dart';
 import '../../history/widgets/detection_actions.dart';
 import '../../scoring/scoring_providers.dart';
+import '../../scoring/widgets/season_hint_banner.dart';
 import '../live_session.dart';
 import 'live_tips.dart';
 import 'score_chips.dart';
@@ -370,6 +371,14 @@ class DetectionTile extends ConsumerWidget {
                             .watch(liveScoreBoardProvider)
                             .state
                             .scoreFor(detection.scientificName),
+                      ),
+                      // And below the number, why it is that number today
+                      // (PKT-17). Renders nothing for a species in season,
+                      // which is most species most of the time.
+                      SeasonHintBanner(
+                        scientificName: detection.scientificName,
+                        commonName: displayName,
+                        compact: true,
                       ),
                     ],
                   ],

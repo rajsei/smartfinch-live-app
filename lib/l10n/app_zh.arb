@@ -1245,5 +1245,7 @@
   "achievementWinterVisitors": "冬季访客",
   "achievementWinterVisitorsCondition": "十二月或一月有 5 个物种",
   "pointsTabYear": "今年",
-  "pointsSectionCollector": "总计"
+  "pointsSectionCollector": "总计",
+  "seasonHintEarly": "来得早！{species} 通常从{month}才会出现在这里。",
+  "seasonHintLate": "还在！{species} 通常{month}之后就走了。"
 }

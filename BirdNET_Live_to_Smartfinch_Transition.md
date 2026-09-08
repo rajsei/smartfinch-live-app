@@ -549,7 +549,19 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 
 *One test caught its own mistake:* the counted rungs were first written with 25 species in May, which also earns **The Returners**. The code was right and the expectation too narrow — moved to August, a month that is neither spring nor winter.
 
-**Next in this phase:** `PKT-17` (season hint on the detection card) and `SAM-15` (the 48-week annual cycle bar), which the plan pairs together — until the app explains *why* points move, the movement reads as a bug.
+**`SAM-15` and `PKT-17` are done** ✅ — 23 tests. The plan pairs them, and the pairing turned out to be the whole point.
+
+**`SAM-15` was already built.** The 48-week chart is inherited: 48 bars, the current week highlighted and outlined, month labels underneath. The specification called it "confirmed free — a chart over data that is sitting there", and it was right. What it lacked was any sentence saying what the shape *means*.
+
+**`PKT-17` is that sentence, and it now does a different job.** Before D20 it defended a strange number; the off-list case is gone, the swings are smaller, and it is now what the specification says it became: **a phenology lesson in one sentence**. "🌱 Early! The blackcap is normally only here from April."
+
+**A species is compared only against itself.** Its *season* is the weeks where it reaches at least half its own annual peak. That one decision is what makes the rule work for a resident and a migrant alike: a blackbird never leaves its season, never gets a hint, and correctly so — there is nothing remarkable about hearing one in February. Half is deliberately generous; a stricter bar would fire through the shoulders of a long season, and a hint that appears for four months is wallpaper.
+
+**Most of the tests are about staying quiet**, because that is where the value is. A hint that fires for a blackbird teaches a child something false. There is a test that sweeps all 48 weeks of a resident's year and expects nothing at any of them.
+
+*The case that needed real thought:* a **winter visitor**, whose season wraps December into January. Such a season has no lowest week that means "start" — the boundary is the week whose *previous* week is out of season. Without that it would have announced its season as starting in January and ending in November, which is exactly backwards. Tested.
+
+**One widget, two places** — the detection card and the species detail, directly under the curve it explains — so the app cannot say two different things about the same bird on the same day. Neutral styling in both: being early is not a problem, it is the most interesting thing that can happen on a walk in March.
 
 **A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 

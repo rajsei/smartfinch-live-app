@@ -1245,5 +1245,7 @@
   "achievementWinterVisitors": "Vintergjester",
   "achievementWinterVisitorsCondition": "5 arter i desember eller januar",
   "pointsTabYear": "I år",
-  "pointsSectionCollector": "Totalt"
+  "pointsSectionCollector": "Totalt",
+  "seasonHintEarly": "Tidlig ute! {species} er vanligvis her først fra {month}.",
+  "seasonHintLate": "Fortsatt her! {species} er vanligvis borte etter {month}."
 }

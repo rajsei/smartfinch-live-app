@@ -1245,5 +1245,7 @@
   "achievementWinterVisitors": "Zimní hosté",
   "achievementWinterVisitorsCondition": "5 druhů v prosinci nebo lednu",
   "pointsTabYear": "Letos",
-  "pointsSectionCollector": "Celkově"
+  "pointsSectionCollector": "Celkově",
+  "seasonHintEarly": "Brzy! {species} tu bývá normálně až od {month}.",
+  "seasonHintLate": "Ještě tu je! {species} normálně po {month} mizí."
 }

@@ -1245,5 +1245,7 @@
   "achievementWinterVisitors": "Wintergasten",
   "achievementWinterVisitorsCondition": "5 soorten in december of januari",
   "pointsTabYear": "Dit jaar",
-  "pointsSectionCollector": "In totaal"
+  "pointsSectionCollector": "In totaal",
+  "seasonHintEarly": "Vroeg! De {species} is hier normaal pas vanaf {month}.",
+  "seasonHintLate": "Nog hier! De {species} is normaal na {month} weg."
 }

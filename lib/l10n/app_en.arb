@@ -5439,5 +5439,29 @@
   "pointsSectionCollector": "Overall",
   "@pointsSectionCollector": {
     "description": "Section label above the Collector ladder, once the year section exists beside it"
+  },
+  "seasonHintEarly": "Early! The {species} is normally only here from {month}.",
+  "@seasonHintEarly": {
+    "description": "PKT-17: the species is here before its season normally starts — a phenology lesson in one sentence",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
+  },
+  "seasonHintLate": "Still here! The {species} is normally gone after {month}.",
+  "@seasonHintLate": {
+    "description": "PKT-17: the species is still here after its season normally ends",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "month": {
+        "type": "String"
+      }
+    }
   }
 }
