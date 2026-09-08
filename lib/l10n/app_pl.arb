@@ -1159,5 +1159,15 @@
   "bonusVariety": "Wiele różnych gatunków",
   "bonusEarlyRiser": "Ranny ptaszek",
   "bonusNewPlace": "Nowe miejsce",
-  "bonusWeekWrapUp": "Dobry tydzień"
+  "bonusWeekWrapUp": "Dobry tydzień",
+  "collectionTitle": "Kolekcja",
+  "collectionProgress": "{collected} z {total} gatunków w twojej okolicy",
+  "collectionWorthHereThisWeek": "Tu, w tym tygodniu: {stars} ⭐",
+  "collectionOnlyMine": "Tylko moje",
+  "collectionEmptyTitle": "Twoja kolekcja jest jeszcze pusta",
+  "collectionEmptySubtitle": "Każdy ptak, którego usłyszysz, trafia tutaj.",
+  "collectionNoMatches": "Nic z tej grupy tutaj",
+  "collectionUnavailable": "Nie udało się otworzyć kolekcji.",
+  "collectionCardCollectedA11y": "{species}, zebrane, warte {stars} gwiazdek tu w tym tygodniu",
+  "collectionCardOpenA11y": "{species}, jeszcze nieznalezione, warte {stars} gwiazdek tu w tym tygodniu"
 }

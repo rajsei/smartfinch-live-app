@@ -1159,5 +1159,15 @@
   "bonusVariety": "Viele verschiedene Arten",
   "bonusEarlyRiser": "Frühaufsteher",
   "bonusNewPlace": "Ein neuer Ort",
-  "bonusWeekWrapUp": "Eine gute Woche"
+  "bonusWeekWrapUp": "Eine gute Woche",
+  "collectionTitle": "Sammlung",
+  "collectionProgress": "{collected} von {total} Arten in deiner Gegend",
+  "collectionWorthHereThisWeek": "Hier, diese Woche: {stars} ⭐",
+  "collectionOnlyMine": "Nur meine",
+  "collectionEmptyTitle": "Deine Sammlung ist noch leer",
+  "collectionEmptySubtitle": "Jeder Vogel, den du hörst, landet hier.",
+  "collectionNoMatches": "Aus dieser Gruppe gibt es hier nichts",
+  "collectionUnavailable": "Die Sammlung konnte nicht geöffnet werden.",
+  "collectionCardCollectedA11y": "{species}, gesammelt, hier diese Woche {stars} Sterne wert",
+  "collectionCardOpenA11y": "{species}, noch nicht gefunden, hier diese Woche {stars} Sterne wert"
 }

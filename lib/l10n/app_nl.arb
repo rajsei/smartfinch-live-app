@@ -1159,5 +1159,15 @@
   "bonusVariety": "Veel verschillende soorten",
   "bonusEarlyRiser": "Vroege vogel",
   "bonusNewPlace": "Een nieuwe plek",
-  "bonusWeekWrapUp": "Een goede week"
+  "bonusWeekWrapUp": "Een goede week",
+  "collectionTitle": "Verzameling",
+  "collectionProgress": "{collected} van {total} soorten in jouw omgeving",
+  "collectionWorthHereThisWeek": "Hier, deze week: {stars} ⭐",
+  "collectionOnlyMine": "Alleen die van mij",
+  "collectionEmptyTitle": "Je verzameling is nog leeg",
+  "collectionEmptySubtitle": "Elke vogel die je hoort komt hier terecht.",
+  "collectionNoMatches": "Niets uit deze groep hier",
+  "collectionUnavailable": "De verzameling kon niet worden geopend.",
+  "collectionCardCollectedA11y": "{species}, verzameld, hier deze week {stars} sterren waard",
+  "collectionCardOpenA11y": "{species}, nog niet gevonden, hier deze week {stars} sterren waard"
 }

@@ -5022,5 +5022,74 @@
   "bonusWeekWrapUp": "A good week",
   "@bonusWeekWrapUp": {
     "description": "Name of the week wrap-up bonus in the day detail (2.6)"
+  },
+  "collectionTitle": "Collection",
+  "@collectionTitle": {
+    "description": "Title of the Collection screen and its home tile (SAM-02)"
+  },
+  "collectionProgress": "{collected} of {total} species in your region",
+  "@collectionProgress": {
+    "description": "SAM-05: progress against the local species list",
+    "placeholders": {
+      "collected": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionWorthHereThisWeek": "Here, this week: {stars} ⭐",
+  "@collectionWorthHereThisWeek": {
+    "description": "SAM-03: what a species is worth, labelled as location- and week-dependent",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionOnlyMine": "Only mine",
+  "@collectionOnlyMine": {
+    "description": "Filter chip narrowing the album to species already collected"
+  },
+  "collectionEmptyTitle": "Your collection is still empty",
+  "@collectionEmptyTitle": {
+    "description": "Shown when the child has not collected anything yet"
+  },
+  "collectionEmptySubtitle": "Every bird you hear lands here.",
+  "@collectionEmptySubtitle": {
+    "description": "Second line of the empty collection state"
+  },
+  "collectionNoMatches": "Nothing in this group here",
+  "@collectionNoMatches": {
+    "description": "Shown when the group filter leaves nothing to display"
+  },
+  "collectionUnavailable": "The collection could not be opened.",
+  "@collectionUnavailable": {
+    "description": "Shown when the collection cannot be read"
+  },
+  "collectionCardCollectedA11y": "{species}, collected, worth {stars} stars here this week",
+  "@collectionCardCollectedA11y": {
+    "description": "Screen-reader label for a collected species card",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "collectionCardOpenA11y": "{species}, not found yet, worth {stars} stars here this week",
+  "@collectionCardOpenA11y": {
+    "description": "Screen-reader label for a species not yet collected",
+    "placeholders": {
+      "species": {
+        "type": "String"
+      },
+      "stars": {
+        "type": "int"
+      }
+    }
   }
 }

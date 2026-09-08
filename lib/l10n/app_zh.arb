@@ -1159,5 +1159,15 @@
   "bonusVariety": "许多不同物种",
   "bonusEarlyRiser": "早起的人",
   "bonusNewPlace": "新地方",
-  "bonusWeekWrapUp": "美好的一周"
+  "bonusWeekWrapUp": "美好的一周",
+  "collectionTitle": "收藏",
+  "collectionProgress": "你所在地区 {total} 个物种中的 {collected} 个",
+  "collectionWorthHereThisWeek": "这里，本周：{stars} ⭐",
+  "collectionOnlyMine": "只看我的",
+  "collectionEmptyTitle": "你的收藏还是空的",
+  "collectionEmptySubtitle": "你听到的每一只鸟都会出现在这里。",
+  "collectionNoMatches": "这里没有这一组的物种",
+  "collectionUnavailable": "无法打开收藏。",
+  "collectionCardCollectedA11y": "{species}，已收集，本周在这里值 {stars} 颗星",
+  "collectionCardOpenA11y": "{species}，尚未找到，本周在这里值 {stars} 颗星"
 }

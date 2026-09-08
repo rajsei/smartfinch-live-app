@@ -1159,5 +1159,15 @@
   "bonusVariety": "Tante specie diverse",
   "bonusEarlyRiser": "Mattiniero",
   "bonusNewPlace": "Un posto nuovo",
-  "bonusWeekWrapUp": "Una buona settimana"
+  "bonusWeekWrapUp": "Una buona settimana",
+  "collectionTitle": "Collezione",
+  "collectionProgress": "{collected} di {total} specie della tua zona",
+  "collectionWorthHereThisWeek": "Qui, questa settimana: {stars} ⭐",
+  "collectionOnlyMine": "Solo le mie",
+  "collectionEmptyTitle": "La tua collezione è ancora vuota",
+  "collectionEmptySubtitle": "Ogni uccello che senti finisce qui.",
+  "collectionNoMatches": "Niente di questo gruppo qui",
+  "collectionUnavailable": "Non è stato possibile aprire la collezione.",
+  "collectionCardCollectedA11y": "{species}, raccolta, vale {stars} stelle qui questa settimana",
+  "collectionCardOpenA11y": "{species}, non ancora trovata, vale {stars} stelle qui questa settimana"
 }

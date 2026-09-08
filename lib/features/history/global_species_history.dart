@@ -35,6 +35,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../core/constants/app_constants.dart';
 import '../../shared/providers/app_providers.dart';
+import '../collection/collection_providers.dart';
 import '../live/live_providers.dart';
 import '../live/live_session.dart';
 
@@ -184,30 +185,20 @@ final globalSpeciesHistoryProvider =
       return history;
     });
 
-/// Set of every scientific name found in any saved session, derived live
-/// from [sessionListProvider].
+/// Species the child has collected — the ticks Explore draws on its list.
 ///
-/// Used by the Explore screen's "detected" checkmark badges (on species
-/// thumbnails and in the species info overlay). We deliberately do NOT
-/// reuse [globalSpeciesHistoryProvider] for this purpose because that
-/// store is only mutated by the Survey alert engine — detections from
-/// Live, Point Count, and File Analysis sessions never reach it. By
-/// recomputing from the on-disk session list we guarantee the badges
-/// always reflect what the user actually has saved, and they refresh
-/// automatically whenever a session is saved or deleted (which
-/// invalidates [sessionListProvider]).
+/// ⚠️ **This is the life list, not "everything ever heard".**
+///
+/// It used to be derived from the on-disk session files, which was right when
+/// a detection was simply a detection. It is not right now: `LifeSpecies` is
+/// what the first-find ×3 checks (`PKT-04`), and a tick that disagreed with it
+/// would be the worst kind of disagreement — a child seeing a species ticked in
+/// Explore and then being awarded ×3 for "finding" it a week later, with
+/// nothing in the app able to explain which of the two was lying.
+///
+/// The consequence is deliberate: a species heard while scoring was paused is
+/// **not** ticked. It is in the journal with its recording (`LOG-15`); what it
+/// is not is collected.
 final detectedSpeciesSetProvider = Provider<Set<String>>((ref) {
-  final asyncSessions = ref.watch(sessionListProvider);
-  return asyncSessions.maybeWhen(
-    data: (sessions) {
-      final names = <String>{};
-      for (final s in sessions) {
-        for (final d in s.detections) {
-          if (d.scientificName.isNotEmpty) names.add(d.scientificName);
-        }
-      }
-      return names;
-    },
-    orElse: () => const <String>{},
-  );
+  return ref.watch(collectedSpeciesNamesProvider);
 });

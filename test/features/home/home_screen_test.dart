@@ -207,18 +207,17 @@ void main() {
       // deletion left it behind. Counting is what stops that recurring.
       await pump(tester, const HomeTiles());
 
-      for (final label in ['Explore', 'Journal', 'Settings']) {
+      for (final label in ['Collection', 'Explore', 'Journal', 'Settings']) {
         expect(find.text(label), findsOneWidget, reason: label);
       }
     });
 
     testWidgets('no tile is present that opens nothing', (tester) async {
-      // Collection and Points arrive with 2.6 and 2.7. Until then they are
-      // absent rather than disabled: a greyed tile is not something an
-      // eight-year-old reads as "later".
+      // Points arrives with 2.7. Until then it is absent rather than
+      // disabled: a greyed tile is not something an eight-year-old reads as
+      // "later".
       await pump(tester, const HomeTiles());
 
-      expect(find.text('Collection'), findsNothing);
       expect(find.text('Points'), findsNothing);
     });
 

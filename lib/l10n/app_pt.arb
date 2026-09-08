@@ -1159,5 +1159,15 @@
   "bonusVariety": "Muitas espécies diferentes",
   "bonusEarlyRiser": "Madrugador",
   "bonusNewPlace": "Um sítio novo",
-  "bonusWeekWrapUp": "Uma boa semana"
+  "bonusWeekWrapUp": "Uma boa semana",
+  "collectionTitle": "Coleção",
+  "collectionProgress": "{collected} de {total} espécies na tua região",
+  "collectionWorthHereThisWeek": "Aqui, esta semana: {stars} ⭐",
+  "collectionOnlyMine": "Só as minhas",
+  "collectionEmptyTitle": "A tua coleção ainda está vazia",
+  "collectionEmptySubtitle": "Cada ave que ouves aparece aqui.",
+  "collectionNoMatches": "Nada deste grupo por aqui",
+  "collectionUnavailable": "Não foi possível abrir a coleção.",
+  "collectionCardCollectedA11y": "{species}, recolhida, vale {stars} estrelas aqui esta semana",
+  "collectionCardOpenA11y": "{species}, ainda não encontrada, vale {stars} estrelas aqui esta semana"
 }

@@ -479,7 +479,19 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 *Still open from chapter LOG:* `LOG-04` (day/week/month/year), `LOG-05` (sticky month header), `LOG-07` (expandable individual detections) and `LOG-11` (share a day as one image) are all P1 and none of them are load-bearing for the field test.
 
-**2.6 · The Collection** (`SAM-02`…`SAM-05`, `SAM-17`) as its own area: found species only, all taxon groups by default with a group filter, the placeholder for open ones, progress counter. **Per-species silhouettes are P1** (`SAM-04b`), so this step needs no pipeline work — but it does need the species bundle to have been built at least once, or every cell shows the placeholder and the Collection looks broken.
+**2.6 · The Collection** (`SAM-02`…`SAM-05`, `SAM-17`) as its own area: found species only, all taxon groups by default with a group filter, the placeholder for open ones, progress counter. **Per-species silhouettes are P1** (`SAM-04b`), so this step needs no pipeline work — but it does need the species bundle to have been built at least once, or every cell shows the placeholder and the Collection looks broken. ✅ *Done — `features/collection/`, 19 tests.*
+
+**"Found" means `LifeSpecies`, and nothing else.** That table is what the first-find ×3 checks (`PKT-04`), so the album and the scoring engine cannot disagree. Had the Collection drawn its own conclusions — from raw detections, say — a child could see a species in their album and then be awarded ×3 for "finding" it a week later, with nothing in the app able to explain which of the two was lying. The consequence is deliberate and tested: a species heard while scoring was paused is in the journal with its recording (`LOG-15`), and is **not** in the album.
+
+**⚠️ That fixed a live inconsistency.** `detectedSpeciesSetProvider` — the ticks Explore draws — was computed from the on-disk *session files*. That was right when a detection was simply a detection; it is wrong now, and on a fresh Smartfinch install (where the JSON store is empty by design, gap H) Explore would have shown nothing ticked while the album filled up. It now reads the same life list.
+
+**A resolved tension in the requirements.** `SAM-02` says the Collection "shows only what the child has actually found"; `SAM-04` rests the whole Pokédex effect on the contrast between filled and empty cells, and `SAM-05` counts "37 of 128". The grid therefore shows the local list with found/open contrast, and **"only mine" is a filter rather than the starting state** — a grid of only what you already have has nothing to fill. `SAM-02`'s sentence is about the distinction from Explore, which still holds: two destinations, two questions.
+
+*Two small deliberate choices.* An open cell keeps its **name** — the album is a wanted list, and a row of question marks is not one. And an empty result distinguishes "you have nothing yet" from "nothing here matches this filter", because telling a child the first when the second is true is discouraging for no reason.
+
+**Progress is against the local list**, not against everything the model knows: 37 of 128 is a number a child can act on, 37 of 9,789 is not.
+
+*The bundle caveat from the plan still stands* — without `tools/build_species_bundle.py` having run, every collected cell falls back to a blank tile. It fails quietly rather than as a crash, but it does make the album look wrong.
 
 **2.7 · Points area and badges** (`STAT-01/02/05/06`, `AUS-01/02/03`): tabs, the 30-day bar chart with empty days shown as empty, key figures, and the three P0 badge groups.
 

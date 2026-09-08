@@ -1159,5 +1159,15 @@
   "bonusVariety": "Много разных видов",
   "bonusEarlyRiser": "Ранняя пташка",
   "bonusNewPlace": "Новое место",
-  "bonusWeekWrapUp": "Хорошая неделя"
+  "bonusWeekWrapUp": "Хорошая неделя",
+  "collectionTitle": "Коллекция",
+  "collectionProgress": "{collected} из {total} видов в твоём краю",
+  "collectionWorthHereThisWeek": "Здесь, на этой неделе: {stars} ⭐",
+  "collectionOnlyMine": "Только мои",
+  "collectionEmptyTitle": "Твоя коллекция пока пуста",
+  "collectionEmptySubtitle": "Каждая птица, которую ты услышишь, попадёт сюда.",
+  "collectionNoMatches": "Из этой группы здесь ничего нет",
+  "collectionUnavailable": "Не удалось открыть коллекцию.",
+  "collectionCardCollectedA11y": "{species}, собрано, стоит {stars} звёзд здесь на этой неделе",
+  "collectionCardOpenA11y": "{species}, ещё не найдено, стоит {stars} звёзд здесь на этой неделе"
 }

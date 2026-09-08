@@ -17,10 +17,10 @@
 //
 // ### Tiles that are not here yet
 //
-// Collection and Points arrive with steps 2.6 and 2.7. They are deliberately
-// **absent rather than disabled**: a greyed-out tile is not something an
-// eight-year-old reads as "later", and a tile that opens an empty screen is a
-// broken promise. Adding each one is a single entry in [_secondaryTiles].
+// Points arrives with step 2.7. It is deliberately **absent rather than
+// disabled**: a greyed-out tile is not something an eight-year-old reads as
+// "later", and a tile that opens an empty screen is a broken promise. Adding
+// it is a single entry in [_secondaryTiles].
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -28,6 +28,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
+import '../../collection/collection_screen.dart';
 import '../../explore/explore_screen.dart';
 import '../../journal/journal_screen.dart';
 import '../../live/live_screen.dart';
@@ -48,7 +49,14 @@ class _HomeTile {
 
 /// Everything other than Live, in the order HOME-04 lists them.
 const List<_HomeTile> _secondaryTiles = [
-  // Sammlung (Collection) belongs here — 2.6.
+  // Collection first: it is the one a child opens in the evening. Explore
+  // sits next to it and answers the other question — two destinations, not a
+  // toggle (SAM-02).
+  _HomeTile(
+    icon: AppIcons.gridViewRounded,
+    label: _collectionLabel,
+    builder: CollectionScreen.new,
+  ),
   _HomeTile(
     icon: AppIcons.searchRounded,
     label: _exploreLabel,
@@ -67,6 +75,7 @@ const List<_HomeTile> _secondaryTiles = [
   ),
 ];
 
+String _collectionLabel(AppLocalizations l10n) => l10n.collectionTitle;
 String _exploreLabel(AppLocalizations l10n) => l10n.exploreMode;
 String _journalLabel(AppLocalizations l10n) => l10n.homeTileJournal;
 String _settingsLabel(AppLocalizations l10n) => l10n.settings;

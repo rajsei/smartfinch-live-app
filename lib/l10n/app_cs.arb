@@ -1159,5 +1159,15 @@
   "bonusVariety": "Hodně různých druhů",
   "bonusEarlyRiser": "Ranní ptáče",
   "bonusNewPlace": "Nové místo",
-  "bonusWeekWrapUp": "Dobrý týden"
+  "bonusWeekWrapUp": "Dobrý týden",
+  "collectionTitle": "Sbírka",
+  "collectionProgress": "{collected} z {total} druhů ve tvém okolí",
+  "collectionWorthHereThisWeek": "Tady, tento týden: {stars} ⭐",
+  "collectionOnlyMine": "Jen moje",
+  "collectionEmptyTitle": "Tvá sbírka je zatím prázdná",
+  "collectionEmptySubtitle": "Každý pták, kterého uslyšíš, se ocitne tady.",
+  "collectionNoMatches": "Z této skupiny tu nic není",
+  "collectionUnavailable": "Sbírku se nepodařilo otevřít.",
+  "collectionCardCollectedA11y": "{species}, nasbíráno, tady tento týden za {stars} hvězd",
+  "collectionCardOpenA11y": "{species}, zatím nenalezeno, tady tento týden za {stars} hvězd"
 }

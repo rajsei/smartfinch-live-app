@@ -1159,5 +1159,15 @@
   "bonusVariety": "Mange forskjellige arter",
   "bonusEarlyRiser": "Morgenfugl",
   "bonusNewPlace": "Et nytt sted",
-  "bonusWeekWrapUp": "En god uke"
+  "bonusWeekWrapUp": "En god uke",
+  "collectionTitle": "Samling",
+  "collectionProgress": "{collected} av {total} arter i området ditt",
+  "collectionWorthHereThisWeek": "Her, denne uka: {stars} ⭐",
+  "collectionOnlyMine": "Bare mine",
+  "collectionEmptyTitle": "Samlingen din er fortsatt tom",
+  "collectionEmptySubtitle": "Hver fugl du hører havner her.",
+  "collectionNoMatches": "Ingenting fra denne gruppa her",
+  "collectionUnavailable": "Samlingen kunne ikke åpnes.",
+  "collectionCardCollectedA11y": "{species}, samlet, verdt {stars} stjerner her denne uka",
+  "collectionCardOpenA11y": "{species}, ikke funnet ennå, verdt {stars} stjerner her denne uka"
 }

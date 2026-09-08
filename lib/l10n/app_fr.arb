@@ -1159,5 +1159,15 @@
   "bonusVariety": "Beaucoup d'espèces différentes",
   "bonusEarlyRiser": "Lève-tôt",
   "bonusNewPlace": "Un nouvel endroit",
-  "bonusWeekWrapUp": "Une bonne semaine"
+  "bonusWeekWrapUp": "Une bonne semaine",
+  "collectionTitle": "Collection",
+  "collectionProgress": "{collected} sur {total} espèces de ta région",
+  "collectionWorthHereThisWeek": "Ici, cette semaine : {stars} ⭐",
+  "collectionOnlyMine": "Seulement les miennes",
+  "collectionEmptyTitle": "Ta collection est encore vide",
+  "collectionEmptySubtitle": "Chaque oiseau que tu entends arrive ici.",
+  "collectionNoMatches": "Rien de ce groupe par ici",
+  "collectionUnavailable": "La collection n'a pas pu être ouverte.",
+  "collectionCardCollectedA11y": "{species}, collectée, vaut {stars} étoiles ici cette semaine",
+  "collectionCardOpenA11y": "{species}, pas encore trouvée, vaut {stars} étoiles ici cette semaine"
 }
