@@ -511,6 +511,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
     if (mounted) {
       ref
         ..invalidate(journalDaysProvider)
+        ..invalidate(journalBucketsProvider)
         ..invalidate(journalDayProvider);
     }
   }

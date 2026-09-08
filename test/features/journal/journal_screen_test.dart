@@ -20,6 +20,7 @@ import 'package:smartfinch/features/journal/journal_repository.dart';
 import 'package:smartfinch/features/journal/journal_screen.dart';
 import 'package:smartfinch/features/scoring/scoring_rules.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
 
 void main() {
@@ -58,6 +59,11 @@ void main() {
     activeDays: activeDays,
   );
 
+  /// Every scope the screen asked the bucket provider for, in order.
+  final askedFor = <JournalScope>[];
+
+  setUp(askedFor.clear);
+
   Future<void> pump(
     WidgetTester tester,
     Widget child, {
@@ -77,13 +83,20 @@ void main() {
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
           if (days != null)
-            journalDaysProvider.overrideWith((ref) async => days),
-          journalBucketsProvider.overrideWith(
-            (ref, period) async => [
+            journalDaysProvider.overrideWith((ref, scope) async {
+              askedFor.add(scope);
+              return days;
+            }),
+          // Narrowing is the repository's job (and is tested there); the
+          // screen only has to ask for the right scope, so the fake answers
+          // by level and reports what it was asked for.
+          journalBucketsProvider.overrideWith((ref, scope) async {
+            askedFor.add(scope);
+            return [
               for (final bucket in buckets ?? const <JournalBucket>[])
-                if (bucket.period == period) bucket,
-            ],
-          ),
+                if (bucket.period == scope.period) bucket,
+            ];
+          }),
           if (detail != null)
             journalDayProvider.overrideWith((ref, key) async => detail),
           // The place editor reads its own sessions; nothing to name here.
@@ -542,6 +555,195 @@ void main() {
       await tester.pumpAndSettle();
 
       expect(find.byType(SliverPersistentHeader), findsNothing);
+    });
+  });
+
+  // ===========================================================================
+  // LOG-04 · drilling in
+  // ===========================================================================
+  //
+  // A tap goes one level in and **narrows** to what was tapped, rather than
+  // scrolling a full list to it. Both because that is what the child meant —
+  // "show me 2026" — and because scrolling could not work: the lists are
+  // capped, so a March week is not in the newest sixty days to scroll to.
+  //
+  // What the screen is responsible for is asking for the right span. The
+  // narrowing itself is the repository's, and is tested there.
+  // ===========================================================================
+  group('LOG-04 · drilling into a card', () {
+    /// Years, months and weeks, so any level has something to show.
+    final everyLevel = [
+      weekOf(DateTime(2026), period: JournalPeriod.year),
+      weekOf(DateTime(2026, 5), period: JournalPeriod.month),
+      weekOf(DateTime(2026, 5, 4)),
+    ];
+
+    Future<void> openYears(WidgetTester tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: everyLevel,
+      );
+      await tester.tap(find.text('Years'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('a year opens its own months, not everyone\u2019s', (
+      tester,
+    ) async {
+      await openYears(tester);
+      await tester.tap(find.text('2026'));
+      await tester.pumpAndSettle();
+
+      expect(
+        askedFor.last,
+        JournalScope.within(
+          JournalPeriod.month,
+          start: DateTime(2026),
+          end: DateTime(2027),
+        ),
+      );
+      expect(find.text('May 2026'), findsOneWidget);
+    });
+
+    testWidgets('a month opens its own weeks', (tester) async {
+      await openYears(tester);
+      await tester.tap(find.text('2026'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('May 2026'));
+      await tester.pumpAndSettle();
+
+      expect(
+        askedFor.last,
+        JournalScope.within(
+          JournalPeriod.week,
+          start: DateTime(2026, 5),
+          end: DateTime(2026, 6),
+        ),
+      );
+    });
+
+    testWidgets('a week opens its own days', (tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: everyLevel,
+      );
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.textContaining('Week of'));
+      await tester.pumpAndSettle();
+
+      // Monday to the following Monday — the same seven days PKT-05 counts.
+      expect(
+        askedFor.last,
+        JournalScope.within(
+          JournalPeriod.day,
+          start: DateTime(2026, 5, 4),
+          end: DateTime(2026, 5, 11),
+        ),
+      );
+    });
+
+    testWidgets('the day is the floor — it opens its detail, not a list', (
+      tester,
+    ) async {
+      await pump(tester, const JournalScreen(), days: [dayWith()]);
+
+      await tester.tap(find.text('8 species'));
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 1));
+
+      expect(find.byType(JournalDayScreen), findsOneWidget);
+    });
+
+    testWidgets('the trail names the whole way in', (tester) async {
+      await openYears(tester);
+      await tester.tap(find.text('2026'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('May 2026'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('2026 › May 2026'), findsOneWidget);
+    });
+
+    testWidgets('tapping the trail climbs back out one step', (tester) async {
+      await openYears(tester);
+      await tester.tap(find.text('2026'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('May 2026'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('2026 › May 2026'));
+      await tester.pumpAndSettle();
+
+      // Back at the months of 2026, not at the top of the journal.
+      expect(find.text('May 2026'), findsOneWidget);
+      expect(find.text('2026'), findsOneWidget);
+    });
+
+    testWidgets('the system back button climbs out before it leaves', (
+      tester,
+    ) async {
+      // A child who has tapped three times in should not land on the home
+      // screen on the first press back.
+      await openYears(tester);
+      await tester.tap(find.text('2026'));
+      await tester.pumpAndSettle();
+
+      await tester.binding.handlePopRoute();
+      await tester.pumpAndSettle();
+
+      expect(find.text('May 2026'), findsNothing);
+      expect(find.byType(JournalScreen), findsOneWidget);
+    });
+
+    testWidgets('the selector is the way out, so it drops the trail', (
+      tester,
+    ) async {
+      await openYears(tester);
+      await tester.tap(find.text('2026'));
+      await tester.pumpAndSettle();
+
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+
+      expect(askedFor.last, const JournalScope(JournalPeriod.week));
+      expect(find.textContaining('›'), findsNothing);
+    });
+
+    testWidgets('the chevron is the only sign the card goes anywhere', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: everyLevel,
+      );
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+
+      expect(find.byIcon(AppIcons.chevronRight), findsOneWidget);
+    });
+
+    testWidgets('a card that leads nowhere shows no chevron', (tester) async {
+      // The bare card is what the tests of LOG-04's contents use; a chevron
+      // that promised a tap and did nothing would be worse than none.
+      await tester.pumpWidget(
+        MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: JournalBucketCard(bucket: weekOf(DateTime(2026, 5, 4))),
+          ),
+        ),
+      );
+
+      expect(find.byIcon(AppIcons.chevronRight), findsNothing);
     });
   });
 }

@@ -73,7 +73,70 @@ class JournalDay {
 /// year navigable once the day list is three hundred entries long. `LOG-06`
 /// will eventually pick the starting level from how much data there is; until
 /// then it opens on days, which is the one a child recognises.
-enum JournalPeriod { day, week, month, year }
+enum JournalPeriod {
+  day,
+  week,
+  month,
+  year;
+
+  /// The level one step in — what tapping a card opens.
+  ///
+  /// Days are the floor: a day opens its detail, not another list.
+  JournalPeriod? get deeper => switch (this) {
+    JournalPeriod.year => JournalPeriod.month,
+    JournalPeriod.month => JournalPeriod.week,
+    JournalPeriod.week => JournalPeriod.day,
+    JournalPeriod.day => null,
+  };
+}
+
+/// What the journal is showing: one level, optionally narrowed to one span.
+///
+/// Narrowing is what tapping a card does (`LOG-04`). Tapping 2026 does not
+/// scroll the month list to 2026 — it *becomes* the month list of 2026, which
+/// is both what the child meant and the only version that works: the lists are
+/// capped, so a March week is not reachable by scrolling a 60-day list at all.
+///
+/// The span is a half-open range, and a bucket belongs to it if it **overlaps**
+/// rather than sits inside. An ISO week straddling the turn of the month would
+/// otherwise be reachable through April and invisible in May, taking the first
+/// three days of May with it.
+@immutable
+class JournalScope {
+  const JournalScope(this.period) : start = null, end = null;
+
+  const JournalScope.within(
+    this.period, {
+    required DateTime this.start,
+    required DateTime this.end,
+  });
+
+  final JournalPeriod period;
+
+  /// First day of the span, inclusive. Null means the whole journal.
+  final DateTime? start;
+
+  /// First day *after* the span, exclusive.
+  final DateTime? end;
+
+  bool get isNarrowed => start != null;
+
+  @override
+  bool operator ==(Object other) =>
+      other is JournalScope &&
+      other.period == period &&
+      other.start == start &&
+      other.end == end;
+
+  @override
+  int get hashCode => Object.hash(period, start, end);
+
+  @override
+  String toString() =>
+      isNarrowed
+          ? 'JournalScope(${period.name}, $start–$end)'
+          : 'JournalScope(${period.name})';
+}
 
 /// One week, month or year of the journal (`LOG-04`).
 @immutable

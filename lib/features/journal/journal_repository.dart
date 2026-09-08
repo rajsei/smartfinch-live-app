@@ -37,7 +37,16 @@ class JournalRepository {
   static const int previewLength = 4;
 
   /// Days with something on them, newest first (`LOG-02`).
-  Future<List<JournalDay>> days({int limit = 60}) async {
+  ///
+  /// [from] and [to] narrow the list to one span — the week a child tapped
+  /// (`LOG-04`). Without them the newest [limit] days come back, which is why
+  /// the drill-down narrows rather than scrolls: an old week is not in the
+  /// last sixty days to scroll to.
+  Future<List<JournalDay>> days({
+    int limit = 60,
+    DateTime? from,
+    DateTime? to,
+  }) async {
     final events =
         await (_db.select(_db.scoreEvents)
           ..where((e) => e.profileId.equals(profileId))).get();
@@ -99,16 +108,17 @@ class JournalRepository {
 
     final days = [
       for (final dayKey in dayKeys)
-        JournalDay(
-          dayKey: dayKey,
-          date: _dateOf(dayKey),
-          stars: starsByDay[dayKey] ?? 0,
-          speciesCount: scoredNames[dayKey]?.length ?? 0,
-          unscoredSpeciesCount: unscoredByDay[dayKey]?.length ?? 0,
-          speciesPreview:
-              (previewByDay[dayKey] ?? const []).take(previewLength).toList(),
-          placeNames: (placesByDay[dayKey] ?? const {}).toList()..sort(),
-        ),
+        if (_within(_dateOf(dayKey), from, to))
+          JournalDay(
+            dayKey: dayKey,
+            date: _dateOf(dayKey),
+            stars: starsByDay[dayKey] ?? 0,
+            speciesCount: scoredNames[dayKey]?.length ?? 0,
+            unscoredSpeciesCount: unscoredByDay[dayKey]?.length ?? 0,
+            speciesPreview:
+                (previewByDay[dayKey] ?? const []).take(previewLength).toList(),
+            placeNames: (placesByDay[dayKey] ?? const {}).toList()..sort(),
+          ),
     ]..sort((a, b) => b.dayKey.compareTo(a.dayKey));
 
     return days.take(limit).toList();
@@ -120,9 +130,17 @@ class JournalRepository {
   /// two busy ones is not a fact about the child worth a card — unlike an
   /// empty *day* in the 30-day chart (`STAT-02`), where the gap is the whole
   /// point. A list is read by scrolling; a chart is read by shape.
+  ///
+  /// [from] and [to] narrow the list to the card the child tapped one level
+  /// out (`LOG-04`) — the months of 2026, the weeks of May. A bucket belongs
+  /// to the span if it **overlaps** it, so the ISO week that straddles the turn
+  /// of the month shows up under both and takes the first days of the new
+  /// month with it.
   Future<List<JournalBucket>> buckets(
     JournalPeriod period, {
     int limit = 60,
+    DateTime? from,
+    DateTime? to,
   }) async {
     if (period == JournalPeriod.day) return const [];
 
@@ -155,8 +173,11 @@ class JournalRepository {
       newSpecies[bucket] = (newSpecies[bucket] ?? 0) + 1;
     }
 
-    final starts = {...stars.keys, ...species.keys}.toList()
-      ..sort((a, b) => b.compareTo(a));
+    final starts =
+        {...stars.keys, ...species.keys}.where((start) {
+            return _overlaps(start, endOfPeriod(start, period), from, to);
+          }).toList()
+          ..sort((a, b) => b.compareTo(a));
 
     return [
       for (final start in starts.take(limit))
@@ -383,6 +404,18 @@ class JournalRepository {
         JournalPeriod.month => DateTime(start.year, start.month + 1),
         JournalPeriod.year => DateTime(start.year + 1),
       };
+
+  /// Whether a single day falls inside the half-open span `[from, to)`.
+  static bool _within(DateTime day, DateTime? from, DateTime? to) =>
+      from == null || (!day.isBefore(from) && day.isBefore(to!));
+
+  /// Whether a bucket's own half-open range meets the span at all.
+  static bool _overlaps(
+    DateTime start,
+    DateTime end,
+    DateTime? from,
+    DateTime? to,
+  ) => from == null || (start.isBefore(to!) && end.isAfter(from));
 
   static DateTime _dateOf(String dayKey) {
     final parts = dayKey.split('-');

@@ -20,17 +20,25 @@ final journalRepositoryProvider = Provider<JournalRepository>((ref) {
 });
 
 /// Days with something on them, newest first (`LOG-02`).
-final journalDaysProvider = FutureProvider<List<JournalDay>>((ref) async {
-  return ref.watch(journalRepositoryProvider).days();
-});
+///
+/// A family over the scope so that drilling into a week (`LOG-04`) asks for
+/// that week's days rather than filtering the newest sixty and finding none.
+final journalDaysProvider =
+    FutureProvider.family<List<JournalDay>, JournalScope>((ref, scope) async {
+      return ref
+          .watch(journalRepositoryProvider)
+          .days(from: scope.start, to: scope.end);
+    });
 
 /// Weeks, months or years, newest first (`LOG-04`).
 final journalBucketsProvider =
-    FutureProvider.family<List<JournalBucket>, JournalPeriod>((
+    FutureProvider.family<List<JournalBucket>, JournalScope>((
       ref,
-      period,
+      scope,
     ) async {
-      return ref.watch(journalRepositoryProvider).buckets(period);
+      return ref
+          .watch(journalRepositoryProvider)
+          .buckets(scope.period, from: scope.start, to: scope.end);
     });
 
 /// Everything one day contains (`LOG-03`).

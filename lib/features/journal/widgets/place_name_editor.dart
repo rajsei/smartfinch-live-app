@@ -110,6 +110,7 @@ class PlaceNameEditor extends ConsumerWidget {
       ..invalidate(journalDaySessionsProvider(dayKey))
       ..invalidate(journalDayProvider(dayKey))
       ..invalidate(journalDaysProvider)
+      ..invalidate(journalBucketsProvider)
       ..invalidate(journalKnownPlacesProvider);
   }
 }

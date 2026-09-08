@@ -485,4 +485,117 @@ void main() {
       expect(await journal.buckets(JournalPeriod.month), isEmpty);
     });
   });
+
+  // ===========================================================================
+  // LOG-04 · narrowing to one span
+  // ===========================================================================
+  //
+  // What a tap on a card asks for. The reason it narrows rather than scrolls
+  // is here rather than on screen: both lists are capped at sixty, so a March
+  // week is not in the newest sixty days for any amount of scrolling to reach.
+  //
+  // The awkward case is the ISO week that straddles the turn of the month.
+  // It has to belong to *both* neighbours, or the first days of a month become
+  // unreachable through the drill-down while still counting in its totals.
+  // ===========================================================================
+  group('LOG-04 · narrowing to a span', () {
+    test('a year asks for its own months and no others', () async {
+      await hear('Turdus merula', at: DateTime(2025, 6, 1, 10));
+      await hear('Sitta europaea', at: DateTime(2026, 2, 3, 10));
+      await hear('Upupa epops', at: DateTime(2026, 11, 3, 10));
+
+      final months = await journal.buckets(
+        JournalPeriod.month,
+        from: DateTime(2026),
+        to: DateTime(2027),
+      );
+
+      expect(months.map((m) => m.start), [
+        DateTime(2026, 11),
+        DateTime(2026, 2),
+      ]);
+    });
+
+    test('a week asks for its own days', () async {
+      await hear('Turdus merula', at: may4.subtract(const Duration(days: 1)));
+      await hear('Sitta europaea', at: may4);
+      await hear('Upupa epops', at: may4.add(const Duration(days: 8)));
+
+      final days = await journal.days(
+        from: DateTime(2026, 5, 4),
+        to: DateTime(2026, 5, 11),
+      );
+
+      expect(days.map((d) => d.dayKey), ['2026-05-04']);
+    });
+
+    test('a straddling week belongs to both months', () async {
+      // Monday 27 April 2026 starts a week that ends on Sunday 3 May. Asked
+      // for under April it is April's; asked for under May it is May's — and
+      // the first three days of May stay reachable either way.
+      await hear('Turdus merula', at: DateTime(2026, 4, 29, 10));
+
+      final april = await journal.buckets(
+        JournalPeriod.week,
+        from: DateTime(2026, 4),
+        to: DateTime(2026, 5),
+      );
+      final may = await journal.buckets(
+        JournalPeriod.week,
+        from: DateTime(2026, 5),
+        to: DateTime(2026, 6),
+      );
+
+      expect(april.single.start, DateTime(2026, 4, 27));
+      expect(may.single.start, DateTime(2026, 4, 27));
+    });
+
+    test('a week wholly outside the span is left out', () async {
+      await hear('Turdus merula', at: DateTime(2026, 4, 20, 10));
+
+      // Monday 20 April to Sunday 26 April — April's, and only April's.
+      expect(
+        await journal.buckets(
+          JournalPeriod.week,
+          from: DateTime(2026, 5),
+          to: DateTime(2026, 6),
+        ),
+        isEmpty,
+      );
+    });
+
+    test('the span is half-open, so neighbours never double up', () async {
+      await hear('Turdus merula', at: DateTime(2026, 4, 30, 10));
+      await hear('Sitta europaea', at: DateTime(2026, 5, 1, 10));
+
+      final april = await journal.days(
+        from: DateTime(2026, 4),
+        to: DateTime(2026, 5),
+      );
+      final may = await journal.days(
+        from: DateTime(2026, 5),
+        to: DateTime(2026, 6),
+      );
+
+      expect(april.map((d) => d.dayKey), ['2026-04-30']);
+      expect(may.map((d) => d.dayKey), ['2026-05-01']);
+    });
+
+    test('without a span nothing is narrowed', () async {
+      await hear('Turdus merula', at: DateTime(2025, 6, 1, 10));
+      await hear('Sitta europaea', at: may4);
+
+      expect(await journal.days(), hasLength(2));
+      expect(await journal.buckets(JournalPeriod.year), hasLength(2));
+    });
+
+    test('a span that holds nothing comes back empty, not wrong', () async {
+      await hear('Turdus merula', at: may4);
+
+      expect(
+        await journal.days(from: DateTime(2026, 1), to: DateTime(2026, 2)),
+        isEmpty,
+      );
+    });
+  });
 }

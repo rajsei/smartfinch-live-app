@@ -563,7 +563,7 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 
 **One widget, two places** — the detection card and the species detail, directly under the curve it explains — so the app cannot say two different things about the same bird on the same day. Neutral styling in both: being early is not a problem, it is the most interesting thing that can happen on a walk in March.
 
-**`LOG-04` and `LOG-05` are done** ✅ — 21 tests. The journal can be read at four zoom levels now, and the day list keeps its place while you scroll it.
+**`LOG-04` and `LOG-05` are done** ✅ — 38 tests. The journal can be read at four zoom levels now, and the day list keeps its place while you scroll it.
 
 **`LOG-04` · four levels, one of which is the day.** Day · Week · Month · Year, as a segmented control above the list. Days stay the level the journal *opens* on, because that is the one a child recognises; `LOG-06`'s "pick the level from how much data there is" is deliberately deferred until there is a year of data to pick from. The wider levels exist for one reason: a year of listening is three hundred cards, and scrolling is not navigation.
 
@@ -576,6 +576,10 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 *Two pieces of calendar arithmetic that would have been invisible when wrong.* Weeks are ISO weeks, Monday to Sunday — the same ones `PKT-05`'s loyalty multipliers count, so a child cannot be "regular" in a week the journal does not show. And months advance through `DateTime(year, month + 1)` rather than 30 days, which is the only reason February does not swallow the first of March. Both are tested at the boundary.
 
 *One asymmetry with the day list, deliberately kept.* A day of nothing but paused listening still appears in the journal, because the recordings are still there and `LOG-15` promises nothing is lost. The same day produces no week card: a bucket is a scoring summary, and a week that scored nothing has nothing to summarise.
+
+*Tapping a card goes one level in* — a year opens its months, a month its weeks, a week its days, and a day still opens the detail it always did. **It narrows rather than scrolls**, which was not the first instinct: "switch to the months and scroll to 2026" is the obvious reading, and it cannot be built. Both lists are capped at sixty entries, so a March week is not in the newest sixty days for any amount of scrolling to reach — and even where it is, landing a child somewhere in the middle of a long list is not the same as showing them the thing they tapped. So the deeper level *becomes* the months of 2026, and a trail across the top ("2026 › May 2026") says where they are and walks back out one step at a time. The system back button climbs the trail before it leaves the journal.
+
+*The awkward case is the ISO week that straddles the turn of the month.* A bucket belongs to a span if it **overlaps** it, not if it sits inside: the week of 27 April appears under both April and May, and takes the first three days of May with it. Containment would have been tidier and would have made 1–3 May unreachable through the drill-down while still counting in May's totals.
 
 **`LOG-05` · the month header stays put.** `SliverMainAxisGroup` around each month's header and its days, rather than a plain pinned header — pinning alone stacks every month at the top, one under the next, instead of April pushing May away as it arrives. The background is opaque, because the cards scroll *underneath* it. The wider levels get no header at all: a "May 2026" bar above a list of months would say the same thing twice.
 

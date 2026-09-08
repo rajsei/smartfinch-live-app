@@ -42,26 +42,107 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
   /// pick this from how much data there is.
   JournalPeriod _period = JournalPeriod.day;
 
+  /// The cards tapped to get here, outermost first.
+  ///
+  /// A tap goes one level in and **narrows** to what was tapped: 2026 becomes
+  /// the months of 2026, May becomes the weeks of May. Keeping the trail is
+  /// what lets back climb out a step at a time instead of jumping to the top.
+  final List<JournalBucket> _trail = [];
+
+  JournalScope get _scope =>
+      _trail.isEmpty
+          ? JournalScope(_period)
+          : JournalScope.within(
+            _period,
+            start: _trail.last.start,
+            end: _trail.last.end,
+          );
+
+  /// The selector is the way *out* of a drill-down as well as the way between
+  /// levels, so it drops the trail rather than narrowing the new level by it.
+  void _select(JournalPeriod period) => setState(() {
+    _period = period;
+    _trail.clear();
+  });
+
+  void _drillInto(JournalBucket bucket) {
+    final deeper = bucket.period.deeper;
+    if (deeper == null) return;
+    setState(() {
+      _trail.add(bucket);
+      _period = deeper;
+    });
+  }
+
+  void _back() => setState(() {
+    _period = _trail.removeLast().period;
+  });
+
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
 
-    return Scaffold(
-      appBar: AppBar(title: Text(l10n.journalTitle)),
-      body: ContentWidthConstraint(
-        child: Column(
-          children: [
-            JournalPeriodSelector(
-              period: _period,
-              onChanged: (period) => setState(() => _period = period),
-            ),
-            Expanded(
-              child:
-                  _period == JournalPeriod.day
-                      ? const _DayList()
-                      : _BucketList(period: _period),
-            ),
-          ],
+    return PopScope(
+      // Back climbs out of the drill-down before it leaves the journal — a
+      // child who has tapped three times in should not land on the home screen
+      // on the first press back.
+      canPop: _trail.isEmpty,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop) _back();
+      },
+      child: Scaffold(
+        appBar: AppBar(title: Text(l10n.journalTitle)),
+        body: ContentWidthConstraint(
+          child: Column(
+            children: [
+              JournalPeriodSelector(period: _period, onChanged: _select),
+              if (_trail.isNotEmpty)
+                JournalTrailBar(trail: _trail, onBack: _back),
+              Expanded(
+                child:
+                    _period == JournalPeriod.day
+                        ? _DayList(scope: _scope)
+                        : _BucketList(scope: _scope, onDrillInto: _drillInto),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Where a drill-down has got to, and the way back out (`LOG-04`).
+class JournalTrailBar extends StatelessWidget {
+  const JournalTrailBar({super.key, required this.trail, required this.onBack});
+
+  final List<JournalBucket> trail;
+  final VoidCallback onBack;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(4, 0, 12, 4),
+        child: TextButton.icon(
+          onPressed: onBack,
+          icon: const Icon(AppIcons.arrowBackRounded, size: 18),
+          // The whole trail, not just the step back: "2026 › May 2026" is how
+          // a child sees where they are without reading the cards.
+          label: Text(
+            [
+              for (final bucket in trail) formatBucketLabel(context, bucket),
+            ].join(' › '),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+          ),
+          style: TextButton.styleFrom(
+            foregroundColor: theme.colorScheme.onSurfaceVariant,
+            visualDensity: VisualDensity.compact,
+          ),
         ),
       ),
     );
@@ -121,14 +202,16 @@ class JournalPeriodSelector extends StatelessWidget {
 
 /// The day list, grouped under sticky month headers (`LOG-02`, `LOG-05`).
 class _DayList extends ConsumerWidget {
-  const _DayList();
+  const _DayList({required this.scope});
+
+  final JournalScope scope;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
     return ref
-        .watch(journalDaysProvider)
+        .watch(journalDaysProvider(scope))
         .when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error:
@@ -188,9 +271,8 @@ class _DayList extends ConsumerWidget {
         );
   }
 
-  String _monthLabel(BuildContext context, DateTime date) => DateFormat.yMMMM(
-    Localizations.localeOf(context).toString(),
-  ).format(date);
+  String _monthLabel(BuildContext context, DateTime date) =>
+      DateFormat.yMMMM(Localizations.localeOf(context).toString()).format(date);
 }
 
 /// The header that stays put while its month scrolls under it (`LOG-05`).
@@ -234,16 +316,17 @@ class _MonthHeaderDelegate extends SliverPersistentHeaderDelegate {
 
 /// Weeks, months or years (`LOG-04`).
 class _BucketList extends ConsumerWidget {
-  const _BucketList({required this.period});
+  const _BucketList({required this.scope, required this.onDrillInto});
 
-  final JournalPeriod period;
+  final JournalScope scope;
+  final void Function(JournalBucket bucket) onDrillInto;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
 
     return ref
-        .watch(journalBucketsProvider(period))
+        .watch(journalBucketsProvider(scope))
         .when(
           loading: () => const Center(child: CircularProgressIndicator()),
           error:
@@ -264,7 +347,10 @@ class _BucketList extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(12, 8, 12, 24),
               itemCount: buckets.length,
               itemBuilder:
-                  (context, index) => JournalBucketCard(bucket: buckets[index]),
+                  (context, index) => JournalBucketCard(
+                    bucket: buckets[index],
+                    onTap: () => onDrillInto(buckets[index]),
+                  ),
             );
           },
         );
@@ -272,10 +358,13 @@ class _BucketList extends ConsumerWidget {
 }
 
 /// One week, month or year (`LOG-04`).
+///
+/// Tapping goes one level in — a year opens its months, a week opens its days.
 class JournalBucketCard extends StatelessWidget {
-  const JournalBucketCard({super.key, required this.bucket});
+  const JournalBucketCard({super.key, required this.bucket, this.onTap});
 
   final JournalBucket bucket;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -284,57 +373,70 @@ class JournalBucketCard extends StatelessWidget {
 
     return Card(
       margin: const EdgeInsets.only(bottom: 10),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    formatBucketLabel(context, bucket),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  Expanded(
+                    child: Text(
+                      formatBucketLabel(context, bucket),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                   ),
-                ),
-                if (bucket.stars > 0)
-                  Text(
-                    '⭐ ${bucket.stars}',
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.primary,
+                  if (bucket.stars > 0)
+                    Text(
+                      '⭐ ${bucket.stars}',
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.primary,
+                      ),
                     ),
-                  ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              l10n.journalDaySpecies(bucket.speciesCount),
-              style: theme.textTheme.bodyMedium,
-            ),
-            const SizedBox(height: 2),
-            Text(
-              l10n.journalBucketDaysOut(bucket.activeDays),
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
+                  // Says the card goes somewhere, which nothing else on it does.
+                  if (onTap != null) ...[
+                    const SizedBox(width: 4),
+                    Icon(
+                      AppIcons.chevronRight,
+                      size: 20,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ],
+                ],
               ),
-            ),
-            // The number a child looks for when zoomed out: a month with four
-            // first finds was a different month from one with none, however
-            // similar the star totals.
-            if (bucket.newSpeciesCount > 0) ...[
               const SizedBox(height: 6),
               Text(
-                l10n.journalBucketNewSpecies(bucket.newSpeciesCount),
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.tertiary,
-                  fontWeight: FontWeight.w600,
+                l10n.journalDaySpecies(bucket.speciesCount),
+                style: theme.textTheme.bodyMedium,
+              ),
+              const SizedBox(height: 2),
+              Text(
+                l10n.journalBucketDaysOut(bucket.activeDays),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+              // The number a child looks for when zoomed out: a month with
+              // four first finds was a different month from one with none,
+              // however similar the star totals.
+              if (bucket.newSpeciesCount > 0) ...[
+                const SizedBox(height: 6),
+                Text(
+                  l10n.journalBucketNewSpecies(bucket.newSpeciesCount),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.tertiary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
     );
