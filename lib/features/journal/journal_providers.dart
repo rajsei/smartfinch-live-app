@@ -24,6 +24,15 @@ final journalDaysProvider = FutureProvider<List<JournalDay>>((ref) async {
   return ref.watch(journalRepositoryProvider).days();
 });
 
+/// Weeks, months or years, newest first (`LOG-04`).
+final journalBucketsProvider =
+    FutureProvider.family<List<JournalBucket>, JournalPeriod>((
+      ref,
+      period,
+    ) async {
+      return ref.watch(journalRepositoryProvider).buckets(period);
+    });
+
 /// Everything one day contains (`LOG-03`).
 final journalDayProvider = FutureProvider.family<JournalDayDetail, String>((
   ref,

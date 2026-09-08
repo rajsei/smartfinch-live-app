@@ -5463,5 +5463,48 @@
         "type": "String"
       }
     }
+  },
+  "journalPeriodDay": "Days",
+  "@journalPeriodDay": {
+    "description": "LOG-04: aggregation level"
+  },
+  "journalPeriodWeek": "Weeks",
+  "@journalPeriodWeek": {
+    "description": "LOG-04: aggregation level"
+  },
+  "journalPeriodMonth": "Months",
+  "@journalPeriodMonth": {
+    "description": "LOG-04: aggregation level"
+  },
+  "journalPeriodYear": "Years",
+  "@journalPeriodYear": {
+    "description": "LOG-04: aggregation level"
+  },
+  "journalWeekOf": "Week of {date}",
+  "@journalWeekOf": {
+    "description": "LOG-04: heading of a week card, naming the Monday it starts on",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "journalBucketDaysOut": "{count, plural, =1{1 day outside} other{{count} days outside}}",
+  "@journalBucketDaysOut": {
+    "description": "LOG-04: how many days of a week or month produced something",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 new species} other{✨ {count} new species}}",
+  "@journalBucketNewSpecies": {
+    "description": "LOG-04: first finds inside a week, month or year — the number a child looks for when zoomed out",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

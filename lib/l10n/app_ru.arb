@@ -1247,5 +1247,12 @@
   "pointsTabYear": "В этом году",
   "pointsSectionCollector": "Всего",
   "seasonHintEarly": "Рано! {species} обычно бывает здесь только с {month}.",
-  "seasonHintLate": "Ещё здесь! {species} обычно улетает после {month}."
+  "seasonHintLate": "Ещё здесь! {species} обычно улетает после {month}.",
+  "journalPeriodDay": "Дни",
+  "journalPeriodWeek": "Недели",
+  "journalPeriodMonth": "Месяцы",
+  "journalPeriodYear": "Годы",
+  "journalWeekOf": "Неделя с {date}",
+  "journalBucketDaysOut": "{count, plural, =1{1 день на улице} few{{count} дня на улице} other{{count} дней на улице}}",
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 новый вид} few{✨ {count} новых вида} other{✨ {count} новых видов}}"
 }

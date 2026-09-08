@@ -1247,5 +1247,12 @@
   "pointsTabYear": "Letos",
   "pointsSectionCollector": "Celkově",
   "seasonHintEarly": "Brzy! {species} tu bývá normálně až od {month}.",
-  "seasonHintLate": "Ještě tu je! {species} normálně po {month} mizí."
+  "seasonHintLate": "Ještě tu je! {species} normálně po {month} mizí.",
+  "journalPeriodDay": "Dny",
+  "journalPeriodWeek": "Týdny",
+  "journalPeriodMonth": "Měsíce",
+  "journalPeriodYear": "Roky",
+  "journalWeekOf": "Týden od {date}",
+  "journalBucketDaysOut": "{count, plural, =1{1 den venku} few{{count} dny venku} other{{count} dní venku}}",
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nový druh} few{✨ {count} nové druhy} other{✨ {count} nových druhů}}"
 }

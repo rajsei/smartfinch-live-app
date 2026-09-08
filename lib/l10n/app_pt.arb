@@ -1247,5 +1247,12 @@
   "pointsTabYear": "Este ano",
   "pointsSectionCollector": "No total",
   "seasonHintEarly": "Cedo! O {species} normalmente só está aqui a partir de {month}.",
-  "seasonHintLate": "Ainda aqui! O {species} normalmente vai-se embora depois de {month}."
+  "seasonHintLate": "Ainda aqui! O {species} normalmente vai-se embora depois de {month}.",
+  "journalPeriodDay": "Dias",
+  "journalPeriodWeek": "Semanas",
+  "journalPeriodMonth": "Meses",
+  "journalPeriodYear": "Anos",
+  "journalWeekOf": "Semana de {date}",
+  "journalBucketDaysOut": "{count, plural, =1{1 dia lá fora} other{{count} dias lá fora}}",
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 espécie nova} other{✨ {count} espécies novas}}"
 }

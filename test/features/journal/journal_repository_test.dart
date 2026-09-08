@@ -23,6 +23,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:smartfinch/core/database/app_database.dart';
 import 'package:smartfinch/core/services/grid_cell.dart';
 import 'package:smartfinch/features/inference/geo_abundance.dart';
+import 'package:smartfinch/features/journal/journal_models.dart';
 import 'package:smartfinch/features/journal/journal_repository.dart';
 import 'package:smartfinch/features/scoring/rarity_scale_provider.dart';
 import 'package:smartfinch/features/scoring/scoring_engine.dart';
@@ -353,6 +354,135 @@ void main() {
 
       expect(await journal.knownPlaceNames(), isEmpty);
       expect((await journal.days()), isEmpty);
+    });
+  });
+
+  // ===========================================================================
+  // LOG-04 · zooming out
+  // ===========================================================================
+  //
+  // Three ways to get this subtly wrong, none of them visible on screen:
+  //
+  //   **Distinct species, not summed days.** A blackbird heard on five days of
+  //   a week is one species that week. Summing the day counts would turn a
+  //   quiet week into a busy-looking one.
+  //
+  //   **Calendar arithmetic, not day counts.** A month is not 30 days and a
+  //   week does not start on Sunday. Both boundaries are drifts that only show
+  //   up months later, on the one card a child happens to look at.
+  //
+  //   **New species means the life list**, so a week's ✨ count is first finds
+  //   and not "species I had not heard since Tuesday".
+  // ===========================================================================
+  group('LOG-04 · weeks, months and years', () {
+    test('a week is Monday to Sunday, as PKT-05 counts them', () async {
+      // Sunday 3 May belongs to the week before Monday 4 May, however close
+      // together the two days feel.
+      await hear('Turdus merula', at: DateTime(2026, 5, 3, 10));
+      await hear('Sitta europaea', at: may4);
+
+      final weeks = await journal.buckets(JournalPeriod.week);
+      expect(weeks.map((w) => w.start), [
+        DateTime(2026, 5, 4),
+        DateTime(2026, 4, 27),
+      ]);
+    });
+
+    test('a month runs to the end of the month, not 30 days on', () {
+      // February 2026 has 28 days. Day arithmetic would put 1 March inside it
+      // and leave a gap in the year.
+      expect(
+        JournalRepository.endOfPeriod(DateTime(2026, 2), JournalPeriod.month),
+        DateTime(2026, 3),
+      );
+      expect(
+        JournalRepository.endOfPeriod(DateTime(2026, 12), JournalPeriod.month),
+        DateTime(2027),
+      );
+    });
+
+    test('February and March stay apart', () async {
+      await hear('Turdus merula', at: DateTime(2026, 2, 28, 10));
+      await hear('Sitta europaea', at: DateTime(2026, 3, 1, 10));
+
+      final months = await journal.buckets(JournalPeriod.month);
+      expect(months.map((m) => m.start), [
+        DateTime(2026, 3),
+        DateTime(2026, 2),
+      ]);
+    });
+
+    test('one species heard all week counts once', () async {
+      await hear('Turdus merula', at: may4);
+      await hear('Turdus merula', at: may4.add(const Duration(days: 1)));
+      await hear('Turdus merula', at: may4.add(const Duration(days: 2)));
+
+      final week = (await journal.buckets(JournalPeriod.week)).single;
+      expect(week.speciesCount, 1);
+      expect(week.activeDays, 3);
+    });
+
+    test('stars add up across the bucket', () async {
+      await hear('Turdus merula', at: may4); // 50 × 3, first find
+      await hear('Upupa epops', at: may4.add(const Duration(days: 1)));
+
+      final days = await journal.days();
+      final week = (await journal.buckets(JournalPeriod.week)).single;
+      expect(week.stars, greaterThan(0));
+      expect(week.stars, days.fold<int>(0, (sum, day) => sum + day.stars));
+    });
+
+    test('✨ counts first finds, not first-of-the-week', () async {
+      await hear('Turdus merula', at: may4);
+      // Same species three weeks later: no longer new, however long the gap.
+      await hear('Turdus merula', at: may4.add(const Duration(days: 21)));
+
+      final weeks = await journal.buckets(JournalPeriod.week);
+      expect(weeks.first.start, DateTime(2026, 5, 25));
+      expect(weeks.first.newSpeciesCount, 0);
+      expect(weeks.last.newSpeciesCount, 1);
+    });
+
+    test('empty weeks in between are left out', () async {
+      await hear('Turdus merula', at: may4);
+      await hear('Sitta europaea', at: may4.add(const Duration(days: 21)));
+
+      // A list is read by scrolling; two blank cards in the middle are noise.
+      // (Unlike the 30-day chart of STAT-02, where the gap is the point.)
+      expect(await journal.buckets(JournalPeriod.week), hasLength(2));
+    });
+
+    test('a year gathers the lot', () async {
+      await hear('Turdus merula', at: DateTime(2026, 2, 28, 10));
+      await hear('Sitta europaea', at: DateTime(2026, 11, 3, 10));
+      await hear('Upupa epops', at: DateTime(2025, 6, 1, 10));
+
+      final years = await journal.buckets(JournalPeriod.year);
+      expect(years.map((y) => y.start), [DateTime(2026), DateTime(2025)]);
+      expect(years.first.speciesCount, 2);
+      expect(years.first.activeDays, 2);
+      expect(years.first.end, DateTime(2027));
+    });
+
+    test('days are not a bucket — they have their own list', () async {
+      await hear('Turdus merula');
+
+      expect(await journal.buckets(JournalPeriod.day), isEmpty);
+      expect(await journal.days(), hasLength(1));
+    });
+
+    test('a day of nothing but test mode is no bucket at all', () async {
+      // Symmetrical with LOG-15 in the day list, and deliberately different:
+      // the day still appears there, because the recording is still there.
+      // A week card is a scoring summary, and an unscored week scored nothing.
+      await hear('Turdus merula', filterEnabled: false);
+
+      expect(await journal.buckets(JournalPeriod.week), isEmpty);
+      expect(await journal.days(), hasLength(1));
+    });
+
+    test('an empty database has no buckets', () async {
+      expect(await journal.buckets(JournalPeriod.month), isEmpty);
     });
   });
 }

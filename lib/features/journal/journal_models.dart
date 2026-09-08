@@ -67,6 +67,57 @@ class JournalDay {
   bool get isEmpty => speciesCount == 0 && unscoredSpeciesCount == 0;
 }
 
+/// How far the journal zooms out (`LOG-04`).
+///
+/// Days are what a child remembers; the wider levels are what makes a full
+/// year navigable once the day list is three hundred entries long. `LOG-06`
+/// will eventually pick the starting level from how much data there is; until
+/// then it opens on days, which is the one a child recognises.
+enum JournalPeriod { day, week, month, year }
+
+/// One week, month or year of the journal (`LOG-04`).
+@immutable
+class JournalBucket {
+  const JournalBucket({
+    required this.period,
+    required this.start,
+    required this.end,
+    this.stars = 0,
+    this.speciesCount = 0,
+    this.newSpeciesCount = 0,
+    this.activeDays = 0,
+  });
+
+  final JournalPeriod period;
+
+  /// First day of the bucket, inclusive.
+  final DateTime start;
+
+  /// First day *after* the bucket. Exclusive, so ranges tile without gaps.
+  final DateTime end;
+
+  final int stars;
+
+  /// Distinct species that scored anywhere in the bucket.
+  ///
+  /// Counted across the whole span rather than summed per day: a blackbird
+  /// heard on five days of a week is one species that week, and adding the
+  /// days would turn a quiet week into a busy-looking one.
+  final int speciesCount;
+
+  /// Species that entered the **life list** inside this bucket.
+  ///
+  /// The number a child actually looks for when zoomed out — a month with
+  /// four first finds was a different month from one with none, however
+  /// similar the star totals.
+  final int newSpeciesCount;
+
+  /// Days in the bucket that produced at least one scoring detection.
+  final int activeDays;
+
+  bool get isEmpty => speciesCount == 0 && stars == 0;
+}
+
 /// One species within a day (`LOG-03`).
 @immutable
 class JournalSpecies {

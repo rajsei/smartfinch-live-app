@@ -1247,5 +1247,12 @@
   "pointsTabYear": "W tym roku",
   "pointsSectionCollector": "Łącznie",
   "seasonHintEarly": "Wcześnie! {species} zwykle jest tu dopiero od {month}.",
-  "seasonHintLate": "Wciąż tu! {species} zwykle po {month} już nie ma."
+  "seasonHintLate": "Wciąż tu! {species} zwykle po {month} już nie ma.",
+  "journalPeriodDay": "Dni",
+  "journalPeriodWeek": "Tygodnie",
+  "journalPeriodMonth": "Miesiące",
+  "journalPeriodYear": "Lata",
+  "journalWeekOf": "Tydzień od {date}",
+  "journalBucketDaysOut": "{count, plural, =1{1 dzień na dworze} few{{count} dni na dworze} other{{count} dni na dworze}}",
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nowy gatunek} few{✨ {count} nowe gatunki} other{✨ {count} nowych gatunków}}"
 }

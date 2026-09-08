@@ -114,6 +114,64 @@ class JournalRepository {
     return days.take(limit).toList();
   }
 
+  /// Weeks, months or years of the journal, newest first (`LOG-04`).
+  ///
+  /// Only buckets that contain something are returned. An empty week between
+  /// two busy ones is not a fact about the child worth a card — unlike an
+  /// empty *day* in the 30-day chart (`STAT-02`), where the gap is the whole
+  /// point. A list is read by scrolling; a chart is read by shape.
+  Future<List<JournalBucket>> buckets(
+    JournalPeriod period, {
+    int limit = 60,
+  }) async {
+    if (period == JournalPeriod.day) return const [];
+
+    final events =
+        await (_db.select(_db.scoreEvents)
+          ..where((e) => e.profileId.equals(profileId))).get();
+    final daySpecies =
+        await (_db.select(_db.daySpecies)
+          ..where((d) => d.profileId.equals(profileId))).get();
+    final lifeList =
+        await (_db.select(_db.lifeSpecies)
+          ..where((l) => l.profileId.equals(profileId))).get();
+
+    final stars = <DateTime, int>{};
+    final species = <DateTime, Set<String>>{};
+    final days = <DateTime, Set<String>>{};
+    final newSpecies = <DateTime, int>{};
+
+    for (final event in events) {
+      final bucket = startOfPeriod(_dateOf(event.dayKey), period);
+      stars[bucket] = (stars[bucket] ?? 0) + event.total;
+    }
+    for (final row in daySpecies) {
+      final bucket = startOfPeriod(_dateOf(row.dayKey), period);
+      (species[bucket] ??= {}).add(row.scientificName);
+      (days[bucket] ??= {}).add(row.dayKey);
+    }
+    for (final row in lifeList) {
+      final bucket = startOfPeriod(row.firstSeenAt, period);
+      newSpecies[bucket] = (newSpecies[bucket] ?? 0) + 1;
+    }
+
+    final starts = {...stars.keys, ...species.keys}.toList()
+      ..sort((a, b) => b.compareTo(a));
+
+    return [
+      for (final start in starts.take(limit))
+        JournalBucket(
+          period: period,
+          start: start,
+          end: endOfPeriod(start, period),
+          stars: stars[start] ?? 0,
+          speciesCount: species[start]?.length ?? 0,
+          newSpeciesCount: newSpecies[start] ?? 0,
+          activeDays: days[start]?.length ?? 0,
+        ),
+    ];
+  }
+
   /// Everything one day contains (`LOG-03`, `LOG-09`, `LOG-15`).
   Future<JournalDayDetail> detailFor(String dayKey) async {
     final scoredRows =
@@ -300,6 +358,31 @@ class JournalRepository {
           session.id: session.placeName!.trim(),
     };
   }
+
+  /// The first day of [when]'s bucket at [period].
+  ///
+  /// Weeks are **ISO** weeks, Monday to Sunday — the same calendar the loyalty
+  /// multipliers use (`PKT-05`). Two week definitions in one app would mean a
+  /// child's "3rd day this week" and their journal week could disagree about
+  /// where a Sunday belongs.
+  static DateTime startOfPeriod(DateTime when, JournalPeriod period) =>
+      switch (period) {
+        JournalPeriod.day => DateTime(when.year, when.month, when.day),
+        JournalPeriod.week => startOfIsoWeek(when),
+        JournalPeriod.month => DateTime(when.year, when.month),
+        JournalPeriod.year => DateTime(when.year),
+      };
+
+  /// The first day *after* [start]'s bucket. Exclusive.
+  static DateTime endOfPeriod(DateTime start, JournalPeriod period) =>
+      switch (period) {
+        JournalPeriod.day => start.add(const Duration(days: 1)),
+        JournalPeriod.week => start.add(const Duration(days: 7)),
+        // Month arithmetic through `DateTime`, not through day counts: months
+        // are 28 to 31 days long and February is where a fixed offset breaks.
+        JournalPeriod.month => DateTime(start.year, start.month + 1),
+        JournalPeriod.year => DateTime(start.year + 1),
+      };
 
   static DateTime _dateOf(String dayKey) {
     final parts = dayKey.split('-');

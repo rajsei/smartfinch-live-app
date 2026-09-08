@@ -1247,5 +1247,12 @@
   "pointsTabYear": "I år",
   "pointsSectionCollector": "Totalt",
   "seasonHintEarly": "Tidlig ute! {species} er vanligvis her først fra {month}.",
-  "seasonHintLate": "Fortsatt her! {species} er vanligvis borte etter {month}."
+  "seasonHintLate": "Fortsatt her! {species} er vanligvis borte etter {month}.",
+  "journalPeriodDay": "Dager",
+  "journalPeriodWeek": "Uker",
+  "journalPeriodMonth": "Måneder",
+  "journalPeriodYear": "År",
+  "journalWeekOf": "Uka fra {date}",
+  "journalBucketDaysOut": "{count, plural, =1{1 dag ute} other{{count} dager ute}}",
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 ny art} other{✨ {count} nye arter}}"
 }

@@ -16,6 +16,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartfinch/features/journal/journal_day_screen.dart';
 import 'package:smartfinch/features/journal/journal_models.dart';
 import 'package:smartfinch/features/journal/journal_providers.dart';
+import 'package:smartfinch/features/journal/journal_repository.dart';
 import 'package:smartfinch/features/journal/journal_screen.dart';
 import 'package:smartfinch/features/scoring/scoring_rules.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
@@ -40,10 +41,28 @@ void main() {
     placeNames: places,
   );
 
+  JournalBucket weekOf(
+    DateTime start, {
+    int stars = 900,
+    int speciesCount = 12,
+    int newSpecies = 0,
+    int activeDays = 3,
+    JournalPeriod period = JournalPeriod.week,
+  }) => JournalBucket(
+    period: period,
+    start: start,
+    end: JournalRepository.endOfPeriod(start, period),
+    stars: stars,
+    speciesCount: speciesCount,
+    newSpeciesCount: newSpecies,
+    activeDays: activeDays,
+  );
+
   Future<void> pump(
     WidgetTester tester,
     Widget child, {
     List<JournalDay>? days,
+    List<JournalBucket>? buckets,
     JournalDayDetail? detail,
   }) async {
     SharedPreferences.setMockInitialValues({});
@@ -59,6 +78,12 @@ void main() {
           sharedPreferencesProvider.overrideWithValue(prefs),
           if (days != null)
             journalDaysProvider.overrideWith((ref) async => days),
+          journalBucketsProvider.overrideWith(
+            (ref, period) async => [
+              for (final bucket in buckets ?? const <JournalBucket>[])
+                if (bucket.period == period) bucket,
+            ],
+          ),
           if (detail != null)
             journalDayProvider.overrideWith((ref, key) async => detail),
           // The place editor reads its own sessions; nothing to name here.
@@ -340,6 +365,183 @@ void main() {
 
       expect(find.textContaining('outside scoring'), findsNothing);
       expect(find.text('no stars'), findsNothing);
+    });
+  });
+
+  // ===========================================================================
+  // LOG-04 / LOG-05 · zooming out, and knowing where you are
+  // ===========================================================================
+  //
+  // The day list is what a child recognises, so it stays the level the journal
+  // opens on. The wider levels exist because a full year of listening is three
+  // hundred cards, and the sticky month header is what keeps that scroll from
+  // becoming a wall of unlabelled dates.
+  // ===========================================================================
+  group('LOG-04 · the aggregation levels', () {
+    testWidgets('the journal opens on days', (tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [weekOf(DateTime(2026, 5, 4))],
+      );
+
+      // The day is on screen, the week is not.
+      expect(find.textContaining('8 species'), findsOneWidget);
+      expect(find.textContaining('Week of'), findsNothing);
+    });
+
+    testWidgets('all four levels are offered', (tester) async {
+      await pump(tester, const JournalScreen(), days: [dayWith()]);
+
+      for (final label in ['Days', 'Weeks', 'Months', 'Years']) {
+        expect(
+          find.widgetWithText(SegmentedButton<JournalPeriod>, label),
+          findsOneWidget,
+        );
+      }
+    });
+
+    testWidgets('picking Weeks swaps the list', (tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [weekOf(DateTime(2026, 5, 4), stars: 900)],
+      );
+
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Week of'), findsOneWidget);
+      expect(find.text('⭐ 900'), findsOneWidget);
+      expect(find.textContaining('3 days outside'), findsOneWidget);
+    });
+
+    testWidgets('a week card says how many species, once each', (tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [weekOf(DateTime(2026, 5, 4), speciesCount: 12)],
+      );
+
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('12 species'), findsOneWidget);
+    });
+
+    testWidgets('first finds are called out — the number a child looks for', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [weekOf(DateTime(2026, 5, 4), newSpecies: 4)],
+      );
+
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('4 new species'), findsOneWidget);
+    });
+
+    testWidgets('a week without a first find says nothing about it', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [weekOf(DateTime(2026, 5, 4))],
+      );
+
+      await tester.tap(find.text('Weeks'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('new species'), findsNothing);
+    });
+
+    testWidgets('a month is named, a year is a number', (tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [
+          weekOf(DateTime(2026, 5), period: JournalPeriod.month),
+          weekOf(DateTime(2026), period: JournalPeriod.year),
+        ],
+      );
+
+      await tester.tap(find.text('Months'));
+      await tester.pumpAndSettle();
+      expect(find.text('May 2026'), findsOneWidget);
+
+      await tester.tap(find.text('Years'));
+      await tester.pumpAndSettle();
+      expect(find.text('2026'), findsOneWidget);
+    });
+
+    testWidgets('an empty level explains itself rather than going blank', (
+      tester,
+    ) async {
+      await pump(tester, const JournalScreen(), days: [dayWith()], buckets: []);
+
+      await tester.tap(find.text('Months'));
+      await tester.pumpAndSettle();
+
+      expect(find.textContaining('Nothing here yet'), findsOneWidget);
+    });
+  });
+
+  group('LOG-05 · the sticky month header', () {
+    testWidgets('every month in the list gets one', (tester) async {
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [
+          dayWith(),
+          JournalDay(
+            dayKey: '2026-04-28',
+            date: DateTime(2026, 4, 28),
+            stars: 120,
+            speciesCount: 3,
+          ),
+        ],
+      );
+
+      expect(find.text('May 2026'), findsOneWidget);
+      expect(find.text('April 2026'), findsOneWidget);
+    });
+
+    testWidgets('it is pinned, so it stays put while its days scroll', (
+      tester,
+    ) async {
+      await pump(tester, const JournalScreen(), days: [dayWith()]);
+
+      final header = tester.widget<SliverPersistentHeader>(
+        find.byType(SliverPersistentHeader).first,
+      );
+      expect(header.pinned, isTrue);
+    });
+
+    testWidgets('the wider levels carry their own labels instead', (
+      tester,
+    ) async {
+      // A month header above a list of months would say the same thing twice.
+      await pump(
+        tester,
+        const JournalScreen(),
+        days: [dayWith()],
+        buckets: [weekOf(DateTime(2026, 5), period: JournalPeriod.month)],
+      );
+
+      await tester.tap(find.text('Months'));
+      await tester.pumpAndSettle();
+
+      expect(find.byType(SliverPersistentHeader), findsNothing);
     });
   });
 }

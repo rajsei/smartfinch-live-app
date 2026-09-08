@@ -1247,5 +1247,12 @@
   "pointsTabYear": "Dit jaar",
   "pointsSectionCollector": "In totaal",
   "seasonHintEarly": "Vroeg! De {species} is hier normaal pas vanaf {month}.",
-  "seasonHintLate": "Nog hier! De {species} is normaal na {month} weg."
+  "seasonHintLate": "Nog hier! De {species} is normaal na {month} weg.",
+  "journalPeriodDay": "Dagen",
+  "journalPeriodWeek": "Weken",
+  "journalPeriodMonth": "Maanden",
+  "journalPeriodYear": "Jaren",
+  "journalWeekOf": "Week van {date}",
+  "journalBucketDaysOut": "{count, plural, =1{1 dag buiten} other{{count} dagen buiten}}",
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nieuwe soort} other{✨ {count} nieuwe soorten}}"
 }

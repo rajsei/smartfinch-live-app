@@ -1247,5 +1247,12 @@
   "pointsTabYear": "今年",
   "pointsSectionCollector": "总计",
   "seasonHintEarly": "来得早！{species} 通常从{month}才会出现在这里。",
-  "seasonHintLate": "还在！{species} 通常{month}之后就走了。"
+  "seasonHintLate": "还在！{species} 通常{month}之后就走了。",
+  "journalPeriodDay": "天",
+  "journalPeriodWeek": "周",
+  "journalPeriodMonth": "月",
+  "journalPeriodYear": "年",
+  "journalWeekOf": "{date}那一周",
+  "journalBucketDaysOut": "{count, plural, other{外出 {count} 天}}",
+  "journalBucketNewSpecies": "{count, plural, other{✨ {count} 个新物种}}"
 }
