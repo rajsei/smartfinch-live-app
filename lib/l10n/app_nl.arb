@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pauzeren",
   "journalClipKeep": "Bewaren",
   "journalClipKept": "Bewaard",
-  "journalClipKeepExplained": "Opnames die je bewaart, worden nooit verwijderd om ruimte te maken."
+  "journalClipKeepExplained": "Opnames die je bewaart, worden nooit verwijderd om ruimte te maken.",
+  "journalShareDayTitle": "Jouw vogeldag",
+  "journalShareDayButton": "Deze dag delen",
+  "journalShareDayPrivacy": "Alleen wat je hier ziet, wordt verstuurd. Je plaatsnamen, je opnames en waar je was blijven op deze telefoon.",
+  "journalDayImageMore": "+{count} meer"
 }

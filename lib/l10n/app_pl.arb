@@ -1262,5 +1262,9 @@
   "journalClipPause": "Wstrzymaj",
   "journalClipKeep": "Zachowaj",
   "journalClipKept": "Zachowane",
-  "journalClipKeepExplained": "Nagrania, które zachowasz, nigdy nie zostaną usunięte dla miejsca."
+  "journalClipKeepExplained": "Nagrania, które zachowasz, nigdy nie zostaną usunięte dla miejsca.",
+  "journalShareDayTitle": "Twój ptasi dzień",
+  "journalShareDayButton": "Udostępnij ten dzień",
+  "journalShareDayPrivacy": "Wysyłane jest tylko to, co tu widzisz. Twoje nazwy miejsc, nagrania i to, gdzie byłeś, zostają w tym telefonie.",
+  "journalDayImageMore": "+{count} więcej"
 }

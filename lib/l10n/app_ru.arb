@@ -1262,5 +1262,9 @@
   "journalClipPause": "Пауза",
   "journalClipKeep": "Сохранить",
   "journalClipKept": "Сохранено",
-  "journalClipKeepExplained": "Записи, которые ты сохранишь, никогда не удаляются ради места."
+  "journalClipKeepExplained": "Записи, которые ты сохранишь, никогда не удаляются ради места.",
+  "journalShareDayTitle": "Твой птичий день",
+  "journalShareDayButton": "Поделиться этим днём",
+  "journalShareDayPrivacy": "Отправляется только то, что ты видишь здесь. Твои названия мест, записи и то, где ты был, остаются в этом телефоне.",
+  "journalDayImageMore": "+{count} ещё"
 }

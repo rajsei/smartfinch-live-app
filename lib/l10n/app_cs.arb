@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pozastavit",
   "journalClipKeep": "Ponechat",
   "journalClipKept": "Ponecháno",
-  "journalClipKeepExplained": "Nahrávky, které si ponecháš, se nikdy nesmažou kvůli místu."
+  "journalClipKeepExplained": "Nahrávky, které si ponecháš, se nikdy nesmažou kvůli místu.",
+  "journalShareDayTitle": "Tvůj ptačí den",
+  "journalShareDayButton": "Sdílet tento den",
+  "journalShareDayPrivacy": "Odešle se jen to, co tu vidíš. Tvoje názvy míst, nahrávky a to, kde jsi byl, zůstanou v tomhle telefonu.",
+  "journalDayImageMore": "+{count} dalších"
 }

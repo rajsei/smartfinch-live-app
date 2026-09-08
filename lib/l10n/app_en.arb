@@ -5538,5 +5538,26 @@
   "journalClipKeepExplained": "Recordings you keep are never deleted to make room.",
   "@journalClipKeepExplained": {
     "description": "SET-12: why keeping matters — old clips are deleted to save space"
+  },
+  "journalShareDayTitle": "Your bird day",
+  "@journalShareDayTitle": {
+    "description": "LOG-11: title of the preview screen for the shareable day image"
+  },
+  "journalShareDayButton": "Share this day",
+  "@journalShareDayButton": {
+    "description": "LOG-11: sends the rendered day image"
+  },
+  "journalShareDayPrivacy": "Only what you see here is sent. Your place names, your recordings and where you were stay on this phone.",
+  "@journalShareDayPrivacy": {
+    "description": "LOG-11 / KID-07: says what the image deliberately leaves out"
+  },
+  "journalDayImageMore": "+{count} more",
+  "@journalDayImageMore": {
+    "description": "LOG-11: chip standing in for the species that did not fit on the card",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
   }
 }

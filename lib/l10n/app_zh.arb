@@ -1262,5 +1262,9 @@
   "journalClipPause": "暂停",
   "journalClipKeep": "保留",
   "journalClipKept": "已保留",
-  "journalClipKeepExplained": "你保留的录音不会为了腾出空间而被删除。"
+  "journalClipKeepExplained": "你保留的录音不会为了腾出空间而被删除。",
+  "journalShareDayTitle": "你的观鸟日",
+  "journalShareDayButton": "分享这一天",
+  "journalShareDayPrivacy": "只会发送你在这里看到的内容。你的地点名称、录音和你去过的地方都留在这台手机上。",
+  "journalDayImageMore": "+{count} 个"
 }

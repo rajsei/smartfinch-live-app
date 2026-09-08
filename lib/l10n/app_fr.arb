@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pause",
   "journalClipKeep": "Garder",
   "journalClipKept": "Gardé",
-  "journalClipKeepExplained": "Les enregistrements que tu gardes ne sont jamais supprimés pour faire de la place."
+  "journalClipKeepExplained": "Les enregistrements que tu gardes ne sont jamais supprimés pour faire de la place.",
+  "journalShareDayTitle": "Ta journée oiseaux",
+  "journalShareDayButton": "Partager cette journée",
+  "journalShareDayPrivacy": "Seul ce que tu vois ici est envoyé. Tes noms de lieux, tes enregistrements et l'endroit où tu étais restent sur ce téléphone.",
+  "journalDayImageMore": "+{count} autres"
 }

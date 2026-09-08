@@ -179,7 +179,7 @@ This makes three specification requirements substantially cheaper than written:
 | `session_review_screen.dart` | 5,730 | **Rebuild** as the day detail (`LOG-03/07/09`) |
 | `widgets/session_review_widgets.dart` | 4,500 | **Rebuild** as day-detail widgets. Not salvageable as-is — built around one recording |
 | `session_library_screen.dart` | 2,106 | **Rebuild** as the day list (`LOG-02/04/05`) |
-| `html_report.dart` | 1,803 | **Keep, re-point** — becomes the basis for `LOG-11` (export a day as an image) |
+| `html_report.dart` | 1,803 | ~~Keep, re-point~~ → **unused by `LOG-11`.** The day image shares its purpose and none of its content: this file is a research artefact (detection tables, confidence columns, a session's coordinates), and `LOG-11` excludes all three by name. Decide separately whether it survives at all |
 | `session_export.dart` | 1,664 | **Keep, split in two.** *Backup*: complete JSON/ZIP, in Settings, for parents → `SET-07`. *Share*: one image of the day, no audio, no coordinates, no free text. Raven and GPX are deleted |
 | `widgets/clip_player_sheet.dart` | 940 | **Keep** — playback for `LIVE-14` and `SAM-08` |
 | `widgets/voice_memo_overlay.dart` | 879 | **Remove** — a field-researcher feature |
@@ -477,7 +477,7 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 **Sessions left navigation** (`LOG-01`). The home tile and the post-session hand-off both point at the Journal now; the session library has no entry point left. It and `session_review_screen` stay in the tree because §3.4 keeps what they carry (export writers, clip playback), and removing them is its own step rather than a side effect of this one.
 
-*Still open from chapter LOG:* `LOG-04` (day/week/month/year), `LOG-05` (sticky month header), `LOG-07` (expandable individual detections) and `LOG-11` (share a day as one image) are all P1 and none of them are load-bearing for the field test.
+*Chapter LOG is complete.* `LOG-04`/`LOG-05` (day/week/month/year with a sticky month header), `LOG-07` (expandable individual detections) and `LOG-11` (share a day as one image) all went in during phase 3; none of them were load-bearing for the field test, which is why they waited.
 
 **2.6 · The Collection** (`SAM-02`…`SAM-05`, `SAM-17`) as its own area: found species only, all taxon groups by default with a group filter, the placeholder for open ones, progress counter. **Per-species silhouettes are P1** (`SAM-04b`), so this step needs no pipeline work — but it does need the species bundle to have been built at least once, or every cell shows the placeholder and the Collection looks broken. ✅ *Done — `features/collection/`, 19 tests.*
 
@@ -598,6 +598,20 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 **`SET-12`'s missing half went in with it.** `setClipFavourite` has existed since phase 2 with nothing to call it; the keep switch on the clip player is that caller, and it closes the open item. It belongs there rather than in a settings list because the moment a child knows a recording is worth keeping is the moment they are listening to it — and what it buys is concrete: retention deletes the oldest clips once a species is over its cap, and a kept clip is exempt.
 
 *A hearing with no recording says so.* Retention having been through is ordinary, not an error, so the row renders a muted icon with an explanation rather than a gap the child has to interpret.
+
+**`LOG-11` is done** ✅ — 10 tests, and the `LOG` block is complete. "Show grandma your bird day": one rendered card per day — date, stars, species, first finds — shared as a PNG. It is the app's only path out.
+
+**Most of the tests are about absence, because that is the half nobody can see.** What is on the card can be checked by looking at it. What is missing cannot, and the specification's list of exclusions is the requirement: no audio, no coordinates, no free text.
+
+**The place name is where two requirements meet in one widget.** `LOG-13` lets a child type "Oma" and shows it on the day card; `KID-07` says free text must never reach another person. So the name lives inside the app and stops at the picture's edge — and nothing on screen would look wrong if that were got wrong, which is exactly why there is a test naming "Oma" and asserting it does not render.
+
+**The share is two steps on purpose.** The day screen's button opens a **preview**, not a share sheet. A one-tap share would mean a child hands a picture to a chat app without ever having seen what is on it, and this is the one action in Smartfinch that cannot be undone by the app. Under the preview, a line says plainly what stayed behind — place names, recordings, where you were — so a child who wonders does not have to squint at the card to find out.
+
+**The picture is the widget, not a second drawing of it.** `RepaintBoundary.toImage` renders the subtree already on screen, so "what you see is what grandma gets" holds by construction. A `PictureRecorder` and a hand-written layout would have been a second implementation of the same card, and the two would have drifted the first time someone restyled a chip. The test proves the previewed subtree renders at 1080 px rather than merely that a boundary exists somewhere.
+
+*Two small things.* The card is sized in logical pixels rather than to its parent, so a tablet does not produce a different picture from a phone. And `mimeTypeForSharedPath` had no `.png` case — without it chat apps offer the day as a file to download instead of showing the image, which defeats the point.
+
+*What is deliberately not reused:* the existing HTML report, which the specification named as the basis. It is a research artefact — full detection tables, timestamps, confidence columns, and a session's coordinates — and every one of those is either gone with the research modes or excluded here by name. The day card shares its purpose and none of its content.
 
 **A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 

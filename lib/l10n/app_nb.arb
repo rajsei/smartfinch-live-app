@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pause",
   "journalClipKeep": "Behold",
   "journalClipKept": "Beholdt",
-  "journalClipKeepExplained": "Opptak du beholder, blir aldri slettet for å gi plass."
+  "journalClipKeepExplained": "Opptak du beholder, blir aldri slettet for å gi plass.",
+  "journalShareDayTitle": "Fugledagen din",
+  "journalShareDayButton": "Del denne dagen",
+  "journalShareDayPrivacy": "Bare det du ser her, blir sendt. Stedsnavnene dine, opptakene dine og hvor du var, blir på denne telefonen.",
+  "journalDayImageMore": "+{count} til"
 }

@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pausa",
   "journalClipKeep": "Conserva",
   "journalClipKept": "Conservata",
-  "journalClipKeepExplained": "Le registrazioni che conservi non vengono mai cancellate per fare spazio."
+  "journalClipKeepExplained": "Le registrazioni che conservi non vengono mai cancellate per fare spazio.",
+  "journalShareDayTitle": "La tua giornata di uccelli",
+  "journalShareDayButton": "Condividi questa giornata",
+  "journalShareDayPrivacy": "Viene inviato solo ciò che vedi qui. I tuoi nomi dei luoghi, le tue registrazioni e dove sei stato restano su questo telefono.",
+  "journalDayImageMore": "+{count} altre"
 }

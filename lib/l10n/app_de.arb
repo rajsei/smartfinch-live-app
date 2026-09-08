@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pause",
   "journalClipKeep": "Behalten",
   "journalClipKept": "Behalten ✓",
-  "journalClipKeepExplained": "Aufnahmen, die du behältst, werden nie gelöscht, um Platz zu schaffen."
+  "journalClipKeepExplained": "Aufnahmen, die du behältst, werden nie gelöscht, um Platz zu schaffen.",
+  "journalShareDayTitle": "Dein Vogeltag",
+  "journalShareDayButton": "Diesen Tag teilen",
+  "journalShareDayPrivacy": "Nur was du hier siehst, wird verschickt. Deine Ortsnamen, deine Aufnahmen und wo du warst bleiben auf diesem Handy.",
+  "journalDayImageMore": "+{count} weitere"
 }

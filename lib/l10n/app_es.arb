@@ -1262,5 +1262,9 @@
   "journalClipPause": "Pausar",
   "journalClipKeep": "Guardar",
   "journalClipKept": "Guardada",
-  "journalClipKeepExplained": "Las grabaciones que guardas nunca se borran para hacer sitio."
+  "journalClipKeepExplained": "Las grabaciones que guardas nunca se borran para hacer sitio.",
+  "journalShareDayTitle": "Tu día de aves",
+  "journalShareDayButton": "Compartir este día",
+  "journalShareDayPrivacy": "Solo se envía lo que ves aquí. Tus nombres de lugares, tus grabaciones y dónde estuviste se quedan en este móvil.",
+  "journalDayImageMore": "+{count} más"
 }

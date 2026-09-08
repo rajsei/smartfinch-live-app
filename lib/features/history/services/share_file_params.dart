@@ -41,6 +41,10 @@ String mimeTypeForSharedPath(String path) {
     case '.ogg':
     case '.oga':
       return 'audio/ogg';
+    // The shared day image (LOG-11). Without a real type, chat apps
+    // offer it as a file to download rather than showing the picture.
+    case '.png':
+      return 'image/png';
     case '.zip':
       return 'application/zip';
     case '.json':

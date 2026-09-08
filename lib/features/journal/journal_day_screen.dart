@@ -36,6 +36,7 @@ import '../explore/widgets/species_info_overlay.dart';
 import '../../core/theme/score_colors.dart';
 import '../scoring/scoring_rules.dart';
 import '../settings/animation_level.dart';
+import 'day_share_screen.dart';
 import 'journal_models.dart';
 import 'journal_providers.dart';
 import 'journal_screen.dart';
@@ -60,6 +61,21 @@ class JournalDayScreen extends ConsumerWidget {
               ? l10n.journalTitle
               : formatJournalDate(context, detail.value!.day.date),
         ),
+        actions: [
+          // The app's only way out (LOG-11), and it opens a preview rather
+          // than a share sheet: a child sends the picture after seeing it.
+          if (detail.value != null && !detail.value!.day.isEmpty)
+            IconButton(
+              tooltip: l10n.journalShareDayButton,
+              icon: const Icon(AppIcons.share),
+              onPressed:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => DayShareScreen(detail: detail.value!),
+                    ),
+                  ),
+            ),
+        ],
       ),
       body: ContentWidthConstraint(
         child: detail.when(
