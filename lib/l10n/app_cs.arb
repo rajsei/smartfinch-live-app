@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "Roky",
   "journalWeekOf": "Týden od {date}",
   "journalBucketDaysOut": "{count, plural, =1{1 den venku} few{{count} dny venku} other{{count} dní venku}}",
-  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nový druh} few{✨ {count} nové druhy} other{✨ {count} nových druhů}}"
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nový druh} few{✨ {count} nové druhy} other{✨ {count} nových druhů}}",
+  "journalThisOneScored": "počítalo se",
+  "journalAboutThisBird": "O tomto ptákovi",
+  "journalNoRecording": "Nahrávka se neuchovala",
+  "journalClipPlay": "Přehrát",
+  "journalClipPause": "Pozastavit",
+  "journalClipKeep": "Ponechat",
+  "journalClipKept": "Ponecháno",
+  "journalClipKeepExplained": "Nahrávky, které si ponecháš, se nikdy nesmažou kvůli místu."
 }

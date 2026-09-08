@@ -30,7 +30,9 @@ abstract final class AppIcons {
   static const IconData batteryChargingFull = Symbols.battery_charging_full;
   static const IconData batterySaverRounded = Symbols.battery_saver_rounded;
   static const IconData bluetoothAudio = Symbols.bluetooth_audio;
+  static const IconData bookmark = Symbols.bookmark;
   static const IconData bookmarkAdded = Symbols.bookmark_added;
+  static const IconData bookmarkFilled = Symbols.bookmark_added_rounded;
   static const IconData brokenImage = Symbols.broken_image;
   static const IconData calendarToday = Symbols.calendar_today;
   static const IconData calendarTodayRounded = Symbols.calendar_today_rounded;

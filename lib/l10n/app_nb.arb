@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "År",
   "journalWeekOf": "Uka fra {date}",
   "journalBucketDaysOut": "{count, plural, =1{1 dag ute} other{{count} dager ute}}",
-  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 ny art} other{✨ {count} nye arter}}"
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 ny art} other{✨ {count} nye arter}}",
+  "journalThisOneScored": "telte",
+  "journalAboutThisBird": "Om denne fuglen",
+  "journalNoRecording": "Ingen opptak lagret",
+  "journalClipPlay": "Spill av",
+  "journalClipPause": "Pause",
+  "journalClipKeep": "Behold",
+  "journalClipKept": "Beholdt",
+  "journalClipKeepExplained": "Opptak du beholder, blir aldri slettet for å gi plass."
 }

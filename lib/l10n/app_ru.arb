@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "Годы",
   "journalWeekOf": "Неделя с {date}",
   "journalBucketDaysOut": "{count, plural, =1{1 день на улице} few{{count} дня на улице} other{{count} дней на улице}}",
-  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 новый вид} few{✨ {count} новых вида} other{✨ {count} новых видов}}"
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 новый вид} few{✨ {count} новых вида} other{✨ {count} новых видов}}",
+  "journalThisOneScored": "засчитано",
+  "journalAboutThisBird": "Об этой птице",
+  "journalNoRecording": "Запись не сохранена",
+  "journalClipPlay": "Воспроизвести",
+  "journalClipPause": "Пауза",
+  "journalClipKeep": "Сохранить",
+  "journalClipKept": "Сохранено",
+  "journalClipKeepExplained": "Записи, которые ты сохранишь, никогда не удаляются ради места."
 }

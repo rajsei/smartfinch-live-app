@@ -240,6 +240,24 @@ class JournalRepository {
       if (peak > (peaks[name] ?? 0)) peaks[name] = peak;
     }
 
+    // Every hearing, earliest first — what a species row expands into
+    // (`LOG-07`). Built once for the day rather than queried per tap.
+    final byName = <String, List<JournalDetection>>{};
+    for (final detection in detections) {
+      (byName[detection.scientificName] ??= []).add(
+        JournalDetection(
+          id: detection.id,
+          heardAt: detection.detectedAt,
+          confidence: detection.peakConfidence ?? detection.confidence,
+          clipPath: detection.audioClipPath,
+          isFavourite: detection.clipIsFavourite,
+        ),
+      );
+    }
+    for (final list in byName.values) {
+      list.sort((a, b) => a.heardAt.compareTo(b.heardAt));
+    }
+
     final scoredNames = {for (final row in scoredRows) row.scientificName};
 
     final scored = [
@@ -252,6 +270,7 @@ class JournalRepository {
           detectionCount: counts[row.scientificName] ?? row.detectionCount,
           isNew: newOnThisDay.contains(row.scientificName),
           peakConfidence: peaks[row.scientificName],
+          detections: byName[row.scientificName] ?? const [],
         ),
     ]..sort((a, b) => b.stars.compareTo(a.stars));
 
@@ -266,6 +285,7 @@ class JournalRepository {
           detectionCount: counts[name] ?? 1,
           scored: false,
           peakConfidence: peaks[name],
+          detections: byName[name] ?? const [],
         ),
     ]..sort((a, b) => a.firstHeardAt.compareTo(b.firstHeardAt));
 

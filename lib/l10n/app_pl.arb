@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "Lata",
   "journalWeekOf": "Tydzień od {date}",
   "journalBucketDaysOut": "{count, plural, =1{1 dzień na dworze} few{{count} dni na dworze} other{{count} dni na dworze}}",
-  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nowy gatunek} few{✨ {count} nowe gatunki} other{✨ {count} nowych gatunków}}"
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nowy gatunek} few{✨ {count} nowe gatunki} other{✨ {count} nowych gatunków}}",
+  "journalThisOneScored": "liczyło się",
+  "journalAboutThisBird": "O tym ptaku",
+  "journalNoRecording": "Nie zachowano nagrania",
+  "journalClipPlay": "Odtwórz",
+  "journalClipPause": "Wstrzymaj",
+  "journalClipKeep": "Zachowaj",
+  "journalClipKept": "Zachowane",
+  "journalClipKeepExplained": "Nagrania, które zachowasz, nigdy nie zostaną usunięte dla miejsca."
 }

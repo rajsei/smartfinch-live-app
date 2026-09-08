@@ -33,10 +33,13 @@ import '../../shared/widgets/content_width_constraint.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../explore/explore_providers.dart';
 import '../explore/widgets/species_info_overlay.dart';
+import '../../core/theme/score_colors.dart';
 import '../scoring/scoring_rules.dart';
+import '../settings/animation_level.dart';
 import 'journal_models.dart';
 import 'journal_providers.dart';
 import 'journal_screen.dart';
+import 'widgets/journal_clip_sheet.dart';
 import 'widgets/place_name_editor.dart';
 
 /// One day of the journal (`LOG-03`, `LOG-09`, `LOG-13`, `LOG-15`).
@@ -91,7 +94,7 @@ class _DayBody extends ConsumerWidget {
           const SizedBox(height: 16),
           _SectionLabel(text: l10n.journalCollected),
           for (final species in detail.scored)
-            JournalSpeciesTile(species: species),
+            JournalSpeciesTile(species: species, dayKey: detail.day.dayKey),
         ],
 
         if (detail.bonuses.isNotEmpty) ...[
@@ -117,7 +120,7 @@ class _DayBody extends ConsumerWidget {
           const SizedBox(height: 20),
           _OutsideScoringHeader(count: detail.outsideScoring.length),
           for (final species in detail.outsideScoring)
-            JournalSpeciesTile(species: species),
+            JournalSpeciesTile(species: species, dayKey: detail.day.dayKey),
         ],
       ],
     );
@@ -172,31 +175,50 @@ class _DayHeader extends StatelessWidget {
   }
 }
 
-/// One species row (`LOG-03`, `LOG-09`).
-class JournalSpeciesTile extends ConsumerWidget {
-  const JournalSpeciesTile({super.key, required this.species});
+/// One species row, which opens into the times it was heard (`LOG-03`,
+/// `LOG-09`, `LOG-07`).
+///
+/// Tapping expands rather than opening the bird's page, because the row's own
+/// contents are one level in and the page is two. The link to the page is the
+/// last thing inside, where a child who wanted it will find it — and where the
+/// old session concept lives on, one level deeper than it used to.
+class JournalSpeciesTile extends ConsumerStatefulWidget {
+  const JournalSpeciesTile({
+    super.key,
+    required this.species,
+    required this.dayKey,
+  });
 
   final JournalSpecies species;
 
+  /// What the clip sheet invalidates after the keep switch (`SET-12`).
+  final String dayKey;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JournalSpeciesTile> createState() => _JournalSpeciesTileState();
+}
+
+class _JournalSpeciesTileState extends ConsumerState<JournalSpeciesTile> {
+  bool _open = false;
+
+  @override
+  Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
+    final species = widget.species;
     final taxonomy = ref.watch(taxonomyServiceProvider).value;
     final locale = ref.watch(effectiveSpeciesLocaleProvider);
     final displayName =
         taxonomy?.lookup(species.scientificName)?.commonNameForLocale(locale) ??
         species.scientificName;
+    final motion = animationLevelFor(context, ref);
 
-    return ListTile(
+    final header = ListTile(
       contentPadding: const EdgeInsets.symmetric(horizontal: 4),
       onTap:
-          () => SpeciesInfoOverlay.show(
-            context,
-            ref,
-            scientificName: species.scientificName,
-            commonName: displayName,
-          ),
+          species.isExpandable
+              ? () => setState(() => _open = !_open)
+              : () => _openSpeciesPage(displayName),
       title: Row(
         children: [
           Flexible(
@@ -223,7 +245,9 @@ class JournalSpeciesTile extends ConsumerWidget {
           color: theme.colorScheme.onSurfaceVariant,
         ),
       ),
-      trailing:
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
           species.scored
               ? _Award(species: species)
               : Text(
@@ -232,16 +256,207 @@ class JournalSpeciesTile extends ConsumerWidget {
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
               ),
+          if (species.isExpandable)
+            Icon(
+              _open ? AppIcons.expandLess : AppIcons.expandMore,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+        ],
+      ),
+    );
+
+    final body =
+        _open
+            ? _HeardTimes(
+              species: species,
+              speciesName: displayName,
+              dayKey: widget.dayKey,
+              onOpenSpeciesPage: () => _openSpeciesPage(displayName),
+            )
+            : const SizedBox.shrink();
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        header,
+        // Off means off: at that level the row simply is or is not open
+        // (SET-02), and nothing on this screen slides.
+        if (motion == AnimationLevel.off)
+          body
+        else
+          AnimatedSize(
+            duration: const Duration(milliseconds: 180),
+            curve: Curves.easeOut,
+            alignment: Alignment.topCenter,
+            child: body,
+          ),
+      ],
     );
   }
+
+  void _openSpeciesPage(String displayName) => SpeciesInfoOverlay.show(
+    context,
+    ref,
+    scientificName: widget.species.scientificName,
+    commonName: displayName,
+  );
 
   String _subtitle(BuildContext context, AppLocalizations l10n) {
     final time = DateFormat.Hm(
       Localizations.localeOf(context).toString(),
-    ).format(species.firstHeardAt);
+    ).format(widget.species.firstHeardAt);
 
-    if (species.detectionCount <= 1) return time;
-    return '$time · ${l10n.journalHeardTimes(species.detectionCount)}';
+    if (widget.species.detectionCount <= 1) return time;
+    return '$time · ${l10n.journalHeardTimes(widget.species.detectionCount)}';
+  }
+}
+
+/// Every time the species was heard that day (`LOG-07`).
+class _HeardTimes extends StatelessWidget {
+  const _HeardTimes({
+    required this.species,
+    required this.speciesName,
+    required this.dayKey,
+    required this.onOpenSpeciesPage,
+  });
+
+  final JournalSpecies species;
+  final String speciesName;
+  final String dayKey;
+  final VoidCallback onOpenSpeciesPage;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 0, 4, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          for (final (index, detection) in species.detections.indexed)
+            _HeardRow(
+              detection: detection,
+              speciesName: speciesName,
+              dayKey: dayKey,
+              // Only the first hearing of the day scored (PKT-04). Saying so
+              // here is the cheapest place in the app to teach that rule.
+              scored: species.scored && index == 0,
+            ),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: onOpenSpeciesPage,
+              icon: const Icon(AppIcons.infoOutline, size: 18),
+              label: Text(l10n.journalAboutThisBird),
+              style: TextButton.styleFrom(
+                visualDensity: VisualDensity.compact,
+                foregroundColor: theme.colorScheme.primary,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// One hearing: when, how sure, and the recording if it was kept.
+class _HeardRow extends StatelessWidget {
+  const _HeardRow({
+    required this.detection,
+    required this.speciesName,
+    required this.dayKey,
+    required this.scored,
+  });
+
+  final JournalDetection detection;
+  final String speciesName;
+  final String dayKey;
+  final bool scored;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final scoreColors = theme.extension<ScoreColors>();
+    final percent = (detection.confidence * 100).round();
+
+    return InkWell(
+      onTap:
+          detection.hasClip
+              ? () => showJournalClipSheet(
+                context,
+                detection: detection,
+                speciesName: speciesName,
+                dayKey: dayKey,
+              )
+              : null,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 4),
+        child: Row(
+          children: [
+            Text(
+              DateFormat.Hm(
+                Localizations.localeOf(context).toString(),
+              ).format(detection.heardAt),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                fontFeatures: const [FontFeature.tabularFigures()],
+              ),
+            ),
+            if (scored) ...[
+              const SizedBox(width: 8),
+              Text(
+                l10n.journalThisOneScored,
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.primary,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+            ],
+            const Spacer(),
+            Semantics(
+              label: l10n.a11yConfidencePercent(percent),
+              excludeSemantics: true,
+              child: Text(
+                '$percent %',
+                style: theme.textTheme.bodySmall?.copyWith(
+                  fontWeight: FontWeight.w600,
+                  color: scoreColors?.forScore(detection.confidence),
+                ),
+              ),
+            ),
+            const SizedBox(width: 8),
+            if (detection.hasClip)
+              Icon(
+                detection.isFavourite
+                    ? AppIcons.bookmarkFilled
+                    : AppIcons.graphicEq,
+                size: 20,
+                color:
+                    detection.isFavourite
+                        ? theme.colorScheme.tertiary
+                        : theme.colorScheme.primary,
+              )
+            else
+              // Retention has been through, or the clip was never kept. Said
+              // plainly rather than left as a gap the child has to interpret.
+              Tooltip(
+                message: l10n.journalNoRecording,
+                child: Icon(
+                  AppIcons.volumeOffRounded,
+                  size: 20,
+                  color: theme.colorScheme.onSurfaceVariant.withValues(
+                    alpha: 0.5,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
+    );
   }
 }
 

@@ -5506,5 +5506,37 @@
         "type": "int"
       }
     }
+  },
+  "journalThisOneScored": "counted",
+  "@journalThisOneScored": {
+    "description": "LOG-07: marks the one hearing of the day that earned stars"
+  },
+  "journalAboutThisBird": "About this bird",
+  "@journalAboutThisBird": {
+    "description": "LOG-07: opens the species page from inside an expanded row"
+  },
+  "journalNoRecording": "No recording kept",
+  "@journalNoRecording": {
+    "description": "LOG-07: tooltip when a detection has no kept audio clip"
+  },
+  "journalClipPlay": "Play",
+  "@journalClipPlay": {
+    "description": "LOG-07: play the kept recording"
+  },
+  "journalClipPause": "Pause",
+  "@journalClipPause": {
+    "description": "LOG-07: pause the kept recording"
+  },
+  "journalClipKeep": "Keep",
+  "@journalClipKeep": {
+    "description": "SET-12: mark this clip so retention never deletes it"
+  },
+  "journalClipKept": "Kept",
+  "@journalClipKept": {
+    "description": "SET-12: state of a clip that is exempt from retention"
+  },
+  "journalClipKeepExplained": "Recordings you keep are never deleted to make room.",
+  "@journalClipKeepExplained": {
+    "description": "SET-12: why keeping matters — old clips are deleted to save space"
   }
 }

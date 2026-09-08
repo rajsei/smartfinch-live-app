@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "年",
   "journalWeekOf": "{date}那一周",
   "journalBucketDaysOut": "{count, plural, other{外出 {count} 天}}",
-  "journalBucketNewSpecies": "{count, plural, other{✨ {count} 个新物种}}"
+  "journalBucketNewSpecies": "{count, plural, other{✨ {count} 个新物种}}",
+  "journalThisOneScored": "已计分",
+  "journalAboutThisBird": "关于这只鸟",
+  "journalNoRecording": "未保留录音",
+  "journalClipPlay": "播放",
+  "journalClipPause": "暂停",
+  "journalClipKeep": "保留",
+  "journalClipKept": "已保留",
+  "journalClipKeepExplained": "你保留的录音不会为了腾出空间而被删除。"
 }

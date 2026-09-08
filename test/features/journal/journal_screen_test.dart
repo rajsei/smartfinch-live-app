@@ -746,4 +746,177 @@ void main() {
       expect(find.byIcon(AppIcons.chevronRight), findsNothing);
     });
   });
+
+  // ===========================================================================
+  // LOG-07 · the row opens into the times it was heard
+  // ===========================================================================
+  //
+  // The one level below a species, and where the old session concept lives on.
+  // What has to hold: the row opens, every hearing is listed with its time and
+  // how sure the app was, only the first one is marked as having counted, and
+  // the bird's own page stays reachable now that a tap no longer opens it.
+  // ===========================================================================
+  group('LOG-07 · the hearings inside a species', () {
+    JournalSpecies merulaHeard({
+      List<JournalDetection> detections = const [],
+      bool scored = true,
+    }) => JournalSpecies(
+      scientificName: 'Turdus merula',
+      firstHeardAt: may4.add(const Duration(hours: 7)),
+      stars: scored ? 50 : 0,
+      scored: scored,
+      detectionCount: detections.length,
+      detections: detections,
+    );
+
+    JournalDetection heardAt(
+      int hour,
+      int minute, {
+      double confidence = 0.87,
+      String? clip,
+      bool kept = false,
+    }) => JournalDetection(
+      id: 'd$hour$minute',
+      heardAt: DateTime(2026, 5, 4, hour, minute),
+      confidence: confidence,
+      clipPath: clip,
+      isFavourite: kept,
+    );
+
+    Future<void> openRow(
+      WidgetTester tester, {
+      required List<JournalDetection> detections,
+      bool scored = true,
+    }) async {
+      await pump(
+        tester,
+        const JournalDayScreen(dayKey: '2026-05-04'),
+        detail: JournalDayDetail(
+          day: dayWith(speciesCount: scored ? 1 : 0, unscored: scored ? 0 : 1),
+          scored: scored ? [merulaHeard(detections: detections)] : const [],
+          outsideScoring:
+              scored
+                  ? const []
+                  : [merulaHeard(detections: detections, scored: false)],
+        ),
+      );
+
+      await tester.tap(find.text('Turdus merula'));
+      await tester.pumpAndSettle();
+    }
+
+    testWidgets('a closed row shows nothing but the species', (tester) async {
+      await pump(
+        tester,
+        const JournalDayScreen(dayKey: '2026-05-04'),
+        detail: JournalDayDetail(
+          day: dayWith(speciesCount: 1),
+          scored: [
+            merulaHeard(detections: [heardAt(7, 12), heardAt(9, 3)]),
+          ],
+        ),
+      );
+
+      expect(find.text('09:03'), findsNothing);
+    });
+
+    testWidgets('tapping opens every time it was heard', (tester) async {
+      await openRow(
+        tester,
+        detections: [heardAt(7, 12), heardAt(7, 40), heardAt(9, 3)],
+      );
+
+      expect(find.text('07:12'), findsOneWidget);
+      expect(find.text('07:40'), findsOneWidget);
+      expect(find.text('09:03'), findsOneWidget);
+    });
+
+    testWidgets('only the first one is marked as having counted', (
+      tester,
+    ) async {
+      // PKT-04 in one word, in the cheapest place in the app to teach it.
+      await openRow(tester, detections: [heardAt(7, 12), heardAt(9, 3)]);
+
+      expect(find.text('counted'), findsOneWidget);
+    });
+
+    testWidgets('nothing counted outside scoring, so nothing says it did', (
+      tester,
+    ) async {
+      await openRow(
+        tester,
+        detections: [heardAt(7, 12), heardAt(9, 3)],
+        scored: false,
+      );
+
+      expect(find.text('07:12'), findsOneWidget);
+      expect(find.text('counted'), findsNothing);
+    });
+
+    testWidgets('each hearing says how sure the app was', (tester) async {
+      await openRow(tester, detections: [heardAt(7, 12, confidence: 0.87)]);
+
+      expect(find.text('87 %'), findsOneWidget);
+    });
+
+    testWidgets('a kept recording is marked as kept', (tester) async {
+      await openRow(
+        tester,
+        detections: [
+          heardAt(7, 12, clip: '/clips/a.wav'),
+          heardAt(9, 3, clip: '/clips/b.wav', kept: true),
+        ],
+      );
+
+      expect(find.byIcon(AppIcons.bookmarkFilled), findsOneWidget);
+      expect(find.byIcon(AppIcons.graphicEq), findsOneWidget);
+    });
+
+    testWidgets('a hearing with no recording says so rather than going blank', (
+      tester,
+    ) async {
+      // Retention has been through. That is ordinary, and the row still has
+      // to render a time a child can read.
+      await openRow(tester, detections: [heardAt(7, 12)]);
+
+      expect(find.text('07:12'), findsOneWidget);
+      expect(find.byIcon(AppIcons.volumeOffRounded), findsOneWidget);
+      expect(find.byIcon(AppIcons.graphicEq), findsNothing);
+    });
+
+    testWidgets('the bird’s own page is still one tap away', (tester) async {
+      // The tap that used to open it now expands, so the link has to be
+      // inside — otherwise LOG-07 would have quietly removed SAM-06.
+      await openRow(tester, detections: [heardAt(7, 12)]);
+
+      expect(find.text('About this bird'), findsOneWidget);
+    });
+
+    testWidgets('tapping again closes it', (tester) async {
+      await openRow(tester, detections: [heardAt(7, 12)]);
+      expect(find.text('07:12'), findsOneWidget);
+
+      await tester.tap(find.text('Turdus merula'));
+      await tester.pumpAndSettle();
+
+      expect(find.text('07:12'), findsNothing);
+    });
+
+    testWidgets('a species with no hearings left opens its page instead', (
+      tester,
+    ) async {
+      // Nothing to expand into, so the row keeps its old behaviour rather
+      // than becoming a tap that does nothing.
+      await pump(
+        tester,
+        const JournalDayScreen(dayKey: '2026-05-04'),
+        detail: JournalDayDetail(
+          day: dayWith(speciesCount: 1),
+          scored: [merulaHeard()],
+        ),
+      );
+
+      expect(find.byIcon(AppIcons.expandMore), findsNothing);
+    });
+  });
 }

@@ -181,6 +181,42 @@ class JournalBucket {
   bool get isEmpty => speciesCount == 0 && stars == 0;
 }
 
+/// One time a species was heard (`LOG-07`).
+///
+/// This is where the old session concept lives on, one level deeper: the raw
+/// `Detection` row, with the clip it kept. A child who expands a species sees
+/// that the blackbird sang at 07:12, 07:40 and 09:03 — and that only the first
+/// of those was worth stars.
+@immutable
+class JournalDetection {
+  const JournalDetection({
+    required this.id,
+    required this.heardAt,
+    required this.confidence,
+    this.clipPath,
+    this.isFavourite = false,
+  });
+
+  /// The `Detections` row id — what a clip and a favourite hang off.
+  final String id;
+
+  final DateTime heardAt;
+
+  /// The highest confidence this detection reached, where the peak was
+  /// written back when it closed (D15); otherwise the confidence it opened at.
+  final double confidence;
+
+  /// Where the kept audio lives, when it was kept at all (`SET-12`).
+  ///
+  /// Null is ordinary rather than exceptional: retention deletes old clips,
+  /// and a detection is still a detection without one.
+  final String? clipPath;
+
+  final bool isFavourite;
+
+  bool get hasClip => clipPath != null;
+}
+
 /// One species within a day (`LOG-03`).
 @immutable
 class JournalSpecies {
@@ -193,6 +229,7 @@ class JournalSpecies {
     this.isNew = false,
     this.scored = true,
     this.peakConfidence,
+    this.detections = const [],
   });
 
   final String scientificName;
@@ -221,7 +258,17 @@ class JournalSpecies {
   /// Highest confidence reached, written back when the detection closed (D15).
   final double? peakConfidence;
 
+  /// Every time it was heard that day, earliest first (`LOG-07`).
+  ///
+  /// Carried on the species rather than fetched when the row expands: a day
+  /// holds tens of detections, not thousands, and one query for the day beats
+  /// a spinner under every tap.
+  final List<JournalDetection> detections;
+
   bool get hasMultiplier => scored && multiplier != ScoreMultiplier.none;
+
+  /// Whether expanding the row would show anything worth the tap.
+  bool get isExpandable => detections.isNotEmpty;
 }
 
 /// Everything a day-detail screen shows (`LOG-03`, `LOG-09`, `LOG-15`).

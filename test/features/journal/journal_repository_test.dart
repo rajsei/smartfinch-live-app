@@ -598,4 +598,133 @@ void main() {
       );
     });
   });
+
+  // ===========================================================================
+  // LOG-07 · every time it was heard
+  // ===========================================================================
+  //
+  // The level below the species: the raw `Detection` rows, which is where the
+  // old session concept survives. Two things have to be right for the row to
+  // teach anything.
+  //
+  //   **Earliest first**, because the first hearing is the one that scored
+  //   (`PKT-04`) and the expanded row says so. Sorted the other way, the badge
+  //   would sit on the wrong line and quietly teach the opposite rule.
+  //
+  //   **The peak confidence**, not the confidence it opened at (D15). A call
+  //   that opened at 0.40 and reached 0.88 is an 88 % detection; showing 40 %
+  //   would make the app look wrong about a bird it got right.
+  // ===========================================================================
+  group('LOG-07 · every time it was heard', () {
+    test('a species carries each hearing, earliest first', () async {
+      await hear('Turdus merula', at: may4.add(const Duration(hours: 2)));
+      await hear('Turdus merula', at: may4);
+      await hear('Turdus merula', at: may4.add(const Duration(hours: 1)));
+
+      final species = (await journal.detailFor('2026-05-04')).scored.single;
+
+      expect(species.detections, hasLength(3));
+      expect(species.detections.map((d) => d.heardAt), [
+        may4,
+        may4.add(const Duration(hours: 1)),
+        may4.add(const Duration(hours: 2)),
+      ]);
+      expect(species.isExpandable, isTrue);
+    });
+
+    test('the first of them is the one that scored', () async {
+      // Not asserted through the UI: the order *is* the claim, and the badge
+      // on screen only ever reads index 0.
+      await hear('Turdus merula', at: may4.add(const Duration(hours: 3)));
+      await hear('Turdus merula', at: may4);
+
+      final species = (await journal.detailFor('2026-05-04')).scored.single;
+      expect(species.detections.first.heardAt, species.firstHeardAt);
+    });
+
+    test('a hearing carries its clip and whether it is kept', () async {
+      final recorded = await scoring.recordDetection(
+        sessionId: sessionId,
+        scientificName: 'Turdus merula',
+        confidence: 0.9,
+        context: contextAt(may4),
+      );
+      await scoring.setClipPath(
+        detectionId: recorded.detectionId,
+        clipPath: '/clips/merula.wav',
+      );
+      await scoring.setClipFavourite(
+        detectionId: recorded.detectionId,
+        isFavourite: true,
+      );
+
+      final detection =
+          (await journal.detailFor(
+            '2026-05-04',
+          )).scored.single.detections.single;
+
+      expect(detection.id, recorded.detectionId);
+      expect(detection.clipPath, '/clips/merula.wav');
+      expect(detection.hasClip, isTrue);
+      expect(detection.isFavourite, isTrue);
+    });
+
+    test('a hearing with no clip is ordinary, not broken', () async {
+      // Retention deletes old clips; a detection without one is still a
+      // detection, and the row has to render it.
+      await hear('Turdus merula');
+
+      final detection =
+          (await journal.detailFor(
+            '2026-05-04',
+          )).scored.single.detections.single;
+
+      expect(detection.clipPath, isNull);
+      expect(detection.hasClip, isFalse);
+    });
+
+    test('the confidence shown is the peak, not the opening one', () async {
+      final recorded = await scoring.recordDetection(
+        sessionId: sessionId,
+        scientificName: 'Turdus merula',
+        confidence: 0.4,
+        context: contextAt(may4),
+      );
+      await scoring.writeBackPeakConfidence(
+        detectionId: recorded.detectionId,
+        peakConfidence: 0.88,
+      );
+
+      final detection =
+          (await journal.detailFor(
+            '2026-05-04',
+          )).scored.single.detections.single;
+
+      expect(detection.confidence, closeTo(0.88, 1e-9));
+    });
+
+    test('species outside scoring carry their hearings too', () async {
+      // LOG-15 promises the recordings are still there; LOG-07 is where a
+      // child actually gets at them.
+      await hear('Turdus merula', filterEnabled: false);
+      await hear(
+        'Turdus merula',
+        filterEnabled: false,
+        at: may4.add(const Duration(hours: 1)),
+      );
+
+      final species =
+          (await journal.detailFor('2026-05-04')).outsideScoring.single;
+
+      expect(species.scored, isFalse);
+      expect(species.detections, hasLength(2));
+    });
+
+    test('one hearing is still worth expanding', () async {
+      await hear('Turdus merula');
+
+      final species = (await journal.detailFor('2026-05-04')).scored.single;
+      expect(species.isExpandable, isTrue);
+    });
+  });
 }

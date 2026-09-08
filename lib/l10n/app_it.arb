@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "Anni",
   "journalWeekOf": "Settimana del {date}",
   "journalBucketDaysOut": "{count, plural, =1{1 giorno fuori} other{{count} giorni fuori}}",
-  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nuova specie} other{✨ {count} nuove specie}}"
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nuova specie} other{✨ {count} nuove specie}}",
+  "journalThisOneScored": "contato",
+  "journalAboutThisBird": "Su questo uccello",
+  "journalNoRecording": "Nessuna registrazione conservata",
+  "journalClipPlay": "Riproduci",
+  "journalClipPause": "Pausa",
+  "journalClipKeep": "Conserva",
+  "journalClipKept": "Conservata",
+  "journalClipKeepExplained": "Le registrazioni che conservi non vengono mai cancellate per fare spazio."
 }

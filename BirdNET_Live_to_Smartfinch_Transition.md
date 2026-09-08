@@ -529,7 +529,7 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 **The job deletes the file first, then clears the row.** The reverse would leave orphaned audio that nothing in the app can find or count. A file that cannot be removed keeps its path, so the next run retries rather than losing track of it. It runs once per app start, off the critical path — a clean-up competing with inference for the disk is one that drops frames (`NFA-13`).
 
-*What is not built:* the UI for marking a favourite. `ScoringRepository.setClipFavourite` is there and the policy honours it; the toggle belongs on the clip player, which `LOG-07` opens up at P1.
+*The UI for marking a favourite arrived with `LOG-07`* — the keep switch on the journal's clip player. `ScoringRepository.setClipFavourite` had existed since phase 2 with nothing calling it; the policy already honoured the flag, so closing the gap was one control and one write.
 
 ### Phase 3 — Version 1.0
 
@@ -582,6 +582,22 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 *The awkward case is the ISO week that straddles the turn of the month.* A bucket belongs to a span if it **overlaps** it, not if it sits inside: the week of 27 April appears under both April and May, and takes the first three days of May with it. Containment would have been tidier and would have made 1–3 May unreachable through the drill-down while still counting in May's totals.
 
 **`LOG-05` · the month header stays put.** `SliverMainAxisGroup` around each month's header and its days, rather than a plain pinned header — pinning alone stacks every month at the top, one under the next, instead of April pushing May away as it arrives. The background is opaque, because the cards scroll *underneath* it. The wider levels get no header at all: a "May 2026" bar above a list of months would say the same thing twice.
+
+**`LOG-07` is done** ✅ — 22 tests. A species row in the day detail opens into the times it was heard: 07:12, 07:40, 09:03, each with how sure the app was and the recording where one was kept. This is the level the specification promised the old session concept would survive at, and it is the last of them.
+
+**Only the first hearing is marked "counted".** `PKT-04` says the first detection of a species on a day scores and the rest do not, and a child who expands a blackbird heard five times learns that rule in one glance without anyone explaining it. That makes the sort order load-bearing rather than cosmetic — sorted the other way the badge lands on the wrong line and teaches the opposite. There is a test on the order for its own sake.
+
+**The confidence shown is the peak, not the opening one.** A call that opened at 40 % and reached 88 % is an 88 % detection (D15). Showing what it opened at would make the app look wrong about a bird it got right, which is worse than showing nothing.
+
+**A tap now expands, so "About this bird" moved inside the row.** The row's own contents are one level in and the species page is two; putting the link at the bottom of the expansion keeps one tap target per row instead of two competing ones. Tested, because `LOG-07` could otherwise have quietly removed `SAM-06`'s way in.
+
+**The clip player is new rather than reused, and that was the point.** The session-review player exists and does all of this already — but it grew for adults doing fieldwork: it shares the audio, exports Raven selection tables, edits notes, records voice memos, confirms detections. Sharing audio is the one that mattered: `LOG-11` decided the rendered day image is the app's **only** sharing path, and it carries no audio. So the journal has its own sheet that draws the spectrogram, plays the clip, and stops. There is a test asserting the absence, because "just reuse the other sheet" is a plausible future edit that would put a share button in a child's hands without anyone noticing.
+
+*It reuses the computation, not the screen* — `renderSpectrogram` was already a pure function, and this is the first caller to run it in an isolate rather than yielding on the UI thread every 200 columns.
+
+**`SET-12`'s missing half went in with it.** `setClipFavourite` has existed since phase 2 with nothing to call it; the keep switch on the clip player is that caller, and it closes the open item. It belongs there rather than in a settings list because the moment a child knows a recording is worth keeping is the moment they are listening to it — and what it buys is concrete: retention deletes the oldest clips once a species is over its cap, and a kept clip is exempt.
+
+*A hearing with no recording says so.* Retention having been through is ordinary, not an error, so the row renders a muted icon with an explanation rather than a gap the child has to interpret.
 
 **A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 

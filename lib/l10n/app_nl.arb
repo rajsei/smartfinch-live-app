@@ -1254,5 +1254,13 @@
   "journalPeriodYear": "Jaren",
   "journalWeekOf": "Week van {date}",
   "journalBucketDaysOut": "{count, plural, =1{1 dag buiten} other{{count} dagen buiten}}",
-  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nieuwe soort} other{✨ {count} nieuwe soorten}}"
+  "journalBucketNewSpecies": "{count, plural, =1{✨ 1 nieuwe soort} other{✨ {count} nieuwe soorten}}",
+  "journalThisOneScored": "telde mee",
+  "journalAboutThisBird": "Over deze vogel",
+  "journalNoRecording": "Geen opname bewaard",
+  "journalClipPlay": "Afspelen",
+  "journalClipPause": "Pauzeren",
+  "journalClipKeep": "Bewaren",
+  "journalClipKept": "Bewaard",
+  "journalClipKeepExplained": "Opnames die je bewaart, worden nooit verwijderd om ruimte te maken."
 }
