@@ -118,6 +118,7 @@ abstract final class PrefKeys {
   static const String windowDuration = 'window_duration';
   static const String confidenceThreshold = 'confidence_threshold';
   static const String inferenceRate = 'inference_rate';
+  static const String animationLevel = 'animation_level';
   static const String speciesFilterMode = 'species_filter_mode';
   static const String sensitivity = 'sensitivity';
   static const String ignoreBirds = 'ignore_species_birds';

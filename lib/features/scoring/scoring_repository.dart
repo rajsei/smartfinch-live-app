@@ -482,6 +482,44 @@ class ScoringRepository {
     );
   }
 
+  /// Records the audio clip written for a detection (`LIVE-14`).
+  ///
+  /// The raw row is the only place a clip path is durable — the in-memory
+  /// record it is also attached to lives as long as the session. Without this,
+  /// `Detections.audioClipPath` stays empty and the `SET-12` retention job has
+  /// nothing to rank.
+  Future<void> setClipPath({
+    required String detectionId,
+    required String? clipPath,
+  }) async {
+    await (_db.update(_db.detections)
+      ..where((d) => d.id.equals(detectionId))).write(
+      DetectionsCompanion(
+        audioClipPath: Value(clipPath),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
+  /// Marks a clip as one the child wants to keep (`SET-12`).
+  ///
+  /// Favourites are never deleted by the retention job. That is the one
+  /// promise the whole clean-up rests on: a child who marks a recording has
+  /// been told it stays, and a job that removed it anyway would be the single
+  /// worst thing this feature could do.
+  Future<void> setClipFavourite({
+    required String detectionId,
+    required bool isFavourite,
+  }) async {
+    await (_db.update(_db.detections)
+      ..where((d) => d.id.equals(detectionId))).write(
+      DetectionsCompanion(
+        clipIsFavourite: Value(isFavourite),
+        updatedAt: Value(DateTime.now()),
+      ),
+    );
+  }
+
   /// Counts a repeat detection of a species that already scored today.
   ///
   /// The repeat is still a real observation and still gets its `Detection`

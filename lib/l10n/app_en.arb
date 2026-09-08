@@ -5229,5 +5229,137 @@
   "achievementOrnithologist": "Ornithologist",
   "@achievementOrnithologist": {
     "description": "AUS-03 Collector tier at 250 species (3.3)"
+  },
+  "settingsAnimationLevel": "Animations",
+  "@settingsAnimationLevel": {
+    "description": "SET-02: how much the app is allowed to move"
+  },
+  "settingsAnimationLevelFull": "Full",
+  "@settingsAnimationLevelFull": {
+    "description": "SET-02 option: confetti and the species card"
+  },
+  "settingsAnimationLevelReduced": "Reduced",
+  "@settingsAnimationLevelReduced": {
+    "description": "SET-02 option: confetti only, no species card"
+  },
+  "settingsAnimationLevelOff": "Off",
+  "@settingsAnimationLevelOff": {
+    "description": "SET-02 option: numbers only"
+  },
+  "settingsAnimationLevelHelp": "Full shows confetti and a card for a new species. Reduced shows only the confetti. Off shows just the numbers. Nothing is lost either way — a new species is still collected and still counts.",
+  "@settingsAnimationLevelHelp": {
+    "description": "SET-02: what each level changes, and what none of them change"
+  },
+  "rulesTitle": "How do I earn stars?",
+  "@rulesTitle": {
+    "description": "SET-11: title of the rules page"
+  },
+  "rulesHowTitle": "Rarer birds are worth more",
+  "@rulesHowTitle": {
+    "description": "SET-11 section heading"
+  },
+  "rulesHowBody": "Every animal has a level where you are. A sparrow you hear every day is worth a little. Something almost nobody hears here is worth a lot.",
+  "@rulesHowBody": {
+    "description": "SET-11 section body"
+  },
+  "rulesTierEverywhere": "Everywhere",
+  "@rulesTierEverywhere": {
+    "description": "SET-11: label for the most abundant rarity level"
+  },
+  "rulesTierCommon": "Common",
+  "@rulesTierCommon": {
+    "description": "SET-11: label for the common rarity level"
+  },
+  "rulesTierRegular": "Now and then",
+  "@rulesTierRegular": {
+    "description": "SET-11: label for the frequent rarity level"
+  },
+  "rulesTierUncommon": "Not so often",
+  "@rulesTierUncommon": {
+    "description": "SET-11: label for the uncommon rarity level"
+  },
+  "rulesTierScarce": "Rare",
+  "@rulesTierScarce": {
+    "description": "SET-11: label for the scarce rarity level"
+  },
+  "rulesTierRare": "Very rare",
+  "@rulesTierRare": {
+    "description": "SET-11: label for the rarest level"
+  },
+  "rulesOncePerDayTitle": "Each animal once a day",
+  "@rulesOncePerDayTitle": {
+    "description": "SET-11 section heading for PKT-03"
+  },
+  "rulesOncePerDayBody": "The first time you hear an animal on a day, you get its stars. If you hear it again the same day, it just says you already have it. So going somewhere new beats standing still.",
+  "@rulesOncePerDayBody": {
+    "description": "SET-11 section body for PKT-03"
+  },
+  "rulesMultipliersTitle": "Sometimes it counts double",
+  "@rulesMultipliersTitle": {
+    "description": "SET-11 section heading for the multipliers"
+  },
+  "rulesMultipliersBody": "Some finds are worth more than usual:",
+  "@rulesMultipliersBody": {
+    "description": "SET-11 section body for the multipliers"
+  },
+  "rulesOnlyBestMultiplier": "Only the best bonus counts — they don't add up.",
+  "@rulesOnlyBestMultiplier": {
+    "description": "SET-11: PKT-07 in one sentence a child can hold"
+  },
+  "rulesBonusesTitle": "Extra stars for a good day",
+  "@rulesBonusesTitle": {
+    "description": "SET-11 section heading for the day bonuses"
+  },
+  "rulesBonusesBody": "The more different animals you hear in one day, the more extra stars you get. At {count} different ones there are already {stars} extra — and it keeps going after that.",
+  "@rulesBonusesBody": {
+    "description": "SET-11 section body for the day bonuses",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "rulesWhyChangeTitle": "Why do the points change during the year?",
+  "@rulesWhyChangeTitle": {
+    "description": "SET-11: the section the requirement asks for by name"
+  },
+  "rulesWhyChangeBody": "Because the birds change. Many fly away in autumn and come back in spring. A blackcap in May is here with hundreds of others — in January almost none are, so hearing one then is a real find. Same bird, same rule: it is worth what it is worth right now, here.",
+  "@rulesWhyChangeBody": {
+    "description": "SET-11: the explanation that stops week coupling reading as a bug"
+  },
+  "rulesWhereTitle": "And why somewhere else is different",
+  "@rulesWhereTitle": {
+    "description": "SET-11: the location half of the same explanation (2.1)"
+  },
+  "rulesWhereBody": "The levels are worked out for where you are. A seagull is nothing special by the sea and quite something inland. On holiday everything is worth something different — that is not a mistake, it is what makes going somewhere new fun.",
+  "@rulesWhereBody": {
+    "description": "SET-11: why the same species is worth something else elsewhere"
+  },
+  "onboardingHomeRegionTitle": "Where do you live?",
+  "@onboardingHomeRegionTitle": {
+    "description": "SET-09: heading of the home-region block on the onboarding permissions page"
+  },
+  "onboardingHomeRegionFromGps": "The app uses where you are. That decides which animals live here and what they are worth.",
+  "@onboardingHomeRegionFromGps": {
+    "description": "SET-09: shown when location was granted and nothing needs picking"
+  },
+  "onboardingHomeRegionWhy": "Without a place the app cannot tell which animals live here — and then there are no stars. Pick your home on the map instead.",
+  "@onboardingHomeRegionWhy": {
+    "description": "SET-09: shown when location is unavailable and a place still has to be picked"
+  },
+  "onboardingHomeRegionPicked": "Your home is set. You can change it later in the settings.",
+  "@onboardingHomeRegionPicked": {
+    "description": "SET-09: shown once a home has been picked on the map"
+  },
+  "onboardingHomeRegionPick": "Pick on the map",
+  "@onboardingHomeRegionPick": {
+    "description": "SET-09: button opening the map picker"
+  },
+  "onboardingHomeRegionChange": "Change",
+  "@onboardingHomeRegionChange": {
+    "description": "SET-09: button reopening the map picker once a home is set"
   }
 }

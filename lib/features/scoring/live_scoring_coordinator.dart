@@ -189,10 +189,13 @@ class LiveScoringCoordinator {
     while (_pending.isNotEmpty) {
       final next = _pending.removeFirst();
       try {
-        if (next.isClose) {
-          await _close(next.record);
-        } else {
-          await _open(next.record, next.conditions);
+        switch (next.kind) {
+          case _PendingKind.opened:
+            await _open(next.record, next.conditions);
+          case _PendingKind.closed:
+            await _close(next.record);
+          case _PendingKind.clip:
+            await _attachClip(next.record, next.clipPath!);
         }
       } catch (error, stack) {
         // A failed detection must never stop the session or the queue behind
@@ -231,8 +234,31 @@ class LiveScoringCoordinator {
     onScored?.call(ScoredDetection(record: record, result: result));
   }
 
+  /// Records the audio clip that was written for a detection (`LIVE-14`).
+  ///
+  /// Arrives late and out of order — cutting a clip means waiting for
+  /// post-roll and then encoding, so it can land after the detection closed.
+  /// That is why the row ids survive a close and are only cleared when the
+  /// session ends.
+  ///
+  /// Queued like everything else, so it cannot interleave with a write.
+  void submitClip(DetectionRecord record, String path) {
+    if (_sessionId == null) return;
+    _pending.add(_PendingDetection.clip(record, _conditions(), path));
+    unawaited(drain());
+  }
+
+  Future<void> _attachClip(DetectionRecord record, String path) async {
+    final rowId = _rowIds[_keyOf(record)];
+    if (rowId == null) return;
+
+    await _repository.setClipPath(detectionId: rowId, clipPath: path);
+  }
+
   Future<void> _close(DetectionRecord record) async {
-    final rowId = _rowIds.remove(_keyOf(record));
+    // Read rather than remove: a clip for this detection may still be
+    // encoding, and it needs the same id when it lands.
+    final rowId = _rowIds[_keyOf(record)];
     if (rowId == null) return;
 
     await _repository.writeBackPeakConfidence(
@@ -297,12 +323,25 @@ class LiveScoringCoordinator {
   );
 }
 
+enum _PendingKind { opened, closed, clip }
+
 /// One queued unit of work.
 class _PendingDetection {
-  _PendingDetection.opened(this.record, this.conditions) : isClose = false;
-  _PendingDetection.closed(this.record, this.conditions) : isClose = true;
+  _PendingDetection.opened(this.record, this.conditions)
+    : kind = _PendingKind.opened,
+      clipPath = null;
+
+  _PendingDetection.closed(this.record, this.conditions)
+    : kind = _PendingKind.closed,
+      clipPath = null;
+
+  _PendingDetection.clip(this.record, this.conditions, this.clipPath)
+    : kind = _PendingKind.clip;
 
   final DetectionRecord record;
   final LiveScoringConditions conditions;
-  final bool isClose;
+  final _PendingKind kind;
+
+  /// Set only for [_PendingKind.clip].
+  final String? clipPath;
 }

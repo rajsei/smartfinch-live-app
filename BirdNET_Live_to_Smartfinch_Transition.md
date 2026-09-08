@@ -509,11 +509,33 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 **The tile grid is complete.** Sammlung · Erkunden · Tagebuch · Punkte · Einstellungen, with a test per tile asserting it actually opens its screen.
 
-**2.8 · Child-facing polish**: animation level (`SET-02`), the rules page (`SET-11`) including "why do the points change during the year?", clip retention (`SET-12`), onboarding with the home region on the permissions screen (`KID-01`, `SET-09`).
+**2.8 · Child-facing polish**: animation level (`SET-02`), the rules page (`SET-11`) including "why do the points change during the year?", clip retention (`SET-12`), onboarding with the home region on the permissions screen (`KID-01`, `SET-09`). ⚠️ *Three of four done — 28 tests. `SET-12` is blocked and needs its own step; see below.*
+
+**`SET-02` · Animation level** — Full · Reduced · Off, on the plain settings screen because it is an accessibility setting as much as an annoyance control. `SET-03` came with it: a system-wide reduce-motion preference pulls Full down to Reduced, leaves an explicit *Off* alone, and is **not written back** — turning the system preference off restores what the child chose rather than what the phone decided for them. *What no level removes is the information:* at every setting the life-list row is written, the ×3 is paid and the journal marks it ✨ NEW. Only the celebration is a setting.
+
+**`SET-11` · The rules page** — principle 6 as a screen. Two things make it work and both are easy to lose in a redesign. **The numbers come from `ScoringRules`**, not from the prose: a page with them typed in would go quietly wrong on the first rebalance, and be wrong in the one place a child goes to check. A test asserts every tier's real value appears. And **"Why do the points change during the year?" is its own section**, which the requirement names — without it week coupling looks like a bug: same bird, same app, a different number. The location half sits beside it, because the value moves with the place too and a child on holiday needs to have been told in advance.
+
+**`KID-01` / `SET-09` · Onboarding** — five screens became four. The two info pages were one thought and merged; the home region joined the permissions page rather than adding a fifth. With location granted there is nothing to ask. Without it — declined, unavailable, or a desktop build — the child picks a place **on a map**, because `SET-09` is explicit that this must work for a child and two decimal numbers are not something an eight-year-old has. Picking a home also switches GPS off, since otherwise the coordinates they just chose would be ignored the moment a fix arrived.
+
+**`SET-12` · Clip retention** ✅ *Done in the two steps its blocker forced — `features/storage/`, 22 tests.*
+
+**The blocker, for the record.** The retention rule ranks clips by species and confidence, which means reading them from `Detections`. But `DetectionClipWriter` attached clips to the **in-memory `DetectionRecord`** only — `Detections.audioClipPath` existed and nothing ever filled it. Built in one pass, this would have been a job with nothing to read.
+
+**Step one: the clip path reaches the row.** A new `onClipAttached` hook on the writer, routed through the controller to `LiveScoringCoordinator.submitClip`, queued like every other write so it cannot interleave. *One thing had to change to make it work:* the coordinator used to **remove** a detection's row id when the detection closed. Cutting a clip means waiting for post-roll and then encoding, so clips routinely land after the close — every one of them would have been silently dropped. Ids now survive the close and are cleared when the session ends, and a test covers exactly that ordering.
+
+**Step two: the policy.** Pure over rows, so "would this remove the only nuthatch?" is a question a test can ask without a filesystem. **Most-recorded species first, lowest confidence first within a species** — a plain oldest-first rule would delete exactly backwards, since a child's earliest recordings are the ones they were most excited about. Two thresholds, both generous and both adjustable: 30 days and 100 clips per species.
+
+**Favourites are excluded before anything is ranked, and still occupy the cap.** Excluding them from the count would let favourites quietly raise the ceiling; counting them is what lets the app say "12 of your 100". A library of nothing but favourites therefore loses nothing and stays over the cap — deliberate, because the alternative is breaking the one promise the clean-up rests on.
+
+**The job deletes the file first, then clears the row.** The reverse would leave orphaned audio that nothing in the app can find or count. A file that cannot be removed keeps its path, so the next run retries rather than losing track of it. It runs once per app start, off the critical path — a clean-up competing with inference for the disk is one that drops frames (`NFA-13`).
+
+*What is not built:* the UI for marking a favourite. `ScoringRepository.setClipFavourite` is there and the policy honours it; the toggle belongs on the clip player, which `LOG-07` opens up at P1.
 
 ### Phase 3 — Version 1.0
 
 The specification's P1, with one reordering: **pull the year list forward** (`PKT-12`, `SAM-16`, `AUS-13`). Since D20 removed the off-list case, the year list is the main way a child experiences the year changing (§5), and `PKT-12` is cheap enough to belong in P0 if there is room. Then `PKT-17` and `SAM-15` early, because until the app explains why points move, the movement reads as a bug.
+
+**A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 
 ### What to watch during the two-week test
 

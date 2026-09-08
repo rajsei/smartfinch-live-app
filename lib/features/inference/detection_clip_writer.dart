@@ -32,6 +32,7 @@ class DetectionClipWriter {
     required this.isCurrentSession,
     required this.onRecordsChanged,
     this.onClipsSettled,
+    this.onClipAttached,
   });
 
   final RecordingService recordingService;
@@ -48,6 +49,15 @@ class DetectionClipWriter {
 
   /// Called after a clip is attached, so the mode can republish its list.
   final VoidCallback onRecordsChanged;
+
+  /// Called with the record a clip was just attached to, and the file.
+  ///
+  /// The in-memory record is not the only place a clip path belongs:
+  /// `Detections.audioClipPath` is what the `SET-12` retention job reads, and
+  /// without this hook that column stays empty and the job has nothing to
+  /// rank. Separate from [onRecordsChanged] because that one fires for the
+  /// UI's benefit and carries no arguments.
+  final void Function(DetectionRecord record, String path)? onClipAttached;
 
   /// Called once no further clip writes are outstanding for a record.
   ///
@@ -212,6 +222,9 @@ class DetectionClipWriter {
     // us can never persist a record pointing at a file we already removed.
     _peakTracker.recordSaved(key, confidence);
     onRecordsChanged();
+    // Same ordering argument for the database row: the path is written while
+    // the file is known to exist, and only then is the old one removed.
+    onClipAttached?.call(updated, path);
     if (replacedPath != null && replacedPath != path) {
       await recordingService.deleteClip(replacedPath);
     }

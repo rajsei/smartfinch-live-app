@@ -15,8 +15,10 @@ import '../about/about_screen.dart';
 import '../announcements/widgets/announcements_settings_section.dart';
 import '../audio/widgets/audio_source_tile.dart';
 import '../explore/explore_providers.dart';
+import '../rules/rules_screen.dart';
 import '../scoring/scoring_rules.dart';
 import '../spectrogram/color_maps.dart';
+import 'animation_level.dart';
 import 'offline_map_download_tile.dart';
 
 bool get _showOfflineMapDownloadSetting => false;
@@ -175,6 +177,43 @@ class SettingsScreen extends ConsumerWidget {
                 subtitle: l10n.settingsGeneralDescription,
               ),
               _ThemeTile(l10n: l10n),
+
+              // SET-02 sits on the plain screen, not behind Advanced: it is
+              // both an accessibility setting and an annoyance control, and
+              // both of those are things a parent looks for on the first
+              // screen rather than two taps in.
+              _ChoiceTile<String>(
+                title: l10n.settingsAnimationLevel,
+                helpBody: l10n.settingsAnimationLevelHelp,
+                value: ref.watch(animationLevelSettingProvider),
+                options: {
+                  AnimationLevel.full.storageValue:
+                      l10n.settingsAnimationLevelFull,
+                  AnimationLevel.reduced.storageValue:
+                      l10n.settingsAnimationLevelReduced,
+                  AnimationLevel.off.storageValue:
+                      l10n.settingsAnimationLevelOff,
+                },
+                onChanged:
+                    (v) =>
+                        ref.read(animationLevelSettingProvider.notifier).set(v),
+              ),
+
+              // The rules, in the child's own language (SET-11). On the plain
+              // screen and near the top, because a child who cannot find out
+              // why a number moved decides the app is arbitrary.
+              ListTile(
+                leading: const Icon(AppIcons.helpOutlineRounded),
+                title: Text(l10n.rulesTitle),
+                trailing: const Icon(AppIcons.chevronRight),
+                onTap:
+                    () => Navigator.of(context).push(
+                      MaterialPageRoute<void>(
+                        builder: (_) => const RulesScreen(),
+                      ),
+                    ),
+              ),
+
               SwitchListTile(
                 title: _TitleWithHelp(
                   title: l10n.settingsDynamicColor,

@@ -26,6 +26,7 @@ import '../scoring/live_score_board.dart';
 import '../scoring/live_scoring_coordinator.dart';
 import '../scoring/scoring_providers.dart';
 import '../scoring/scoring_repository.dart';
+import '../settings/animation_level.dart';
 import '../settings/settings_screen.dart';
 import '../spectrogram/spectrogram_widget.dart';
 import 'live_controller.dart';
@@ -476,7 +477,12 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
       _scoreBoard = board;
       _listeningToScoreBoard = true;
       board.addListener(_onScoreBoardChanged);
-      _liveController?.onDetectionCycle = coordinator.submitCycle;
+      _liveController
+        ?..onDetectionCycle = coordinator.submitCycle
+        // Clips land late — post-roll plus encoding — so this fills
+        // `Detections.audioClipPath` after the fact. Without it the column
+        // stays empty and the SET-12 retention job has nothing to rank.
+        ..onClipAttached = coordinator.submitClip;
       _scoringCoordinator = coordinator;
     } catch (e, st) {
       debugPrint('[LiveScreen] scoring unavailable: $e\n$st');
@@ -488,7 +494,9 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
     final coordinator = _scoringCoordinator;
     if (coordinator == null) return;
 
-    _liveController?.onDetectionCycle = null;
+    _liveController
+      ?..onDetectionCycle = null
+      ..onClipAttached = null;
     _scoringCoordinator = null;
     _detachScoreBoard();
     try {
@@ -538,15 +546,19 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   }
 
   /// Shows one celebration and completes when it has gone away.
+  ///
+  /// How much of it happens is `SET-02`'s to decide. What is *not* a setting:
+  /// the find itself. At every level the life-list row is written, the ×3 is
+  /// paid and the journal marks it ✨ NEW — only the celebration is optional.
   Future<void> _presentCelebration(FirstFindAnnouncement announcement) async {
     if (!mounted) return;
+    final level = animationLevelFor(context, ref);
 
     // Confetti first and independently: it plays over the live screen while
     // the card comes up, and it never blocks a tap (LIVE-05).
-    if (!MediaQuery.of(context).disableAnimations) {
-      _showConfetti();
-    }
+    if (level.allowsConfetti) _showConfetti();
 
+    if (!level.allowsSpeciesCard) return;
     await FirstFindCard.show(context, announcement);
   }
 

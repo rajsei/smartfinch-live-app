@@ -9,6 +9,7 @@ import 'package:smartfinch/shared/utils/app_icons.dart';
 import '../../core/theme/app_theme.dart';
 import '../about/about_screen.dart';
 import '../explore/explore_providers.dart';
+import '../scoring/scoring_providers.dart';
 import '../live/live_providers.dart';
 import '../../shared/providers/settings_providers.dart';
 import 'help_screen.dart';
@@ -83,6 +84,28 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _preload(ref.read(audioLabelsSetProvider.future), 'audio labels');
     _preload(ref.read(geoModelProvider.future), 'geo model');
     unawaited(_warmUpLocation());
+    unawaited(_runClipRetention());
+  }
+
+  /// Trims the audio clips once per app start (`SET-12`).
+  ///
+  /// Here rather than on a timer or after every detection: nothing about it is
+  /// urgent, and a clean-up competing with inference for the disk is one that
+  /// drops frames during a live session (`NFA-13`). Failures are logged and
+  /// dropped — a clip that could not be removed keeps its row, so the next run
+  /// tries again rather than losing track of the file.
+  Future<void> _runClipRetention() async {
+    try {
+      final result = await ref.read(clipRetentionJobProvider).run();
+      if (!result.didNothing) {
+        debugPrint(
+          '[HomeScreen] clip retention: ${result.deleted} removed, '
+          '${result.failed} failed',
+        );
+      }
+    } catch (error) {
+      debugPrint('[HomeScreen] clip retention failed: $error');
+    }
   }
 
   /// Decode the logo into the image cache, so the header can paint it on the

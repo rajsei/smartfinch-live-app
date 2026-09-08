@@ -37,6 +37,7 @@ import '../../shared/providers/app_providers.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../../shared/services/link_launcher.dart';
 import '../../shared/widgets/content_width_constraint.dart';
+import 'widgets/home_region_tile.dart';
 
 // ---------------------------------------------------------------------------
 // Layout constants
@@ -80,8 +81,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           defaultTargetPlatform == TargetPlatform.macOS ||
           defaultTargetPlatform == TargetPlatform.linux);
 
-  static const int _totalPages = 5;
-  static const int _termsPageIndex = 4;
+  /// `KID-01`: at most four screens, and the home region shares the
+  /// permissions one rather than adding a fifth (`SET-09`, D18).
+  static const int _totalPages = 4;
+  static const int _termsPageIndex = 3;
+  static const int _permissionsPageIndex = 2;
 
   @override
   void initState() {
@@ -229,20 +233,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 controller: _controller,
                 onPageChanged: (i) {
                   setState(() => _page = i);
-                  if (i == 3) _refreshPermissionStatus();
+                  if (i == _permissionsPageIndex) _refreshPermissionStatus();
                 },
                 children: [
                   _WelcomePage(l10n: l10n, theme: theme),
+                  // KID-01 allows four screens, and the home region has to fit
+                  // inside them (SET-09). The two info pages became one: "how
+                  // it works" and "what's in it" are one thought, and the
+                  // second page was the cheapest of the five to lose.
                   _InfoPage(
                     icon: AppIcons.graphicEqRounded,
                     title: l10n.onboardingHowItWorksTitle,
-                    body: l10n.onboardingHowItWorksBody,
-                    theme: theme,
-                  ),
-                  _InfoPage(
-                    icon: AppIcons.gridViewRounded,
-                    title: l10n.onboardingFeaturesTitle,
-                    body: l10n.onboardingFeaturesBody,
+                    body:
+                        '${l10n.onboardingHowItWorksBody}\n\n'
+                        '${l10n.onboardingFeaturesBody}',
                     theme: theme,
                   ),
                   _PermissionsPage(
@@ -604,6 +608,12 @@ class _PermissionsPage extends ConsumerWidget {
                     theme: theme,
                     l10n: l10n,
                   ),
+                  const SizedBox(height: 14),
+                  // Directly under the location tile, because it is the answer
+                  // to what happens when that one is declined. Without a
+                  // position there is no rarity level and therefore no stars
+                  // (SET-09, gap F) — this is not an optional extra.
+                  HomeRegionTile(locationGranted: locGranted, theme: theme),
                   const SizedBox(height: 14),
                   _ConsentTile(
                     icon: AppIcons.mapSheet,

@@ -16,6 +16,8 @@ import '../../core/database/app_database.dart';
 import '../../core/services/grid_cell.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../explore/explore_providers.dart';
+import '../live/live_providers.dart';
+import '../storage/clip_retention_job.dart';
 import 'live_score_board.dart';
 import 'live_scoring_coordinator.dart';
 import 'rarity_scale_provider.dart';
@@ -61,6 +63,16 @@ final liveScoringCoordinatorProvider = FutureProvider<LiveScoringCoordinator>((
     ref.invalidate(totalStarsProvider);
   };
   return coordinator;
+});
+
+/// The `SET-12` clip clean-up.
+///
+/// Not watched by any screen: it is a job, and it is read once at startup.
+final clipRetentionJobProvider = Provider<ClipRetentionJob>((ref) {
+  return ClipRetentionJob(
+    db: ref.watch(appDatabaseProvider),
+    recordings: ref.watch(recordingServiceProvider),
+  );
 });
 
 /// Today's scoring, as the live screen sees it.

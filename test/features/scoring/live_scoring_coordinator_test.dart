@@ -93,6 +93,12 @@ void main() {
     cell: cell,
   );
 
+  const paused = LiveScoringConditions(
+    appliedThreshold: 35,
+    filterEnabled: false,
+    cell: cell,
+  );
+
   /// What the coordinator reads on every cycle.
   ///
   /// Mutable on purpose: the threshold, the filter and the cell can all change
@@ -215,6 +221,76 @@ void main() {
     });
   });
 
+  group('SET-12 · the clip path reaches the database', () {
+    test('a clip attached after scoring lands on the row', () async {
+      final record = recordOf('Turdus merula', 0.6);
+      coordinator.submitCycle(cycle(opened: [record]));
+      await coordinator.drain();
+
+      coordinator.submitClip(record, '/clips/blackbird.flac');
+      await coordinator.drain();
+
+      final detection = (await db.select(db.detections).get()).single;
+      expect(detection.audioClipPath, '/clips/blackbird.flac');
+    });
+
+    test(
+      '⚠️ a clip that lands after the detection closed still finds it',
+      () async {
+        // Cutting a clip means waiting for post-roll and then encoding, so it
+        // routinely arrives after the detection ended. Removing the row id on
+        // close — which is what the first version did — silently dropped every
+        // one of them.
+        final record = recordOf('Turdus merula', 0.6);
+        coordinator.submitCycle(cycle(opened: [record]));
+        coordinator.submitCycle(cycle(closed: [record]));
+        await coordinator.drain();
+
+        coordinator.submitClip(record, '/clips/late.flac');
+        await coordinator.drain();
+
+        final detection = (await db.select(db.detections).get()).single;
+        expect(detection.audioClipPath, '/clips/late.flac');
+        expect(detection.peakConfidence, isNotNull, reason: 'close still ran');
+      },
+    );
+
+    test('a clip for an unknown detection is ignored, not an error', () async {
+      coordinator.submitClip(recordOf('Turdus merula', 0.6), '/clips/x.flac');
+
+      await expectLater(coordinator.drain(), completes);
+      expect(await db.select(db.detections).get(), isEmpty);
+    });
+
+    test('a paused detection still gets its clip path', () async {
+      // The recordings are kept while scoring is off (LOG-15), so they have to
+      // be findable by the retention job like any other.
+      conditions = paused;
+      final record = recordOf('Turdus merula', 0.6);
+      coordinator.submitCycle(cycle(opened: [record]));
+      await coordinator.drain();
+
+      coordinator.submitClip(record, '/clips/paused.flac');
+      await coordinator.drain();
+
+      final detection = (await db.select(db.detections).get()).single;
+      expect(detection.scoringPaused, isTrue);
+      expect(detection.audioClipPath, '/clips/paused.flac');
+    });
+
+    test('nothing is written once the session has ended', () async {
+      final record = recordOf('Turdus merula', 0.6);
+      coordinator.submitCycle(cycle(opened: [record]));
+      await coordinator.endSession(endedAt: may4);
+
+      coordinator.submitClip(record, '/clips/orphan.flac');
+      await coordinator.drain();
+
+      final detection = (await db.select(db.detections).get()).single;
+      expect(detection.audioClipPath, isNull);
+    });
+  });
+
   group('the queue is serial', () {
     test('two detections of one species in one cycle do not race', () async {
       // Both would read "not scored today" if they ran concurrently, and both
@@ -273,12 +349,6 @@ void main() {
   });
 
   group('PKT-20 · a paused session still records', () {
-    const paused = LiveScoringConditions(
-      appliedThreshold: 35,
-      filterEnabled: false,
-      cell: cell,
-    );
-
     test('the detection is written and flagged, and nothing scores', () async {
       conditions = paused;
       coordinator.submitCycle(cycle(opened: [recordOf('Turdus merula', 0.9)]));

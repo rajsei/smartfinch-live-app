@@ -195,6 +195,13 @@ class LiveController {
       _syncSessionDetections();
       _notifyListeners();
     },
+    onClipAttached: (record, path) {
+      try {
+        onClipAttached?.call(record, path);
+      } catch (e, st) {
+        debugPrint('[LiveController] clip callback ERROR: $e\n$st');
+      }
+    },
   );
 
   /// Maximum number of in-memory detections (older entries are still
@@ -252,6 +259,14 @@ class LiveController {
   /// Announcements feature to reset its per-session bookkeeping
   /// (startup grace, anti-repeat, etc.).
   void Function()? onSessionStarted;
+
+  /// Called when an audio clip has been written and attached to a record.
+  ///
+  /// Arrives *after* the detection was scored — cutting a clip means waiting
+  /// for post-roll and then encoding — and sometimes after it has closed. The
+  /// scoring layer uses it to fill `Detections.audioClipPath`, which is what
+  /// the `SET-12` retention job reads.
+  void Function(DetectionRecord record, String path)? onClipAttached;
 
   /// Called once per inference cycle with the accumulator's own view of it:
   /// which detections began, which changed, and which ended.
