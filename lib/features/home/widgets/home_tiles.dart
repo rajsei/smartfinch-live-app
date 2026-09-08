@@ -15,12 +15,10 @@
 //   guessing — a child who wants their collection and a parent who wants
 //   settings both arrive on this screen.
 //
-// ### Tiles that are not here yet
-//
-// Points arrives with step 2.7. It is deliberately **absent rather than
-// disabled**: a greyed-out tile is not something an eight-year-old reads as
-// "later", and a tile that opens an empty screen is a broken promise. Adding
-// it is a single entry in [_secondaryTiles].
+// The grid is complete as of 2.7: Sammlung, Erkunden, Tagebuch, Punkte,
+// Einstellungen. Nothing here is disabled or a placeholder — a tile that opens
+// an empty screen is a broken promise, and a greyed-out one is not something
+// an eight-year-old reads as "later".
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -32,6 +30,7 @@ import '../../collection/collection_screen.dart';
 import '../../explore/explore_screen.dart';
 import '../../journal/journal_screen.dart';
 import '../../live/live_screen.dart';
+import '../../points/points_screen.dart';
 import '../../settings/settings_screen.dart';
 
 /// One secondary destination.
@@ -67,7 +66,11 @@ const List<_HomeTile> _secondaryTiles = [
     label: _journalLabel,
     builder: JournalScreen.new,
   ),
-  // Punkte (Points) belongs here — 2.7.
+  _HomeTile(
+    icon: AppIcons.barChart,
+    label: _pointsLabel,
+    builder: PointsScreen.new,
+  ),
   _HomeTile(
     icon: AppIcons.tuneRounded,
     label: _settingsLabel,
@@ -78,6 +81,7 @@ const List<_HomeTile> _secondaryTiles = [
 String _collectionLabel(AppLocalizations l10n) => l10n.collectionTitle;
 String _exploreLabel(AppLocalizations l10n) => l10n.exploreMode;
 String _journalLabel(AppLocalizations l10n) => l10n.homeTileJournal;
+String _pointsLabel(AppLocalizations l10n) => l10n.pointsTitle;
 String _settingsLabel(AppLocalizations l10n) => l10n.settings;
 
 /// The home screen's navigation: one large Live tile plus secondary tiles.

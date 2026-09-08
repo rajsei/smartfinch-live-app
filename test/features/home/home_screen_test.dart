@@ -18,7 +18,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:smartfinch/features/collection/collection_screen.dart';
 import 'package:smartfinch/features/home/widgets/home_tiles.dart';
+import 'package:smartfinch/features/journal/journal_screen.dart';
+import 'package:smartfinch/features/points/points_screen.dart';
 import 'package:smartfinch/features/home/widgets/star_header.dart';
 import 'package:smartfinch/features/live/widgets/day_summary_bar.dart';
 import 'package:smartfinch/features/scoring/live_score_board.dart';
@@ -207,19 +210,42 @@ void main() {
       // deletion left it behind. Counting is what stops that recurring.
       await pump(tester, const HomeTiles());
 
-      for (final label in ['Collection', 'Explore', 'Journal', 'Settings']) {
+      // HOME-04's full list, complete as of 2.7.
+      for (final label in [
+        'Collection',
+        'Explore',
+        'Journal',
+        'Points',
+        'Settings',
+      ]) {
         expect(find.text(label), findsOneWidget, reason: label);
       }
     });
 
-    testWidgets('no tile is present that opens nothing', (tester) async {
-      // Points arrives with 2.7. Until then it is absent rather than
-      // disabled: a greyed tile is not something an eight-year-old reads as
-      // "later".
-      await pump(tester, const HomeTiles());
+    // A tile that opens nothing is a broken promise, and the old carousel
+    // ended up with one card and two page dots precisely because nobody
+    // checked. One test per tile rather than a loop: a loop shares one
+    // binding across pushes, and the failure it produces names no tile.
+    //
+    // Deliberately not `pumpAndSettle` — these screens read the database and
+    // sit on a spinner in a test, which never settles. That the route lands is
+    // the whole claim.
+    for (final entry
+        in <String, Type>{
+          'Collection': CollectionScreen,
+          'Journal': JournalScreen,
+          'Points': PointsScreen,
+        }.entries) {
+      testWidgets('the ${entry.key} tile opens its screen', (tester) async {
+        await pump(tester, const HomeTiles());
 
-      expect(find.text('Points'), findsNothing);
-    });
+        await tester.tap(find.text(entry.key));
+        await tester.pump();
+        await tester.pump(const Duration(milliseconds: 400));
+
+        expect(find.byType(entry.value), findsOneWidget);
+      });
+    }
 
     testWidgets('tapping one navigates', (tester) async {
       await pump(tester, const HomeTiles());

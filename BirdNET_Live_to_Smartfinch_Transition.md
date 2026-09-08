@@ -493,7 +493,21 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 *The bundle caveat from the plan still stands* — without `tools/build_species_bundle.py` having run, every collected cell falls back to a blank tile. It fails quietly rather than as a crash, but it does make the album look wrong.
 
-**2.7 · Points area and badges** (`STAT-01/02/05/06`, `AUS-01/02/03`): tabs, the 30-day bar chart with empty days shown as empty, key figures, and the three P0 badge groups.
+**2.7 · Points area and badges** (`STAT-01/02/05/06`, `AUS-01/02/03`): tabs, the 30-day bar chart with empty days shown as empty, key figures, and the three P0 badge groups. ✅ *Done — `features/points/`, 35 tests.*
+
+**Nothing is stored.** Every badge and achievement is derived from `DaySpecies`, `ScoreEvents` and `LifeSpecies` on demand rather than written to the `Achievements` table. That is what `AUS-12` asks for — after a rebalance, badges already earned must still be derivable from history — and it means a rule change cannot leave a stale row for someone to find months later. The table stays for the day an unlock animation needs to know whether something is *newly* earned (`AUS-08`, P1).
+
+**`STAT-06`'s definition of an active day is load-bearing and now tested.** A day counts when it produced at least one *scoring* detection — which is exactly what a `DaySpecies` row is. So a day spent entirely in test mode is not an active day and does not extend a streak, and there is a test that walks precisely that: active, paused, active → two active days, longest run of one.
+
+**The empty columns are the point of the chart.** Omit them and five scattered days across a month draw the same shape as five days in a row, so the chart would tell every child they are consistent. Kept, an empty day is a visible sliver rather than nothing — a bar of zero height is indistinguishable from no bar at all. Hand-drawn: thirty bars is a `Row` of `Container`s, and a charting dependency would cost more than it saves.
+
+**The streak figure is the *longest*, never the current one.** `AUS-07` says a broken streak is not commented on, so the screen carries no number that can fall to zero overnight. The chart already says it, quietly, and once is enough.
+
+**Loyalty badges are derived from the days, not from the multiplier.** The multiplier on a `ScoreEvent` records what was *paid*, and only the highest one ever is (`PKT-07`) — so a species that was a first find on the day it also became a Regular would have no ×2 to find. Counting the days directly is the only reading that cannot lose a badge.
+
+**`AUS-02` is honoured literally:** unearned badges are not shown greyed out. `AUS-04`/`AUS-05` bring the full day and week catalogue at P1, where an open badge reads as a goal rather than as a gap. The Achievements tab does show one line for the next medal, which is a goal without being a row of eight faded ones.
+
+**The tile grid is complete.** Sammlung · Erkunden · Tagebuch · Punkte · Einstellungen, with a test per tile asserting it actually opens its screen.
 
 **2.8 · Child-facing polish**: animation level (`SET-02`), the rules page (`SET-11`) including "why do the points change during the year?", clip retention (`SET-12`), onboarding with the home region on the permissions screen (`KID-01`, `SET-09`).
 

@@ -5091,5 +5091,143 @@
         "type": "int"
       }
     }
+  },
+  "pointsTitle": "Points",
+  "@pointsTitle": {
+    "description": "Title of the Points area and its home tile (STAT-01)"
+  },
+  "pointsTabOverview": "Overview",
+  "@pointsTabOverview": {
+    "description": "STAT-05: first tab of the Points area"
+  },
+  "pointsTabBadges": "Badges",
+  "@pointsTabBadges": {
+    "description": "STAT-05: second tab of the Points area"
+  },
+  "pointsTabAchievements": "Achievements",
+  "@pointsTabAchievements": {
+    "description": "STAT-05: third tab of the Points area"
+  },
+  "pointsLast30Days": "The last 30 days",
+  "@pointsLast30Days": {
+    "description": "Heading above the 30-day bar chart (STAT-02)"
+  },
+  "pointsChartA11y": "Stars per day over {days} days, best day {peak}",
+  "@pointsChartA11y": {
+    "description": "Screen-reader label for the daily bar chart",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      },
+      "peak": {
+        "type": "int"
+      }
+    }
+  },
+  "pointsFigureTotalStars": "Stars in total",
+  "@pointsFigureTotalStars": {
+    "description": "STAT-06 key figure label"
+  },
+  "pointsFigureSpecies": "Species collected",
+  "@pointsFigureSpecies": {
+    "description": "STAT-06 key figure label"
+  },
+  "pointsFigureActiveDays": "Days outside",
+  "@pointsFigureActiveDays": {
+    "description": "STAT-06 key figure label — a day that produced at least one scoring detection"
+  },
+  "pointsFigureLongestStreak": "Longest run",
+  "@pointsFigureLongestStreak": {
+    "description": "STAT-06 key figure label — the longest run, never the current one (AUS-07)"
+  },
+  "pointsUnavailable": "The points could not be loaded.",
+  "@pointsUnavailable": {
+    "description": "Shown when the points area cannot be read"
+  },
+  "pointsNoBadgesTitle": "No badges yet",
+  "@pointsNoBadgesTitle": {
+    "description": "Empty state of the badges tab"
+  },
+  "pointsNoBadgesSubtitle": "Ten species in one day earns your first one.",
+  "@pointsNoBadgesSubtitle": {
+    "description": "Second line of the badges empty state"
+  },
+  "pointsNoAchievementsTitle": "The first medal is close",
+  "@pointsNoAchievementsTitle": {
+    "description": "Empty state of the achievements tab"
+  },
+  "pointsNextTier": "{count, plural, =1{1 more species to the next medal} other{{count} more species to the next medal}}",
+  "@pointsNextTier": {
+    "description": "AUS-03: how many species are still needed for the next Collector tier",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "badgeTenInOneGo": "Ten in one go",
+  "@badgeTenInOneGo": {
+    "description": "AUS-01 badge name (3.2)"
+  },
+  "badgeTenInOneGoCondition": "10 different species in one day",
+  "@badgeTenInOneGoCondition": {
+    "description": "AUS-01 badge condition"
+  },
+  "badgeRegular": "Regular",
+  "@badgeRegular": {
+    "description": "AUS-02 loyalty badge name (3.2)"
+  },
+  "badgeRegularCondition": "Heard on 3 days of one week",
+  "@badgeRegularCondition": {
+    "description": "AUS-02 loyalty badge condition"
+  },
+  "badgePermanentGuest": "Always here",
+  "@badgePermanentGuest": {
+    "description": "AUS-02 loyalty badge name (3.2)"
+  },
+  "badgePermanentGuestCondition": "Heard on 6 days of one week",
+  "@badgePermanentGuestCondition": {
+    "description": "AUS-02 loyalty badge condition"
+  },
+  "achievementSpeciesCollected": "{count} species collected",
+  "@achievementSpeciesCollected": {
+    "description": "AUS-03: subtitle of a Collector tier",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "achievementFirstSteps": "First steps",
+  "@achievementFirstSteps": {
+    "description": "AUS-03 Collector tier at 10 species (3.3)"
+  },
+  "achievementAttentiveListener": "Attentive listener",
+  "@achievementAttentiveListener": {
+    "description": "AUS-03 Collector tier at 25 species (3.3)"
+  },
+  "achievementHalfAHundred": "Half a hundred",
+  "@achievementHalfAHundred": {
+    "description": "AUS-03 Collector tier at 50 species (3.3)"
+  },
+  "achievementConnoisseur": "Connoisseur",
+  "@achievementConnoisseur": {
+    "description": "AUS-03 Collector tier at 75 species (3.3)"
+  },
+  "achievementBigHundred": "The big hundred",
+  "@achievementBigHundred": {
+    "description": "AUS-03 Collector tier at 100 species (3.3)"
+  },
+  "achievementSpeciesHunter": "Species hunter",
+  "@achievementSpeciesHunter": {
+    "description": "AUS-03 Collector tier at 150 species (3.3)"
+  },
+  "achievementEarsLikeALynx": "Ears like a lynx",
+  "@achievementEarsLikeALynx": {
+    "description": "AUS-03 Collector tier at 200 species (3.3)"
+  },
+  "achievementOrnithologist": "Ornithologist",
+  "@achievementOrnithologist": {
+    "description": "AUS-03 Collector tier at 250 species (3.3)"
   }
 }
