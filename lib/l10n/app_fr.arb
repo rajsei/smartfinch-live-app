@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 jours",
   "homeFigureToday": "Aujourd'hui",
   "levelShort": "Niveau {number}",
-  "levelToNextShort": "Encore {stars} jusqu'au niveau {number}"
+  "levelToNextShort": "Encore {stars} jusqu'au niveau {number}",
+  "backupIncludeAudio": "Inclure les enregistrements",
+  "backupIncludeAudioNote": "Ils seront de nouveau là sur le nouvel appareil. Le fichier devient beaucoup plus gros — une année d'enregistrements peut faire plusieurs centaines de mégaoctets.",
+  "journalClipShare": "Partager cet enregistrement"
 }

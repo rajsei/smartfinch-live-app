@@ -5,10 +5,10 @@
 // Two things are worth a test here, and neither is the audio.
 //
 //   **What the sheet does not have.** It is deliberately not the session
-//   review player: no share, no delete, no notes, no voice memos. Sharing
-//   audio in particular is something Smartfinch decided against — `LOG-11`
-//   makes the rendered day image the only sharing path — and a later "just
-//   reuse the other sheet" would put it back without anyone noticing.
+//   review player: no delete, no notes, no voice memos, no export formats. It
+//   *does* share the recording — see the test for why that is a decision and
+//   not a leak — but a later "just reuse the other sheet" would bring the rest
+//   back with it, and nobody would notice.
 //
 //   **The keep switch reaches the database.** It is the one control on the
 //   sheet that changes anything, and what it changes is whether retention is
@@ -87,15 +87,29 @@ void main() {
     expect(find.byTooltip('Play'), findsOneWidget);
   });
 
-  testWidgets('carries nothing that could send the audio anywhere', (
+  testWidgets('the recording can be sent on: it belongs to the child', (
     tester,
   ) async {
-    // KID-07 and LOG-11: the day image is the only thing that leaves the
-    // phone, and it has no audio in it.
+    // A reversal, stated here so it is not read as a regression. `LOG-11`
+    // decided what a shared *day image* contains — no audio, no coordinates,
+    // no free text — and that is still true and still tested. It did not
+    // decide that a child may never hand anybody a bird they recorded.
     await pump(tester);
 
-    expect(find.byIcon(AppIcons.share), findsNothing);
+    expect(find.byIcon(AppIcons.share), findsOneWidget);
+  });
+
+  testWidgets('but none of the research chrome came back with it', (
+    tester,
+  ) async {
+    // The session review player had per-detection notes, voice memos, a
+    // confirm flag, a delete and an export-format menu. Sharing the clip is
+    // one button, not a door back to all of that.
+    await pump(tester);
+
     expect(find.byType(PopupMenuButton<Object?>), findsNothing);
+    expect(find.byType(TextField), findsNothing);
+    expect(find.byIcon(AppIcons.deleteOutline), findsNothing);
   });
 
   testWidgets('offers to keep the recording, and says why', (tester) async {

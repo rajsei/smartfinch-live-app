@@ -31,8 +31,8 @@ import 'dart:typed_data';
 
 import 'package:fftea/fftea.dart';
 
-import '../../recording/audio_decoder.dart';
-import '../../spectrogram/color_maps.dart';
+import '../recording/audio_decoder.dart';
+import 'color_maps.dart';
 
 /// Highest frequency drawn. Above this there is nothing a bird call needs.
 const int kSpectrogramMaxFreqHz = 16000;

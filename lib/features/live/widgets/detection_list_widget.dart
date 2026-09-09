@@ -17,13 +17,11 @@ import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/theme/app_semantic_colors.dart';
 import '../../../core/theme/score_colors.dart';
 import '../../../shared/providers/settings_providers.dart';
 import '../../../shared/services/taxonomy_service.dart';
 import '../../../shared/widgets/detection_evidence_badge.dart';
 import '../../explore/explore_providers.dart';
-import '../../history/widgets/detection_actions.dart';
 import '../../scoring/scoring_providers.dart';
 import '../../scoring/widgets/season_hint_banner.dart';
 import '../live_session.dart';
@@ -39,7 +37,6 @@ class DetectionList extends StatelessWidget {
     required this.detections,
     required this.isActive,
     this.onDetectionTap,
-    this.actionsBuilder,
     this.showTips = false,
     this.emptyIcon,
     this.emptyTitle,
@@ -94,14 +91,6 @@ class DetectionList extends StatelessWidget {
   /// current detections to the top.
   final Map<String, int>? speciesDetectionCounts;
 
-  /// Optional per-detection action contract. When non-null and
-  /// non-empty, each tile gets an inline confirm checkmark (if
-  /// [DetectionActions.onToggleConfirm] is set) and a more_vert overflow
-  /// for the remaining actions (share / delete / replace). Live screens
-  /// pass null to keep the streaming view chrome-free; the survey live
-  /// screen wires confirm + share so reviewers can validate as they go.
-  final DetectionActions? Function(DetectionRecord detection)? actionsBuilder;
-
   @override
   Widget build(BuildContext context) {
     if (detections.isEmpty) {
@@ -120,50 +109,19 @@ class DetectionList extends StatelessWidget {
       itemCount: detections.length,
       itemBuilder: (context, index) {
         final det = detections[index];
-        final actions = actionsBuilder?.call(det);
         final isActivelyDetected = activeDetections?.contains(det) ?? true;
-        final tile = DetectionTile(
+        // No per-tile action menu. It existed for the session review screen —
+        // confirm, share, delete a detection — and went with it: `LOG-01`
+        // retired the session as a level of navigation, and `KID-07` had
+        // already ruled out the share half of it.
+        return DetectionTile(
           detection: det,
           onTap: onDetectionTap != null ? () => onDetectionTap!(det) : null,
-          actions: actions,
           showConfidence: isActivelyDetected,
           detectionCount: speciesDetectionCounts?[det.scientificName],
           showScore: showScore,
         );
-        // When the host wires a delete action, also expose it as a
-        // horizontal swipe shortcut. The host's undo SnackBar covers
-        // misfires, so no modal confirm is needed. Keyed by the
-        // detection's identity (sci-name + microsecond timestamp) so
-        // dismiss/rebuild stays stable as new detections stream in.
-        final onDelete = actions?.onDelete;
-        if (onDelete == null) return tile;
-        return Dismissible(
-          key: ValueKey(
-            '${det.scientificName}-${det.timestamp.microsecondsSinceEpoch}',
-          ),
-          direction: DismissDirection.horizontal,
-          background: _swipeDeleteBackground(context, alignLeft: true),
-          secondaryBackground: _swipeDeleteBackground(
-            context,
-            alignLeft: false,
-          ),
-          onDismissed: (_) => onDelete(),
-          child: tile,
-        );
       },
-    );
-  }
-
-  Widget _swipeDeleteBackground(
-    BuildContext context, {
-    required bool alignLeft,
-  }) {
-    final theme = Theme.of(context);
-    return Container(
-      alignment: alignLeft ? Alignment.centerLeft : Alignment.centerRight,
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      color: theme.colorScheme.error.withAlpha(40),
-      child: Icon(AppIcons.deleteOutline, color: theme.colorScheme.error),
     );
   }
 }
@@ -174,7 +132,6 @@ class DetectionTile extends ConsumerWidget {
     super.key,
     required this.detection,
     this.onTap,
-    this.actions,
     this.showConfidence = true,
     this.detectionCount,
     this.showScore = false,
@@ -185,12 +142,6 @@ class DetectionTile extends ConsumerWidget {
 
   /// Whether to show today's points for this species (LIVE-02/03/04).
   final bool showScore;
-
-  /// Per-detection action contract. When provided, the tile renders an
-  /// inline confirm icon (if [DetectionActions.onToggleConfirm] is set)
-  /// followed by a [DetectionActionsOverflow] for the remaining actions,
-  /// in place of the chevron.
-  final DetectionActions? actions;
 
   /// Whether to render current-confidence visuals for this row.
   final bool showConfidence;
@@ -388,62 +339,19 @@ class DetectionTile extends ConsumerWidget {
               const SizedBox(width: 8),
 
               // ── Trailing chrome ────────────────────────────────
-              // When per-detection actions are wired, replace the
-              // navigational chevron with inline confirm + overflow so the
-              // tile matches the cluster row in session review. Otherwise
-              // keep the lightweight chevron to signal tap-for-info.
-              if (actions != null)
-                ..._trailingActions(context, theme, actions!)
-              else
-                Icon(
-                  AppIcons.chevronRight,
-                  size: 20,
-                  color: theme.colorScheme.onSurface.withAlpha(80),
-                ),
+              // A chevron, and only a chevron: tap for the bird. The confirm
+              // and overflow controls that used to sit here belonged to the
+              // session review screen and went with it.
+              Icon(
+                AppIcons.chevronRight,
+                size: 20,
+                color: theme.colorScheme.onSurface.withAlpha(80),
+              ),
             ],
           ),
         ),
       ),
     );
-  }
-
-  List<Widget> _trailingActions(
-    BuildContext context,
-    ThemeData theme,
-    DetectionActions actions,
-  ) {
-    final l10n = AppLocalizations.of(context)!;
-    return [
-      if (actions.onToggleConfirm != null)
-        Tooltip(
-          message:
-              actions.isConfirmed
-                  ? l10n.detectionUnconfirmTooltip
-                  : l10n.detectionConfirmTooltip,
-          child: InkWell(
-            onTap: actions.onToggleConfirm,
-            borderRadius: BorderRadius.circular(24),
-            child: Padding(
-              padding: const EdgeInsets.all(8),
-              child: Icon(
-                actions.isConfirmed
-                    ? AppIcons.checkCircle
-                    : AppIcons.checkCircleOutline,
-                size: 24,
-                color:
-                    actions.isConfirmed
-                        ? AppSemanticColors.of(context).success
-                        : theme.colorScheme.onSurface.withAlpha(120),
-              ),
-            ),
-          ),
-        ),
-      if (actions.hasOverflow)
-        DetectionActionsOverflow(
-          actions: actions,
-          iconColor: theme.colorScheme.onSurface.withAlpha(120),
-        ),
-    ];
   }
 
   /// Map confidence to a color via the [ScoreColors] theme extension.

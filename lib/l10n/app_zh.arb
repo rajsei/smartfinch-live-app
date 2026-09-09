@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 天",
   "homeFigureToday": "今天",
   "levelShort": "等级 {number}",
-  "levelToNextShort": "还差 {stars} 到等级 {number}"
+  "levelToNextShort": "还差 {stars} 到等级 {number}",
+  "backupIncludeAudio": "包含录音",
+  "backupIncludeAudioNote": "在新设备上它们会回来。文件会大很多——一年的录音可能有几百 MB。",
+  "journalClipShare": "分享这段录音"
 }

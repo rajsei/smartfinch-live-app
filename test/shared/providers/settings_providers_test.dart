@@ -85,16 +85,8 @@ void main() {
       expect(container.read(clipContextProvider), 1);
     });
 
-    test('exportFormat defaults to raven', () {
-      expect(container.read(exportFormatProvider), 'raven');
-    });
-
     test('includeAudio defaults to true', () {
       expect(container.read(includeAudioProvider), true);
-    });
-
-    test('playbackVoiceMemoDucking defaults to 0.75', () {
-      expect(container.read(playbackVoiceMemoDuckingProvider), 0.75);
     });
 
     test('spectrogramDuration defaults to 20', () {

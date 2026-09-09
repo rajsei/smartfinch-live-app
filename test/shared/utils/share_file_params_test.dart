@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:smartfinch/features/history/services/share_file_params.dart';
+import 'package:smartfinch/shared/utils/share_file_params.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 

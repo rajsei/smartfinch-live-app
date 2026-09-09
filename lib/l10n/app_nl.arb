@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 dagen",
   "homeFigureToday": "Vandaag",
   "levelShort": "Level {number}",
-  "levelToNextShort": "Nog {stars} tot level {number}"
+  "levelToNextShort": "Nog {stars} tot level {number}",
+  "backupIncludeAudio": "Opnames meenemen",
+  "backupIncludeAudioNote": "Ze staan weer op het nieuwe apparaat. Het bestand wordt veel groter — een jaar aan opnames kan honderden megabytes zijn.",
+  "journalClipShare": "Deze opname delen"
 }

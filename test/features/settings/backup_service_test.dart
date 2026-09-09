@@ -21,10 +21,11 @@
 // =============================================================================
 
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
-import 'package:drift/drift.dart' hide isNull;
+import 'package:drift/drift.dart' hide isNotNull, isNull;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -203,6 +204,148 @@ void main() {
       expect(detection.audioClipPath, isNull);
       // But what the child valued is still recorded.
       expect(detection.clipIsFavourite, isTrue);
+    });
+  });
+
+  // ===========================================================================
+  // SET-07 · the recordings, when the owner wants them
+  // ===========================================================================
+  //
+  // Off by default, because a year of clips is hundreds of megabytes and a
+  // file too large to send protects nothing. Off by default is a different
+  // thing from not offered: the recordings are the child's, on the child's
+  // device, and a backup that could never carry them would be the app deciding
+  // which part of somebody's own data is worth keeping.
+  // ===========================================================================
+  group('SET-07 · the recordings travel when asked', () {
+    late Directory clipsIn;
+    late Directory clipsOut;
+
+    setUp(() {
+      clipsIn = Directory.systemTemp.createTempSync('smartfinch-clips-in');
+      clipsOut = Directory.systemTemp.createTempSync('smartfinch-clips-out');
+    });
+
+    tearDown(() {
+      for (final dir in [clipsIn, clipsOut]) {
+        if (dir.existsSync()) dir.deleteSync(recursive: true);
+      }
+    });
+
+    /// A detection with a real file behind it.
+    Future<String> hearWithClip(String name, {List<int>? bytes}) async {
+      final id = await hear(name);
+      final file = File('${clipsIn.path}/$name.wav')
+        ..writeAsBytesSync(bytes ?? [1, 2, 3, 4, 5]);
+      await scoring.setClipPath(detectionId: id, clipPath: file.path);
+      return id;
+    }
+
+    BackupService onPhone(AppDatabase db) =>
+        BackupService(db, clipDirectory: () async => clipsOut);
+
+    test('without the switch the file carries none of them', () async {
+      await hearWithClip('Species sp0');
+
+      final bytes = await backup.export();
+      final phone = await freshPhone();
+      await onPhone(phone).restore(bytes);
+
+      final detection = await phone.select(phone.detections).getSingle();
+      expect(detection.audioClipPath, isNull);
+      expect(clipsOut.listSync(), isEmpty);
+    });
+
+    test(
+      'with it, the recording comes back and plays from the new phone',
+      () async {
+        final id = await hearWithClip('Species sp0', bytes: [9, 8, 7, 6]);
+
+        final bytes = await backup.export(includeAudio: true);
+        final phone = await freshPhone();
+        await onPhone(phone).restore(bytes);
+
+        final detection = await phone.select(phone.detections).getSingle();
+        expect(detection.audioClipPath, isNotNull);
+
+        final restored = File(detection.audioClipPath!);
+        expect(restored.existsSync(), isTrue);
+        // Byte for byte: it is the recording, not a re-encoding of it.
+        expect(restored.readAsBytesSync(), [9, 8, 7, 6]);
+        // And it lands under the id the row carries, not the old filename.
+        expect(restored.path, contains(id));
+      },
+    );
+
+    test('the archive is bigger for it, which is the honest trade', () async {
+      await hearWithClip('Species sp0', bytes: List.filled(20000, 7));
+
+      final without = await backup.export();
+      final with_ = await backup.export(includeAudio: true);
+
+      expect(with_.length, greaterThan(without.length));
+    });
+
+    test('a clip retention already deleted is simply absent', () async {
+      // The row keeps its path, the file does not exist, and nothing reports
+      // a failure for a recording that was always allowed to go.
+      final id = await hear('Species sp0');
+      await scoring.setClipPath(
+        detectionId: id,
+        clipPath: '${clipsIn.path}/gone.wav',
+      );
+
+      final bytes = await backup.export(includeAudio: true);
+      final phone = await freshPhone();
+      await onPhone(phone).restore(bytes);
+
+      final detection = await phone.select(phone.detections).getSingle();
+      expect(detection.audioClipPath, isNull);
+    });
+
+    test('a detection with no clip is unaffected either way', () async {
+      await hear('Species sp0');
+
+      final bytes = await backup.export(includeAudio: true);
+      final phone = await freshPhone();
+      final summary = await onPhone(phone).restore(bytes);
+
+      expect(summary.detections, 1);
+      expect(
+        (await phone.select(phone.detections).getSingle()).audioClipPath,
+        isNull,
+      );
+    });
+
+    test('what was kept stays kept, recording or not', () async {
+      // SET-12's flag says something about what the child valued. It survives
+      // a restore even when the recording itself did not travel.
+      final id = await hearWithClip('Species sp0');
+      await scoring.setClipFavourite(detectionId: id, isFavourite: true);
+
+      final bytes = await backup.export();
+      final phone = await freshPhone();
+      await onPhone(phone).restore(bytes);
+
+      final detection = await phone.select(phone.detections).getSingle();
+      expect(detection.clipIsFavourite, isTrue);
+      expect(detection.audioClipPath, isNull);
+    });
+
+    test('two recordings do not overwrite each other', () async {
+      await hearWithClip('Species sp0', bytes: [1]);
+      await hearWithClip('Species sp39', bytes: [2, 2]);
+
+      final bytes = await backup.export(includeAudio: true);
+      final phone = await freshPhone();
+      await onPhone(phone).restore(bytes);
+
+      final paths = [
+        for (final d in await phone.select(phone.detections).get())
+          d.audioClipPath,
+      ];
+      expect(paths.whereType<String>(), hasLength(2));
+      expect(paths.toSet(), hasLength(2));
     });
   });
 

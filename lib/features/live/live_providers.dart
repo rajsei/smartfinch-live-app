@@ -31,7 +31,7 @@ import '../../shared/providers/settings_providers.dart';
 import '../../shared/services/weather_service.dart';
 import '../announcements/announcements_alert_sink.dart';
 import '../audio/audio_providers.dart';
-import '../history/session_repository.dart';
+import 'session_repository.dart';
 import '../recording/recording_service.dart';
 import 'live_controller.dart';
 import 'live_session.dart';

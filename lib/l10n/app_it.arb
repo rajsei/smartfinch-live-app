@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 giorni",
   "homeFigureToday": "Oggi",
   "levelShort": "Livello {number}",
-  "levelToNextShort": "Ancora {stars} per il livello {number}"
+  "levelToNextShort": "Ancora {stars} per il livello {number}",
+  "backupIncludeAudio": "Includi le registrazioni",
+  "backupIncludeAudioNote": "Torneranno sul nuovo dispositivo. Il file diventa molto più grande: un anno di registrazioni può essere di diverse centinaia di megabyte.",
+  "journalClipShare": "Condividi questa registrazione"
 }

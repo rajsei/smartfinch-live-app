@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 dní",
   "homeFigureToday": "Dnes",
   "levelShort": "Level {number}",
-  "levelToNextShort": "Ještě {stars} do levelu {number}"
+  "levelToNextShort": "Ještě {stars} do levelu {number}",
+  "backupIncludeAudio": "Zálohovat i nahrávky",
+  "backupIncludeAudioNote": "Na novém zařízení budou zase k dispozici. Soubor bude výrazně větší – rok nahrávek může mít několik set megabajtů.",
+  "journalClipShare": "Sdílet tuto nahrávku"
 }

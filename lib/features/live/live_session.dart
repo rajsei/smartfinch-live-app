@@ -352,9 +352,10 @@ class SessionSettings {
 /// them, and no filter distinguishes them.
 ///
 /// They disappear for good with the Drift schema (transition 1.1), where the
-/// session table has no type column at all — so do not spend effort collapsing
-/// the branches that still switch on them in `features/history`. That layer is
-/// rebuilt as the Journal in phase 2.5.
+/// session table has no type column at all. The `features/history` layer that
+/// used to switch on them is gone: the Journal replaced it, and the session
+/// review screen it ended with went when a finished recording started landing
+/// in the day instead.
 enum SessionType {
   /// Real-time microphone-based identification session. The only live value.
   live,

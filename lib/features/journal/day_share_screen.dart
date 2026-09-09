@@ -31,7 +31,7 @@ import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../shared/utils/share_sheet.dart';
-import '../history/services/share_file_params.dart';
+import '../../shared/utils/share_file_params.dart';
 import 'journal_models.dart';
 import 'widgets/day_image_card.dart';
 

@@ -179,8 +179,8 @@ This makes three specification requirements substantially cheaper than written:
 | `session_review_screen.dart` | 5,730 | **Rebuild** as the day detail (`LOG-03/07/09`) |
 | `widgets/session_review_widgets.dart` | 4,500 | **Rebuild** as day-detail widgets. Not salvageable as-is — built around one recording |
 | `session_library_screen.dart` | 2,106 | **Rebuild** as the day list (`LOG-02/04/05`) |
-| `html_report.dart` | 1,803 | ~~Keep, re-point~~ → **unused by `LOG-11`.** The day image shares its purpose and none of its content: this file is a research artefact (detection tables, confidence columns, a session's coordinates), and `LOG-11` excludes all three by name. Decide separately whether it survives at all |
-| `session_export.dart` | 1,664 | ~~Keep, split in two~~ → **replaced by two new files, and unused by either.** `SET-07`'s backup writes the Drift tables directly; `LOG-11`'s day image renders the card widget. This one exports *sessions* — the level of navigation `LOG-01` removed — in Raven and GPX, both deleted with the research modes. Decide separately whether it survives at all |
+| `html_report.dart` | 1,803 | ~~Keep, re-point~~ → **deleted.** The day image shares its purpose and none of its content — this was a research artefact (detection tables, confidence columns, a session's coordinates), all three excluded by `LOG-11` by name |
+| `session_export.dart` | 1,664 | ~~Keep, split in two~~ → **deleted.** `SET-07`'s backup writes the Drift tables directly and `LOG-11`'s day image renders the card widget, so neither ever used it; it went with the session review screen |
 | `widgets/clip_player_sheet.dart` | 940 | **Keep** — playback for `LIVE-14` and `SAM-08` |
 | `widgets/voice_memo_overlay.dart` | 879 | **Remove** — a field-researcher feature |
 | `services/detection_sharing_service.dart` | 746 | **Keep, narrow** — one share path (the day image), not per-detection audio sharing. `KID-07` |
@@ -674,7 +674,7 @@ The app has no account and stores everything on the device, which is the right t
 
 **One transaction.** A half-restored collection — detections without the events that scored them — would be worse than the empty database it replaced, because nothing would look broken. A refused file leaves the existing collection untouched, and that is asserted too.
 
-**The recordings are deliberately not in the file.** A year of clips is hundreds of megabytes, and a backup too large to write or send protects nothing; the clips are already a retention-managed cache that `SET-12` deletes by policy, while the *collection* is the thing that has to survive. The consequence is handled rather than ignored: **clip paths are cleared on the way in**, so the journal never offers a play button for a file that is on the old phone. `clipIsFavourite` survives, because it says something about what the child valued and costs nothing.
+**The recordings were deliberately not in the file** — since reversed, see the section below: they travel when the owner asks for them, and the default is still off because a year of clips is hundreds of megabytes and a backup too large to send protects nothing. The consequence is handled rather than ignored: **clip paths are cleared on the way in**, so the journal never offers a play button for a file that is on the old phone. `clipIsFavourite` survives, because it says something about what the child valued and costs nothing.
 
 *A bug caught by writing that:* Drift's `toJson` keys by the **Dart field name**, not the column name — `audioClipPath`, not `audio_clip_path`. The first version of the clearing override used the column name, compiled, ran, and did nothing at all.
 
@@ -763,6 +763,42 @@ The direction sketched at the end of phase 3 is built, with one deliberate restr
 *And a test that would have caught the first pass.* The existing home tests pump at 1,000 logical pixels, which the layout treats as a tablet — the size that actually squeezes this header is a short phone. There is now one at 360 × 640 with a six-figure star total, and it found a real overflow on the level line the moment it was written: at level 13 the right-hand text reads "14,343 to level 14", which is wider than what is left beside "Level 13". It gives way now instead of overflowing.
 
 **What this does not include:** `HOME-05` (the 7-day sparkline) and `HOME-06` ("Still possible today"). Both belong in the new header and both are now cheap — `AUS-04` already knows which daily badges are open — but neither is part of the avatar, and bundling them would have made one reviewable change into three.
+
+### The session-review branch is gone
+
+`LOG-01` retired the session as a level of navigation in phase 2.5, and the journal replaced the library. One route never got the message: **the end of a live session still pushed the session review screen**. A child who stopped recording landed in a research view of one recording — spectrogram strip, per-detection confirm and share menu, export options — instead of in the day they had just spent listening to.
+
+That single push was what kept an entire branch alive. A finished session now lands in **`JournalDayScreen`** for the day it started (`LOG-03`), with the journal underneath so closing the day goes there rather than to the home screen. With it removed, the following had no reachable caller and went:
+
+`session_review_screen.dart` · `session_library_screen.dart` · `session_map_screen.dart` · `session_export.dart` · `html_report.dart` · `export_metadata_helper.dart` · `clip_player_sheet.dart` · `session_review_widgets.dart` · `voice_memo_overlay.dart` · `detection_actions.dart` · `detection_sharing_service.dart` · `audio_export_normalizer.dart` · `audio_share_extension.dart` · `session_audio_trim.dart` · `detection_audio_window.dart` — and their nine test files.
+
+*Two of these were already flagged in §3 as "decide separately whether it survives at all".* This is that decision.
+
+**The live detection tile lost its action menu**, which turned out to be dead in a second way: `DetectionTile` accepted a `DetectionActions` contract, but nothing in Live ever passed one — only the review screen did. The chevron that says "tap for the bird" is now the only trailing chrome. `KID-07` had already ruled out the share half of that menu.
+
+**Settings shrank accordingly.** The **Playback** section (voice memos, ducking, playback overlay) configured only the review screen and is gone. **Export** kept exactly one switch — "include audio files" — and lost the Raven/CSV/JSON/GPX picker, "share as WAV", the app-metadata block and the HTML report: what those exported was a *session*, in formats meant for people who open selection tables. Seven providers and five preference keys went with them.
+
+*`features/history` no longer exists.* Five files survived it, and each moved to where its one consumer lives: `global_species_history.dart` → Explore, `session_repository.dart` and `session_path_codec.dart` → Live, `share_file_params.dart` → `shared/utils`, `spectrogram_renderer.dart` → the spectrogram feature. A directory named for a feature that is gone is a map that lies.
+
+*Still open, and bigger than it looks:* **648 of 1,366 l10n keys now have no reference in `lib/`.** Most predate this — the survey, point-count and file-analysis modes went in phase 0 and took their vocabulary with them. Removing them is a sweep across twelve files and worth doing on its own, not as a rider.
+
+### The audio can leave the device — a decision reversed
+
+`LOG-11` was being read as "the rendered day image is the app's **only** way out", and two things had been built on that reading: the backup deliberately left the recordings behind, and the journal's clip player deliberately had no share button.
+
+**That reading was too broad, and it has been corrected.** `LOG-11` decided what a *shared day* contains — no audio, no coordinates, no free text — and that is still exactly true and still tested: the day image carries none of them. It did not decide that a child may never hand anybody a bird they recorded. `KID-07` is untouched either way: it bans free text reaching another person, and a five-second clip of a blackbird is not text.
+
+The principle behind the correction is the one that should have been applied first: **the recordings are theirs, on their device.** An app that will not give them back is not protecting a child, it is keeping somebody else's data.
+
+**`SET-07` can now carry the recordings.** "Include the recordings" sits on the backup screen, off by default — a year of clips is hundreds of megabytes and a file too large to send protects nothing — but off by default is a different thing from not offered. When it is on, each clip goes into the archive under `clips/<detection id>`, and a restore writes them back and repoints the rows at their new location.
+
+*Named by the detection id, not by the original filename*, because the id is what the row carries and the filenames were only ever unique inside one session's directory. *Restored into one directory* rather than the `recordings/<sessionId>/` tree they came from: those belong to the JSON session store, which a restore does not repopulate, and a clip's home is its `Detection` row.
+
+*Two ordering decisions worth keeping.* The files are written **before** the transaction, because a file write is not part of the database's all-or-nothing and a restore that rolled back after spilling a hundred megabytes would leave them behind with nothing pointing at them; the worst case now is orphans the next restore overwrites by name. And a clip retention has already deleted is **skipped in silence** — the row keeps its path, the restore finds no file, the path is cleared, and nothing reports a failure for a recording that was always allowed to go.
+
+**One recording can be shared on its own**, from the clip player in the journal. The file itself, not a copy in an export format. That is the whole feature; none of the research chrome came back with it, and there is a test that says so.
+
+*What this leaves unchanged:* the day image (`LOG-11`) still renders date, stars and species and nothing else, and the place names of `LOG-13` still stop at its edge.
 
 **~~A second home-screen redesign direction is being explored, not yet built.~~ Built — see the section above.** The sketch as it stood: Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 

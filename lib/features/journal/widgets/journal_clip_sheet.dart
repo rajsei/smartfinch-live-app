@@ -3,15 +3,26 @@
 // =============================================================================
 //
 // Deliberately *not* the session-review clip player. That one grew for adults
-// doing fieldwork: it shares the audio, exports Raven selection tables, edits
-// notes, records voice memos and confirms detections. Every one of those is
-// either gone with the research modes or, in the case of sharing audio,
-// something Smartfinch decided against — `LOG-11` makes the rendered day image
-// the app's only sharing path, and `KID-07` keeps free text off anyone else's
-// screen.
+// doing fieldwork: Raven selection tables, HTML reports, per-detection notes,
+// voice memos, confirm flags. All of it went with the research modes.
 //
-// So this sheet does three things and stops: it draws the spectrogram, it
-// plays the clip, and it lets a child keep the recording (`SET-12`).
+// So this sheet does four things and stops: it draws the spectrogram, it plays
+// the clip, it lets a child keep the recording (`SET-12`), and it lets them
+// send it to someone.
+//
+// ### Sharing one recording — a decision that was reversed
+//
+// `LOG-11` originally read as "the rendered day image is the app's *only* way
+// out", and this sheet was built without a share button because of it. That
+// reading was too broad. `LOG-11` decided what a **shared day** contains — no
+// audio, no coordinates, no free text — and that is still exactly true: the
+// day image carries none of them. It did not decide that a child may never
+// send anybody a bird they recorded.
+//
+// The recording is theirs, it is on their device, and the app refusing to hand
+// it back is not child protection, it is the app keeping someone else's data.
+// `KID-07` is untouched: it bans free text reaching another person, and a
+// five-second clip of a blackbird is not text.
 //
 // ### The keep switch is the one control that changes anything
 //
@@ -29,12 +40,15 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../../core/constants/app_constants.dart';
 import '../../../shared/providers/settings_providers.dart';
-import '../../history/services/spectrogram_renderer.dart';
+import '../../../shared/utils/share_file_params.dart';
+import '../../../shared/utils/share_sheet.dart';
+import '../../spectrogram/spectrogram_renderer.dart';
 import '../../recording/audio_decoder.dart';
 import '../../recording/native_audio_decoder.dart';
 import '../../scoring/scoring_providers.dart';
@@ -201,6 +215,20 @@ class _JournalClipSheetState extends ConsumerState<JournalClipSheet> {
     }
   }
 
+  /// Hands the recording to the system share sheet.
+  ///
+  /// The file itself, not a copy in some export format: what leaves is the
+  /// clip the child just listened to.
+  Future<void> _share() async {
+    final origin = shareOriginFrom(context);
+    await reportShareFailure(
+      context,
+      SharePlus.instance.share(
+        shareParamsForFile(widget.clipPath, sharePositionOrigin: origin),
+      ),
+    );
+  }
+
   Future<void> _toggleKept() async {
     final next = !_kept;
     setState(() => _kept = next);
@@ -263,8 +291,12 @@ class _JournalClipSheetState extends ConsumerState<JournalClipSheet> {
                   ),
                 ),
                 const Spacer(),
-                // The one control that changes anything: a kept clip is
-                // exempt from retention (SET-12).
+                IconButton(
+                  onPressed: _share,
+                  icon: const Icon(AppIcons.share),
+                  tooltip: l10n.journalClipShare,
+                ),
+                // A kept clip is exempt from retention (SET-12).
                 TextButton.icon(
                   onPressed: _toggleKept,
                   icon: Icon(

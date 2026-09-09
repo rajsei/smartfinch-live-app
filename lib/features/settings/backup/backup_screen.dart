@@ -31,9 +31,10 @@ import 'package:share_plus/share_plus.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
+import '../../../shared/providers/settings_providers.dart';
 import '../../../shared/utils/share_sheet.dart';
 import '../../collection/collection_providers.dart';
-import '../../history/services/share_file_params.dart';
+import '../../../shared/utils/share_file_params.dart';
 import '../../journal/journal_providers.dart';
 import '../../points/points_providers.dart';
 import '../../scoring/scoring_providers.dart';
@@ -86,6 +87,21 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
           ),
           const SizedBox(height: 20),
 
+          // The recordings are the child's, on the child's device. Whether
+          // they travel with the backup is their call — the app's job is to
+          // say what it costs, not to decide for them.
+          SwitchListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.backupIncludeAudio),
+            subtitle: Text(l10n.backupIncludeAudioNote),
+            value: ref.watch(includeAudioProvider),
+            onChanged:
+                _busy
+                    ? null
+                    : (v) => ref.read(includeAudioProvider.notifier).set(v),
+          ),
+          const SizedBox(height: 12),
+
           FilledButton.icon(
             onPressed: _busy ? null : _save,
             icon: const Icon(AppIcons.save),
@@ -133,7 +149,9 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     final origin = shareOriginFrom(context);
 
     try {
-      final bytes = await ref.read(backupServiceProvider).export();
+      final bytes = await ref
+          .read(backupServiceProvider)
+          .export(includeAudio: ref.read(includeAudioProvider));
       final directory = await getTemporaryDirectory();
       final stamp = DateFormat('yyyy-MM-dd').format(DateTime.now());
       final file = File('${directory.path}/smartfinch-$stamp.zip');

@@ -6038,5 +6038,17 @@
         "type": "int"
       }
     }
+  },
+  "backupIncludeAudio": "Include the recordings",
+  "@backupIncludeAudio": {
+    "description": "SET-07: whether the kept recordings travel with the backup"
+  },
+  "backupIncludeAudioNote": "They come back on the new device. The file gets much bigger — a year of recordings can be several hundred megabytes.",
+  "@backupIncludeAudioNote": {
+    "description": "SET-07: what including the recordings costs"
+  },
+  "journalClipShare": "Share this recording",
+  "@journalClipShare": {
+    "description": "Sharing one recording from the journal's clip player — the child's own data, on their own device"
   }
 }

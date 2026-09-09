@@ -193,9 +193,6 @@ abstract final class PrefKeys {
   static const String exportSelection = 'export_selection';
 
   static const String includeAudio = 'include_audio';
-  static const String shareAudioAsWav = 'share_audio_as_wav';
-  static const String exportHtmlReport = 'export_html_report';
-  static const String includeAppMetadata = 'include_app_metadata';
 
   // Location / geo settings
   static const String useGps = 'use_gps';
@@ -329,10 +326,8 @@ abstract final class PrefKeys {
       'session_review_playback_overlay';
 
   /// Whether to auto-play voice memo annotations at their timestamp during review.
-  static const String playbackVoiceMemos = 'playback_voice_memos';
 
   /// Main recording volume reduction while auto-playing voice memos.
-  static const String playbackVoiceMemoDucking = 'playback_voice_memo_ducking';
 
   // --- Announcements (spoken detections, post-v1.0) ---------------------
   // See [dev/announcements.md] for the full design. The user-facing

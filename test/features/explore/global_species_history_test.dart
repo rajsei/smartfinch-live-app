@@ -8,7 +8,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:smartfinch/core/constants/app_constants.dart';
-import 'package:smartfinch/features/history/global_species_history.dart';
+import 'package:smartfinch/features/explore/global_species_history.dart';
 import 'package:smartfinch/features/live/live_session.dart';
 
 void main() {

@@ -15,7 +15,7 @@ import 'dart:typed_data';
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:smartfinch/features/history/services/spectrogram_renderer.dart';
+import 'package:smartfinch/features/spectrogram/spectrogram_renderer.dart';
 import 'package:smartfinch/features/recording/audio_decoder.dart';
 import 'package:smartfinch/features/spectrogram/color_maps.dart';
 

@@ -419,78 +419,6 @@ final saveSessionAutomaticallyProvider =
 // Export Settings
 // ---------------------------------------------------------------------------
 
-/// Export format ('raven', 'csv', 'json', 'gpx' — default 'raven').
-///
-/// Deprecated since 0.12.0: the export pipeline now reads
-/// [exportSelectionProvider] (a multi-select bitmask). This provider
-/// remains for one-time migration of pre-0.12.0 installs and for
-/// backward-compatible reads from a few legacy call sites.
-final exportFormatProvider =
-    StateNotifierProvider<StringSettingNotifier, String>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return StringSettingNotifier(prefs, PrefKeys.exportFormat, 'raven');
-    });
-
-/// Set of formats included in every export ZIP, persisted as a
-/// comma-separated string under [PrefKeys.exportSelection]. Defaults to
-/// `{'raven'}` for new installs; users may deselect every format to
-/// share the raw audio file without a ZIP container.
-final exportSelectionProvider =
-    StateNotifierProvider<ExportSelectionNotifier, Set<String>>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return ExportSelectionNotifier(prefs);
-    });
-
-class ExportSelectionNotifier extends StateNotifier<Set<String>> {
-  ExportSelectionNotifier(this._prefs) : super(_load(_prefs));
-
-  // Sentinel string used to persist an intentionally-empty selection,
-  // so SharedPreferences can distinguish "never set" from "explicitly
-  // none" (the latter must NOT trigger the new-install default).
-  static const String _emptySentinel = '__none__';
-  static const Set<String> _allFormats = {'raven', 'csv', 'json', 'gpx'};
-  static const Set<String> _defaultFormats = {'raven'};
-
-  final SharedPreferences _prefs;
-
-  static Set<String> _load(SharedPreferences prefs) {
-    final raw = prefs.getString(PrefKeys.exportSelection);
-    if (raw == null) {
-      // Migrate from the legacy single-choice key when present.
-      final legacy = prefs.getString(PrefKeys.exportFormat);
-      if (legacy != null && _allFormats.contains(legacy)) {
-        return {legacy};
-      }
-      return {..._defaultFormats};
-    }
-    if (raw.isEmpty || raw == _emptySentinel) return <String>{};
-    return raw.split(',').where(_allFormats.contains).toSet();
-  }
-
-  void toggle(String format, bool enabled) {
-    if (!_allFormats.contains(format)) return;
-    final next = {...state};
-    if (enabled) {
-      next.add(format);
-    } else {
-      next.remove(format);
-    }
-    _persist(next);
-  }
-
-  void set(Set<String> formats) {
-    _persist(formats.where(_allFormats.contains).toSet());
-  }
-
-  void _persist(Set<String> next) {
-    state = next;
-    _prefs.setString(
-      PrefKeys.exportSelection,
-      next.isEmpty ? _emptySentinel : next.join(','),
-    );
-  }
-}
-
 /// Include audio files in export (default true).
 final includeAudioProvider = StateNotifierProvider<BoolSettingNotifier, bool>((
   ref,
@@ -501,33 +429,18 @@ final includeAudioProvider = StateNotifierProvider<BoolSettingNotifier, bool>((
 
 /// Convert FLAC recordings to WAV before sharing/exporting (default false).
 /// WAV is universally compatible but larger; FLAC is lossless compressed.
-final shareAudioAsWavProvider =
-    StateNotifierProvider<BoolSettingNotifier, bool>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return BoolSettingNotifier(prefs, PrefKeys.shareAudioAsWav, false);
-    });
 
 /// Bundle a self-contained `<session>_report.html` next to the audio in the
 /// export ZIP (default true). The HTML opens in any browser, embeds the
 /// session metadata + clip players, and pulls species images / data
 /// from the BirdNET taxonomy API on the fly. Off-by-default for users
 /// who only want the raw table + audio.
-final exportHtmlReportProvider =
-    StateNotifierProvider<BoolSettingNotifier, bool>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return BoolSettingNotifier(prefs, PrefKeys.exportHtmlReport, true);
-    });
 
 /// Bundle the BirdNET Live app metadata side-file (`*.metadata.json`)
 /// inside the export ZIP (default true). The side-file carries
 /// provenance such as app version, model identity, weather snapshot,
 /// and audio integrity warnings. Disable to share audio + selected
 /// formats without app-specific metadata.
-final includeAppMetadataProvider =
-    StateNotifierProvider<BoolSettingNotifier, bool>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return BoolSettingNotifier(prefs, PrefKeys.includeAppMetadata, true);
-    });
 
 // ---------------------------------------------------------------------------
 // Location / Geo Settings
@@ -587,33 +500,10 @@ final showSciNamesProvider = StateNotifierProvider<BoolSettingNotifier, bool>((
 });
 
 /// Whether to show the playback overlay (clip player sheet) in session review (default true).
-final sessionReviewPlaybackOverlayProvider =
-    StateNotifierProvider<BoolSettingNotifier, bool>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return BoolSettingNotifier(
-        prefs,
-        PrefKeys.sessionReviewPlaybackOverlay,
-        true,
-      );
-    });
 
 /// Whether to auto-play voice memo annotations at their timestamp during session review (default false).
-final playbackVoiceMemosProvider =
-    StateNotifierProvider<BoolSettingNotifier, bool>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return BoolSettingNotifier(prefs, PrefKeys.playbackVoiceMemos, false);
-    });
 
 /// Main recording ducking while auto-playing voice memos (0.0-0.95, default 0.75).
-final playbackVoiceMemoDuckingProvider =
-    StateNotifierProvider<DoubleSettingNotifier, double>((ref) {
-      final prefs = ref.watch(sharedPreferencesProvider);
-      return DoubleSettingNotifier(
-        prefs,
-        PrefKeys.playbackVoiceMemoDucking,
-        0.75,
-      );
-    });
 
 /// Timestamp display mode: `'relative'` (session-relative `MM:SS`) or
 /// `'absolute'` (local clock `HH:mm:ss`).  Default `'relative'`.

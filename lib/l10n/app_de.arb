@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 Tage",
   "homeFigureToday": "Heute",
   "levelShort": "Level {number}",
-  "levelToNextShort": "Noch {stars} bis Level {number}"
+  "levelToNextShort": "Noch {stars} bis Level {number}",
+  "backupIncludeAudio": "Aufnahmen mitsichern",
+  "backupIncludeAudioNote": "Sie sind auf dem neuen Gerät wieder da. Die Datei wird deutlich größer – ein Jahr Aufnahmen können mehrere hundert Megabyte sein.",
+  "journalClipShare": "Diese Aufnahme teilen"
 }

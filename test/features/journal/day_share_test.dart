@@ -19,7 +19,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:smartfinch/features/history/services/share_file_params.dart';
+import 'package:smartfinch/shared/utils/share_file_params.dart';
 import 'package:smartfinch/features/journal/day_share_screen.dart';
 import 'package:smartfinch/features/journal/journal_models.dart';
 import 'package:smartfinch/features/journal/journal_providers.dart';

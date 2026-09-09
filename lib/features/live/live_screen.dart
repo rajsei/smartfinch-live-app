@@ -18,8 +18,8 @@ import '../audio/audio_providers.dart';
 import '../explore/explore_providers.dart';
 import '../explore/widgets/species_info_overlay.dart';
 import '../journal/journal_providers.dart';
+import '../journal/journal_day_screen.dart';
 import '../journal/journal_screen.dart';
-import '../history/session_review_screen.dart';
 import '../inference/advanced_pooling_params.dart';
 import '../recording/recording_service.dart';
 import '../scoring/live_score_board.dart';
@@ -834,23 +834,24 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         }
       }
 
-      // Persist completed session — unless the user turned off automatic
-      // saving, in which case the review screen opens in the "unsaved" state
-      // and only writes the session if the user explicitly saves it.
+      // Persist the completed session unless automatic saving is off.
       final autoSave = ref.read(saveSessionAutomaticallyProvider);
       if (autoSave) {
         await repo.save(session);
         ref.invalidate(sessionListProvider);
       }
 
-      // Replace the live screen with the Journal (instantly, no transition)
-      // and then push the review screen on top with the normal page
-      // animation. The user sees `live → review`; closing review lands in the
-      // Journal rather than back on the home screen.
+      // Where a finished session lands: the **day**, not the session.
       //
-      // It used to land in the session library. `LOG-01` retires that: the
-      // child navigates by day, and the day they just spent listening is the
-      // one they want to see.
+      // `LOG-01` is the whole point — the app stopped being organised by
+      // recording. This route was the last place that still was: it pushed
+      // the session review screen, which showed one recording's detections
+      // with its spectrogram strip and its export menu. A child who listened
+      // before school and again in the park had one *day*, and the screen
+      // that greeted them insisted otherwise.
+      //
+      // The journal goes underneath so that closing the day lands there
+      // rather than back on the home screen.
       if (mounted) {
         final navigator = Navigator.of(context);
         navigator.pushReplacement(
@@ -863,8 +864,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         navigator.push(
           MaterialPageRoute<void>(
             builder:
-                (_) =>
-                    SessionReviewScreen(session: session, autoSaved: autoSave),
+                (_) => JournalDayScreen(dayKey: dayKeyFor(session.startTime)),
           ),
         );
       }

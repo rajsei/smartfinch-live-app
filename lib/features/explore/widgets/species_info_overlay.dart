@@ -33,7 +33,7 @@ import '../../scoring/widgets/season_hint_banner.dart';
 import '../explore_providers.dart';
 import '../explore_tier.dart';
 import '../../inference/geo_model.dart';
-import '../../history/global_species_history.dart';
+import '../global_species_history.dart';
 import 'pick_wikipedia_url.dart';
 
 /// Shows a modal bottom sheet with detailed species information.

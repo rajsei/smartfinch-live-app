@@ -40,8 +40,13 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
+import 'dart:io';
+
 import 'package:archive/archive.dart';
+import 'package:path/path.dart' as p;
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/database/app_database.dart';
@@ -54,6 +59,9 @@ const int kBackupFormatVersion = 1;
 
 /// Name of the JSON document inside the archive.
 const String kBackupEntryName = 'smartfinch-backup.json';
+
+/// Where the recordings sit inside the archive, when they are included.
+const String kBackupClipDir = 'clips';
 
 /// What a restore found in the file.
 @immutable
@@ -106,22 +114,42 @@ enum BackupFailure {
 
 /// Writes and reads the whole database as one file (`SET-07`).
 class BackupService {
-  BackupService(this._db);
+  BackupService(this._db, {Future<Directory> Function()? clipDirectory})
+    : _clipDirectory = clipDirectory ?? _defaultClipDirectory;
 
   final AppDatabase _db;
+
+  /// Where restored recordings are written. Injectable so a test can hand it
+  /// a temporary directory instead of a platform channel.
+  final Future<Directory> Function() _clipDirectory;
+
+  static Future<Directory> _defaultClipDirectory() async {
+    final documents = await getApplicationDocumentsDirectory();
+    return Directory('${documents.path}/recordings/restored');
+  }
 
   /// Everything, as the bytes of a zip archive.
   ///
   /// Zipped rather than bare JSON for one practical reason: a year of
   /// detections is a lot of very repetitive text, and this compresses to a
-  /// fraction of it. The format also leaves room to add files later — kept
-  /// recordings, say — without the reader having to change.
-  Future<Uint8List> export({DateTime? now}) async {
+  /// fraction of it. It is also what lets [includeAudio] work — the recordings
+  /// travel as files inside the same archive.
+  ///
+  /// [includeAudio] is the child's — or the parent's — call, not the app's.
+  /// The recordings are theirs, they are on their device, and a backup that
+  /// silently left them behind would be the app deciding what part of someone's
+  /// own data is worth keeping. It is off by default because a year of clips is
+  /// hundreds of megabytes and a file too large to send protects nothing, but
+  /// off by default is a different thing from not offered.
+  Future<Uint8List> export({DateTime? now, bool includeAudio = false}) async {
+    final detections = await _db.select(_db.detections).get();
+
     final document = <String, dynamic>{
       'format': kBackupFormat,
       'version': kBackupFormatVersion,
       'schemaVersion': _db.schemaVersion,
       'createdAt': (now ?? DateTime.now()).toUtc().toIso8601String(),
+      'includesAudio': includeAudio,
       'tables': {
         'sessions': await _rows(_db.sessions),
         'detections': await _rows(_db.detections),
@@ -137,6 +165,32 @@ class BackupService {
     final json = utf8.encode(jsonEncode(document));
     final archive =
         Archive()..addFile(ArchiveFile(kBackupEntryName, json.length, json));
+
+    if (includeAudio) {
+      for (final detection in detections) {
+        final path = detection.audioClipPath;
+        if (path == null) continue;
+
+        final file = File(path);
+        // A clip retention has already deleted is simply not there. Skipping
+        // it is the whole story — the row keeps its path, the restore finds no
+        // file for it and clears it, and nothing anywhere reports a failure
+        // for a recording that was always allowed to go.
+        if (!file.existsSync()) continue;
+
+        final bytes = file.readAsBytesSync();
+        archive.addFile(
+          // Named by the detection id, not by the original filename: the id is
+          // what the row carries, and the filenames were only ever unique
+          // inside one session's directory.
+          ArchiveFile(
+            '$kBackupClipDir/${detection.id}${p.extension(path)}',
+            bytes.length,
+            bytes,
+          ),
+        );
+      }
+    }
 
     final bytes = ZipEncoder().encode(archive);
     return Uint8List.fromList(bytes);
@@ -184,6 +238,14 @@ class BackupService {
     // and it is exactly the sort of loss nobody would think to test for.
     final highestBefore = await _highestLevelReached();
 
+    // Written to disk *before* the transaction: a file write is not part of
+    // the database's all-or-nothing, and a restore that rolled back after
+    // spilling a hundred megabytes would leave them behind with nothing
+    // pointing at them. This way the worst case is orphaned files that the
+    // next restore overwrites by name.
+    final clips = _unpackClips(bytes);
+    final restored = await _writeClips(clips);
+
     await _db.transaction(() async {
       // Reverse dependency order: detections reference sessions.
       await _db.delete(_db.achievements).go();
@@ -196,7 +258,11 @@ class BackupService {
       await _db.delete(_db.userProfiles).go();
 
       await _insert(_db.sessions, tables['sessions'], Session.fromJson);
-      await _insert(_db.detections, tables['detections'], _detectionFromJson);
+      await _insert(
+        _db.detections,
+        tables['detections'],
+        (json) => _detectionFromJson(json, restored),
+      );
       await _insert(
         _db.scoreEvents,
         tables['scoreEvents'],
@@ -221,18 +287,72 @@ class BackupService {
     return summary;
   }
 
-  /// The clip path is dropped on the way in.
+  /// Points a restored detection at its recording, where one came with it.
   ///
-  /// The recordings are not in the file — see the header — so a restored
-  /// detection must not claim to have one. The journal would render a play
-  /// button for a file that is on the old phone, which reads as a bug rather
-  /// than as the deliberate trade it is. `clipIsFavourite` survives: it says
-  /// something about what the child valued, and costs nothing.
-  static Detection _detectionFromJson(Map<String, dynamic> json) {
+  /// [restored] maps detection id → the path the clip was written to. A
+  /// detection with no entry gets a **null** path rather than the one it had
+  /// on the old phone: that file is not on this device, and a journal row
+  /// offering to play it would read as a bug rather than as an absence.
+  ///
+  /// `clipIsFavourite` survives either way. It says something about what the
+  /// child valued, and it costs nothing to keep.
+  static Detection _detectionFromJson(
+    Map<String, dynamic> json,
+    Map<String, String> restored,
+  ) {
     // Drift's serializer keys the JSON by the *Dart* field name, not the
     // column name — 'audioClipPath', not 'audio_clip_path'. Getting that
-    // wrong here would leave the path in place and do nothing visible.
-    return Detection.fromJson({...json, 'audioClipPath': null});
+    // wrong here would leave the old path in place and do nothing visible.
+    final id = json['id'] as String?;
+    return Detection.fromJson({
+      ...json,
+      'audioClipPath': id == null ? null : restored[id],
+    });
+  }
+
+  /// The recordings inside [bytes], keyed by detection id.
+  Map<String, List<int>> _unpackClips(Uint8List bytes) {
+    final archive = ZipDecoder().decodeBytes(bytes);
+    final clips = <String, List<int>>{};
+
+    for (final file in archive.files) {
+      if (!file.isFile) continue;
+      if (!file.name.startsWith('$kBackupClipDir/')) continue;
+
+      final name = file.name.substring(kBackupClipDir.length + 1);
+      final id = p.basenameWithoutExtension(name);
+      if (id.isEmpty) continue;
+      clips[id] = file.content as List<int>;
+    }
+    return clips;
+  }
+
+  /// Writes them out, and reports where each landed.
+  ///
+  /// One directory rather than the `recordings/<sessionId>/` tree they came
+  /// from: those directories belong to the JSON session store, which a restore
+  /// does not repopulate. A clip's home is its `Detection` row, and the row
+  /// carries the path.
+  Future<Map<String, String>> _writeClips(Map<String, List<int>> clips) async {
+    if (clips.isEmpty) return const {};
+
+    final directory = await _clipDirectory();
+    await directory.create(recursive: true);
+
+    final written = <String, String>{};
+    for (final entry in clips.entries) {
+      // Failures are per clip and silent. A recording that cannot be written
+      // leaves its row without a path — the same state as one retention
+      // deleted — and must not take the collection down with it.
+      try {
+        final file = File('${directory.path}/${entry.key}.wav');
+        await file.writeAsBytes(entry.value, flush: true);
+        written[entry.key] = file.path;
+      } catch (error) {
+        debugPrint('[BackupService] could not restore a clip: $error');
+      }
+    }
+    return written;
   }
 
   Future<int> _highestLevelReached() async {

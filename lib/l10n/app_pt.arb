@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 dias",
   "homeFigureToday": "Hoje",
   "levelShort": "Nível {number}",
-  "levelToNextShort": "Faltam {stars} para o nível {number}"
+  "levelToNextShort": "Faltam {stars} para o nível {number}",
+  "backupIncludeAudio": "Incluir as gravações",
+  "backupIncludeAudioNote": "Voltam a estar no novo dispositivo. O ficheiro fica muito maior — um ano de gravações pode ter várias centenas de megabytes.",
+  "journalClipShare": "Partilhar esta gravação"
 }

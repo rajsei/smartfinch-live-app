@@ -119,7 +119,6 @@ class SettingsScreen extends ConsumerWidget {
     'inference': SettingsView.advanced,
     'spectrogram': SettingsView.advanced,
     'recording': SettingsView.advanced,
-    'playback': SettingsView.advanced,
     'speciesFilter': SettingsView.advanced,
     'export': SettingsView.advanced,
   };
@@ -572,51 +571,6 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
             ],
 
-            // --- Playback ---
-            if (_showSection('playback')) ...[
-              _SectionHeader(
-                title: l10n.settingsPlayback,
-                subtitle: l10n.settingsPlaybackDescription,
-              ),
-              SwitchListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsPlaybackOverlay,
-                  helpBody: l10n.settingsHelpPlaybackOverlay,
-                ),
-                subtitle: Text(l10n.settingsPlaybackOverlayDescription),
-                value: ref.watch(sessionReviewPlaybackOverlayProvider),
-                onChanged:
-                    (v) => ref
-                        .read(sessionReviewPlaybackOverlayProvider.notifier)
-                        .set(v),
-              ),
-              SwitchListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsPlaybackVoiceMemos,
-                  helpBody: l10n.settingsHelpPlaybackVoiceMemos,
-                ),
-                subtitle: Text(l10n.settingsPlaybackVoiceMemosDescription),
-                value: ref.watch(playbackVoiceMemosProvider),
-                onChanged:
-                    (v) => ref.read(playbackVoiceMemosProvider.notifier).set(v),
-              ),
-              if (ref.watch(playbackVoiceMemosProvider))
-                _SliderTile(
-                  title: l10n.settingsPlaybackVoiceMemoDucking,
-                  helpBody: l10n.settingsHelpPlaybackVoiceMemoDucking,
-                  value: ref.watch(playbackVoiceMemoDuckingProvider),
-                  min: 0.0,
-                  max: 0.95,
-                  divisions: 19,
-                  format: (v) => '${(v * 100).round()}%',
-                  onChanged:
-                      (v) => ref
-                          .read(playbackVoiceMemoDuckingProvider.notifier)
-                          .set(v),
-                ),
-              const Divider(),
-            ],
-
             // --- Announcements ---
             if (_showSection('announcements'))
               AnnouncementsSettingsSection(
@@ -713,7 +667,13 @@ class SettingsScreen extends ConsumerWidget {
                 title: l10n.settingsExport,
                 subtitle: l10n.settingsExportDescription,
               ),
-              _ExportFormatChecklist(),
+              // Everything else this section used to carry — the Raven /
+              // CSV / JSON / GPX picker, "share as WAV", the app-metadata
+              // block and the HTML report — went with the research modes it
+              // configured. What it exported was a *session*, the level of
+              // navigation `LOG-01` removed, in formats meant for people who
+              // open selection tables. The one switch left is the one anybody
+              // can answer for themselves: whether the audio goes with it.
               CheckboxListTile(
                 dense: true,
                 title: _TitleWithHelp(
@@ -724,43 +684,6 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged:
                     (v) =>
                         ref.read(includeAudioProvider.notifier).set(v ?? false),
-              ),
-              if (ref.watch(includeAudioProvider))
-                CheckboxListTile(
-                  dense: true,
-                  title: _TitleWithHelp(
-                    title: l10n.settingsShareAudioAsWav,
-                    helpBody: l10n.settingsHelpShareAudioAsWav,
-                  ),
-                  value: ref.watch(shareAudioAsWavProvider),
-                  onChanged:
-                      (v) => ref
-                          .read(shareAudioAsWavProvider.notifier)
-                          .set(v ?? false),
-                ),
-              CheckboxListTile(
-                dense: true,
-                title: _TitleWithHelp(
-                  title: l10n.settingsExportAppMetadata,
-                  helpBody: l10n.settingsHelpExportAppMetadata,
-                ),
-                value: ref.watch(includeAppMetadataProvider),
-                onChanged:
-                    (v) => ref
-                        .read(includeAppMetadataProvider.notifier)
-                        .set(v ?? false),
-              ),
-              CheckboxListTile(
-                dense: true,
-                title: _TitleWithHelp(
-                  title: l10n.settingsExportHtmlReport,
-                  helpBody: l10n.settingsHelpExportHtmlReport,
-                ),
-                value: ref.watch(exportHtmlReportProvider),
-                onChanged:
-                    (v) => ref
-                        .read(exportHtmlReportProvider.notifier)
-                        .set(v ?? false),
               ),
               const Divider(),
             ],
@@ -2086,58 +2009,6 @@ class _GpsRefreshTileState extends ConsumerState<_GpsRefreshTile> {
               )
               : const Icon(AppIcons.refresh),
       onTap: _refreshing ? null : _refresh,
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// _ExportFormatChecklist — multi-select export formats (I2)
-// ---------------------------------------------------------------------------
-//
-// Replaces the single-choice export-format selector with a row of
-// independent checkboxes. The pipeline bundles every enabled format
-// into the export ZIP, so users can grab Raven + CSV + JSON in one
-// share. Selection is persisted via [exportSelectionProvider]. Unticking
-// every format (together with the audio / metadata / HTML report boxes)
-// shares the raw audio file on its own — see [buildSessionExport].
-// ---------------------------------------------------------------------------
-
-class _ExportFormatChecklist extends ConsumerWidget {
-  const _ExportFormatChecklist();
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
-    final selection = ref.watch(exportSelectionProvider);
-    // (token, display label, per-format help). Labels stay in English as
-    // technical terms; only the help bodies are localized.
-    final formats = <(String, String, String)>[
-      ('raven', 'Raven Selection Table', l10n.settingsHelpExportRaven),
-      ('csv', 'CSV', l10n.settingsHelpExportCsv),
-      ('json', 'JSON', l10n.settingsHelpExportJson),
-      ('gpx', 'GPX (track + waypoints)', l10n.settingsHelpExportGpx),
-    ];
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: _TitleWithHelp(
-            title: l10n.settingsExportFormat,
-            helpBody: l10n.settingsHelpExportFormat,
-          ),
-        ),
-        for (final fmt in formats)
-          CheckboxListTile(
-            dense: true,
-            title: _TitleWithHelp(title: fmt.$2, helpBody: fmt.$3),
-            value: selection.contains(fmt.$1),
-            onChanged:
-                (v) => ref
-                    .read(exportSelectionProvider.notifier)
-                    .toggle(fmt.$1, v ?? false),
-          ),
-      ],
     );
   }
 }

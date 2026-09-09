@@ -1365,5 +1365,8 @@
   "homeFigureLast30Days": "30 dager",
   "homeFigureToday": "I dag",
   "levelShort": "Nivå {number}",
-  "levelToNextShort": "{stars} igjen til nivå {number}"
+  "levelToNextShort": "{stars} igjen til nivå {number}",
+  "backupIncludeAudio": "Ta med opptakene",
+  "backupIncludeAudioNote": "De er tilbake på den nye enheten. Fila blir mye større – et år med opptak kan bli flere hundre megabyte.",
+  "journalClipShare": "Del dette opptaket"
 }

@@ -8,7 +8,7 @@ import 'dart:convert';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:path/path.dart' as p;
 
-import 'package:smartfinch/features/history/session_repository.dart';
+import 'package:smartfinch/features/live/session_repository.dart';
 import 'package:smartfinch/features/live/live_session.dart';
 
 void main() {
