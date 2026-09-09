@@ -5810,5 +5810,82 @@
   "speciesHowItSounds": "How it sounds",
   "@speciesHowItSounds": {
     "description": "SAM-11 / SAM-12: heading of the call mnemonic"
+  },
+  "backupTitle": "Backup",
+  "@backupTitle": {
+    "description": "SET-07: settings entry, worded for a parent"
+  },
+  "backupSubtitle": "Save the collection to a file, or bring it back",
+  "@backupSubtitle": {
+    "description": "SET-07: what the settings entry is for"
+  },
+  "backupExplanation": "Smartfinch keeps everything on this device and never uploads anything. That also means a lost or reset phone takes the collection with it. A backup is one file containing every species, every day and every star — keep it somewhere you will find it again, such as a cloud drive. Recordings are not included; they stay on this phone.",
+  "@backupExplanation": {
+    "description": "SET-07: the parent-facing explanation at the top of the screen"
+  },
+  "backupSaveButton": "Save a backup",
+  "@backupSaveButton": {
+    "description": "SET-07: writes the backup and opens the share sheet"
+  },
+  "backupSaveNote": "You choose where it goes. Smartfinch does not keep a copy.",
+  "@backupSaveNote": {
+    "description": "SET-07: says the app does not keep the file itself"
+  },
+  "backupRestoreButton": "Restore from a backup",
+  "@backupRestoreButton": {
+    "description": "SET-07: opens the file picker"
+  },
+  "backupRestoreNote": "This replaces everything on this device with what is in the file.",
+  "@backupRestoreNote": {
+    "description": "SET-07: warns before the button is pressed, not only in the dialog"
+  },
+  "backupRestoreConfirmTitle": "Replace everything?",
+  "@backupRestoreConfirmTitle": {
+    "description": "SET-07: confirmation dialog title"
+  },
+  "backupRestoreConfirmBody": "This backup holds {species} species and was saved on {date}. Everything currently on this device will be replaced by it.",
+  "@backupRestoreConfirmBody": {
+    "description": "SET-07: names what is in the file, because confirming a filename is not consent",
+    "placeholders": {
+      "species": {
+        "type": "int"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "backupRestoreConfirmAction": "Restore",
+  "@backupRestoreConfirmAction": {
+    "description": "SET-07: the irreversible button in the confirmation dialog"
+  },
+  "backupRestoreDone": "Restored. {species} species are back.",
+  "@backupRestoreDone": {
+    "description": "SET-07: confirmation after a successful restore",
+    "placeholders": {
+      "species": {
+        "type": "int"
+      }
+    }
+  },
+  "backupNotABackup": "That file is not a Smartfinch backup.",
+  "@backupNotABackup": {
+    "description": "SET-07: the chosen file is not a Smartfinch backup"
+  },
+  "backupTooNew": "This backup is from a newer version of Smartfinch. Update the app first.",
+  "@backupTooNew": {
+    "description": "SET-07: the backup comes from a newer version of the app"
+  },
+  "backupCorrupt": "This backup could not be read. It may be damaged.",
+  "@backupCorrupt": {
+    "description": "SET-07: the file is a backup but unreadable"
+  },
+  "backupSaveFailed": "The backup could not be saved.",
+  "@backupSaveFailed": {
+    "description": "SET-07: the backup could not be written"
+  },
+  "backupRestoreFailed": "The restore did not finish. Nothing was changed.",
+  "@backupRestoreFailed": {
+    "description": "SET-07: the restore did not complete; nothing was changed"
   }
 }

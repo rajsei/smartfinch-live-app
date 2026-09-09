@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "Laatste keer: {date}",
   "speciesFirstHeardOn": "Allereerste keer: {date}",
   "speciesHeardAt": "Bij: {places}",
-  "speciesHowItSounds": "Hoe hij klinkt"
+  "speciesHowItSounds": "Hoe hij klinkt",
+  "backupTitle": "Back-up",
+  "backupSubtitle": "De verzameling in een bestand opslaan of terugzetten",
+  "backupExplanation": "Smartfinch bewaart alles op dit apparaat en uploadt nooit iets. Dat betekent ook dat een verloren of gewiste telefoon de verzameling meeneemt. Een back-up is één bestand met alle soorten, alle dagen en alle sterren — bewaar het ergens waar je het terugvindt, bijvoorbeeld in de cloud. Opnames zitten er niet in; die blijven op deze telefoon.",
+  "backupSaveButton": "Back-up opslaan",
+  "backupSaveNote": "Jij kiest waar het bestand heen gaat. Smartfinch bewaart geen kopie.",
+  "backupRestoreButton": "Herstellen vanuit een back-up",
+  "backupRestoreNote": "Hiermee wordt alles op dit apparaat vervangen door wat er in het bestand staat.",
+  "backupRestoreConfirmTitle": "Alles vervangen?",
+  "backupRestoreConfirmBody": "Deze back-up bevat {species} soorten en is opgeslagen op {date}. Alles wat nu op dit apparaat staat, wordt erdoor vervangen.",
+  "backupRestoreConfirmAction": "Herstellen",
+  "backupRestoreDone": "Hersteld. {species} soorten zijn terug.",
+  "backupNotABackup": "Dat bestand is geen Smartfinch-back-up.",
+  "backupTooNew": "Deze back-up komt van een nieuwere versie van Smartfinch. Werk eerst de app bij.",
+  "backupCorrupt": "Deze back-up kon niet worden gelezen. Mogelijk is hij beschadigd.",
+  "backupSaveFailed": "De back-up kon niet worden opgeslagen.",
+  "backupRestoreFailed": "Het herstellen is niet voltooid. Er is niets veranderd."
 }

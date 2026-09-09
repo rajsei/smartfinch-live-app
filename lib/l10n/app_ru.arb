@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "В последний раз: {date}",
   "speciesFirstHeardOn": "Впервые: {date}",
   "speciesHeardAt": "Где: {places}",
-  "speciesHowItSounds": "Как звучит"
+  "speciesHowItSounds": "Как звучит",
+  "backupTitle": "Резервная копия",
+  "backupSubtitle": "Сохранить коллекцию в файл или вернуть её",
+  "backupExplanation": "Smartfinch хранит всё на этом устройстве и ничего никуда не отправляет. Но это значит и другое: потерянный или сброшенный телефон уносит коллекцию с собой. Резервная копия — это один файл со всеми видами, днями и звёздами. Положи его туда, где найдёшь снова, например в облако. Записи в него не входят: они остаются на этом телефоне.",
+  "backupSaveButton": "Сохранить копию",
+  "backupSaveNote": "Куда её положить — решаешь ты. Smartfinch копию не хранит.",
+  "backupRestoreButton": "Восстановить из копии",
+  "backupRestoreNote": "Это заменит всё на этом устройстве содержимым файла.",
+  "backupRestoreConfirmTitle": "Заменить всё?",
+  "backupRestoreConfirmBody": "В этой копии {species} видов, сохранена {date}. Всё, что сейчас на этом устройстве, будет ею заменено.",
+  "backupRestoreConfirmAction": "Восстановить",
+  "backupRestoreDone": "Восстановлено. Вернулось видов: {species}.",
+  "backupNotABackup": "Этот файл не является резервной копией Smartfinch.",
+  "backupTooNew": "Эта копия из более новой версии Smartfinch. Сначала обнови приложение.",
+  "backupCorrupt": "Не удалось прочитать эту копию. Возможно, она повреждена.",
+  "backupSaveFailed": "Не удалось сохранить копию.",
+  "backupRestoreFailed": "Восстановление не завершилось. Ничего не изменилось."
 }

@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "L'ultima volta: {date}",
   "speciesFirstHeardOn": "La prima volta in assoluto: {date}",
   "speciesHeardAt": "A: {places}",
-  "speciesHowItSounds": "Come suona"
+  "speciesHowItSounds": "Come suona",
+  "backupTitle": "Backup",
+  "backupSubtitle": "Salvare la collezione in un file o recuperarla",
+  "backupExplanation": "Smartfinch tiene tutto su questo dispositivo e non carica nulla. Questo significa però anche che un telefono perso o ripristinato si porta via la collezione. Un backup è un unico file con tutte le specie, tutti i giorni e tutte le stelle: conservalo dove lo ritroverai, per esempio in un cloud. Le registrazioni non sono incluse: restano su questo telefono.",
+  "backupSaveButton": "Salva un backup",
+  "backupSaveNote": "Decidi tu dove va. Smartfinch non ne tiene una copia.",
+  "backupRestoreButton": "Ripristina da un backup",
+  "backupRestoreNote": "Questo sostituisce tutto ciò che è su questo dispositivo con il contenuto del file.",
+  "backupRestoreConfirmTitle": "Sostituire tutto?",
+  "backupRestoreConfirmBody": "Questo backup contiene {species} specie ed è stato salvato il {date}. Tutto ciò che è ora su questo dispositivo verrà sostituito.",
+  "backupRestoreConfirmAction": "Ripristina",
+  "backupRestoreDone": "Ripristinato. {species} specie sono tornate.",
+  "backupNotABackup": "Quel file non è un backup di Smartfinch.",
+  "backupTooNew": "Questo backup viene da una versione più recente di Smartfinch. Aggiorna prima l'app.",
+  "backupCorrupt": "Non è stato possibile leggere questo backup. Potrebbe essere danneggiato.",
+  "backupSaveFailed": "Non è stato possibile salvare il backup.",
+  "backupRestoreFailed": "Il ripristino non è stato completato. Non è stato cambiato nulla."
 }

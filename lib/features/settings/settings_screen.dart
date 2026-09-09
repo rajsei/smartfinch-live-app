@@ -19,6 +19,7 @@ import '../rules/rules_screen.dart';
 import '../scoring/scoring_rules.dart';
 import '../spectrogram/color_maps.dart';
 import 'animation_level.dart';
+import 'backup/backup_screen.dart';
 import 'offline_map_download_tile.dart';
 
 bool get _showOfflineMapDownloadSetting => false;
@@ -112,6 +113,7 @@ class SettingsScreen extends ConsumerWidget {
     'location': SettingsView.plain,
     'privacy': SettingsView.plain,
     'about': SettingsView.plain,
+    'backup': SettingsView.plain,
     'danger': SettingsView.plain,
     'audio': SettingsView.advanced,
     'inference': SettingsView.advanced,
@@ -842,6 +844,30 @@ class SettingsScreen extends ConsumerWidget {
                   );
                 },
               ),
+
+            // --- Backup (SET-07) ---
+            //
+            // On the plain screen, not behind Advanced: it is the only thing
+            // standing between a broken phone and a lost collection, and the
+            // parent who needs it is not going looking for it. It sits beside
+            // the danger zone because those are the two irreversible data
+            // actions, and a parent finds both in one place.
+            if (_showSection('backup')) ...[
+              const Divider(),
+              ListTile(
+                leading: const Icon(AppIcons.save),
+                title: Text(l10n.backupTitle),
+                subtitle: Text(l10n.backupSubtitle),
+                trailing: const Icon(AppIcons.chevronRight),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const BackupScreen(),
+                    ),
+                  );
+                },
+              ),
+            ],
 
             // --- Danger Zone ---
             if (_showSection('danger')) ...[

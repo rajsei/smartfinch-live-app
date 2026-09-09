@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "La última vez: {date}",
   "speciesFirstHeardOn": "La primera vez: {date}",
   "speciesHeardAt": "En: {places}",
-  "speciesHowItSounds": "Cómo suena"
+  "speciesHowItSounds": "Cómo suena",
+  "backupTitle": "Copia de seguridad",
+  "backupSubtitle": "Guardar la colección en un archivo o recuperarla",
+  "backupExplanation": "Smartfinch guarda todo en este dispositivo y no sube nada. Eso también significa que un móvil perdido o restablecido se lleva la colección consigo. Una copia de seguridad es un único archivo con todas las especies, todos los días y todas las estrellas: guárdalo donde vayas a encontrarlo, por ejemplo en la nube. Las grabaciones no se incluyen; se quedan en este móvil.",
+  "backupSaveButton": "Guardar una copia",
+  "backupSaveNote": "Tú eliges dónde va. Smartfinch no se queda con una copia.",
+  "backupRestoreButton": "Restaurar desde una copia",
+  "backupRestoreNote": "Esto sustituye todo lo que hay en este dispositivo por lo que contiene el archivo.",
+  "backupRestoreConfirmTitle": "¿Sustituir todo?",
+  "backupRestoreConfirmBody": "Esta copia contiene {species} especies y se guardó el {date}. Todo lo que hay ahora en este dispositivo será sustituido por ella.",
+  "backupRestoreConfirmAction": "Restaurar",
+  "backupRestoreDone": "Restaurado. {species} especies han vuelto.",
+  "backupNotABackup": "Ese archivo no es una copia de seguridad de Smartfinch.",
+  "backupTooNew": "Esta copia es de una versión más nueva de Smartfinch. Actualiza la app primero.",
+  "backupCorrupt": "No se ha podido leer esta copia. Puede estar dañada.",
+  "backupSaveFailed": "No se ha podido guardar la copia.",
+  "backupRestoreFailed": "La restauración no ha terminado. No se ha cambiado nada."
 }

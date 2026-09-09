@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "Naposledy: {date}",
   "speciesFirstHeardOn": "Úplně poprvé: {date}",
   "speciesHeardAt": "Kde: {places}",
-  "speciesHowItSounds": "Jak zní"
+  "speciesHowItSounds": "Jak zní",
+  "backupTitle": "Záloha",
+  "backupSubtitle": "Uložit sbírku do souboru nebo ji obnovit",
+  "backupExplanation": "Smartfinch uchovává vše v tomto zařízení a nic nenahrává. To ale také znamená, že se ztraceným nebo resetovaným telefonem zmizí i sbírka. Záloha je jeden soubor se všemi druhy, dny a hvězdami – ulož ho tam, kde ho zase najdeš, třeba na cloud. Nahrávky součástí nejsou, ty zůstávají v tomto telefonu.",
+  "backupSaveButton": "Uložit zálohu",
+  "backupSaveNote": "Kam soubor půjde, určuješ ty. Smartfinch si kopii nenechává.",
+  "backupRestoreButton": "Obnovit ze zálohy",
+  "backupRestoreNote": "Tím se vše v tomto zařízení nahradí obsahem souboru.",
+  "backupRestoreConfirmTitle": "Nahradit vše?",
+  "backupRestoreConfirmBody": "Tato záloha obsahuje {species} druhů a byla uložena {date}. Vše, co je teď v tomto zařízení, se tím nahradí.",
+  "backupRestoreConfirmAction": "Obnovit",
+  "backupRestoreDone": "Obnoveno. {species} druhů je zpátky.",
+  "backupNotABackup": "Tento soubor není zálohou Smartfinche.",
+  "backupTooNew": "Tato záloha pochází z novější verze Smartfinche. Nejdřív aktualizuj aplikaci.",
+  "backupCorrupt": "Tuto zálohu se nepodařilo přečíst. Možná je poškozená.",
+  "backupSaveFailed": "Zálohu se nepodařilo uložit.",
+  "backupRestoreFailed": "Obnovení se nedokončilo. Nic se nezměnilo."
 }

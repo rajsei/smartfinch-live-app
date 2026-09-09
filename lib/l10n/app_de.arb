@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "Zuletzt: {date}",
   "speciesFirstHeardOn": "Zum ersten Mal: {date}",
   "speciesHeardAt": "Bei: {places}",
-  "speciesHowItSounds": "So klingt er"
+  "speciesHowItSounds": "So klingt er",
+  "backupTitle": "Sicherung",
+  "backupSubtitle": "Die Sammlung in einer Datei sichern oder zurückholen",
+  "backupExplanation": "Smartfinch speichert alles auf diesem Gerät und lädt nichts hoch. Das heißt aber auch: Geht das Handy verloren oder wird es zurückgesetzt, ist die Sammlung weg. Eine Sicherung ist eine einzige Datei mit allen Arten, allen Tagen und allen Sternen – bewahre sie dort auf, wo du sie wiederfindest, zum Beispiel in einer Cloud. Aufnahmen sind nicht enthalten; die bleiben auf diesem Handy.",
+  "backupSaveButton": "Sicherung speichern",
+  "backupSaveNote": "Du bestimmst, wohin sie geht. Smartfinch behält keine Kopie.",
+  "backupRestoreButton": "Aus einer Sicherung wiederherstellen",
+  "backupRestoreNote": "Damit wird alles auf diesem Gerät durch den Inhalt der Datei ersetzt.",
+  "backupRestoreConfirmTitle": "Alles ersetzen?",
+  "backupRestoreConfirmBody": "Diese Sicherung enthält {species} Arten und wurde am {date} gespeichert. Alles, was gerade auf diesem Gerät ist, wird dadurch ersetzt.",
+  "backupRestoreConfirmAction": "Wiederherstellen",
+  "backupRestoreDone": "Wiederhergestellt. {species} Arten sind zurück.",
+  "backupNotABackup": "Diese Datei ist keine Smartfinch-Sicherung.",
+  "backupTooNew": "Diese Sicherung stammt aus einer neueren Smartfinch-Version. Aktualisiere zuerst die App.",
+  "backupCorrupt": "Diese Sicherung konnte nicht gelesen werden. Sie ist vielleicht beschädigt.",
+  "backupSaveFailed": "Die Sicherung konnte nicht gespeichert werden.",
+  "backupRestoreFailed": "Die Wiederherstellung wurde nicht abgeschlossen. Es wurde nichts verändert."
 }

@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "Sist: {date}",
   "speciesFirstHeardOn": "Aller første gang: {date}",
   "speciesHeardAt": "På: {places}",
-  "speciesHowItSounds": "Sånn høres den ut"
+  "speciesHowItSounds": "Sånn høres den ut",
+  "backupTitle": "Sikkerhetskopi",
+  "backupSubtitle": "Lagre samlingen i en fil, eller hente den tilbake",
+  "backupExplanation": "Smartfinch beholder alt på denne enheten og laster aldri opp noe. Det betyr også at en mistet eller nullstilt telefon tar samlingen med seg. En sikkerhetskopi er én fil med alle arter, alle dager og alle stjerner – legg den et sted du finner den igjen, for eksempel i en skytjeneste. Opptak er ikke med; de blir på denne telefonen.",
+  "backupSaveButton": "Lagre en sikkerhetskopi",
+  "backupSaveNote": "Du bestemmer hvor den havner. Smartfinch beholder ingen kopi.",
+  "backupRestoreButton": "Gjenopprett fra en sikkerhetskopi",
+  "backupRestoreNote": "Dette erstatter alt på denne enheten med det som ligger i fila.",
+  "backupRestoreConfirmTitle": "Erstatte alt?",
+  "backupRestoreConfirmBody": "Denne sikkerhetskopien inneholder {species} arter og ble lagret {date}. Alt som er på denne enheten nå, blir erstattet av den.",
+  "backupRestoreConfirmAction": "Gjenopprett",
+  "backupRestoreDone": "Gjenopprettet. {species} arter er tilbake.",
+  "backupNotABackup": "Den fila er ikke en Smartfinch-sikkerhetskopi.",
+  "backupTooNew": "Denne sikkerhetskopien er fra en nyere versjon av Smartfinch. Oppdater appen først.",
+  "backupCorrupt": "Denne sikkerhetskopien kunne ikke leses. Den kan være skadet.",
+  "backupSaveFailed": "Sikkerhetskopien kunne ikke lagres.",
+  "backupRestoreFailed": "Gjenopprettingen ble ikke fullført. Ingenting ble endret."
 }

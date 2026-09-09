@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "上一次：{date}",
   "speciesFirstHeardOn": "第一次：{date}",
   "speciesHeardAt": "地点：{places}",
-  "speciesHowItSounds": "听起来像什么"
+  "speciesHowItSounds": "听起来像什么",
+  "backupTitle": "备份",
+  "backupSubtitle": "把收藏保存为文件，或者恢复回来",
+  "backupExplanation": "Smartfinch 把所有内容都留在这台设备上，从不上传。这也意味着手机丢失或被重置时，收藏也会一起消失。备份是一个文件，包含所有物种、所有日子和所有星星——把它放在你能再找到的地方，比如云盘。录音不包含在内，它们留在这台手机上。",
+  "backupSaveButton": "保存备份",
+  "backupSaveNote": "你决定文件放在哪里。Smartfinch 不保留副本。",
+  "backupRestoreButton": "从备份恢复",
+  "backupRestoreNote": "这会用文件里的内容替换本设备上的全部内容。",
+  "backupRestoreConfirmTitle": "替换全部内容？",
+  "backupRestoreConfirmBody": "这份备份包含 {species} 个物种，保存于 {date}。本设备上现有的全部内容都会被它替换。",
+  "backupRestoreConfirmAction": "恢复",
+  "backupRestoreDone": "已恢复。{species} 个物种回来了。",
+  "backupNotABackup": "这个文件不是 Smartfinch 备份。",
+  "backupTooNew": "这份备份来自更新版本的 Smartfinch。请先更新应用。",
+  "backupCorrupt": "无法读取这份备份，它可能已损坏。",
+  "backupSaveFailed": "无法保存备份。",
+  "backupRestoreFailed": "恢复没有完成。什么都没有改变。"
 }

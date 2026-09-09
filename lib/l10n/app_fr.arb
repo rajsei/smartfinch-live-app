@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "La dernière fois : {date}",
   "speciesFirstHeardOn": "La toute première fois : {date}",
   "speciesHeardAt": "À : {places}",
-  "speciesHowItSounds": "Comment il sonne"
+  "speciesHowItSounds": "Comment il sonne",
+  "backupTitle": "Sauvegarde",
+  "backupSubtitle": "Enregistrer la collection dans un fichier, ou la restaurer",
+  "backupExplanation": "Smartfinch garde tout sur cet appareil et n'envoie rien. Cela veut dire aussi qu'un téléphone perdu ou réinitialisé emporte la collection avec lui. Une sauvegarde est un seul fichier contenant toutes les espèces, toutes les journées et toutes les étoiles — range-le là où tu le retrouveras, par exemple dans un cloud. Les enregistrements n'y sont pas ; ils restent sur ce téléphone.",
+  "backupSaveButton": "Enregistrer une sauvegarde",
+  "backupSaveNote": "C'est toi qui choisis où elle va. Smartfinch n'en garde pas de copie.",
+  "backupRestoreButton": "Restaurer depuis une sauvegarde",
+  "backupRestoreNote": "Cela remplace tout ce qui est sur cet appareil par le contenu du fichier.",
+  "backupRestoreConfirmTitle": "Tout remplacer ?",
+  "backupRestoreConfirmBody": "Cette sauvegarde contient {species} espèces et date du {date}. Tout ce qui se trouve actuellement sur cet appareil sera remplacé.",
+  "backupRestoreConfirmAction": "Restaurer",
+  "backupRestoreDone": "Restauré. {species} espèces sont de retour.",
+  "backupNotABackup": "Ce fichier n'est pas une sauvegarde Smartfinch.",
+  "backupTooNew": "Cette sauvegarde vient d'une version plus récente de Smartfinch. Mets d'abord l'application à jour.",
+  "backupCorrupt": "Cette sauvegarde n'a pas pu être lue. Elle est peut-être endommagée.",
+  "backupSaveFailed": "La sauvegarde n'a pas pu être enregistrée.",
+  "backupRestoreFailed": "La restauration n'est pas allée à son terme. Rien n'a été modifié."
 }

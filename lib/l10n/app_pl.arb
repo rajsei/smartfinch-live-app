@@ -1319,5 +1319,21 @@
   "speciesLastHeardOn": "Ostatnio: {date}",
   "speciesFirstHeardOn": "Po raz pierwszy: {date}",
   "speciesHeardAt": "Gdzie: {places}",
-  "speciesHowItSounds": "Jak brzmi"
+  "speciesHowItSounds": "Jak brzmi",
+  "backupTitle": "Kopia zapasowa",
+  "backupSubtitle": "Zapisz kolekcję do pliku lub przywróć ją",
+  "backupExplanation": "Smartfinch trzyma wszystko na tym urządzeniu i niczego nie wysyła. To znaczy też, że zgubiony albo zresetowany telefon zabiera kolekcję ze sobą. Kopia zapasowa to jeden plik ze wszystkimi gatunkami, dniami i gwiazdkami – zapisz go tam, gdzie go znajdziesz, na przykład w chmurze. Nagrania nie są w nim zawarte; zostają w tym telefonie.",
+  "backupSaveButton": "Zapisz kopię",
+  "backupSaveNote": "To ty decydujesz, gdzie trafi. Smartfinch nie zachowuje kopii.",
+  "backupRestoreButton": "Przywróć z kopii",
+  "backupRestoreNote": "To zastąpi wszystko na tym urządzeniu zawartością pliku.",
+  "backupRestoreConfirmTitle": "Zastąpić wszystko?",
+  "backupRestoreConfirmBody": "Ta kopia zawiera {species} gatunków i została zapisana {date}. Wszystko, co jest teraz na tym urządzeniu, zostanie nią zastąpione.",
+  "backupRestoreConfirmAction": "Przywróć",
+  "backupRestoreDone": "Przywrócono. Wróciło {species} gatunków.",
+  "backupNotABackup": "Ten plik nie jest kopią zapasową Smartfincha.",
+  "backupTooNew": "Ta kopia pochodzi z nowszej wersji Smartfincha. Najpierw zaktualizuj aplikację.",
+  "backupCorrupt": "Nie udało się odczytać tej kopii. Może być uszkodzona.",
+  "backupSaveFailed": "Nie udało się zapisać kopii.",
+  "backupRestoreFailed": "Przywracanie się nie zakończyło. Nic nie zostało zmienione."
 }
