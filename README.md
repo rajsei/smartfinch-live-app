@@ -1,86 +1,44 @@
-# BirdNET Live - Professional bioacoustics in your pocket
+# Smartfinch · Schlaumeise
 
 <p align="center">
-  <img src="assets/images/app-icon.png" alt="BirdNET Live" width="250">
+  <img src="assets/images/smartfinch_logo_full.svg" alt="Smartfinch" width="320">
 </p>
 
 <p align="center">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-blue.svg" alt="License: MIT"></a>
-   <img src="https://img.shields.io/badge/flutter-%3E%3D3.27-blue.svg" alt="Flutter >=3.27">
+  <img src="https://img.shields.io/badge/flutter-%3E%3D3.27-blue.svg" alt="Flutter >=3.27">
   <img src="https://img.shields.io/badge/platforms-Android%20%7C%20iOS%20%7C%20Windows-green.svg" alt="Platforms">
-  <img src="https://img.shields.io/badge/version-1.1.2-orange.svg" alt="Version">
-  <img src="https://img.shields.io/badge/species-9%2C789-brightgreen.svg" alt="Species: 9,789">
+  <img src="https://img.shields.io/badge/for-ages%208--13-orange.svg" alt="For ages 8–13">
 </p>
 
-Built for field researchers, conservationists, and birders, BirdNET Live identifies bird species in real time using on-device BirdNET+ inference — no internet required. Built with Flutter for Android, iOS, and Windows.
+**A bird-collecting game for children.** Every bird you hear is one you have found. The phone listens, names what it hears, and the bird goes into a collection that is yours and stays on your device.
 
-<p align="center">
-  <img src="docs/assets/screenshots/live-mode.png" alt="Live Mode" width="150">
-  <img src="docs/assets/screenshots/session-review.png" alt="Session Review" width="150">
-  <img src="docs/assets/screenshots/explore.png" alt="Explore" width="150">
-  <img src="docs/assets/screenshots/species.png" alt="Species Overlay" width="150">
-  <img src="docs/assets/screenshots/file-analysis.png" alt="File Analysis" width="150">
-</p>
+Rarer birds are worth more — and what counts as rare depends on where you are and what week it is, so the same blackbird is worth 50 stars all year and a redwing is worth a thousand in November. That is the whole point: it makes going outside in February interesting.
 
-<p align="center">
-  <a href="https://play.google.com/store/apps/details?id=de.tu_chemnitz.mi.kahst.birdnet_live"><b>Google Play</b></a>
-  &nbsp;·&nbsp;
-  <a href="https://apps.apple.com/us/app/birdnet-live/id6776168518"><b>App Store</b></a>
-  &nbsp;·&nbsp;
-  <a href="https://github.com/birdnet-team/birdnet-live-app/releases/latest"><b>Download APK</b></a>
-  &nbsp;·&nbsp;
-  <a href="https://birdnet-team.github.io/birdnet-live-app/"><b>Documentation</b></a>
-  &nbsp;·&nbsp;
-  <a href="https://github.com/birdnet-team/birdnet-live-app/releases"><b>All Releases</b></a>
-</p>
+> **The app has two names.** In German it is **Schlaumeise**; in every other language it is **Smartfinch**. They are not translations of one another — *Schlaumeise* is a tit and a pun that only works in German — so each has its own logo and the launcher shows whichever the device's language calls for.
 
-**NOTE: BirdNET Live is under active development. Some rough edges and limitations remain — please [report issues](https://github.com/birdnet-team/birdnet-live-app/issues) you run into and contribute if you can!**
+Built with Flutter for Android, iOS and Windows. Identification runs on-device with the BirdNET+ model; nothing is uploaded, and the app works with no internet at all.
 
 ---
 
-## Table of Contents
+## What it does
 
-- [Features](#features)
-- [Install on Android](#install-on-android)
-- [Quick Start](#quick-start)
-  - [Prerequisites](#prerequisites)
-  - [Setup](#setup)
-  - [Verify](#verify)
-- [Deploy to Phone](#deploy-to-phone)
-  - [Android (USB — Windows / macOS / Linux)](#android-usb--windows--macos--linux)
-  - [Android (Wireless — Windows)](#android-wireless--windows)
-  - [iOS (macOS only)](#ios-macos-only)
-  - [VS Code Tips](#vs-code-tips)
-- [Documentation](#documentation)
-- [Project Structure](#project-structure)
-- [Model Assets](#model-assets)
-- [Development](#development)
-- [License](#license)
-- [Acceptable Use](#acceptable-use)
-- [Citation](#citation)
-- [Funding](#funding)
-- [Partners](#partners)
+- **Live** — press one button and listen. Birds appear as they are heard, and the first find of a species is worth three times its value.
+- **The collection** — every species you have ever heard, and a second view for this calendar year that starts again each January.
+- **The journal** — organised by *day*, not by recording: zoom out to weeks, months or years, open a day to see every species, every star and every time you heard it.
+- **Points, badges and achievements** — a daily and weekly badge catalogue, rarity and persistence achievements, and a level ladder from egg to legend that your bird grows along.
+- **Explore** — every species that occurs where you are, with a 48-week curve per species and a sentence explaining when it is early.
+- **Share a day** — one rendered card: date, stars, species. No audio, no coordinates, no names of places. It is the only picture the app ever makes for someone else.
+- **Backup** — the whole collection as one file, recordings included if you want them. There is no account and no cloud; this is what stands between a broken phone and a lost collection.
+- **Twelve languages** — English, German, Czech, Spanish, French, Italian, Portuguese, Dutch, Norwegian Bokmål, Polish, Russian and Simplified Chinese.
 
-## Features
+## What it does not do
 
-- **Live Mode** — Real-time scrolling spectrogram with species identification
-- **Point Count Mode** — Timed survey sessions with countdown timer and station metadata
-- **Survey Mode** — Long-running transect surveys with GPS tracking, background monitoring, and detection sampling
-- **File Analysis Mode** — Analyze existing audio files (WAV, FLAC, MP3, OGG, and more)
-- **ARU Mode** — Turn your device into an acoustic recording unit for multi-day deployments
-- **Explore** — Browse species expected at your location using the BirdNET geo-model
-- **Session Library** — Review, edit, and export past sessions with audio playback
-- **Export** — Raven Pro, CSV, JSON, GPX, and ZIP bundle formats
-- **On-device inference** — BirdNET+ model (9,789 species), no internet required
-- **FLAC recording** — Pure Dart encoder for compressed audio (50–60% reduction)
-- **Landscape & tablet layouts** — Adaptive UI for phones and tablets in both orientations
-- **Localization** — UI translations and spoken announcement phrasing for English, German, Czech, Spanish, French, Italian, Portuguese, Dutch, Norwegian Bokmål, Polish, Russian, and Simplified Chinese
+No account, no leaderboard, no advertising, no purchases. Location is coarsened to a 0.1° grid cell before it is stored and never leaves the device. Nothing a child types — the names they give their favourite places — is ever rendered into anything shareable.
 
-## Install on Android
+## Install
 
-BirdNET Live is available on the [Google Play Store](https://play.google.com/store/apps/details?id=de.tu_chemnitz.mi.kahst.birdnet_live) and is available as a signed APK for sideloading. Download the latest release from the [Releases page](https://github.com/birdnet-team/birdnet-live-app/releases/latest), transfer the `.apk` file to your phone, and open it to install. You may need to allow installation from unknown sources in your device settings.
-
-> **Note:** The APK is ~260 MB because it includes the full BirdNET+ audio model and all species images for full offline use.
+Built from source for now; there is no store listing yet. See [Quick Start](#quick-start) below.
 
 ## Quick Start
 
@@ -94,8 +52,8 @@ BirdNET Live is available on the [Google Play Store](https://play.google.com/sto
 ### Setup
 
 ```bash
-git clone https://github.com/birdnet-team/birdnet-live-app.git
-cd birdnet-live-app
+git clone https://github.com/rajsei/smartfinch-live-app.git
+cd smartfinch-live-app
 git lfs install
 git lfs pull
 flutter pub get
@@ -177,7 +135,7 @@ flutter analyze   # Check for issues
 
 ## Documentation
 
-- **User & Developer Docs**: [GitHub Pages](https://birdnet-team.github.io/birdnet-live-app/) (MkDocs Material)
+- **User & Developer Docs**: the `docs/` directory in this repository (MkDocs Material). There is no published site yet — the one at `birdnet-team.github.io` documents BirdNET Live, which this app is derived from but no longer resembles.
 
 To preview the documentation locally:
 
@@ -209,7 +167,7 @@ test/             # Tests mirroring lib/ structure
 
 ## Model Assets
 
-BirdNET Live runs fully on-device, so the model assets are part of the checkout/build rather than downloaded by the app at runtime. The large `.onnx` files in `assets/models/` are tracked with Git LFS:
+Smartfinch runs fully on-device, so the model assets are part of the checkout/build rather than downloaded by the app at runtime. The large `.onnx` files in `assets/models/` are tracked with Git LFS:
 
 - `BirdNET+_V3.0-preview3.1_Global_10K-pruned_FP16.onnx` — audio classifier (~65 MB)
 - `BirdNET+_Geomodel_V3.0.4_Global_10K-pruned_FP16.onnx` — location-based species model (~13 MB)
@@ -245,17 +203,17 @@ Please ensure you review and adhere to the specific license terms provided with 
 
 ## Acceptable Use
 
-Please refer to the [Acceptable Use Policy](ACCEPTABLE_USE.md) for responsible-use guidance for BirdNET and BirdNET Live.
+Please refer to the [Acceptable Use Policy](ACCEPTABLE_USE.md) for responsible-use guidance for BirdNET and Smartfinch.
 
 ## Citation
 
 If you use this app in your scientific work, please cite it using the following BibTeX entry:
 
 ```bibtex
-@software{BirdNET_Live_2026,
+@software{Smartfinch_2026,
   author = {Kahl, Stefan and Börner, Andy and Mauermann, Max and Seifert, Raja Charlotte and Lasseck, Mario and Wilhelm-Stein, Thomas and Wood, Connor M. and Eibl, Maximilian and Klinck, Holger},
-  title = {{BirdNET Live app - Professional bioacoustics in your pocket}},
-  url = {https://github.com/birdnet-team/birdnet-live-app},
+  title = {{Smartfinch — a bird-collecting game for children}},
+  url = {https://github.com/rajsei/smartfinch-live-app},
   year = {2026}
 }
 ```

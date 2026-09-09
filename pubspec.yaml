@@ -1,5 +1,5 @@
 name: smartfinch
-description: "Real-time bird species identification using on-device ONNX inference"
+description: "A bird-collecting game for children — every bird you hear is one you have found"
 publish_to: 'none'
 version: 1.1.2+223
 
@@ -93,6 +93,7 @@ dependencies:
   # Annotations only (@immutable); lets the scoring engine stay pure Dart
   # instead of importing flutter/foundation just for one annotation.
   meta: ^1.19.0
+  flutter_svg: ^2.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -112,13 +113,20 @@ flutter:
   generate: true
 
   assets:
-    - assets/images/app-icon.png
+    # Two brands, one app: Schlaumeise in German, Smartfinch elsewhere.
+    # The PNG marks are the source for the generated launcher icons; the
+    # SVGs are what the interface draws (see `AppLogo`).
+    - assets/images/schlaumeise_logo.png
+    - assets/images/smartfinch_logo.png
+    - assets/images/schlaumeise_logo_round.svg
+    - assets/images/schlaumeise_logo_round_solidbg.svg
+    - assets/images/smartfinch_logo_round.svg
+    - assets/images/smartfinch_logo_round_solidbg.svg
     - assets/images/dummy_species.png
     - assets/images/icon-birdnet.png
     - assets/images/icon-ebird.png
     - assets/images/icon-inat.png
     - assets/images/icon-wikipedia.png
-    - assets/images/logo-birdnet-circle.png
     - assets/models/
     - assets/species_images/
     - assets/species_data/
@@ -127,13 +135,22 @@ flutter:
     - assets/species_profiles/
     - assets/announcements/
 
+# The launcher icon is the one place the two brands cannot both win: it is
+# baked at build time and cannot follow the device language the way the in-app
+# logo does. Smartfinch is the default because it matches the package name, the
+# application ID and eleven of the twelve locales; a German-market build swaps
+# these four lines for the `schlaumeise-` files and `#12253F`.
+#
+# The inputs are generated — `python tools/build_launcher_icons.py` — because
+# an adaptive foreground needs the mark inside Android's safe zone and an iOS
+# icon needs no transparency at all, and neither is what a brand mark is
+# exported as.
 flutter_launcher_icons:
   android: true
   ios: true
   windows:
     generate: true
-    image_path: "assets/images/app-icon.png"
-  remove_alpha_ios: true
-  image_path: "assets/images/app-icon.png"
-  adaptive_icon_background: "assets/images/app-icon-background.png"
-  adaptive_icon_foreground: "assets/images/app-icon-foreground.png"
+    image_path: "assets/images/launcher/smartfinch-icon.png"
+  image_path: "assets/images/launcher/smartfinch-icon.png"
+  adaptive_icon_background: "#262626"
+  adaptive_icon_foreground: "assets/images/launcher/smartfinch-icon-foreground.png"

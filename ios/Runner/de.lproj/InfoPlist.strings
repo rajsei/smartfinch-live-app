@@ -1,0 +1,3 @@
+/* The German name of the app. Everywhere else it is Smartfinch — see
+   CFBundleDisplayName in Info.plist. */
+"CFBundleDisplayName" = "Schlaumeise";

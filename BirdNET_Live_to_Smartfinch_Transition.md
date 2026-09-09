@@ -288,14 +288,16 @@ The fork keeps merging from `birdnet-team/birdnet-live-app`. Deleting 20,000 lin
 
 ## 8. Rebranding checklist
 
-Mechanical but wide, and easy to half-finish:
+Mechanical but wide, and easy to half-finish. **Mostly done** — see the rebranding section in phase 3 for what the two names turned out to mean:
 
-- `pubspec.yaml`: `name: birdnet_live` is the Dart package name, and it appears in **every** `package:birdnet_live/...` import
-- Android application ID `de.tu_chemnitz.mi.kahst.birdnet_live`, iOS bundle ID, Windows installer identifiers — use a **new** ID, so Smartfinch installs alongside BirdNET Live rather than replacing it on a researcher's phone
-- `assets/images/app-icon.png` and the adaptive-icon background; regenerate via `flutter_launcher_icons`
-- App name in all 12 locales, store listings in `dev/store/`, mockups in `dev/mockups/`
-- `README.md`, `mkdocs.yml`, 154 files in `docs/user/`, `CITATION.cff`, `LICENSE` attribution
-- **Attribution obligations stay.** The BirdNET model licence (`MODEL_LICENSE`) and the Cornell / TU Chemnitz credit are not optional and must remain visible in the About screen. A children's app does not get to drop them.
+- ✅ `pubspec.yaml`: `name: smartfinch`, and every `package:smartfinch/...` import with it
+- ✅ Android application ID `de.tu_chemnitz.mi.rajs.smartfinch` — a **new** ID, so this installs alongside BirdNET Live rather than replacing it on a researcher's phone
+- ✅ App name in all 12 locales — and it is **two** names: Schlaumeise in German, Smartfinch elsewhere, with an artwork each
+- ✅ `README.md`, and the citation block with it
+- ✅ Launcher icons, both brands, generated from the PNG marks by `tools/build_launcher_icons.py`. Smartfinch is the one baked in; a German build swaps four lines
+- ⬜ `mkdocs.yml` and the files under `docs/user/`
+- ⬜ Store listings in `dev/store/` — there is no listing yet, and the README says so rather than linking one that does not exist
+- **Attribution obligations stay**, and have. The BirdNET model licence (`MODEL_LICENSE`), the classifier and geo-model names, the funding and partner sections and the Cornell / TU Chemnitz credit are untouched and still visible in the About screen. A children's app does not get to drop them.
 
 ---
 
@@ -799,6 +801,56 @@ The principle behind the correction is the one that should have been applied fir
 **One recording can be shared on its own**, from the clip player in the journal. The file itself, not a copy in an export format. That is the whole feature; none of the research chrome came back with it, and there is a test that says so.
 
 *What this leaves unchanged:* the day image (`LOG-11`) still renders date, stars and species and nothing else, and the place names of `LOG-13` still stop at its edge.
+
+### Rebranding — and the app turning out to have two names
+
+**In German the app is Schlaumeise; everywhere else it is Smartfinch.** They are not translations of one another: *Schlaumeise* is a tit and a pun on *Schlaumeier* that exists only in German, and a finch is not a tit. So this is not one wordmark with a swapped string — it is two brands with two pieces of artwork, and the app picks between them the way it picks every other string, by locale.
+
+*The failure that would be invisible:* the picture and the caption drifting apart, so a German child reads "Schlaumeise" under a finch. `AppLogo.assetFor` and `l10n.appTitle` are both driven by the locale, and there is a test that walks all twelve and asserts they agree.
+
+**SVG, not PNG.** The mark is drawn at 40 logical pixels in a settings row and 220 on the onboarding card; a raster asset would have to ship at the larger size to survive the larger use. `flutter_svg` is a new dependency and the first one added since the transition began — worth naming, because the alternative was six PNGs in three sizes each.
+
+**Where the name comes from now:**
+
+| | |
+|---|---|
+| Interface | `l10n.appTitle` — Schlaumeise in `app_de.arb`, Smartfinch in the other eleven |
+| Android launcher | `@string/app_name`, with `values-de/strings.xml` carrying the German one |
+| iOS launcher | `CFBundleDisplayName`, with `de.lproj/InfoPlist.strings` overriding it |
+| Logs, filenames | `AppConstants.appName` — a stable ASCII token, marked ⚠️ *not for the interface* |
+
+*Eleven strings still said "BirdNET Live"* — the onboarding welcome, the privacy description, the help intro, the data-clear failure and others. All twelve locales are rebranded. What deliberately stays is every mention of **BirdNET the model and the organisation**: the classifier's name, the geo-model, the taxonomy version, the funding and partners sections, the acceptable-use policy. Those are attribution and licensing, not branding.
+
+**The README was still BirdNET Live's** — "Professional bioacoustics in your pocket", a feature list headed by Point Count and ARU modes, store links to an app this is no longer, and a documentation site belonging to the upstream project. It now describes what this app is, says plainly that there is no store listing yet rather than linking one that does not exist, and points at the `docs/` directory rather than at the upstream site.
+
+**The launcher icon is the new bird**, once the PNG marks arrived. `tools/build_launcher_icons.py` turns each 2000² brand mark into the two things the platforms actually want, for **both** brands:
+
+- an **opaque** 1024² square for iOS and the legacy Android icon, composited onto the mark's own outer-rim colour rather than onto whatever the toolchain would have filled the transparency with;
+- a **transparent** adaptive foreground with the mark scaled into Android's safe zone, because a launcher crops roughly a quarter of that layer to whatever shape it prefers.
+
+The rim colour is **sampled from the artwork** rather than written down — `#262626` for Smartfinch, `#12253F` for Schlaumeise — which keeps the adaptive background matching the mark's edge when the artwork is redrawn. A mask that cuts into the badge then cuts into more of the same colour, so the crop is invisible whichever shape a launcher uses.
+
+⚠️ **This is the one place the two brands cannot both win.** A launcher icon is baked at build time and cannot follow the device language the way `AppLogo` does. Smartfinch is the default — it matches the package name, the application ID and eleven of the twelve locales — and a German-market build swaps four lines in `pubspec.yaml` for the `schlaumeise-` files and `#12253F`. Both sets are generated and committed, so that swap is a config change and not a redraw. A real answer for a German store release is a build flavour.
+
+*The old artwork went with it:* `app-icon.png`, its adaptive foreground and background, and `logo-birdnet-circle.png` had no reference left in `lib/` once the header stopped drawing a logo.
+
+*One asset is missing and the app works around it.* `smartfinch_logo_full.svg` — the bird-plus-wordmark lock-up — is in the tree; its Schlaumeise counterpart is not. `AppLogoStyle` therefore offers only the variants **both** brands have, because a style one of them is missing would render for a Czech child and throw for a German one, and nothing would reveal it until somebody set their phone to German. The onboarding hero uses the round mark, with the app's name already in text beneath it.
+
+### The season hint stopped naming the bird — a grammar bug in seven languages
+
+`PKT-17`'s sentence read "**Die** {species} ist normalerweise erst ab April hier." The article is the problem, and it is not a German problem: **`El`, `Le`, `Il`, `De`, `O`, `Die`** were all written into the sentence, and each of them is a guess about a noun that arrives at runtime from a taxonomy of thousands.
+
+German bird names take all three genders — *der* Zilpzalp, *die* Amsel, *das* Sumpfhuhn — so any article in the sentence is wrong for roughly two thirds of them. "Die Sumpfhuhn" is what that looks like on screen.
+
+**It is not fixable by choosing a better article, because no article is right for every noun.** It is fixable by not needing one — and the name was redundant anyway: the banner only ever renders directly *under* the species' own name, on the live detection card and on the species page. So the sentence lost the name and, with it, the article:
+
+> 🌱 **Früh dran!** Normalerweise erst ab April hier.
+
+*Article-free, pronoun-free, and shorter* — which for an eight-year-old is a gain, not a loss. All twelve locales were rewritten; Norwegian was already the only one that had dropped the article.
+
+**A test now holds the line.** It renders the banner in all twelve locales and asserts that none of the thirteen definite articles those languages reach for appears anywhere in the text. A future string that puts a species into a sentence has this problem waiting for it, and the guard is what makes that visible rather than shipped.
+
+⚠️ **The same sentence has a second grammar bug, which is not fixed.** `{month}` is rendered with `DateFormat.MMMM`, which yields the **nominative**: `апрель`, `kwiecień`, `duben`. Russian, Polish and Czech all need a case after the preposition — *с апреля*, *od kwietnia*, *od dubna* — so those three read as broken to a native speaker. This one cannot be dodged by rephrasing the way the article could, and hand-inflecting twelve month names in three languages I cannot check with a speaker is the same bet `SAM-11` declined to make. **It needs 36 short strings from someone who speaks them.**
 
 **~~A second home-screen redesign direction is being explored, not yet built.~~ Built — see the section above.** The sketch as it stood: Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 

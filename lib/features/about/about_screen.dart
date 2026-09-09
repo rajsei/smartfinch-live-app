@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/widgets/app_logo.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../core/constants/app_constants.dart';
@@ -37,17 +38,10 @@ class AboutScreen extends ConsumerWidget {
             Center(
               child: Column(
                 children: [
-                  ClipOval(
-                    child: Image.asset(
-                      'assets/images/app-icon.png',
-                      width: 80,
-                      height: 80,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                  AppLogo(size: 80, semanticLabel: l10n.appTitle),
                   const SizedBox(height: 12),
                   Text(
-                    AppConstants.appName,
+                    l10n.appTitle,
                     style: theme.textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),

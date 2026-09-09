@@ -25,6 +25,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
+import 'package:smartfinch/shared/widgets/app_logo.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../core/theme/app_semantic_colors.dart';
@@ -397,15 +398,7 @@ class _WelcomePage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(flex: 2),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(28),
-              child: Image.asset(
-                'assets/images/app-icon.png',
-                width: 112,
-                height: 112,
-                fit: BoxFit.cover,
-              ),
-            ),
+            AppLogo(size: 140, semanticLabel: l10n.appTitle),
             const SizedBox(height: 28),
             Text(
               l10n.onboardingWelcomeTitle,

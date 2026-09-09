@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="ic_launcher_background">#00000000</color>
+    <color name="ic_launcher_background">#262626</color>
 
     <!-- Quick Listen home-screen widget (light). Values are lifted straight
          from the app's light ColorScheme in lib/core/theme/app_theme.dart so

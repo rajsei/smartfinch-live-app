@@ -6,7 +6,11 @@ library;
 /// App-wide string constants.
 abstract final class AppConstants {
   /// Application display name.
-  static const String appName = 'BirdNET Live';
+  /// ⚠️ Not for the interface. The app has two names — **Schlaumeise** in
+  /// German, **Smartfinch** everywhere else — so anything a person reads
+  /// must come from `l10n.appTitle`. This one is for log lines, file name
+  /// prefixes and other places where a stable ASCII token is wanted.
+  static const String appName = 'Smartfinch';
 
   /// GitHub repository URL.
   static const String githubUrl =

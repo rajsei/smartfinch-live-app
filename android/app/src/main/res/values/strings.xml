@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- The launcher name. German gets its own in values-de. -->
+    <string name="app_name">Smartfinch</string>
     <!-- Home-screen widget picker label/description and button text. See
          QuickListenWidgetProvider.kt. "Live Mode" is kept in English in
          every locale per AGENTS.md's technical-term list. -->

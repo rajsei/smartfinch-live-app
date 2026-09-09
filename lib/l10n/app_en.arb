@@ -28,7 +28,7 @@
   "@about": {
     "description": "About screen title"
   },
-  "onboardingWelcomeTitle": "Welcome to BirdNET Live",
+  "onboardingWelcomeTitle": "Welcome to Smartfinch",
   "@onboardingWelcomeTitle": {
     "description": "Onboarding welcome screen title"
   },
@@ -40,7 +40,7 @@
   "@onboardingHowItWorksTitle": {
     "description": "Onboarding how it works screen title"
   },
-  "onboardingHowItWorksBody": "BirdNET Live continuously listens to your surroundings. It analyzes audio using an on-device artificial intelligence model to identify species in real-time. Detections are highlighted on a live scrolling spectrogram. Everything is processed locally, meaning it works entirely offline and protects your privacy.",
+  "onboardingHowItWorksBody": "Smartfinch continuously listens to your surroundings. It analyzes audio using an on-device artificial intelligence model to identify species in real-time. Detections are highlighted on a live scrolling spectrogram. Everything is processed locally, meaning it works entirely offline and protects your privacy.",
   "@onboardingHowItWorksBody": {
     "description": "Onboarding how it works body text"
   },
@@ -56,7 +56,7 @@
   "@onboardingPermissionsTitle": {
     "description": "Onboarding permissions screen title"
   },
-  "onboardingPermissionsBody": "BirdNET Live needs microphone access for audio capture and (optionally) location access for geotagging detections, GPS tracks in surveys, and location-based species filtering. Both can be revoked at any time in system settings.",
+  "onboardingPermissionsBody": "Smartfinch needs microphone access for audio capture and (optionally) location access for geotagging detections, GPS tracks in surveys, and location-based species filtering. Both can be revoked at any time in system settings.",
   "@onboardingPermissionsBody": {
     "description": "Onboarding permissions screen body text"
   },
@@ -348,7 +348,7 @@
   "@settingsDataCleared": {
     "description": "Snackbar message after clearing all data"
   },
-  "settingsDataClearFailed": "Some data could not be cleared. Please close BirdNET Live and try again.",
+  "settingsDataClearFailed": "Some data could not be cleared. Please close Smartfinch and try again.",
   "@settingsDataClearFailed": {
     "description": "Snackbar message when clearing all data fails"
   },
@@ -437,7 +437,7 @@
   "@aboutCredits": {
     "description": "Section title for the team that built BirdNET"
   },
-  "aboutCreditsDescription": "BirdNET Live is developed by the Cornell K. Lisa Yang Center for Conservation Bioacoustics at the Cornell Lab of Ornithology and Chemnitz University of Technology with support from the Museum für Naturkunde Berlin.",
+  "aboutCreditsDescription": "Smartfinch is developed by the Cornell K. Lisa Yang Center for Conservation Bioacoustics at the Cornell Lab of Ornithology and Chemnitz University of Technology with support from the Museum für Naturkunde Berlin.",
   "@aboutCreditsDescription": {
     "description": "Credits description"
   },
@@ -445,7 +445,7 @@
   "@aboutFunding": {
     "description": "Section title for the funding card on the About screen"
   },
-  "aboutFundingDescription": "The development of BirdNET Live is supported by the Deutsche Bundesstiftung Umwelt through the project RangerSound (project 39263/01).",
+  "aboutFundingDescription": "The development of Smartfinch is supported by the Deutsche Bundesstiftung Umwelt through the project RangerSound (project 39263/01).",
   "@aboutFundingDescription": {
     "description": "Funding statement on the About screen. Keep 'Deutsche Bundesstiftung Umwelt' and the project number as-is in every locale."
   },
@@ -2411,7 +2411,7 @@
   "@settingsHelpExportHtmlReport": {
     "description": "Help text for export HTML report setting"
   },
-  "settingsHelpExportAppMetadata": "When enabled, the export ZIP includes a `*.metadata.json` side-file with BirdNET Live provenance: app and model version, weather snapshot at the start of the session, and audio integrity warnings. Turn off to share only audio and the selected formats without any app-specific files.",
+  "settingsHelpExportAppMetadata": "When enabled, the export ZIP includes a `*.metadata.json` side-file with Smartfinch provenance: app and model version, weather snapshot at the start of the session, and audio integrity warnings. Turn off to share only audio and the selected formats without any app-specific files.",
   "@settingsHelpExportAppMetadata": {
     "description": "Help text for the include app metadata setting"
   },
@@ -3079,7 +3079,7 @@
     "description": "Metadata for surveyAlertBodyFirstInSession"
 
   },
-  "surveyAlertBodyFirstEver": "First detection ever in BirdNET Live",
+  "surveyAlertBodyFirstEver": "First detection ever in Smartfinch",
   "@surveyAlertBodyFirstEver": {
 
     "description": "Metadata for surveyAlertBodyFirstEver"
@@ -3458,7 +3458,7 @@
   "@helpTitle": {
     "description": "Help screen title and menu label"
   },
-  "helpIntro": "BirdNET Live is built around a small set of repeatable screens: Home, mode screens, Session Review, and Settings. This help page explains what the app is showing and where the main controls live.",
+  "helpIntro": "Smartfinch is built around a small set of repeatable screens: Home, mode screens, Session Review, and Settings. This help page explains what the app is showing and where the main controls live.",
   "@helpIntro": {
     "description": "Introduction paragraph on the help screen"
   },
@@ -3749,13 +3749,13 @@
   },
   "settingsExportAppMetadata": "Include app metadata",
   "@settingsExportAppMetadata": {
-    "description": "Checkbox: bundle the BirdNET Live metadata side-file inside the export ZIP"
+    "description": "Checkbox: bundle the Smartfinch metadata side-file inside the export ZIP"
   },
   "settingsPrivacy": "Privacy",
   "@settingsPrivacy": {
     "description": "Settings section header for third-party network gates"
   },
-  "settingsPrivacyDescription": "Choose which third-party services BirdNET Live may contact on your behalf. All toggles are off by default.",
+  "settingsPrivacyDescription": "Choose which third-party services Smartfinch may contact on your behalf. All toggles are off by default.",
   "@settingsPrivacyDescription": {
     "description": "Settings section subtitle"
   },
@@ -4563,7 +4563,7 @@
       }
     }
   },
-  "liveScreenHelpDetections": "Tap any species row to open the species details sheet. When you stop the session, BirdNET Live saves it and opens Session Review.",
+  "liveScreenHelpDetections": "Tap any species row to open the species details sheet. When you stop the session, Smartfinch saves it and opens Session Review.",
   "@liveScreenHelpDetections": {
     "description": "Explains the detection list on the Live Mode help overlay"
   },
@@ -5440,25 +5440,19 @@
   "@pointsSectionCollector": {
     "description": "Section label above the Collector ladder, once the year section exists beside it"
   },
-  "seasonHintEarly": "Early! The {species} is normally only here from {month}.",
+  "seasonHintEarly": "Early! Normally not here before {month}.",
   "@seasonHintEarly": {
     "description": "PKT-17: the species is here before its season normally starts — a phenology lesson in one sentence",
     "placeholders": {
-      "species": {
-        "type": "String"
-      },
       "month": {
         "type": "String"
       }
     }
   },
-  "seasonHintLate": "Still here! The {species} is normally gone after {month}.",
+  "seasonHintLate": "Still here! Normally gone after {month}.",
   "@seasonHintLate": {
     "description": "PKT-17: the species is still here after its season normally ends",
     "placeholders": {
-      "species": {
-        "type": "String"
-      },
       "month": {
         "type": "String"
       }

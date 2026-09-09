@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- The German name of the app. -->
+    <string name="app_name">Schlaumeise</string>
     <string name="quick_listen_widget_label">Schnell lauschen</string>
     <string name="quick_listen_widget_description">Direkt in den Live Mode wechseln und mit dem Zuhören beginnen.</string>
     <string name="quick_listen_widget_button">Zuhören starten</string>
