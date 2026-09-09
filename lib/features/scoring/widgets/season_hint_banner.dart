@@ -10,6 +10,23 @@
 // It reads as information rather than as a warning. Being early is not a
 // problem — it is the most interesting thing that can happen on a walk in
 // March.
+//
+// ### ⚠️ The sentence does not name the bird, and must not start to
+//
+// It used to: "Die {species} ist normalerweise erst ab April hier." The
+// article is the problem. German bird names take all three genders — *der*
+// Zilpzalp, *die* Amsel, *das* Sumpfhuhn — and the name arrives at runtime
+// from a taxonomy of thousands, so any article written into the sentence is
+// wrong for roughly two thirds of them. Seven of the twelve locales had the
+// same bug: `El`, `Le`, `Il`, `De`, `O`, `Die`.
+//
+// It is not fixable by choosing a better article, because there is no article
+// that is right for every noun. It is fixable by not needing one — and the
+// name is redundant anyway: this banner only ever renders directly under the
+// species' own name, on the detection card and on the species page.
+//
+// So: no name in the sentence, no article, no gender. Any future string that
+// wants to put a species into a sentence has this problem waiting for it.
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -30,14 +47,10 @@ class SeasonHintBanner extends ConsumerWidget {
   const SeasonHintBanner({
     super.key,
     required this.scientificName,
-    required this.commonName,
     this.compact = false,
   });
 
   final String scientificName;
-
-  /// The name the sentence uses — the child's language, not Latin.
-  final String commonName;
 
   /// Drops the padding and the background, for use inside a detection card.
   final bool compact;
@@ -57,22 +70,16 @@ class SeasonHintBanner extends ConsumerWidget {
     );
     if (hint == null) return const SizedBox.shrink();
 
-    return SeasonHintText(hint: hint, commonName: commonName, compact: compact);
+    return SeasonHintText(hint: hint, compact: compact);
   }
 }
 
 /// The rendered sentence, separated from the lookup so it can be tested with a
 /// hint rather than with a loaded geo model.
 class SeasonHintText extends StatelessWidget {
-  const SeasonHintText({
-    super.key,
-    required this.hint,
-    required this.commonName,
-    this.compact = false,
-  });
+  const SeasonHintText({super.key, required this.hint, this.compact = false});
 
   final SeasonHint hint;
-  final String commonName;
   final bool compact;
 
   @override
@@ -85,8 +92,8 @@ class SeasonHintText extends StatelessWidget {
     ).format(DateTime(2026, hint.relevantMonth));
 
     final (emoji, text) = switch (hint.phase) {
-      SeasonPhase.early => ('🌱', l10n.seasonHintEarly(commonName, month)),
-      SeasonPhase.late => ('🍂', l10n.seasonHintLate(commonName, month)),
+      SeasonPhase.early => ('🌱', l10n.seasonHintEarly(month)),
+      SeasonPhase.late => ('🍂', l10n.seasonHintLate(month)),
     };
 
     final line = Row(

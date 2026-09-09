@@ -328,7 +328,6 @@ class DetectionTile extends ConsumerWidget {
                       // which is most species most of the time.
                       SeasonHintBanner(
                         scientificName: detection.scientificName,
-                        commonName: displayName,
                         compact: true,
                       ),
                     ],

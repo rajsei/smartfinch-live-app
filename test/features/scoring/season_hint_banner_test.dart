@@ -20,21 +20,15 @@ void main() {
   Future<void> pump(
     WidgetTester tester,
     SeasonHint hint, {
-    String species = 'Barn swallow',
+    Locale locale = const Locale('en'),
     bool compact = false,
   }) async {
     await tester.pumpWidget(
       MaterialApp(
-        locale: const Locale('en'),
+        locale: locale,
         localizationsDelegates: AppLocalizations.localizationsDelegates,
         supportedLocales: AppLocalizations.supportedLocales,
-        home: Scaffold(
-          body: SeasonHintText(
-            hint: hint,
-            commonName: species,
-            compact: compact,
-          ),
-        ),
+        home: Scaffold(body: SeasonHintText(hint: hint, compact: compact)),
       ),
     );
     await tester.pumpAndSettle();
@@ -47,15 +41,10 @@ void main() {
       seasonEndMonth: 9,
     );
 
-    testWidgets('names the species and the month it normally arrives', (
-      tester,
-    ) async {
+    testWidgets('names the month it normally arrives', (tester) async {
       await pump(tester, early);
 
-      expect(
-        find.text('Early! The Barn swallow is normally only here from May.'),
-        findsOneWidget,
-      );
+      expect(find.text('Early! Normally not here before May.'), findsOneWidget);
     });
 
     testWidgets('the month is a word, not a number', (tester) async {
@@ -89,9 +78,7 @@ void main() {
       await pump(tester, late);
 
       expect(
-        find.text(
-          'Still here! The Barn swallow is normally gone after September.',
-        ),
+        find.text('Still here! Normally gone after September.'),
         findsOneWidget,
       );
     });
@@ -150,6 +137,72 @@ void main() {
       final decoration = panel.decoration! as BoxDecoration;
       expect(decoration.color, isNot(scheme.error));
       expect(decoration.color, isNot(scheme.errorContainer));
+    });
+  });
+
+  group('⚠️ the sentence never names the bird', () {
+    // It used to: "Die {species} ist normalerweise erst ab April hier." German
+    // bird names take all three genders — *der* Zilpzalp, *die* Amsel, *das*
+    // Sumpfhuhn — and the name arrives at runtime from a taxonomy of
+    // thousands, so a written-in article is wrong for most of them. Seven of
+    // the twelve locales had it: El, Le, Il, De, O, Die, The.
+    //
+    // There is no article that is right for every noun, so the fix is to need
+    // none. These tests are what stops a name being put back.
+    const early = SeasonHint(
+      phase: SeasonPhase.early,
+      seasonStartMonth: 4,
+      seasonEndMonth: 9,
+    );
+
+    testWidgets('no article precedes anything, in any locale', (tester) async {
+      // Every definite article the twelve locales would have reached for.
+      const articles = [
+        'The ',
+        'Die ',
+        'Der ',
+        'Das ',
+        'El ',
+        'La ',
+        'Le ',
+        'Il ',
+        'Lo ',
+        'De ',
+        'Het ',
+        'O ',
+        'A ',
+      ];
+
+      for (final locale in AppLocalizations.supportedLocales) {
+        await pump(tester, early, locale: locale);
+
+        final text = tester
+            .widgetList<Text>(find.byType(Text))
+            .map((t) => t.data ?? '')
+            .join(' ');
+
+        for (final article in articles) {
+          expect(
+            text.contains(article),
+            isFalse,
+            reason: '${locale.languageCode} says "$article" before something',
+          );
+        }
+      }
+    });
+
+    testWidgets('and the name is not in it either', (tester) async {
+      // The banner only ever renders directly under the species' own name, so
+      // repeating it was redundant as well as ungrammatical.
+      await pump(tester, early);
+
+      final text = tester
+          .widgetList<Text>(find.byType(Text))
+          .map((t) => t.data ?? '')
+          .join(' ');
+
+      expect(text, contains('Normally'));
+      expect(text.toLowerCase(), isNot(contains('swallow')));
     });
   });
 }

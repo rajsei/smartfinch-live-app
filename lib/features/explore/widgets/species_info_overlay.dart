@@ -335,10 +335,7 @@ class _SpeciesInfoSheetState extends ConsumerState<_SpeciesInfoSheet> {
                 // Directly under the curve, because it is the sentence that
                 // turns the curve into a lesson (PKT-17). Renders nothing for
                 // a species that is in season, which is most of them.
-                SeasonHintBanner(
-                  scientificName: widget.scientificName,
-                  commonName: widget.commonName,
-                ),
+                SeasonHintBanner(scientificName: widget.scientificName),
 
                 // ── External links ───────────────────────────────
                 if (_detail != null) ...[
