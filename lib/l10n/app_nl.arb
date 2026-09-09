@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Sterrenverzamelaar {tier}",
   "achievementStarCollectorCondition": "{count} sterren verzameld",
   "badgeUnlockedTitle": "Badge behaald!",
-  "badgeUnlockedTitleMany": "{count} badges behaald!"
+  "badgeUnlockedTitleMany": "{count} badges behaald!",
+  "speciesYourHistory": "Jij en deze vogel",
+  "speciesHeardTimesOnDays": "{times} keer gehoord op {days} dagen",
+  "speciesLastHeardOn": "Laatste keer: {date}",
+  "speciesFirstHeardOn": "Allereerste keer: {date}",
+  "speciesHeardAt": "Bij: {places}",
+  "speciesHowItSounds": "Hoe hij klinkt"
 }

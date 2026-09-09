@@ -216,7 +216,7 @@ Nothing in BirdNET Live resembles these. This is the actual Smartfinch project.
 >
 > ⚠️ **Unrelated but urgent:** `assets/species_images/` and `assets/species_data/` are gitignored build outputs, and a fresh clone has neither. Until `tools/build_species_bundle.py` has run, **every species falls back to the placeholder and no profile text appears at all** — which looks exactly like a bug in the Collection. Run the bundle before judging any species UI.
 >
-> **The editorial register is now the dominant non-code risk.** The bundled species descriptions are written for adults, in 11 locales. `SAM-11` asks for 2–3 child-friendly sentences plus a call mnemonic per species — and under D5 the species pool is no longer birds only. Under D4 the l10n discipline in `AGENTS.md` means every new Smartfinch UI string needs 12 translations. Recommendation unchanged: German first, English second, everything else keeps the adult text until someone funds the rewrite.
+> **The editorial register is now the dominant non-code risk.** The bundled species descriptions are written for adults, in 11 locales. `SAM-11` asks for 2–3 child-friendly sentences plus a call mnemonic per species — and under D5 the species pool is no longer birds only. Under D4 the l10n discipline in `AGENTS.md` means every new Smartfinch UI string needs 12 translations. Recommendation unchanged: German first, English second, everything else keeps the adult text until someone funds the rewrite. **Status:** the mechanism shipped with `SAM-11` and 24 species are written in both languages; the remaining ~100 are writing, not engineering, and the risk is unchanged in kind — only smaller.
 
 ---
 
@@ -638,6 +638,29 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 *The two restraints are what the tests are about.* `BadgeWatcher` returns nothing on its first look: the badge list is derived from all of history (`AUS-12`), so a first derivation reports everything ever earned, and celebrating that would mean opening the app after a month away and watching forty popups. And it throttles — the rules read the whole score journal, so running them after every bird would put a year of history through a query on the audio thread's heels. A badge landing twenty seconds late is still a surprise; a first find has to be immediate, which is why that one is pushed by the score board rather than polled.
 
 *Not built:* 🌧️ **Bad weather hero**, the tenth row of 3.2's daily table. It is `AUS-11`'s, at a different priority, and it needs the weather consent gate — a child who declines weather simply never earns it. The catalogue is otherwise complete.
+
+**`SAM-06` and `SAM-11` are done** ✅ — 22 tests, with one caveat on `SAM-11` that is stated below rather than buried.
+
+**`SAM-06` · the personal half, and a stale tile that had to go first.** The species page already showed "you have detected this N times, last seen …" — reading `sessionListProvider`, the **old JSON session library**. On a Smartfinch install that panel could only ever say nothing, because detections live in Drift now. It is the same class of bug as the Explore ticks in phase 2, in the one place a child goes to look at *their own* history. Replaced by `CollectionRepository.personalStatsFor`, which reads the real tables.
+
+**It reads across both layers on purpose.** The raw `Detections` answer "how often, when, where" — *including* the ones heard while scoring was paused, because a bird heard in test mode was still heard (`LOG-15`). The scoring layer answers "is it collected" and "what has it been worth". Reading only the second would tell a child they have never heard a robin on the evening they spent listening to one. There is a test with that exact shape.
+
+⚠️ **"Where" is the name the child typed** (`LOG-13`), never a coordinate. The app coarsens location to a 0.1° cell before storing anything (`NFA-08`) and the shared day image carries no place at all (`LOG-11`, `KID-07`) — a species page that quietly reintroduced a location would undo all three, and nothing on screen would look wrong. Tested by asserting that no `"50.8,12.9"`-shaped string reaches the widget.
+
+*A bird never heard gets no panel at all.* An empty box reading "0 times" would turn the album into a report card about everything the child has not managed.
+
+**`SAM-11` · the mechanism is complete, the editorial work is not, and that distinction is the honest one.** The requirement is a **rewrite, not a translation** — 130 species × 3 sentences — and the specification says so twice. What shipped:
+
+- `ChildProfileService` and `assets/species_profiles/child_profiles.json`, hand-written, keyed by scientific name → locale → `{ text, call }`. Its own directory, because `assets/species_data/` holds the *generated* bundle and is gitignored wholesale — an authored file put there would never have been committed, which is how it was first written and how it was caught.
+- The species page renders the child text **instead of** the adult paragraph where one exists. Two descriptions of the same bird would be two things to read, and the second one is the one written for grown-ups.
+- The call mnemonic gets its own block (`SAM-12`), because it is the one part used *outdoors* — everything above it is read on the sofa.
+- **24 species written, German and English.** The commonest garden, park and woodland birds a child here actually hears. Every other species falls back to the bundled adult description, which is the ordinary case and is tested as such.
+
+*Two deliberate omissions, both of which look like gaps.* A locale with no rewrite returns **null rather than English** — `SET-10`'s recommendation, and the right one: a Czech child reading an English paragraph is worse served than one reading the Czech adult description. And a species gets **no mnemonic** unless a real one exists; inventing one would teach a child something false about a bird, which is worse than saying nothing.
+
+*Why a separate asset rather than a twelfth bundle locale:* different kind of text, different lifecycle. The adult descriptions are generated by `tools/build_species_bundle.py` from the taxonomy; these are written by a person, one species at a time. Merging them would let a bundle regeneration silently overwrite editorial work.
+
+**What remains on `SAM-11` is writing, not engineering.** Roughly a hundred more species in two languages. The shape is fixed, there is a test that every shipped profile has both languages and is the right length, and adding one is a JSON entry.
 
 **A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 

@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Collezionista di stelle {tier}",
   "achievementStarCollectorCondition": "{count} stelle raccolte",
   "badgeUnlockedTitle": "Distintivo ottenuto!",
-  "badgeUnlockedTitleMany": "{count} distintivi ottenuti!"
+  "badgeUnlockedTitleMany": "{count} distintivi ottenuti!",
+  "speciesYourHistory": "Tu e questo uccello",
+  "speciesHeardTimesOnDays": "Sentito {times} volte in {days} giorni",
+  "speciesLastHeardOn": "L'ultima volta: {date}",
+  "speciesFirstHeardOn": "La prima volta in assoluto: {date}",
+  "speciesHeardAt": "A: {places}",
+  "speciesHowItSounds": "Come suona"
 }

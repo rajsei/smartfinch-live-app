@@ -37,6 +37,7 @@ import '../../core/theme/score_colors.dart';
 import '../../core/services/asset_pack_service.dart';
 import '../../shared/models/taxonomy_species.dart';
 import '../../shared/providers/settings_providers.dart';
+import '../../shared/services/child_profile_service.dart';
 import '../../shared/services/species_description_service.dart';
 import '../../shared/services/taxonomy_service.dart';
 import '../../core/services/location_service.dart';
@@ -178,6 +179,15 @@ final speciesDescriptionServiceProvider = Provider<SpeciesDescriptionService>((
   ref,
 ) {
   return SpeciesDescriptionService();
+});
+
+/// The hand-written child-register profiles (`SAM-11`).
+///
+/// Separate from the bundled adult descriptions above because it is a
+/// different kind of text with a different lifecycle: those are generated
+/// from the taxonomy, these are written one species at a time.
+final childProfileServiceProvider = Provider<ChildProfileService>((ref) {
+  return ChildProfileService();
 });
 
 // ---------------------------------------------------------------------------

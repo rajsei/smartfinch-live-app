@@ -1,0 +1,257 @@
+{
+  "_readme": [
+    "SAM-11 — species profiles written for a child of 8-13, not for an adult.",
+    "This is a rewrite, not a translation: the bundled adult descriptions stay",
+    "where they are and are used for every species not listed here.",
+    "",
+    "Per SET-10's recommendation the register is German first, English second.",
+    "The other ten UI locales fall back to the adult description until someone",
+    "funds the rewrite — a machine translation of a deliberately chosen",
+    "register is worse than the honest adult text.",
+    "",
+    "Shape: scientific name -> locale -> { text, call }.",
+    "  text  2-3 sentences. What it looks like, and one thing worth knowing.",
+    "  call  How to recognise the voice (SAM-12). Omitted where no honest",
+    "        mnemonic exists - an invented one would teach something false."
+  ],
+  "Turdus merula": {
+    "de": {
+      "text": "Das Männchen ist tiefschwarz mit einem orangegelben Schnabel, das Weibchen schlicht braun. Amseln singen gern von hohen Warten – Dachfirsten, Antennen, Baumspitzen – und sind oft die Ersten am Morgen und die Letzten am Abend.",
+      "call": "Ruhige, flötende Melodien, als würde jemand gemütlich vor sich hin pfeifen. Am Schluss oft ein leises Kratzen."
+    },
+    "en": {
+      "text": "The male is glossy black with an orange-yellow bill; the female is plain brown. Blackbirds like to sing from high perches — roof ridges, aerials, treetops — and are often the first voice in the morning and the last in the evening.",
+      "call": "Calm, flute-like phrases, like someone whistling a made-up tune. Often ends in a scratchy little twitter."
+    }
+  },
+  "Erithacus rubecula": {
+    "de": {
+      "text": "Klein, rundlich, mit leuchtend oranger Brust und Stirn. Rotkehlchen sind erstaunlich zutraulich: Wer im Garten gräbt, bekommt oft eines zu Besuch, das auf Würmer wartet. Sie singen fast das ganze Jahr, manchmal sogar nachts unter einer Straßenlaterne.",
+      "call": "Ein dünner, perlender, etwas wehmütiger Gesang, der immer wieder neu ansetzt."
+    },
+    "en": {
+      "text": "Small and round, with a bright orange breast and forehead. Robins are surprisingly tame: dig in a garden and one often turns up to wait for worms. They sing almost all year, sometimes even at night under a streetlight.",
+      "call": "A thin, silvery, slightly wistful song that keeps starting over."
+    }
+  },
+  "Parus major": {
+    "de": {
+      "text": "Die größte heimische Meise: schwarzer Kopf, weiße Wangen, gelber Bauch mit einem schwarzen Streifen in der Mitte. Beim Männchen ist dieser Streifen breiter als beim Weibchen. Kohlmeisen sind laut, neugierig und die häufigsten Gäste am Futterhäuschen.",
+      "call": "Ein zweisilbiges „zi-zi-bäh, zi-zi-bäh\", das an eine quietschende Fahrradpumpe erinnert."
+    },
+    "en": {
+      "text": "The biggest tit here: black head, white cheeks, yellow belly with a black stripe down the middle. The stripe is wider on the male than on the female. Great tits are loud, curious and the commonest visitor to a bird feeder.",
+      "call": "A two-note \"tea-cher, tea-cher\", a bit like a squeaky bicycle pump."
+    }
+  },
+  "Cyanistes caeruleus": {
+    "de": {
+      "text": "Winzig, mit blauer Kappe, blauen Flügeln und gelbem Bauch. Blaumeisen turnen kopfüber an den dünnsten Zweigen, weil sie dort an Insekten kommen, die für schwerere Vögel unerreichbar sind.",
+      "call": "Ein paar hohe Töne und dann ein schneller, klirrender Triller."
+    },
+    "en": {
+      "text": "Tiny, with a blue cap, blue wings and a yellow belly. Blue tits clamber upside down on the thinnest twigs, because that is where they reach insects heavier birds cannot get to.",
+      "call": "A couple of high notes and then a fast, tinkling trill."
+    }
+  },
+  "Passer domesticus": {
+    "de": {
+      "text": "Der Vogel, der am liebsten dort wohnt, wo Menschen wohnen: unter Dachziegeln, in Hecken, auf Marktplätzen. Männchen haben eine graue Kappe und einen schwarzen Latz, Weibchen sind unauffällig braun gestreift. Spatzen sind fast nie allein unterwegs.",
+      "call": "Ein ständiges, gesprächiges „tschilp, tschilp\" aus dem Inneren einer Hecke."
+    },
+    "en": {
+      "text": "The bird that likes living where people live: under roof tiles, in hedges, around market squares. Males have a grey cap and a black bib, females are quietly streaked brown. Sparrows are almost never on their own.",
+      "call": "A constant, chatty \"cheep, cheep\" from somewhere inside a hedge."
+    }
+  },
+  "Fringilla coelebs": {
+    "de": {
+      "text": "Das Männchen hat eine blaugraue Kappe und eine rostrote Brust, im Flug leuchten weiße Binden auf den Flügeln. Buchfinken singen von einem festen Platz aus, und Vögel aus verschiedenen Gegenden singen ein klein wenig anders – so etwas wie einen Dialekt.",
+      "call": "Ein Lauf, der schneller wird und mit einem entschlossenen Schnörkel endet – wie ein Anlauf mit Absprung."
+    },
+    "en": {
+      "text": "The male has a blue-grey cap and a rusty-pink breast, with white flashes on the wings in flight. Chaffinches sing from a favourite perch, and birds from different areas sing slightly differently — something like an accent.",
+      "call": "A run of notes that speeds up and ends in a decided flourish — like a run-up and a jump."
+    }
+  },
+  "Phylloscopus collybita": {
+    "de": {
+      "text": "Ein kleiner, olivgrüner Vogel ohne auffällige Zeichnung – kaum vom Fitis zu unterscheiden, außer am Gesang. Zilpzalpe gehören zu den ersten Zugvögeln, die im Frühjahr zurückkommen.",
+      "call": "Er singt seinen eigenen Namen: „zilp-zalp-zilp-zalp\", in unregelmäßiger Reihenfolge."
+    },
+    "en": {
+      "text": "A small olive-green bird with no obvious markings — almost impossible to tell from a willow warbler except by voice. Chiffchaffs are among the first migrants back in spring.",
+      "call": "It sings its own name: \"chiff-chaff-chiff-chaff\", in no fixed order."
+    }
+  },
+  "Sitta europaea": {
+    "de": {
+      "text": "Blaugrau oben, orange unten, mit einem schwarzen Strich durchs Auge. Der Kleiber ist der einzige Vogel bei uns, der kopfüber einen Stamm hinunterlaufen kann. Ist ihm ein Nistloch zu groß, mauert er es mit Lehm passend zu.",
+      "call": "Laute, klare Pfiffe – „vit vit vit\" –, die durch den ganzen Wald tragen."
+    },
+    "en": {
+      "text": "Blue-grey above, orange below, with a black stripe through the eye. The nuthatch is the only bird here that can walk head-first down a tree trunk. If a nest hole is too big, it walls it up with mud until it fits.",
+      "call": "Loud, clear whistles — \"vit vit vit\" — that carry right through a wood."
+    }
+  },
+  "Dendrocopos major": {
+    "de": {
+      "text": "Schwarz-weiß gemustert mit leuchtend rotem Unterschwanz; das Männchen hat zusätzlich einen roten Fleck im Nacken. Das Trommeln ist keine Nahrungssuche, sondern ein Ruf: Es ersetzt den Gesang und sagt anderen Spechten, wem dieser Baum gehört.",
+      "call": "Eine kurze, schnelle Trommelwirbel-Serie, dazwischen ein scharfes „kick\"."
+    },
+    "en": {
+      "text": "Boldly black and white with a bright red patch under the tail; the male has a red spot on the nape as well. The drumming is not feeding — it is a call. It replaces song and tells other woodpeckers whose tree this is.",
+      "call": "A short, very fast drum roll, with a sharp \"kick\" in between."
+    }
+  },
+  "Pica pica": {
+    "de": {
+      "text": "Schwarz-weiß mit einem langen Schwanz, der im Licht grün und violett schimmert. Elstern sind ausgesprochen klug – sie erkennen sich im Spiegel, was sonst kaum ein Tier kann.",
+      "call": "Ein hartes, ratterndes Schackern, wie eine Ratsche."
+    },
+    "en": {
+      "text": "Black and white with a long tail that shines green and purple in the light. Magpies are remarkably clever — they recognise themselves in a mirror, which very few animals can do.",
+      "call": "A hard, rattling chatter, like a football rattle."
+    }
+  },
+  "Corvus corone": {
+    "de": {
+      "text": "Ganz schwarz, kräftig, mit schwerem Schnabel. Rabenkrähen lösen Aufgaben, an denen viele Tiere scheitern: Sie biegen Draht zu Haken und legen harte Nüsse auf die Straße, damit Autos sie knacken.",
+      "call": "Ein raues, tiefes „kraah\", meist drei Mal hintereinander."
+    },
+    "en": {
+      "text": "All black, sturdy, with a heavy bill. Carrion crows solve problems that defeat most animals: they bend wire into hooks, and drop hard nuts onto roads so cars crack them open.",
+      "call": "A harsh, deep \"kraah\", usually three times in a row."
+    }
+  },
+  "Columba palumbus": {
+    "de": {
+      "text": "Die größte Taube bei uns, grau mit einem weißen Fleck am Hals und weißen Streifen auf den Flügeln. Beim Auffliegen klatschen die Flügel laut – ein Warnsignal für alle anderen in der Nähe.",
+      "call": "Ein fünfsilbiges, verschlafenes Gurren, das mittendrin abbricht."
+    },
+    "en": {
+      "text": "The biggest pigeon here, grey with a white neck patch and white stripes on the wings. When it takes off, its wings clatter loudly — a warning to everything else nearby.",
+      "call": "A sleepy five-note coo that breaks off in the middle."
+    }
+  },
+  "Sturnus vulgaris": {
+    "de": {
+      "text": "Aus der Ferne schwarz, aus der Nähe grün und violett glänzend mit hellen Punkten. Stare ahmen nach, was sie hören – andere Vögel, aber auch Handyklingeln oder eine Autotür. Im Herbst fliegen sie zu Tausenden in Wolken, die die Form wechseln.",
+      "call": "Ein wildes Durcheinander aus Pfiffen, Knarren und geklauten Geräuschen."
+    },
+    "en": {
+      "text": "Black from a distance, but close up green and purple with pale spots. Starlings copy what they hear — other birds, but also phone ringtones and car doors. In autumn they fly in clouds of thousands that keep changing shape.",
+      "call": "A wild jumble of whistles, creaks and stolen noises."
+    }
+  },
+  "Troglodytes troglodytes": {
+    "de": {
+      "text": "Winzig, rund, rostbraun, mit einem kurzen Schwanz, den er steil nach oben stellt. Der Zaunkönig ist einer der kleinsten Vögel Europas und einer der lautesten – für seine Größe singt kein Vogel kräftiger.",
+      "call": "Ein überraschend lautes, schmetterndes Trillern aus dem Gebüsch."
+    },
+    "en": {
+      "text": "Tiny, round and rusty brown, with a short tail held straight up. The wren is one of Europe's smallest birds and one of its loudest — for its size, nothing sings harder.",
+      "call": "A startlingly loud, rattling burst of song from inside a bush."
+    }
+  },
+  "Turdus philomelos": {
+    "de": {
+      "text": "Braun oben, mit dunklen, pfeilförmigen Flecken auf heller Brust – kleiner und zierlicher als eine Amsel. Singdrosseln haben oft einen „Amboss\": einen bestimmten Stein, auf dem sie Schneckenhäuser aufschlagen.",
+      "call": "Jede Strophe wird zwei- oder dreimal wiederholt – daran erkennt man sie sicher."
+    },
+    "en": {
+      "text": "Brown above, with dark arrowhead spots on a pale breast — smaller and neater than a blackbird. Song thrushes often keep an \"anvil\": a particular stone they use to smash snail shells open.",
+      "call": "Every phrase is repeated two or three times — that is how to be sure it is this one."
+    }
+  },
+  "Carduelis carduelis": {
+    "de": {
+      "text": "Auffällig bunt: rotes Gesicht, schwarz-weißer Kopf und ein leuchtend gelbes Band auf jedem Flügel. Der schmale Schnabel ist dafür gemacht, Samen aus Disteln zu ziehen, an die andere Vögel nicht herankommen.",
+      "call": "Ein klingelndes, perlendes Plaudern, oft aus einem kleinen Trupp."
+    },
+    "en": {
+      "text": "Strikingly colourful: a red face, a black-and-white head and a bright yellow bar on each wing. The narrow bill is built for pulling seeds out of thistles that other birds cannot reach.",
+      "call": "A tinkling, liquid chatter, usually from a small group."
+    }
+  },
+  "Chloris chloris": {
+    "de": {
+      "text": "Kräftig gebaut, olivgrün mit gelben Kanten an Flügeln und Schwanz. Der dicke Schnabel knackt harte Samen, für die andere Finken zu schwach sind.",
+      "call": "Ein langgezogenes, nasales „dschüüüh\", das klingt, als wäre der Vogel leicht genervt."
+    },
+    "en": {
+      "text": "Solidly built, olive-green with yellow edges to the wings and tail. The thick bill cracks hard seeds that other finches cannot manage.",
+      "call": "A long, nasal \"dweeez\" that sounds slightly annoyed."
+    }
+  },
+  "Sylvia atricapilla": {
+    "de": {
+      "text": "Unscheinbar grau – bis auf die Kappe: beim Männchen schwarz, beim Weibchen rotbraun. Deshalb heißt auch das Weibchen Mönchsgrasmücke, obwohl seine Kappe gar nicht schwarz ist.",
+      "call": "Beginnt kratzig und geplaudert und endet in klaren, flötenden Tönen."
+    },
+    "en": {
+      "text": "Plain grey apart from the cap: black on the male, red-brown on the female. That is why the female is still called a blackcap even though her cap is not black at all.",
+      "call": "Starts scratchy and chattering, then opens out into clear flute-like notes."
+    }
+  },
+  "Apus apus": {
+    "de": {
+      "text": "Sichelförmige Flügel, ganz dunkel, fast immer in der Luft. Mauersegler fressen, trinken, schlafen und paaren sich im Flug – auf dem Boden landen sie nur zum Brüten. Ein junger Mauersegler kann nach dem Ausfliegen zwei Jahre am Stück fliegen.",
+      "call": "Schrille, lange Schreie von Gruppen, die im Sommerabend um die Häuser jagen."
+    },
+    "en": {
+      "text": "Scythe-shaped wings, all dark, almost always in the air. Swifts eat, drink, sleep and mate on the wing — they land only to nest. A young swift can stay airborne for two years after it leaves the nest.",
+      "call": "Long screaming calls from parties chasing round the houses on summer evenings."
+    }
+  },
+  "Hirundo rustica": {
+    "de": {
+      "text": "Blauschwarz oben, hell unten, mit rotbrauner Kehle und zwei langen Spießen am Schwanz. Rauchschwalben bauen ihre Nester aus Lehmkügelchen, am liebsten in Ställen und Scheunen, und kehren oft jahrelang zum selben Nest zurück.",
+      "call": "Ein schnelles, fröhliches Gezwitscher, das in einem trockenen Schnarren endet."
+    },
+    "en": {
+      "text": "Blue-black above, pale below, with a red-brown throat and two long streamers on the tail. Barn swallows build their nests from pellets of mud, by preference in stables and barns, and often come back to the same nest for years.",
+      "call": "Fast, cheerful twittering that ends in a dry rattle."
+    }
+  },
+  "Cuculus canorus": {
+    "de": {
+      "text": "Schlank, grau, im Flug leicht mit einem Sperber zu verwechseln. Kuckucke bauen kein Nest: Das Weibchen legt seine Eier einzeln in die Nester anderer Vögel, und der junge Kuckuck wirft deren Eier hinaus.",
+      "call": "Er ruft seinen eigenen Namen – „kuck-uck\" – und man hört ihn viel öfter, als man ihn sieht."
+    },
+    "en": {
+      "text": "Slim and grey, easily mistaken for a sparrowhawk in flight. Cuckoos build no nest: the female lays her eggs one at a time in other birds' nests, and the young cuckoo pushes their eggs out.",
+      "call": "It calls its own name — \"cuck-oo\" — and is heard far more often than it is seen."
+    }
+  },
+  "Strix aluco": {
+    "de": {
+      "text": "Die häufigste Eule bei uns, rundköpfig, mit tiefschwarzen Augen. Waldkäuze jagen fast lautlos: Die Kanten ihrer Federn sind ausgefranst, was den Luftzug bricht und den Flug still macht.",
+      "call": "Das lange „huu – huhuhuuu\" ist das Männchen; das scharfe „kuwitt\" ist das Weibchen."
+    },
+    "en": {
+      "text": "The commonest owl here, round-headed, with deep black eyes. Tawny owls hunt almost silently: the edges of their feathers are frayed, which breaks up the airflow and hushes the flight.",
+      "call": "The long \"hoo — hoo-hoo-hooo\" is the male; the sharp \"ke-wick\" is the female."
+    }
+  },
+  "Garrulus glandarius": {
+    "de": {
+      "text": "Rosabraun mit einem leuchtend blau gestreiften Fleck am Flügel und weißem Bürzel. Eichelhäher vergraben im Herbst Tausende Eicheln als Vorrat – und weil sie nicht alle wiederfinden, pflanzen sie nebenbei ganze Eichenwälder.",
+      "call": "Ein rauer, kreischender Schrei, oft die erste Warnung im Wald, dass jemand kommt."
+    },
+    "en": {
+      "text": "Pinkish brown with a bright blue barred patch on the wing and a white rump. Jays bury thousands of acorns each autumn — and because they never find them all again, they plant whole oak woods by accident.",
+      "call": "A harsh screech, often the first warning in a wood that somebody is coming."
+    }
+  },
+  "Pyrrhula pyrrhula": {
+    "de": {
+      "text": "Kräftiger Finkenschnabel, schwarze Kappe; das Männchen hat eine leuchtend rosarote Brust, das Weibchen eine graubraune. Gimpel sind auffallend still und bleiben oft paarweise zusammen, auch im Winter.",
+      "call": "Ein weicher, trauriger Pfiff – „djü\" –, viel leiser, als man bei diesem Vogel erwartet."
+    },
+    "en": {
+      "text": "A stout finch bill and a black cap; the male has a glowing rose-red breast, the female a grey-brown one. Bullfinches are noticeably quiet and often stay together in pairs, even in winter.",
+      "call": "A soft, sad piping \"deu\" — far quieter than you would expect from this bird."
+    }
+  }
+}

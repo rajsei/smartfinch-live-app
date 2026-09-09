@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Stjernesamler {tier}",
   "achievementStarCollectorCondition": "{count} stjerner samlet",
   "badgeUnlockedTitle": "Merke oppnådd!",
-  "badgeUnlockedTitleMany": "{count} merker oppnådd!"
+  "badgeUnlockedTitleMany": "{count} merker oppnådd!",
+  "speciesYourHistory": "Du og denne fuglen",
+  "speciesHeardTimesOnDays": "Hørt {times} ganger på {days} dager",
+  "speciesLastHeardOn": "Sist: {date}",
+  "speciesFirstHeardOn": "Aller første gang: {date}",
+  "speciesHeardAt": "På: {places}",
+  "speciesHowItSounds": "Sånn høres den ut"
 }

@@ -20,6 +20,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 
+import '../../../shared/services/child_profile_service.dart';
+import '../../collection/collection_providers.dart';
+
 import '../../../core/theme/app_theme.dart';
 import '../../../core/theme/score_colors.dart';
 import '../../../shared/models/taxonomy_species.dart';
@@ -31,7 +34,6 @@ import '../explore_providers.dart';
 import '../explore_tier.dart';
 import '../../inference/geo_model.dart';
 import '../../history/global_species_history.dart';
-import '../../live/live_providers.dart';
 import 'pick_wikipedia_url.dart';
 
 /// Shows a modal bottom sheet with detailed species information.
@@ -77,6 +79,10 @@ class _SpeciesInfoSheet extends ConsumerStatefulWidget {
 class _SpeciesInfoSheetState extends ConsumerState<_SpeciesInfoSheet> {
   TaxonomySpecies? _detail;
   String? _description;
+
+  /// The child-register rewrite, where one exists (`SAM-11`).
+  ChildProfile? _childProfile;
+
   bool _loading = true;
   bool _fetched = false;
 
@@ -101,10 +107,17 @@ class _SpeciesInfoSheetState extends ConsumerState<_SpeciesInfoSheet> {
         locale,
       );
 
+      // Loaded alongside rather than instead: the adult text is the fallback
+      // for the hundred species that have no rewrite yet (SAM-11, SET-10).
+      final childProfile = await ref
+          .read(childProfileServiceProvider)
+          .profileFor(widget.scientificName, locale);
+
       if (mounted) {
         setState(() {
           _detail = detail;
           _description = description;
+          _childProfile = childProfile;
           _loading = false;
         });
       }
@@ -275,7 +288,7 @@ class _SpeciesInfoSheetState extends ConsumerState<_SpeciesInfoSheet> {
               // at a glance how often (and when last) they have logged
               // this species. Skipped entirely when the species has never
               // been detected — there's nothing useful to show.
-              _DetectionStatsTile(scientificName: widget.scientificName),
+              SpeciesPersonalTile(scientificName: widget.scientificName),
 
               // ── Loading skeleton (shimmer placeholder for the bio paragraph) ─
               if (_loading)
@@ -286,7 +299,14 @@ class _SpeciesInfoSheetState extends ConsumerState<_SpeciesInfoSheet> {
 
               // ── Description ─────────────────────────────────
               if (!_loading) ...[
-                if (_description != null) ...[
+                // The child-register rewrite wins where there is one, and
+                // replaces the adult paragraph rather than sitting above it:
+                // two descriptions of the same bird would be two things to
+                // read, and the second one is the one written for grown-ups
+                // (SAM-11).
+                if (_childProfile != null)
+                  _ChildProfileBlock(profile: _childProfile!)
+                else if (_description != null) ...[
                   Padding(
                     padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
                     child: Text(
@@ -734,122 +754,160 @@ class _OverlayDetectedBadge extends StatelessWidget {
 /// entirely when the species has never been logged so the overlay stays
 /// uncluttered for unfamiliar birds the user is exploring for the first
 /// time.
-class _DetectionStatsTile extends ConsumerWidget {
-  const _DetectionStatsTile({required this.scientificName});
+/// The species text, written for a child (`SAM-11`).
+///
+/// Replaces the bundled adult paragraph rather than sitting beside it. Two
+/// descriptions of the same bird would be two things to read, and the second
+/// one is the one written for grown-ups.
+class _ChildProfileBlock extends StatelessWidget {
+  const _ChildProfileBlock({required this.profile});
+
+  final ChildProfile profile;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            profile.text,
+            style: theme.textTheme.bodyMedium?.copyWith(height: 1.5),
+          ),
+          // The call gets its own block, because it is the one part a child
+          // uses *outdoors* — everything above is read on the sofa (SAM-12).
+          if (profile.hasCall) ...[
+            const SizedBox(height: 12),
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: theme.colorScheme.secondaryContainer,
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text('👂', style: theme.textTheme.titleMedium),
+                  const SizedBox(width: 10),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          l10n.speciesHowItSounds,
+                          style: theme.textTheme.labelMedium?.copyWith(
+                            fontWeight: FontWeight.w700,
+                            color: theme.colorScheme.onSecondaryContainer,
+                          ),
+                        ),
+                        const SizedBox(height: 2),
+                        Text(
+                          profile.call!,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: theme.colorScheme.onSecondaryContainer,
+                            height: 1.4,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+/// The child's own history with this species (`SAM-06`).
+///
+/// What turns a reference page into a collection card. Everything above it is
+/// the same for every child in the country; this part is theirs.
+///
+/// ⚠️ **"Where" is the name they typed** (`LOG-13`), never a coordinate. The
+/// app coarsens location before it stores anything (`NFA-08`) and the shared
+/// day image carries no place at all (`LOG-11`, `KID-07`) — a species page
+/// that quietly reintroduced a map would undo all three.
+class SpeciesPersonalTile extends ConsumerWidget {
+  const SpeciesPersonalTile({super.key, required this.scientificName});
 
   final String scientificName;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
-    final highContrast = AppTheme.isHighContrastTheme(theme);
     final l10n = AppLocalizations.of(context)!;
-    final asyncSessions = ref.watch(sessionListProvider);
 
-    return asyncSessions.when(
-      loading: () => const SizedBox.shrink(),
-      error: (a, b) => const SizedBox.shrink(),
-      data: (sessions) {
-        // Walk every session once. We aggregate three numbers in one pass
-        // so that opening the overlay never depends on session count: total
-        // detections, distinct sessions that contain this species, and the
-        // newest detection timestamp.
-        var totalDetections = 0;
-        var sessionCount = 0;
-        DateTime? lastSeen;
-        for (final session in sessions) {
-          var inThisSession = 0;
-          for (final d in session.detections) {
-            if (d.scientificName != scientificName) continue;
-            inThisSession++;
-            // DetectionRecord.timestamp is already an absolute wall-clock
-            // time so we can compare directly across sessions.
-            final ts = d.timestamp;
-            if (lastSeen == null || ts.isAfter(lastSeen)) {
-              lastSeen = ts;
-            }
-          }
-          if (inThisSession > 0) {
-            sessionCount++;
-            totalDetections += inThisSession;
-          }
-        }
+    final stats = ref.watch(speciesPersonalStatsProvider(scientificName)).value;
+    // Nothing personal to say yet. An empty panel reading "0 times" on a bird
+    // a child has never heard would make the album feel like a report card.
+    if (stats == null || stats.isEmpty) return const SizedBox.shrink();
 
-        if (totalDetections == 0) return const SizedBox.shrink();
+    final lines = <String>[
+      l10n.speciesHeardTimesOnDays(stats.timesHeard, stats.daysHeard),
+      if (stats.lastHeardAt != null)
+        l10n.speciesLastHeardOn(_date(context, stats.lastHeardAt!)),
+      if (stats.firstHeardAt != null)
+        l10n.speciesFirstHeardOn(_date(context, stats.firstHeardAt!)),
+      if (stats.places.isNotEmpty)
+        l10n.speciesHeardAt(stats.places.take(3).join(' · ')),
+    ];
 
-        final lastSeenText =
-            lastSeen != null ? _formatLastSeen(context, lastSeen) : '—';
-
-        return Padding(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-            decoration: BoxDecoration(
-              color:
-                  highContrast
-                      ? Colors.white
-                      : theme.colorScheme.primaryContainer.withAlpha(120),
-              borderRadius: BorderRadius.circular(10),
-              border:
-                  highContrast
-                      ? Border.all(color: Colors.black, width: 1.5)
-                      : null,
-            ),
-            child: Row(
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.primaryContainer,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                Icon(
-                  AppIcons.checkCircle,
-                  size: 20,
-                  // Black keeps maximum contrast against the white
-                  // high-contrast panel; normal themes use the vibrant
-                  // brand-blue primary.
-                  color:
-                      highContrast ? Colors.black : theme.colorScheme.primary,
-                ),
-                const SizedBox(width: 10),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        l10n.speciesYouHaveDetected(
-                          totalDetections,
-                          sessionCount,
-                        ),
-                        style: theme.textTheme.bodyMedium?.copyWith(
-                          color: highContrast ? Colors.black : null,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        l10n.speciesLastSeen(lastSeenText),
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color:
-                              highContrast
-                                  ? Colors.black
-                                  : theme.colorScheme.onSurface.withAlpha(170),
-                        ),
-                      ),
-                    ],
+                  child: Text(
+                    l10n.speciesYourHistory,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
                   ),
                 ),
+                if (stats.stars > 0)
+                  Text(
+                    '⭐ ${stats.stars}',
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onPrimaryContainer,
+                    ),
+                  ),
               ],
             ),
-          ),
-        );
-      },
+            const SizedBox(height: 6),
+            for (final line in lines)
+              Padding(
+                padding: const EdgeInsets.only(bottom: 2),
+                child: Text(
+                  line,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onPrimaryContainer,
+                  ),
+                ),
+              ),
+          ],
+        ),
+      ),
     );
   }
 
-  static String _formatLastSeen(BuildContext context, DateTime dt) {
-    final locale = Localizations.localeOf(context).toString();
-    return MaterialLocalizations.of(
-          context,
-        ).formatMediumDate(dt.toLocal()).toString().isNotEmpty
-        // Fall through to a stable yyyy-MM-dd if the platform localization
-        // is unavailable for the active locale (rare on supported devices).
-        ? MaterialLocalizations.of(context).formatMediumDate(dt.toLocal())
-        : '${dt.year}-${dt.month.toString().padLeft(2, '0')}-${dt.day.toString().padLeft(2, '0')} ($locale)';
-  }
+  static String _date(BuildContext context, DateTime when) =>
+      MaterialLocalizations.of(context).formatMediumDate(when.toLocal());
 }

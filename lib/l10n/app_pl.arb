@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Kolekcjoner gwiazd {tier}",
   "achievementStarCollectorCondition": "Zebrane {count} gwiazdek",
   "badgeUnlockedTitle": "Odznaka zdobyta!",
-  "badgeUnlockedTitleMany": "Zdobyto {count} odznak!"
+  "badgeUnlockedTitleMany": "Zdobyto {count} odznak!",
+  "speciesYourHistory": "Ty i ten ptak",
+  "speciesHeardTimesOnDays": "Usłyszany {times} razy w ciągu {days} dni",
+  "speciesLastHeardOn": "Ostatnio: {date}",
+  "speciesFirstHeardOn": "Po raz pierwszy: {date}",
+  "speciesHeardAt": "Gdzie: {places}",
+  "speciesHowItSounds": "Jak brzmi"
 }

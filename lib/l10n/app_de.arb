@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Sternensammler {tier}",
   "achievementStarCollectorCondition": "{count} Sterne gesammelt",
   "badgeUnlockedTitle": "Abzeichen geschafft!",
-  "badgeUnlockedTitleMany": "{count} Abzeichen geschafft!"
+  "badgeUnlockedTitleMany": "{count} Abzeichen geschafft!",
+  "speciesYourHistory": "Du und dieser Vogel",
+  "speciesHeardTimesOnDays": "{times}-mal an {days} Tagen gehört",
+  "speciesLastHeardOn": "Zuletzt: {date}",
+  "speciesFirstHeardOn": "Zum ersten Mal: {date}",
+  "speciesHeardAt": "Bei: {places}",
+  "speciesHowItSounds": "So klingt er"
 }

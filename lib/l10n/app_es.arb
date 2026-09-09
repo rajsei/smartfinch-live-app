@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Coleccionista de estrellas {tier}",
   "achievementStarCollectorCondition": "{count} estrellas reunidas",
   "badgeUnlockedTitle": "¡Insignia conseguida!",
-  "badgeUnlockedTitleMany": "¡{count} insignias conseguidas!"
+  "badgeUnlockedTitleMany": "¡{count} insignias conseguidas!",
+  "speciesYourHistory": "Tú y esta ave",
+  "speciesHeardTimesOnDays": "Oída {times} veces en {days} días",
+  "speciesLastHeardOn": "La última vez: {date}",
+  "speciesFirstHeardOn": "La primera vez: {date}",
+  "speciesHeardAt": "En: {places}",
+  "speciesHowItSounds": "Cómo suena"
 }

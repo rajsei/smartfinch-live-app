@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Collectionneur d'étoiles {tier}",
   "achievementStarCollectorCondition": "{count} étoiles récoltées",
   "badgeUnlockedTitle": "Badge obtenu !",
-  "badgeUnlockedTitleMany": "{count} badges obtenus !"
+  "badgeUnlockedTitleMany": "{count} badges obtenus !",
+  "speciesYourHistory": "Toi et cet oiseau",
+  "speciesHeardTimesOnDays": "Entendu {times} fois sur {days} jours",
+  "speciesLastHeardOn": "La dernière fois : {date}",
+  "speciesFirstHeardOn": "La toute première fois : {date}",
+  "speciesHeardAt": "À : {places}",
+  "speciesHowItSounds": "Comment il sonne"
 }

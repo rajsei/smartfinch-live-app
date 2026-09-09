@@ -122,6 +122,9 @@ flutter:
     - assets/models/
     - assets/species_images/
     - assets/species_data/
+    # Hand-written child-register profiles (SAM-11) — authored, not
+    # generated, and deliberately outside the gitignored bundle dir.
+    - assets/species_profiles/
     - assets/announcements/
 
 flutter_launcher_icons:

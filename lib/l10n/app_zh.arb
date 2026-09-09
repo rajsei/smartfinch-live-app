@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "集星者 {tier}",
   "achievementStarCollectorCondition": "已收集 {count} 颗星",
   "badgeUnlockedTitle": "获得徽章！",
-  "badgeUnlockedTitleMany": "获得 {count} 枚徽章！"
+  "badgeUnlockedTitleMany": "获得 {count} 枚徽章！",
+  "speciesYourHistory": "你和这只鸟",
+  "speciesHeardTimesOnDays": "在 {days} 天里听到 {times} 次",
+  "speciesLastHeardOn": "上一次：{date}",
+  "speciesFirstHeardOn": "第一次：{date}",
+  "speciesHeardAt": "地点：{places}",
+  "speciesHowItSounds": "听起来像什么"
 }

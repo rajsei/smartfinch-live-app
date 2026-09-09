@@ -205,3 +205,18 @@ final collectionProgressProvider = FutureProvider<CollectionProgress>((
     total: entries.length,
   );
 });
+
+/// The child's own history with one species (`SAM-06`).
+///
+/// A family rather than one big map: a species page asks about exactly one
+/// bird, and loading everyone's history to answer that would grow with the
+/// collection for no reason.
+final speciesPersonalStatsProvider =
+    FutureProvider.family<SpeciesPersonalStats, String>((
+      ref,
+      scientificName,
+    ) async {
+      return ref
+          .watch(collectionRepositoryProvider)
+          .personalStatsFor(scientificName);
+    });

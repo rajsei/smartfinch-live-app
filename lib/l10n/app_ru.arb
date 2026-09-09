@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Собиратель звёзд {tier}",
   "achievementStarCollectorCondition": "Собрано {count} звёзд",
   "badgeUnlockedTitle": "Значок получен!",
-  "badgeUnlockedTitleMany": "Получено значков: {count}!"
+  "badgeUnlockedTitleMany": "Получено значков: {count}!",
+  "speciesYourHistory": "Ты и эта птица",
+  "speciesHeardTimesOnDays": "Услышана {times} раз за {days} дней",
+  "speciesLastHeardOn": "В последний раз: {date}",
+  "speciesFirstHeardOn": "Впервые: {date}",
+  "speciesHeardAt": "Где: {places}",
+  "speciesHowItSounds": "Как звучит"
 }

@@ -5763,5 +5763,52 @@
         "type": "int"
       }
     }
+  },
+  "speciesYourHistory": "You and this bird",
+  "@speciesYourHistory": {
+    "description": "SAM-06: heading of the child's own history with this species"
+  },
+  "speciesHeardTimesOnDays": "Heard {times} times on {days} days",
+  "@speciesHeardTimesOnDays": {
+    "description": "SAM-06: how often, across how many days",
+    "placeholders": {
+      "times": {
+        "type": "int"
+      },
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "speciesLastHeardOn": "Last time: {date}",
+  "@speciesLastHeardOn": {
+    "description": "SAM-06: when the child last heard it",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesFirstHeardOn": "First time ever: {date}",
+  "@speciesFirstHeardOn": {
+    "description": "SAM-06: the day it entered the life list",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesHeardAt": "At: {places}",
+  "@speciesHeardAt": {
+    "description": "SAM-06: the places the child named, never a coordinate (LOG-13, KID-07)",
+    "placeholders": {
+      "places": {
+        "type": "String"
+      }
+    }
+  },
+  "speciesHowItSounds": "How it sounds",
+  "@speciesHowItSounds": {
+    "description": "SAM-11 / SAM-12: heading of the call mnemonic"
   }
 }

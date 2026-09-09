@@ -1313,5 +1313,11 @@
   "achievementStarCollector": "Sběratel hvězd {tier}",
   "achievementStarCollectorCondition": "Nasbíráno {count} hvězd",
   "badgeUnlockedTitle": "Odznak získán!",
-  "badgeUnlockedTitleMany": "Získáno {count} odznaků!"
+  "badgeUnlockedTitleMany": "Získáno {count} odznaků!",
+  "speciesYourHistory": "Ty a tenhle pták",
+  "speciesHeardTimesOnDays": "Slyšeno {times}× ve {days} dnech",
+  "speciesLastHeardOn": "Naposledy: {date}",
+  "speciesFirstHeardOn": "Úplně poprvé: {date}",
+  "speciesHeardAt": "Kde: {places}",
+  "speciesHowItSounds": "Jak zní"
 }
