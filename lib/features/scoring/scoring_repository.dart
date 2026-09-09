@@ -33,6 +33,7 @@ import 'package:uuid/uuid.dart';
 import '../../core/database/app_database.dart';
 import '../../core/database/tables.dart';
 import '../../core/services/grid_cell.dart';
+import '../avatar/level_ladder.dart';
 import 'live_score_board.dart';
 import 'scoring_engine.dart';
 
@@ -596,15 +597,32 @@ class ScoringRepository {
   ///
   /// Materialised rather than summed on every read, and rebuildable from
   /// `ScoreEvents` at any time.
+  /// Adds to the running total, and raises the level floor if it moved.
+  ///
+  /// ⚠️ The **only** place `highestLevelReached` is written during play. It is
+  /// a ratchet (`AUS-12`): a rebalancing may lower the star total, and without
+  /// a stored floor the next read would demote the child and take the avatar
+  /// stage with it (`AVA-02`). Written here rather than derived on read,
+  /// because a floor only ever computed from today's stars is not a floor.
   Future<int> _addStars(int stars, DateTime now) async {
     final profile =
         await (_db.select(_db.userProfiles)
           ..where((p) => p.id.equals(profileId))).getSingle();
     final updated = profile.totalStars + stars;
 
+    final reached = levelForStars(updated).number;
+    final floor =
+        reached > profile.highestLevelReached
+            ? reached
+            : profile.highestLevelReached;
+
     await (_db.update(_db.userProfiles)
       ..where((p) => p.id.equals(profileId))).write(
-      UserProfilesCompanion(totalStars: Value(updated), updatedAt: Value(now)),
+      UserProfilesCompanion(
+        totalStars: Value(updated),
+        highestLevelReached: Value(floor),
+        updatedAt: Value(now),
+      ),
     );
     return updated;
   }

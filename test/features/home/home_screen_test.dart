@@ -18,7 +18,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:drift/native.dart';
+
+import 'package:smartfinch/core/database/app_database.dart';
+import 'package:smartfinch/features/avatar/avatar_providers.dart';
+import 'package:smartfinch/features/avatar/level_ladder.dart';
+import 'package:smartfinch/features/home/widgets/home_header.dart';
 import 'package:smartfinch/features/collection/collection_screen.dart';
+import 'package:smartfinch/features/home/home_screen.dart';
 import 'package:smartfinch/features/home/widgets/home_tiles.dart';
 import 'package:smartfinch/features/journal/journal_screen.dart';
 import 'package:smartfinch/features/points/points_screen.dart';
@@ -255,6 +262,292 @@ void main() {
 
       // Landed on the settings screen, whose plain view carries this section.
       expect(find.text('General'), findsWidgets);
+    });
+  });
+
+  // ===========================================================================
+  // The two-tone home screen, and the avatar on it (HOME-07)
+  // ===========================================================================
+  //
+  // The layout itself is a UI direction rather than a requirement, so what is
+  // asserted here is the part that is: the avatar is on the home screen
+  // (`HOME-07`, `AVA-01`), every destination is still one tap away in the
+  // default position (`HOME-04`, `KID-04`), and the panel that carries them
+  // can be moved without any of them going missing.
+  // ===========================================================================
+  group('the two-tone home screen', () {
+    Future<void> pumpHome(WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      // Portrait: the two-tone layout is the portrait one.
+      tester.view.physicalSize = const Size(1000, 2000);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            appDatabaseProvider.overrideWithValue(db),
+            starTotalsProvider.overrideWith(
+              (ref) async => const StarTotals(total: 4200),
+            ),
+            levelProgressProvider.overrideWith(
+              (ref) async => progressFor(stars: 4200),
+            ),
+            avatarNameProvider.overrideWith((ref) async => null),
+          ],
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      // Past the home screen's own warm-up, which arms a 2-second timeout on
+      // the taxonomy load. Left pending it fails the test at teardown for a
+      // reason that has nothing to do with the layout.
+      await tester.pump(const Duration(seconds: 3));
+    }
+
+    testWidgets('HOME-07 · the bird is on it, with its level', (tester) async {
+      await pumpHome(tester);
+
+      expect(find.byType(AvatarBadge), findsOneWidget);
+      // The chip on the circle, and the line under the bar.
+      expect(find.text('4'), findsOneWidget);
+      expect(find.text('Level 4'), findsOneWidget);
+    });
+
+    testWidgets('the three figures are there, each labelled', (tester) async {
+      // HOME-01 and HOME-02: three numbers answering three questions, and a
+      // header that showed the same figure three times would look right and
+      // be useless.
+      await pumpHome(tester);
+
+      expect(find.text('Total'), findsOneWidget);
+      expect(find.text('30 days'), findsOneWidget);
+      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('4,200'), findsOneWidget);
+    });
+
+    testWidgets('and how far the next level is (STAT-07)', (tester) async {
+      // Level 4 runs 4,000 → 8,000, so 3,800 to go.
+      await pumpHome(tester);
+
+      expect(find.textContaining('to level 5'), findsOneWidget);
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    });
+
+    testWidgets('it fits a small phone without overflowing', (tester) async {
+      // The existing pump is 1000 logical px wide, which the layout treats as
+      // a tablet. The header shares its screen with the panel, so the size
+      // that actually squeezes it is a short phone — and an overflow there
+      // fails this test rather than shipping as a yellow stripe.
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      tester.view.physicalSize = const Size(360, 640);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            appDatabaseProvider.overrideWithValue(db),
+            starTotalsProvider.overrideWith(
+              // A long total, because the biggest number is what runs out of
+              // room first.
+              (ref) async =>
+                  const StarTotals(total: 345657, last30Days: 1257, today: 114),
+            ),
+            levelProgressProvider.overrideWith(
+              (ref) async => progressFor(stars: 345657),
+            ),
+            avatarNameProvider.overrideWith((ref) async => null),
+          ],
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+
+      expect(tester.takeException(), isNull);
+      expect(find.text('345,657'), findsOneWidget);
+
+      // Every destination on screen without scrolling, at the size that
+      // squeezes hardest — KID-04's "one tap away" is not one tap away if the
+      // last row is below the fold.
+      for (final label in ['Collection', 'Explore', 'Journal', 'Points']) {
+        final rect = tester.getRect(find.text(label));
+        expect(
+          rect.bottom,
+          lessThanOrEqualTo(640),
+          reason: '$label is off the bottom of a 640-pixel screen',
+        );
+      }
+    });
+
+    testWidgets('the app name is not taking up the header any more', (
+      tester,
+    ) async {
+      // It cost a third of the block to tell a child the name of the app they
+      // had just opened. The header's job is to say what *they* have.
+      await pumpHome(tester);
+
+      expect(find.text('Smartfinch'), findsNothing);
+    });
+
+    testWidgets('every destination is still one tap away', (tester) async {
+      // HOME-04 and KID-04. A layout change must not bury a destination
+      // behind a gesture.
+      await pumpHome(tester);
+
+      expect(find.byType(HomeTiles), findsOneWidget);
+      for (final label in ['Collection', 'Explore', 'Journal', 'Points']) {
+        expect(
+          find.text(label),
+          findsWidgets,
+          reason: '$label should be reachable without dragging',
+        );
+      }
+    });
+
+    testWidgets('the panel starts open, under the header', (tester) async {
+      // The failure this replaces: the panel opened *over* the star figures
+      // and clipped its own tiles, which on screen looked as though the app
+      // had stopped drawing.
+      await pumpHome(tester);
+
+      final headerBottom = tester.getRect(find.byType(HomeHeader)).bottom;
+      final panelTop = tester.getRect(find.byType(HomeTiles)).top;
+
+      expect(panelTop, greaterThanOrEqualTo(headerBottom - 1));
+      expect(find.text('Total'), findsOneWidget);
+    });
+
+    testWidgets('the handle moves the panel down and back', (tester) async {
+      // The one piece the sketch marked as meant to survive. Tapping counts:
+      // a child who never discovers the drag can still press the handle
+      // (KID-04).
+      await pumpHome(tester);
+
+      final openTop = tester.getRect(find.byType(HomeTiles)).top;
+
+      await tester.tap(find.bySemanticsLabel(RegExp('Drag to move')));
+      await tester.pumpAndSettle();
+      final downTop = tester.getRect(find.byType(HomeTiles)).top;
+      expect(downTop, greaterThan(openTop));
+
+      await tester.tap(find.bySemanticsLabel(RegExp('Drag to move')));
+      await tester.pumpAndSettle();
+      expect(tester.getRect(find.byType(HomeTiles)).top, closeTo(openTop, 1));
+    });
+  });
+
+  // ===========================================================================
+  // Landscape — the same two blocks, side by side
+  // ===========================================================================
+  group('the home screen held sideways', () {
+    Future<void> pumpLandscape(WidgetTester tester) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      // A phone on its side: plenty of width, barely any height. That is the
+      // shape the layout has to answer, and the one a portrait test never
+      // exercises.
+      tester.view.physicalSize = const Size(844, 390);
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            appDatabaseProvider.overrideWithValue(db),
+            starTotalsProvider.overrideWith(
+              (ref) async =>
+                  const StarTotals(total: 345657, last30Days: 1257, today: 114),
+            ),
+            levelProgressProvider.overrideWith(
+              (ref) async => progressFor(stars: 345657),
+            ),
+            avatarNameProvider.overrideWith((ref) async => null),
+          ],
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+    }
+
+    testWidgets('the logo and the app name are gone from it too', (
+      tester,
+    ) async {
+      await pumpLandscape(tester);
+
+      expect(find.text('Smartfinch'), findsNothing);
+      expect(find.byType(Image), findsNothing);
+    });
+
+    testWidgets('it is the same star display, rules and all', (tester) async {
+      // Not a landscape arrangement of the same numbers — the identical
+      // widget, so the two orientations cannot drift apart.
+      await pumpLandscape(tester);
+
+      expect(find.byType(HomeHeader), findsOneWidget);
+      expect(find.text('Total'), findsOneWidget);
+      expect(find.text('30 days'), findsOneWidget);
+      expect(find.text('Today'), findsOneWidget);
+      expect(find.text('345,657'), findsOneWidget);
+    });
+
+    testWidgets('the bird and the level come with it', (tester) async {
+      await pumpLandscape(tester);
+
+      expect(find.byType(AvatarBadge), findsOneWidget);
+      expect(find.textContaining('Level '), findsOneWidget);
+    });
+
+    testWidgets('header on the left, tiles on the right', (tester) async {
+      await pumpLandscape(tester);
+
+      final header = tester.getRect(find.byType(HomeHeader));
+      final tiles = tester.getRect(find.byType(HomeTiles));
+
+      expect(header.right, lessThanOrEqualTo(tiles.left + 1));
+      // The navigation gets the larger share, because it is the half that
+      // uses extra width.
+      expect(tiles.width, greaterThan(header.width));
+    });
+
+    testWidgets('and it all fits, without overflowing', (tester) async {
+      await pumpLandscape(tester);
+
+      expect(tester.takeException(), isNull);
+      for (final label in ['Collection', 'Explore', 'Journal', 'Points']) {
+        expect(find.text(label), findsOneWidget);
+      }
     });
   });
 }

@@ -95,8 +95,6 @@ class HomeTiles extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final l10n = AppLocalizations.of(context)!;
-
     return ConstrainedBox(
       constraints: BoxConstraints(maxWidth: isTablet ? 620 : 460),
       child: Padding(
@@ -113,29 +111,69 @@ class HomeTiles extends ConsumerWidget {
                   ),
             ),
             SizedBox(height: compact ? 8 : 12),
-            Row(
-              children: [
-                for (final tile in _secondaryTiles) ...[
-                  Expanded(
-                    child: _SecondaryTile(
-                      icon: tile.icon,
-                      label: tile.label(l10n),
-                      isTablet: isTablet,
-                      onTap:
-                          () => Navigator.of(context).push(
-                            MaterialPageRoute<void>(
-                              builder: (_) => tile.builder(),
-                            ),
-                          ),
-                    ),
-                  ),
-                  if (tile != _secondaryTiles.last) const SizedBox(width: 8),
-                ],
-              ],
-            ),
+            // Portrait: two, then three. Five across a phone leaves each tile
+            // narrower than its own label, and "Einstellungen" wrapping onto
+            // three lines is how a grid stops reading as a grid. Landscape
+            // keeps the single row, where there is width for it.
+            if (compact)
+              _TileRow(
+                tiles: _secondaryTiles,
+                isTablet: isTablet,
+                compact: compact,
+              )
+            else ...[
+              _TileRow(
+                tiles: _secondaryTiles.take(2).toList(),
+                isTablet: isTablet,
+                compact: compact,
+              ),
+              const SizedBox(height: 8),
+              _TileRow(
+                tiles: _secondaryTiles.skip(2).toList(),
+                isTablet: isTablet,
+                compact: compact,
+              ),
+            ],
           ],
         ),
       ),
+    );
+  }
+}
+
+/// One row of equal secondary tiles.
+class _TileRow extends StatelessWidget {
+  const _TileRow({
+    required this.tiles,
+    required this.isTablet,
+    required this.compact,
+  });
+
+  final List<_HomeTile> tiles;
+  final bool isTablet;
+  final bool compact;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+
+    return Row(
+      children: [
+        for (final tile in tiles) ...[
+          Expanded(
+            child: _SecondaryTile(
+              icon: tile.icon,
+              label: tile.label(l10n),
+              isTablet: isTablet,
+              onTap:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(builder: (_) => tile.builder()),
+                  ),
+            ),
+          ),
+          if (tile != tiles.last) const SizedBox(width: 8),
+        ],
+      ],
     );
   }
 }

@@ -25,10 +25,15 @@ import '../../scoring/scoring_providers.dart';
 
 /// The star header (HOME-01, HOME-02, LIVE-18).
 class StarHeader extends ConsumerWidget {
-  const StarHeader({super.key, this.compact = false});
+  const StarHeader({super.key, this.compact = false, this.flat = false});
 
   /// Tightens the spacing for the landscape layout.
   final bool compact;
+
+  /// Drops the container: on the two-tone home screen these numbers already
+  /// sit on a block of `primaryContainer`, and a second one inside it would
+  /// be a card on a card in the same colour.
+  final bool flat;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -44,15 +49,20 @@ class StarHeader extends ConsumerWidget {
     // rather than a spinner: a child arriving at an empty home screen should
     // see "0" and understand it, not watch a loading indicator.
     final totals = ref.watch(starTotalsProvider).value ?? const StarTotals();
-    return _Totals(totals: totals, compact: compact);
+    return _Totals(totals: totals, compact: compact, flat: flat);
   }
 }
 
 class _Totals extends StatelessWidget {
-  const _Totals({required this.totals, required this.compact});
+  const _Totals({
+    required this.totals,
+    required this.compact,
+    this.flat = false,
+  });
 
   final StarTotals totals;
   final bool compact;
+  final bool flat;
 
   @override
   Widget build(BuildContext context) {
@@ -67,15 +77,18 @@ class _Totals extends StatelessWidget {
       ),
       excludeSemantics: true,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 16),
+        margin: EdgeInsets.symmetric(horizontal: flat ? 0 : 16),
         padding: EdgeInsets.symmetric(
-          horizontal: 16,
+          horizontal: flat ? 4 : 16,
           vertical: compact ? 10 : 14,
         ),
-        decoration: BoxDecoration(
-          color: theme.colorScheme.primaryContainer,
-          borderRadius: BorderRadius.circular(16),
-        ),
+        decoration:
+            flat
+                ? null
+                : BoxDecoration(
+                  color: theme.colorScheme.primaryContainer,
+                  borderRadius: BorderRadius.circular(16),
+                ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [

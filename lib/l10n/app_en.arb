@@ -5887,5 +5887,156 @@
   "backupRestoreFailed": "The restore did not finish. Nothing was changed.",
   "@backupRestoreFailed": {
     "description": "SET-07: the restore did not complete; nothing was changed"
+  },
+  "levelEgg": "Egg",
+  "@levelEgg": {
+    "description": "Level 1 title (3.5)"
+  },
+  "levelChick": "Chick",
+  "@levelChick": {
+    "description": "Level 2 title (3.5)"
+  },
+  "levelNestling": "Nestling",
+  "@levelNestling": {
+    "description": "Level 3 title (3.5)"
+  },
+  "levelFledgling": "Fledgling",
+  "@levelFledgling": {
+    "description": "Level 4 title (3.5)"
+  },
+  "levelYoungBird": "Young bird",
+  "@levelYoungBird": {
+    "description": "Level 5 title (3.5)"
+  },
+  "levelScout": "Scout",
+  "@levelScout": {
+    "description": "Level 6 title (3.5)"
+  },
+  "levelListener": "Listener",
+  "@levelListener": {
+    "description": "Level 7 title (3.5)"
+  },
+  "levelSinger": "Singer",
+  "@levelSinger": {
+    "description": "Level 8 title (3.5)"
+  },
+  "levelTerritoryHolder": "Territory holder",
+  "@levelTerritoryHolder": {
+    "description": "Level 9 title (3.5)"
+  },
+  "levelFarFlier": "Far flier",
+  "@levelFarFlier": {
+    "description": "Level 10 title (3.5)"
+  },
+  "levelMigrant": "Migrant",
+  "@levelMigrant": {
+    "description": "Level 11 title (3.5)"
+  },
+  "levelReturner": "Returner",
+  "@levelReturner": {
+    "description": "Level 12 title (3.5)"
+  },
+  "levelOldBird": "Old bird",
+  "@levelOldBird": {
+    "description": "Level 13 title (3.5)"
+  },
+  "levelFlockLeader": "Flock leader",
+  "@levelFlockLeader": {
+    "description": "Level 14 title (3.5)"
+  },
+  "levelLegend": "Legend",
+  "@levelLegend": {
+    "description": "Level 15 title (3.5)"
+  },
+  "levelWithTitle": "Level {number} · {title}",
+  "@levelWithTitle": {
+    "description": "STAT-07: the level number and its title, e.g. Level 4 · Fledgling",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "levelStarsToNext": "{stars} ⭐ to {title}",
+  "@levelStarsToNext": {
+    "description": "STAT-07: how far to the next rung",
+    "placeholders": {
+      "stars": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "title": {
+        "type": "String"
+      }
+    }
+  },
+  "levelTopOfTheLadder": "The very top. Nothing above this one.",
+  "@levelTopOfTheLadder": {
+    "description": "STAT-07: shown at level 15, where there is nothing left to reach"
+  },
+  "avatarStageEgg": "An egg",
+  "@avatarStageEgg": {
+    "description": "AVA-02 stage, accessibility label"
+  },
+  "avatarStageChick": "A chick",
+  "@avatarStageChick": {
+    "description": "AVA-02 stage, accessibility label"
+  },
+  "avatarStageFledgling": "A fledgling",
+  "@avatarStageFledgling": {
+    "description": "AVA-02 stage, accessibility label"
+  },
+  "avatarStageAdult": "A grown bird",
+  "@avatarStageAdult": {
+    "description": "AVA-02 stage, accessibility label"
+  },
+  "avatarNameTitle": "What is your bird called?",
+  "@avatarNameTitle": {
+    "description": "AVA-05: title of the naming sheet"
+  },
+  "avatarNameClear": "No name for now",
+  "@avatarNameClear": {
+    "description": "AVA-05: removes the chosen name again"
+  },
+  "homePanelHandleA11y": "Drag to move the buttons down or back up",
+  "@homePanelHandleA11y": {
+    "description": "HOME redesign: accessibility label of the drag handle on the tile panel"
+  },
+  "homeFigureTotal": "Total",
+  "@homeFigureTotal": {
+    "description": "HOME-01: label beside the big star total on the home header"
+  },
+  "homeFigureLast30Days": "30 days",
+  "@homeFigureLast30Days": {
+    "description": "HOME-01: label under the 30-day figure"
+  },
+  "homeFigureToday": "Today",
+  "@homeFigureToday": {
+    "description": "HOME-02: label under today's figure"
+  },
+  "levelShort": "Level {number}",
+  "@levelShort": {
+    "description": "STAT-07: the level, on the home header where there is no room for its title",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "levelToNextShort": "{stars} to level {number}",
+  "@levelToNextShort": {
+    "description": "STAT-07: how far to the next level, on the home header",
+    "placeholders": {
+      "stars": {
+        "type": "int",
+        "format": "decimalPattern"
+      },
+      "number": {
+        "type": "int"
+      }
+    }
   }
 }

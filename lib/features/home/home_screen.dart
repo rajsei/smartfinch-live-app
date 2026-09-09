@@ -13,8 +13,8 @@ import '../scoring/scoring_providers.dart';
 import '../live/live_providers.dart';
 import '../../shared/providers/settings_providers.dart';
 import 'help_screen.dart';
+import 'widgets/home_header.dart';
 import 'widgets/home_tiles.dart';
-import 'widgets/star_header.dart';
 
 // =============================================================================
 // Home Screen — Main Menu
@@ -31,19 +31,6 @@ import 'widgets/star_header.dart';
 // dots underneath. What replaces it says the same thing the app does: there is
 // exactly one thing you are meant to do, and it is listen.
 // =============================================================================
-
-/// The app logo, decoded to the largest size it is ever drawn at (160 logical
-/// px on a tablet, ×3 for common high-density screens) instead of its full
-/// 891×891 source, reducing decode work and the image-cache footprint.
-///
-/// Shared by the header and by the warm-up's precache so both resolve to the
-/// same image-cache entry; `ResizeImage` is part of the cache key, so a plain
-/// `AssetImage` here would miss.
-const ImageProvider _appLogoImage = ResizeImage(
-  AssetImage('assets/images/app-icon.png'),
-  width: 480,
-  height: 480,
-);
 
 /// Main menu screen — entry point after onboarding.
 class HomeScreen extends ConsumerStatefulWidget {
@@ -63,14 +50,10 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   Future<void> _warmUpApp() async {
-    // Let the logo finish decoding before any of this starts. The first frame
-    // paints without it — an asset image is never ready that early — and its
-    // decode finishes on a *later* main-isolate turn, so a warm-up that grabs
-    // the isolate first leaves the header visibly logo-less for as long as it
-    // holds on. Nothing below is on the critical path for what the user sees.
-    await _precacheLogo();
-    if (!mounted) return;
-
+    // Nothing here is on the critical path for what the user sees, and
+    // nothing gates it any more: the logo precache that used to run first went
+    // with the logo, which the two-tone header does not carry.
+    //
     // Riverpod caches these results, so opening Live Mode (or another feature)
     // reuses work that has already completed instead of redoing it — and
     // nothing here is awaited, so the menu stays interactive throughout.
@@ -105,22 +88,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       }
     } catch (error) {
       debugPrint('[HomeScreen] clip retention failed: $error');
-    }
-  }
-
-  /// Decode the logo into the image cache, so the header can paint it on the
-  /// next frame.
-  ///
-  /// Bounded, and failures are swallowed: this gates every other warm-up, and
-  /// a logo that never resolves must not be able to leave the model unloaded.
-  Future<void> _precacheLogo() async {
-    try {
-      await precacheImage(
-        _appLogoImage,
-        context,
-      ).timeout(const Duration(seconds: 2));
-    } catch (error) {
-      debugPrint('[HomeScreen] logo precache failed: $error');
     }
   }
 
@@ -163,228 +130,313 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     final shortestSide = MediaQuery.of(context).size.shortestSide;
     final isTablet = shortestSide >= 600;
 
+    // Both layouts take the whole box and do their own scrolling inside it:
+    // each is a Stack or a Row of full-height columns, and neither survives
+    // being handed the unbounded height a scroll view would give it.
     return Scaffold(
-      body: SafeArea(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return SingleChildScrollView(
-              padding: EdgeInsets.symmetric(
-                horizontal:
-                    isLandscape ? (isTablet ? 64 : 48) : (isTablet ? 40 : 24),
-                vertical: isLandscape ? 12 : 0,
+      body:
+          isLandscape
+              ? _LandscapeHomeLayout(
+                l10n: l10n,
+                theme: theme,
+                isTablet: isTablet,
+              )
+              : _PortraitHomeLayout(
+                l10n: l10n,
+                theme: theme,
+                isTablet: isTablet,
               ),
-              child: Center(
-                child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                  child:
-                      isLandscape
-                          ? _LandscapeHomeLayout(
-                            l10n: l10n,
-                            theme: theme,
-                            isTablet: isTablet,
-                          )
-                          : _PortraitHomeLayout(
-                            l10n: l10n,
-                            theme: theme,
-                            isTablet: isTablet,
-                          ),
+    );
+  }
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Portrait Layout — two-tone: a coloured top, a panel of tiles below
+// ─────────────────────────────────────────────────────────────────────────────
+//
+// A block of `primaryContainer` at the top carrying the avatar and the star
+// figures (`HOME-07`, `HOME-01`, `HOME-02`), and a `surface`-coloured panel
+// below carrying the tile navigation (`HOME-04`, `HOME-08`). Both colours come
+// from `ColorScheme`, so the layout follows light/dark/dynamic-colour/
+// high-contrast the way the rest of the app does, and nothing here commits to
+// a palette that was explicitly not settled.
+//
+// ### Why this is arithmetic and not a DraggableScrollableSheet
+//
+// It was one, and it did not work. That widget sizes itself in *fractions of
+// its parent*, which is right for a modal over a finished screen and wrong for
+// a panel that has to leave a particular header visible: the fraction and the
+// header's real height are unrelated numbers, and when they disagree the panel
+// covers the header and clips its own contents. On a phone it opened over the
+// star figures and cut the tiles off mid-row.
+//
+// So the split is computed instead. The header gets what its content needs —
+// the status-bar inset plus a fixed content height — and the panel takes the
+// rest. Both numbers are exact, and the panel keeps its height while it moves,
+// so nothing re-lays-out mid-animation.
+//
+// ### The panel still pulls down, and that is the load-bearing part
+//
+// The one piece the sketch marked as meant to survive: the lower area drops to
+// a handle at the screen's edge and frees the space above it. Today that space
+// is the header; later it is where a child arranges the birds their level has
+// unlocked, before pulling the panel back up.
+//
+// Not a hidden gesture: the handle is visible, it is a **tap target as well as
+// a drag** — a child who never discovers the drag can still press it — there
+// are two positions rather than a free float, and every destination is one tap
+// away in the default position (`KID-04`).
+class _PortraitHomeLayout extends ConsumerStatefulWidget {
+  const _PortraitHomeLayout({
+    required this.l10n,
+    required this.theme,
+    this.isTablet = false,
+  });
+
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final bool isTablet;
+
+  /// What the header needs below the status bar: the avatar row with the
+  /// figures beside it, and the level line with its bar.
+  static const double headerHeight = 200;
+
+  /// How much of the panel stays on screen when it is down.
+  static const double handleHeight = 56;
+
+  @override
+  ConsumerState<_PortraitHomeLayout> createState() =>
+      _PortraitHomeLayoutState();
+}
+
+class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
+  bool _down = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = widget.theme;
+    final topInset = MediaQuery.paddingOf(context).top;
+
+    return ColoredBox(
+      color: theme.colorScheme.primaryContainer,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final height = constraints.maxHeight;
+
+          // Clamped, so a very short screen still leaves the panel room to be
+          // a panel rather than a strip with three tiles in it.
+          final openTop = (topInset + _PortraitHomeLayout.headerHeight).clamp(
+            0.0,
+            height * 0.55,
+          );
+          final closedTop = height - _PortraitHomeLayout.handleHeight;
+
+          return Stack(
+            children: [
+              Positioned(
+                top: topInset,
+                left: 0,
+                right: 0,
+                height: (openTop - topInset).clamp(0.0, height),
+                // Scrollable rather than clipped: on a short screen the clamp
+                // above can hand the header less than its content wants, and
+                // scrolling is the graceful answer to that.
+                child: const SingleChildScrollView(child: HomeHeader()),
+              ),
+
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                top: _down ? closedTop : openTop,
+                left: 0,
+                right: 0,
+                // A fixed height rather than `bottom: 0`: the panel keeps its
+                // layout while it slides, so the tiles do not reflow on every
+                // frame of the animation.
+                height: height - openTop,
+                child: _TilePanel(
+                  l10n: widget.l10n,
+                  theme: theme,
+                  isTablet: widget.isTablet,
+                  isDown: _down,
+                  onToggle: () => setState(() => _down = !_down),
                 ),
               ),
-            );
-          },
-        ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// The lower half: a handle, the tiles, the footer.
+class _TilePanel extends StatelessWidget {
+  const _TilePanel({
+    required this.l10n,
+    required this.theme,
+    required this.isTablet,
+    required this.isDown,
+    required this.onToggle,
+  });
+
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final bool isTablet;
+  final bool isDown;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: theme.colorScheme.surface,
+      borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          // Visible, tappable and draggable. A gesture nobody can see is a
+          // gesture a child does not have (KID-04), so the handle answers to a
+          // press as well as to a drag.
+          Semantics(
+            button: true,
+            label: l10n.homePanelHandleA11y,
+            child: GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: onToggle,
+              onVerticalDragEnd: (details) {
+                final velocity = details.primaryVelocity ?? 0;
+                if (velocity > 100 && !isDown) onToggle();
+                if (velocity < -100 && isDown) onToggle();
+              },
+              child: SizedBox(
+                height: 24,
+                child: Center(
+                  child: Container(
+                    width: 44,
+                    height: 5,
+                    decoration: BoxDecoration(
+                      color: theme.colorScheme.onSurfaceVariant.withValues(
+                        alpha: 0.4,
+                      ),
+                      borderRadius: BorderRadius.circular(3),
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          // Scrollable, so a small phone scrolls the tiles rather than losing
+          // the bottom row off the edge — which is what the first attempt did,
+          // and on screen it looked as though the app had stopped drawing.
+          Expanded(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  HomeTiles(isTablet: isTablet),
+                  const SizedBox(height: 12),
+                  _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
+                  const SizedBox(height: 20),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// Portrait Layout — Original vertical arrangement
+// Landscape Layout — the same two tones, turned ninety degrees
 // ─────────────────────────────────────────────────────────────────────────────
-
-class _PortraitHomeLayout extends ConsumerWidget {
-  const _PortraitHomeLayout({
-    required this.l10n,
-    required this.theme,
-    this.isTablet = false,
-  });
-  final AppLocalizations l10n;
-  final ThemeData theme;
-  final bool isTablet;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      children: [
-        const SizedBox(height: 24),
-        _LogoHeader(l10n: l10n, theme: theme, isTablet: isTablet),
-        const SizedBox(height: 16),
-        // Above the tiles: the first thing a child looks at is what they have,
-        // and the second is the button that makes it grow (HOME-01, HOME-08).
-        const StarHeader(),
-        const SizedBox(height: 20),
-        HomeTiles(isTablet: isTablet),
-        const SizedBox(height: 12),
-        _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
-        const SizedBox(height: 16),
-      ],
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Landscape Layout — Logo + title left, grid + footer right
-// ─────────────────────────────────────────────────────────────────────────────
-
+//
+// Portrait splits the screen top and bottom because that is where the room is.
+// Held sideways a phone has the opposite problem — plenty of width, barely any
+// height — so the same two blocks stand side by side instead: the coloured one
+// on the left with the bird and the figures, the surface one on the right with
+// the tiles.
+//
+// **It is the same `HomeHeader`.** Not a landscape arrangement of the same
+// numbers — the identical widget, so the star display with its rules is the
+// one a child already knows and the two orientations cannot drift into showing
+// different things.
+//
+// ### Why 2 : 3
+//
+// The header's width need is close to fixed: a 52-pixel bird, a gap, and a
+// six-figure number beside it. The tiles are the half that *uses* extra width —
+// Live is a wide primary tile and the rest sit in one row beneath it. So the
+// header takes the smaller share and the navigation takes the rest.
+//
+// ### No handle here
+//
+// The panel does not slide sideways. In portrait pulling it down frees the
+// screen for something — today the header, later the diorama of unlocked birds
+// — and there is no such thing to free here: the header is already beside it,
+// not behind it. A gesture that only half-matched the other orientation would
+// be worse than none.
 class _LandscapeHomeLayout extends ConsumerWidget {
   const _LandscapeHomeLayout({
     required this.l10n,
     required this.theme,
     this.isTablet = false,
   });
+
   final AppLocalizations l10n;
   final ThemeData theme;
   final bool isTablet;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      children: [
-        SizedBox(height: isTablet ? 14 : 8),
-        // ── Compact single-row logo + title header, pinned left ──
-        Align(
-          alignment: Alignment.centerLeft,
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: isTablet ? 24 : 16),
-            child: _LogoHeader(
-              l10n: l10n,
-              theme: theme,
-              compact: true,
-              isTablet: isTablet,
+    return ColoredBox(
+      color: theme.colorScheme.primaryContainer,
+      child: SafeArea(
+        right: false,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            Expanded(
+              flex: 2,
+              child: Center(
+                // Scrollable for the same reason it is in portrait: a short
+                // landscape phone can have less height than the header wants,
+                // and scrolling is the graceful answer to that.
+                child: SingleChildScrollView(
+                  child: HomeHeader(compact: !isTablet),
+                ),
+              ),
             ),
-          ),
+            Expanded(
+              flex: 3,
+              child: Material(
+                color: theme.colorScheme.surface,
+                // The rounded edge faces the header, as the top edge does in
+                // portrait: one shape, rotated with the layout.
+                borderRadius: const BorderRadius.horizontal(
+                  left: Radius.circular(28),
+                ),
+                clipBehavior: Clip.antiAlias,
+                child: SafeArea(
+                  left: false,
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.symmetric(vertical: isTablet ? 20 : 14),
+                    child: Column(
+                      children: [
+                        HomeTiles(isTablet: isTablet, compact: true),
+                        SizedBox(height: isTablet ? 20 : 14),
+                        _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          ],
         ),
-        SizedBox(height: isTablet ? 16 : 12),
-        const StarHeader(compact: true),
-        SizedBox(height: isTablet ? 20 : 14),
-        HomeTiles(isTablet: isTablet, compact: true),
-        SizedBox(height: isTablet ? 24 : 18),
-        SizedBox(
-          width: double.infinity,
-          child: _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
-        ),
-        SizedBox(height: isTablet ? 16 : 10),
-      ],
+      ),
     );
   }
 }
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Logo Header
-// ─────────────────────────────────────────────────────────────────────────────
-
-class _LogoHeader extends ConsumerWidget {
-  const _LogoHeader({
-    required this.l10n,
-    required this.theme,
-    this.compact = false,
-    this.isTablet = false,
-  });
-  final AppLocalizations l10n;
-  final ThemeData theme;
-  final bool compact;
-  final bool isTablet;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final highContrast = AppTheme.isHighContrastTheme(theme);
-    final logoSize =
-        compact ? (isTablet ? 72.0 : 56.0) : (isTablet ? 160.0 : 120.0);
-    final logo = Container(
-      width: logoSize,
-      height: logoSize,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        boxShadow: [
-          BoxShadow(
-            color: (highContrast
-                    ? AppTheme.brandPrimaryLight
-                    : theme.colorScheme.primary)
-                .withAlpha(60),
-            blurRadius: compact ? 16 : 32,
-            spreadRadius: compact ? 2 : 4,
-          ),
-        ],
-      ),
-      child: ClipOval(
-        child: Image(
-          image: _appLogoImage,
-          width: logoSize,
-          height: logoSize,
-          fit: BoxFit.cover,
-        ),
-      ),
-    );
-    final title = Text(
-      l10n.appTitle,
-      style: (compact
-              ? theme.textTheme.headlineSmall
-              : theme.textTheme.headlineMedium)
-          ?.copyWith(
-            fontWeight: FontWeight.w700,
-            letterSpacing: -0.5,
-            fontSize: compact ? (isTablet ? 22 : 20) : (isTablet ? 32 : null),
-          ),
-      textAlign: compact ? TextAlign.left : TextAlign.center,
-    );
-    final subtitle = Text(
-      l10n.homeSubtitle,
-      style: theme.textTheme.bodyMedium?.copyWith(
-        color:
-            highContrast
-                ? theme.colorScheme.onSurface
-                : theme.colorScheme.onSurface.withAlpha(153),
-        fontSize: isTablet ? 16 : null,
-      ),
-      textAlign: compact ? TextAlign.left : TextAlign.center,
-    );
-    if (compact) {
-      return Row(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          logo,
-          SizedBox(width: isTablet ? 18 : 12),
-          ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: isTablet ? 520 : 420),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [title, const SizedBox(height: 4), subtitle],
-            ),
-          ),
-        ],
-      );
-    }
-
-    return Column(
-      children: [
-        logo,
-        SizedBox(height: isTablet ? 28 : 20),
-        title,
-        const SizedBox(height: 6),
-        subtitle,
-      ],
-    );
-  }
-}
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Footer — 5 items that wrap naturally
-// ─────────────────────────────────────────────────────────────────────────────
 
 class _Footer extends StatelessWidget {
   const _Footer({

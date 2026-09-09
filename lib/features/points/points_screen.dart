@@ -21,6 +21,8 @@ import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
 import '../../shared/widgets/content_width_constraint.dart';
+import '../avatar/avatar_name_sheet.dart';
+import '../avatar/widgets/avatar_card.dart';
 import 'points_models.dart';
 import 'points_providers.dart';
 import 'widgets/daily_chart.dart';
@@ -86,6 +88,16 @@ class _OverviewTab extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
       children: [
+        // AVA-01 puts the avatar on the home screen *and* here, and STAT-07
+        // wants the level with a bar to the next. Same widget as the home
+        // screen, so the two cannot show different levels.
+        Card(
+          margin: const EdgeInsets.only(bottom: 16),
+          child: Padding(
+            padding: const EdgeInsets.all(12),
+            child: AvatarCard(onTap: () => showAvatarNameSheet(context)),
+          ),
+        ),
         KeyFiguresGrid(figures: figures),
         const SizedBox(height: 24),
         Text(

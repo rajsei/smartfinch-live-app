@@ -688,7 +688,7 @@ The app has no account and stores everything on the device, which is the right t
 
 The phase-3 list in this document was built from the requirements the transition *changed*. Re-reading the specification's P1 rows against the code afterwards turns up a set that was never on it, and most of them cluster:
 
-**The avatar and the level are not built at all** — `AVA-01` (an avatar figure on the home screen and the points overview), `AVA-02` (it develops with the level: egg → chick → fledgling → adult), `AVA-05` (it can be named), `STAT-07` (current level with a progress bar to the next) and `HOME-07` (the avatar on the home screen). The *data* is there and always has been: `UserProfiles.highestLevelReached` is written, and `AUS-12`'s ratchet already protects it — including through a restore, as of `SET-07`. What is missing is every part a child would see. This is the largest single gap left, and it is a feature cluster rather than five separate jobs.
+**~~The avatar and the level are not built at all~~ — done, with the home-screen redesign; see the section below.** `AVA-01`, `AVA-02`, `AVA-05`, `STAT-07` and `HOME-07` went in as one cluster, because the level *is* the avatar's stage of life and building either alone would have meant building half the other. The paragraph below is left as written, because the reason it was one gap rather than five is the same reason it was one change. The *data* is there and always has been: `UserProfiles.highestLevelReached` is written, and `AUS-12`'s ratchet already protects it — including through a restore, as of `SET-07`. What is missing is every part a child would see. This is the largest single gap left, and it is a feature cluster rather than five separate jobs.
 
 **Smaller, and each independent:**
 
@@ -713,7 +713,58 @@ The phase-3 list in this document was built from the requirements the transition
 
 *None of this contradicts what phase 3 set out to do* — the list at the top of this section was the set of requirements the transition **changed**, and every one of those is now built. But "phase 3 is done" and "P1 is done" are different sentences, and only the first is true.
 
-**A second home-screen redesign direction is being explored, not yet built.** Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
+### The avatar block, and the home screen it lives on
+
+**`AVA-01`, `AVA-02`, `AVA-05`, `STAT-07` and `HOME-07` are done** ✅ — 35 tests. This was the largest gap the P1 audit above turned up, and it was one cluster rather than five jobs: the level *is* the avatar's stage of life, so building either alone would have meant building half of the other.
+
+**The ladder was already specified and already half-built.** §3.5's fifteen rungs go in as a const table — egg, chick, nestling, fledgling, young bird, scout, listener, singer, territory holder, far flier, migrant, returner, old bird, flock leader, legend — and `UserProfiles.highestLevelReached` has been in the schema since phase 1. What was missing was anything that *wrote* it: the column existed, `AUS-12`'s ratchet was described in three documents and defended through a restore in `SET-07`, and nothing had ever raised it. It is raised now in `ScoringRepository._addStars`, which is the one place the star total changes.
+
+⚠️ **A ratchet that is only ever read is not a ratchet.** That is the failure this cluster is most likely to regress into, because everything looks correct until the first rebalancing — which is exactly when nobody is looking at it. There is a test that plays until a threshold is crossed and asserts the stored floor moved, and another that sets the floor above the total and asserts play cannot lower it.
+
+**Four stages, not fifteen.** `AVA-02` words it as egg → chick → fledgling → adult, and that is what shipped. Fifteen pictures would be fifteen pieces of artwork nobody has drawn; the level number and its title carry the finer progression, the picture carries the shape of it. The stages are **emoji, deliberately** — a placeholder PNG looks like a decision, and this is explicitly not one. Real illustrations replace one getter and nothing else.
+
+**`STAT-07`'s bar can never say a child has lost ground.** After a rebalancing the stored level sits above what today's stars would earn, so the progress fraction clamps at zero and the bar reads empty rather than negative. Nothing anywhere mentions it — the whole point of the ratchet is that the child never finds out the level was defended. `LevelProgress.isRatcheted` exists only so a test can assert that state is reachable and stable.
+
+**`AVA-05` · a list, never a text field.** Twelve preset names, and the reason is in the requirement: free text is a moderation surface the app has decided not to acquire (`KID-07`). `LOG-13`'s place names are the one exception the specification made deliberately, and it made it because a place name is for the child's own memory of a walk; an avatar's name has no such argument. The names are **not localised** — translating "Pieps" into eleven languages would rename a child's bird when the family switches the app's language. The name lives in `UserProfiles.avatarState`, so it travels with a backup (`SET-07`) instead of being the one thing lost on a new phone.
+
+### The home screen, redesigned
+
+The direction sketched at the end of phase 3 is built, with one deliberate restraint: **theme roles, not chosen colours.** A block of `primaryContainer` at the top carrying the logo, the avatar and the star figures; a `surface`-coloured panel below carrying the tile navigation. Both come from `ColorScheme`, so the layout follows light/dark/dynamic-colour/high-contrast the way the rest of the app does and nothing commits to a palette the sketch explicitly left unsettled.
+
+**The panel pulls down, and that is the load-bearing part.** It was the one piece the sketch marked as meant to survive: the lower area drops to a handle at the screen's edge and frees the space above it. Today that space is the header; later it is where a child arranges the birds their level has unlocked.
+
+*It is arithmetic, not a `DraggableScrollableSheet`.* It was one, and it did not work: that widget sizes itself in **fractions of its parent**, which is right for a modal over a finished screen and wrong for a panel that has to leave a particular header visible. The fraction and the header's real height are unrelated numbers, and when they disagree the panel covers the header and clips its own contents — on a phone it opened over the star figures and cut the tiles off mid-row, which read as the app having stopped drawing. The split is computed now: the header gets the status-bar inset plus a fixed content height, the panel takes the rest, and the panel keeps its height while it slides so nothing reflows mid-animation.
+
+*It is not a hidden gesture.* The handle is visible, it answers to a **tap as well as a drag** — a child who never discovers the drag can still press it — there are two positions rather than a free float, and every destination is still one tap away in the default position (`KID-04`). Tested at 360 × 640, by measuring that each tile's label ends above the bottom of the screen: "one tap away" is not one tap away if the last row is below the fold.
+
+**Landscape is the same two blocks turned ninety degrees.** Portrait splits top and bottom because that is where the room is; held sideways a phone has the opposite problem — plenty of width, barely any height — so the blocks stand side by side: the coloured one on the left with the bird and the figures, the surface one on the right with the tiles, its rounded edge facing the header exactly as the top edge does in portrait.
+
+*It is the same `HomeHeader`*, not a landscape arrangement of the same numbers. The star display with its rules is the one a child already knows, and the two orientations cannot drift into showing different things.
+
+*Two parts to three.* The header's width need is close to fixed — a bird, a gap, a six-figure number beside it. The tiles are the half that *uses* extra width, so they get the larger share.
+
+*No handle there.* In portrait, pulling the panel down frees the screen for something — today the header, later the diorama. Sideways there is nothing to free: the header is already beside the panel, not behind it. A gesture that only half-matched the other orientation would be worse than none.
+
+**The logo and the app title are gone from both orientations**, and the warm-up's logo precache went with them — it existed to have the image decoded before the header painted it, and no header paints it now. That also removed a two-second timer that every home-screen test had to pump past.
+
+**The header was laid out twice.** The first pass reused the existing pieces — logo block, then an `AvatarCard`, then the star header — and it was wrong on a phone: three stacked cards inside 40 % of the screen, nothing like the sketch. The second pass is `HomeHeader`, built to the agreed arrangement:
+
+- the bird in a circle on the left, its level on a chip
+- ⭐ the total, large, with its label beside it
+- a rule, then the two smaller figures side by side — 30 days, and today
+- the level line and its bar across the full width
+
+*The logo and the app title are gone from it.* They were the first thing on the old home screen and they cost the block a third of its height to tell a child the name of the app they had just opened. The header's job is to say what *they* have; the app's own name is on the icon they tapped.
+
+*The secondary tiles are two then three*, as the sketch has them. Five across a phone leaves each tile narrower than its own label, and "Einstellungen" wrapping onto three lines is how a grid stops reading as one. Landscape keeps the single row, where there is width for it.
+
+**`LIVE-18` survives the restyle**, which is the part of this worth a note: while scoring is off the figures are still replaced by the same notice live mode shows, in the same words. A header that kept displaying stale totals during a paused session would be the app quietly lying about a number a child is watching.
+
+*And a test that would have caught the first pass.* The existing home tests pump at 1,000 logical pixels, which the layout treats as a tablet — the size that actually squeezes this header is a short phone. There is now one at 360 × 640 with a six-figure star total, and it found a real overflow on the level line the moment it was written: at level 13 the right-hand text reads "14,343 to level 14", which is wider than what is left beside "Level 13". It gives way now instead of overflowing.
+
+**What this does not include:** `HOME-05` (the 7-day sparkline) and `HOME-06` ("Still possible today"). Both belong in the new header and both are now cheap — `AUS-04` already knows which daily badges are open — but neither is part of the avatar, and bundling them would have made one reviewable change into three.
+
+**~~A second home-screen redesign direction is being explored, not yet built.~~ Built — see the section above.** The sketch as it stood: Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
 
 ### What to watch during the two-week test
 
