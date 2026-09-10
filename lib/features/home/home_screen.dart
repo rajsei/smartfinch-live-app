@@ -199,7 +199,11 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
 
   /// What the header needs below the status bar: the avatar row with the
   /// figures beside it, and the level line with its bar.
-  static const double headerHeight = 200;
+  ///
+  /// A tablet gets more, and the header's contents grow to use it — otherwise
+  /// the extra height on a 1,280-pixel screen turns into a band of empty
+  /// colour above a block of empty surface.
+  static double headerHeight({required bool isTablet}) => isTablet ? 300 : 200;
 
   /// How much of the panel stays on screen when it is down.
   static const double handleHeight = 56;
@@ -225,10 +229,9 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
 
           // Clamped, so a very short screen still leaves the panel room to be
           // a panel rather than a strip with three tiles in it.
-          final openTop = (topInset + _PortraitHomeLayout.headerHeight).clamp(
-            0.0,
-            height * 0.55,
-          );
+          final openTop = (topInset +
+                  _PortraitHomeLayout.headerHeight(isTablet: widget.isTablet))
+              .clamp(0.0, height * 0.55);
           final closedTop = height - _PortraitHomeLayout.handleHeight;
 
           return Stack(
@@ -241,7 +244,9 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                 // Scrollable rather than clipped: on a short screen the clamp
                 // above can hand the header less than its content wants, and
                 // scrolling is the graceful answer to that.
-                child: const SingleChildScrollView(child: HomeHeader()),
+                child: SingleChildScrollView(
+                  child: HomeHeader(large: widget.isTablet),
+                ),
               ),
 
               AnimatedPositioned(
@@ -325,19 +330,47 @@ class _TilePanel extends StatelessWidget {
               ),
             ),
           ),
-          // Scrollable, so a small phone scrolls the tiles rather than losing
-          // the bottom row off the edge — which is what the first attempt did,
-          // and on screen it looked as though the app had stopped drawing.
+          // Bottom-aligned, and scrollable when that is not possible.
+          //
+          // The tiles sit at the **bottom** of the panel rather than at its
+          // top: that is where a thumb is, and it means the spare height ends
+          // up in one block above them instead of as a gap under the last row.
+          // That block is also the space the sketch earmarked for the diorama
+          // of unlocked birds, so leaving it whole is the point rather than a
+          // side effect.
+          //
+          // `minHeight` plus `MainAxisAlignment.end` is the standard pairing
+          // for "push to the bottom, but scroll if the content is taller than
+          // the box" — on a short phone the tiles simply scroll instead of
+          // being pushed off the edge.
           Expanded(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  HomeTiles(isTablet: isTablet),
-                  const SizedBox(height: 12),
-                  _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
-                  const SizedBox(height: 20),
-                ],
-              ),
+            child: LayoutBuilder(
+              builder: (context, constraints) {
+                return SingleChildScrollView(
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: constraints.maxHeight,
+                    ),
+                    child: Column(
+                      // Bottom on a phone, centred on a tablet. The bottom
+                      // edge is a thumb argument, and a tablet is not held by
+                      // one — there the same alignment would leave half a
+                      // screen of blank surface above the buttons, which reads
+                      // as a void rather than as room.
+                      mainAxisAlignment:
+                          isTablet
+                              ? MainAxisAlignment.center
+                              : MainAxisAlignment.end,
+                      children: [
+                        HomeTiles(isTablet: isTablet),
+                        SizedBox(height: isTablet ? 20 : 14),
+                        _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
+                        SizedBox(height: isTablet ? 28 : 20),
+                      ],
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],

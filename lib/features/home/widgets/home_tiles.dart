@@ -96,9 +96,12 @@ class HomeTiles extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return ConstrainedBox(
-      constraints: BoxConstraints(maxWidth: isTablet ? 620 : 460),
+      // Capped, because a tile stretched across a tablet is a stripe rather
+      // than a button — but a wider cap than the phone's, so the extra width
+      // goes into the tiles instead of into margin.
+      constraints: BoxConstraints(maxWidth: isTablet ? 760 : 480),
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16),
+        padding: EdgeInsets.symmetric(horizontal: isTablet ? 24 : 16),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
@@ -110,7 +113,7 @@ class HomeTiles extends ConsumerWidget {
                     MaterialPageRoute<void>(builder: (_) => const LiveScreen()),
                   ),
             ),
-            SizedBox(height: compact ? 8 : 12),
+            SizedBox(height: compact ? 8 : (isTablet ? 18 : 14)),
             // Portrait: two, then three. Five across a phone leaves each tile
             // narrower than its own label, and "Einstellungen" wrapping onto
             // three lines is how a grid stops reading as a grid. Landscape
@@ -127,7 +130,7 @@ class HomeTiles extends ConsumerWidget {
                 isTablet: isTablet,
                 compact: compact,
               ),
-              const SizedBox(height: 8),
+              SizedBox(height: isTablet ? 14 : 10),
               _TileRow(
                 tiles: _secondaryTiles.skip(2).toList(),
                 isTablet: isTablet,
@@ -171,7 +174,7 @@ class _TileRow extends StatelessWidget {
                   ),
             ),
           ),
-          if (tile != tiles.last) const SizedBox(width: 8),
+          if (tile != tiles.last) SizedBox(width: isTablet ? 14 : 10),
         ],
       ],
     );
@@ -208,14 +211,14 @@ class _LiveTile extends StatelessWidget {
           child: Container(
             width: double.infinity,
             padding: EdgeInsets.symmetric(
-              horizontal: 20,
-              vertical: compact ? 18 : (isTablet ? 32 : 26),
+              horizontal: isTablet ? 28 : 22,
+              vertical: compact ? 20 : (isTablet ? 46 : 34),
             ),
             child: Row(
               children: [
                 Icon(
                   AppIcons.micRounded,
-                  size: compact ? 34 : (isTablet ? 48 : 40),
+                  size: compact ? 34 : (isTablet ? 60 : 46),
                   color: theme.colorScheme.onPrimary,
                 ),
                 const SizedBox(width: 16),
@@ -284,24 +287,25 @@ class _SecondaryTile extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(14),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: isTablet ? 18 : 14),
+            padding: EdgeInsets.symmetric(vertical: isTablet ? 30 : 22),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
                   icon,
-                  size: isTablet ? 28 : 24,
+                  size: isTablet ? 38 : 30,
                   color: theme.colorScheme.onSurfaceVariant,
                 ),
-                const SizedBox(height: 6),
+                SizedBox(height: isTablet ? 10 : 8),
                 Text(
                   label,
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurface,
-                  ),
+                  style: (isTablet
+                          ? theme.textTheme.titleMedium
+                          : theme.textTheme.labelLarge)
+                      ?.copyWith(color: theme.colorScheme.onSurface),
                 ),
               ],
             ),

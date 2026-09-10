@@ -550,4 +550,102 @@ void main() {
       }
     });
   });
+
+  // ===========================================================================
+  // Where the buttons sit, and how big they are
+  // ===========================================================================
+  //
+  // The panel is taller than its contents on every screen worth shipping to,
+  // so *where the slack goes* is a decision rather than an accident. On a phone
+  // it goes above the tiles, putting them under the thumb; on a tablet it is
+  // split, because a tablet is not held by one thumb and the same alignment
+  // would read as half a blank screen rather than as room.
+  // ===========================================================================
+  group('the tile panel', () {
+    Future<void> pumpAt(WidgetTester tester, Size size) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      tester.view.physicalSize = size;
+      tester.view.devicePixelRatio = 1.0;
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            appDatabaseProvider.overrideWithValue(db),
+            starTotalsProvider.overrideWith(
+              (ref) async => const StarTotals(total: 4200),
+            ),
+            levelProgressProvider.overrideWith(
+              (ref) async => progressFor(stars: 4200),
+            ),
+            avatarNameProvider.overrideWith((ref) async => null),
+          ],
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+    }
+
+    testWidgets('on a phone the buttons sit at the bottom', (tester) async {
+      await pumpAt(tester, const Size(390, 844));
+
+      final panelTop = tester.getRect(find.byType(HomeHeader)).bottom;
+      final tiles = tester.getRect(find.byType(HomeTiles));
+
+      final above = tiles.top - panelTop;
+      final below = 844 - tiles.bottom;
+
+      // The slack is above them, not spread as a gap under the last row.
+      expect(above, greaterThan(below));
+      expect(below, lessThan(120), reason: 'they should be near the edge');
+    });
+
+    testWidgets('on a tablet it is split instead', (tester) async {
+      await pumpAt(tester, const Size(800, 1280));
+
+      final panelTop = tester.getRect(find.byType(HomeHeader)).bottom;
+      final tiles = tester.getRect(find.byType(HomeTiles));
+
+      final above = tiles.top - panelTop;
+      final below = 1280 - tiles.bottom;
+
+      // Roughly balanced: neither edge gets all of it.
+      expect(above, greaterThan(60));
+      expect(below, greaterThan(60));
+    });
+
+    testWidgets('and the buttons themselves are bigger there', (tester) async {
+      await pumpAt(tester, const Size(390, 844));
+      final onPhone = tester.getRect(find.byType(HomeTiles)).height;
+
+      await pumpAt(tester, const Size(800, 1280));
+      final onTablet = tester.getRect(find.byType(HomeTiles)).height;
+
+      expect(onTablet, greaterThan(onPhone));
+    });
+
+    testWidgets('the header grows with them, rather than floating', (
+      tester,
+    ) async {
+      // Otherwise a tablet shows a phone-sized header in a band of colour.
+      await pumpAt(tester, const Size(390, 844));
+      final onPhone = tester.getRect(find.byType(HomeHeader)).height;
+
+      await pumpAt(tester, const Size(800, 1280));
+      final onTablet = tester.getRect(find.byType(HomeHeader)).height;
+
+      expect(onTablet, greaterThan(onPhone));
+    });
+  });
 }

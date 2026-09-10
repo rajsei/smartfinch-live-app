@@ -39,11 +39,15 @@ import '../../scoring/scoring_providers.dart';
 
 /// The coloured block at the top of the home screen.
 class HomeHeader extends ConsumerWidget {
-  const HomeHeader({super.key, this.compact = false});
+  const HomeHeader({super.key, this.compact = false, this.large = false});
 
   /// Tightens the bird and the big number for the landscape column, which is
   /// narrower than the full width portrait gives them.
   final bool compact;
+
+  /// Opens them up for a tablet, which has height to spare and would
+  /// otherwise show a phone-sized header floating in a band of colour.
+  final bool large;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -58,7 +62,10 @@ class HomeHeader extends ConsumerWidget {
     final progress = ref.watch(levelProgressProvider).value ?? _startOfLadder;
 
     return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 20),
+      padding:
+          large
+              ? const EdgeInsets.fromLTRB(32, 24, 32, 28)
+              : const EdgeInsets.fromLTRB(20, 12, 20, 20),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
@@ -67,20 +74,25 @@ class HomeHeader extends ConsumerWidget {
             children: [
               AvatarBadge(
                 progress: progress,
-                size: compact ? 52 : 64,
+                size: compact ? 52 : (large ? 96 : 64),
                 onTap: () => showAvatarNameSheet(context),
               ),
-              SizedBox(width: compact ? 12 : 16),
+              SizedBox(width: compact ? 12 : (large ? 24 : 16)),
               Expanded(
                 child:
                     scoring
-                        ? _Figures(totals: totals, ink: ink, compact: compact)
+                        ? _Figures(
+                          totals: totals,
+                          ink: ink,
+                          compact: compact,
+                          large: large,
+                        )
                         : const ScoringPausedNotice(compact: true),
               ),
             ],
           ),
-          const SizedBox(height: 18),
-          _LevelLine(progress: progress, ink: ink),
+          SizedBox(height: large ? 28 : 18),
+          _LevelLine(progress: progress, ink: ink, large: large),
         ],
       ),
     );
@@ -167,11 +179,13 @@ class _Figures extends StatelessWidget {
     required this.totals,
     required this.ink,
     this.compact = false,
+    this.large = false,
   });
 
   final StarTotals totals;
   final Color ink;
   final bool compact;
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
@@ -199,7 +213,9 @@ class _Figures extends StatelessWidget {
                   ink: ink,
                   style: (compact
                           ? theme.textTheme.headlineSmall
-                          : theme.textTheme.headlineMedium)
+                          : (large
+                              ? theme.textTheme.displaySmall
+                              : theme.textTheme.headlineMedium))
                       ?.copyWith(fontWeight: FontWeight.w800),
                 ),
               ),
@@ -326,10 +342,15 @@ class _Star extends StatelessWidget {
 
 /// "Level 4" and the bar to the next one (`STAT-07`).
 class _LevelLine extends StatelessWidget {
-  const _LevelLine({required this.progress, required this.ink});
+  const _LevelLine({
+    required this.progress,
+    required this.ink,
+    this.large = false,
+  });
 
   final LevelProgress progress;
   final Color ink;
+  final bool large;
 
   @override
   Widget build(BuildContext context) {
@@ -379,7 +400,7 @@ class _LevelLine extends StatelessWidget {
           borderRadius: BorderRadius.circular(6),
           child: LinearProgressIndicator(
             value: progress.fraction,
-            minHeight: 9,
+            minHeight: large ? 14 : 9,
             backgroundColor: ink.withValues(alpha: 0.22),
             valueColor: AlwaysStoppedAnimation<Color>(
               theme.colorScheme.surface,
