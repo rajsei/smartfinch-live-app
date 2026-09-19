@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Übersicht",
   "pointsTabBadges": "Auszeichnungen",
   "pointsTabAchievements": "Errungenschaften",
-  "pointsLast30Days": "Die letzten 30 Tage",
   "pointsChartA11y": "Sterne pro Tag über {days} Tage, bester Tag {peak}",
   "pointsFigureTotalStars": "Sterne insgesamt",
   "pointsFigureSpecies": "Arten gesammelt",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "Noch {stars} bis Level {number}",
   "backupIncludeAudio": "Aufnahmen mitsichern",
   "backupIncludeAudioNote": "Sie sind auf dem neuen Gerät wieder da. Die Datei wird deutlich größer – ein Jahr Aufnahmen können mehrere hundert Megabyte sein.",
-  "journalClipShare": "Diese Aufnahme teilen"
+  "journalClipShare": "Diese Aufnahme teilen",
+  "chartRangeWeek": "7 Tage",
+  "chartRangeMonth": "30 Tage",
+  "chartRangeYear": "Jahr",
+  "pointsChartTitle": "Sterne pro Tag",
+  "pointsChartTapHint": "Tippe auf einen Balken, um den Tag zu öffnen.",
+  "pointsChartBarA11y": "{date}: {stars} Sterne",
+  "homeStillPossibleTitle": "Heute noch möglich",
+  "homeSparklineA11y": "Sterne der letzten {days} Tage"
 }

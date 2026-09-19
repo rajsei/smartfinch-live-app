@@ -30,11 +30,28 @@ import 'package:smartfinch/features/home/widgets/home_tiles.dart';
 import 'package:smartfinch/features/journal/journal_screen.dart';
 import 'package:smartfinch/features/points/points_screen.dart';
 import 'package:smartfinch/features/home/widgets/star_header.dart';
+import 'package:smartfinch/features/home/widgets/still_possible_card.dart';
+import 'package:smartfinch/features/points/points_models.dart';
+import 'package:smartfinch/features/points/points_providers.dart';
 import 'package:smartfinch/features/live/widgets/day_summary_bar.dart';
 import 'package:smartfinch/features/scoring/live_score_board.dart';
 import 'package:smartfinch/features/scoring/scoring_providers.dart';
+import 'package:smartfinch/features/scoring/scoring_repository.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
+
+/// Seven days with a gap in them, for HOME-05's sparkline.
+final _sevenDays = [
+  for (var i = 0; i < 7; i++)
+    () {
+      final date = DateTime(2026, 5, 8 + i);
+      return DayStars(
+        dayKey: dayKeyFor(date),
+        date: date,
+        stars: i == 3 ? 0 : 20 * (i + 1),
+      );
+    }(),
+];
 
 void main() {
   /// Pumps [child] with the scoring providers wired.
@@ -46,6 +63,11 @@ void main() {
     Widget child, {
     StarTotals? totals,
     bool scoringPaused = false,
+    // HOME-06's suggestion is derived from the whole badge catalogue, which
+    // would mean a database for every header test. Two open badges is the
+    // ordinary case; a test that cares about the empty one passes it.
+    List<BadgeDefinition> stillPossible = const [kEveningListener, kTenInOneGo],
+    List<DayStars>? sparkline,
   }) async {
     SharedPreferences.setMockInitialValues({
       if (scoringPaused) 'species_filter_mode': 'off',
@@ -60,6 +82,10 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
+          stillPossibleProvider.overrideWith((ref) async => stillPossible),
+          homeSparklineProvider.overrideWith(
+            (ref) async => sparkline ?? _sevenDays,
+          ),
           if (totals != null)
             starTotalsProvider.overrideWith((ref) async => totals),
         ],
@@ -602,13 +628,73 @@ void main() {
 
       final panelTop = tester.getRect(find.byType(HomeHeader)).bottom;
       final tiles = tester.getRect(find.byType(HomeTiles));
+      // From the top of the *buttons*, not of `HomeTiles`: HOME-06's
+      // suggestion sits inside the same widget, above the Live tile, and it is
+      // content rather than slack.
+      final buttons = tester.getRect(
+        find
+            .ancestor(of: find.text('Live'), matching: find.byType(Material))
+            .first,
+      );
 
-      final above = tiles.top - panelTop;
+      final above = buttons.top - panelTop;
       final below = 844 - tiles.bottom;
 
       // The slack is above them, not spread as a gap under the last row.
       expect(above, greaterThan(below));
       expect(below, lessThan(120), reason: 'they should be near the edge');
+    });
+
+    testWidgets('the panel is only as tall as what is in it', (tester) async {
+      // It used to take the whole remainder of the screen and push its
+      // contents to the bottom of it, which left a block of empty surface
+      // under them on anything roomy. That room belongs to the coloured half,
+      // where the sketch put the diorama.
+      await pumpAt(tester, const Size(800, 1280));
+
+      final lastThing = tester.getRect(find.text('Help')).bottom;
+
+      expect(
+        1280 - lastThing,
+        lessThan(60),
+        reason: 'the surface below the footer should be a margin, not a block',
+      );
+    });
+
+    testWidgets('and it still takes only what the header leaves', (
+      tester,
+    ) async {
+      // The other end of the same rule: on a screen too short for everything
+      // the panel stops at the header rather than growing over it, and its
+      // contents scroll inside what is left.
+      await pumpAt(tester, const Size(360, 640));
+
+      final header = tester.getRect(find.byType(HomeHeader));
+      final tiles = tester.getRect(find.byType(HomeTiles));
+
+      expect(tiles.top, greaterThanOrEqualTo(header.bottom));
+      for (final label in ['Collection', 'Explore', 'Journal', 'Points']) {
+        expect(
+          tester.getRect(find.text(label)).bottom,
+          lessThanOrEqualTo(640),
+          reason: '$label is off the bottom of a 640-pixel screen',
+        );
+      }
+    });
+
+    testWidgets('the handle answers across the full width, and 48 high', (
+      tester,
+    ) async {
+      // The grip is drawn small on purpose; what has to be big is the thing
+      // that reacts. A child aiming at a five-pixel bar with a thumb misses.
+      await pumpAt(tester, const Size(390, 844));
+
+      final handle = tester.getRect(
+        find.bySemanticsLabel(RegExp('Drag to move')),
+      );
+
+      expect(handle.height, greaterThanOrEqualTo(48));
+      expect(handle.width, 390);
     });
 
     testWidgets('on a tablet it is split instead', (tester) async {
@@ -646,6 +732,84 @@ void main() {
       final onTablet = tester.getRect(find.byType(HomeHeader)).height;
 
       expect(onTablet, greaterThan(onPhone));
+    });
+  });
+
+  // ===========================================================================
+  // The two additions of 2.9 — HOME-05 and HOME-06
+  // ===========================================================================
+  //
+  // Both live on a screen with no spare height, so each is asserted twice:
+  // once for being there, and once for giving way when the screen is too short
+  // to carry it. `KID-04` is why — a destination pushed below the fold is not
+  // one tap away, and neither of these is worth a tile.
+  // ===========================================================================
+  group('HOME-05 · the seven-day sparkline', () {
+    testWidgets('is in the header, with the days it covers named', (
+      tester,
+    ) async {
+      await pump(tester, const HomeHeader());
+      await tester.pump();
+
+      expect(find.text('7 days'), findsOneWidget);
+    });
+
+    testWidgets('goes when the numbers go (LIVE-18)', (tester) async {
+      // Seven bars of stars is a point count like any other, and a header
+      // drawing them under a "paused" notice contradicts itself.
+      await pump(tester, const HomeHeader(), scoringPaused: true);
+      await tester.pump();
+
+      expect(find.byType(ScoringPausedNotice), findsOneWidget);
+      expect(find.text('7 days'), findsNothing);
+    });
+
+    testWidgets('and on a screen too short for it', (tester) async {
+      await pump(tester, const HomeHeader(dense: true));
+      await tester.pump();
+
+      expect(find.text('7 days'), findsNothing);
+      // The level line, which is what the room was kept for, stays.
+      expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    });
+  });
+
+  group('HOME-06 · what is still possible today', () {
+    testWidgets('names the open badges above the Live tile', (tester) async {
+      await pump(tester, const HomeTiles());
+      await tester.pump();
+
+      expect(find.text('Still possible today'), findsOneWidget);
+
+      final card = tester.getRect(find.byType(StillPossibleCard));
+      final live = tester.getRect(find.text('Live'));
+      expect(card.bottom, lessThan(live.top));
+    });
+
+    testWidgets('a short screen gets one suggestion instead of two', (
+      tester,
+    ) async {
+      await pump(tester, const HomeTiles(dense: true));
+      await tester.pump();
+      final dense = tester.getRect(find.byType(StillPossibleCard)).height;
+
+      await pump(tester, const HomeTiles());
+      await tester.pump();
+      final full = tester.getRect(find.byType(StillPossibleCard)).height;
+
+      expect(dense, lessThan(full));
+    });
+
+    testWidgets('is absent, not empty, when there is nothing to suggest', (
+      tester,
+    ) async {
+      // An encouraging placeholder would make it furniture, and furniture is
+      // not read.
+      await pump(tester, const HomeTiles(), stillPossible: const []);
+      await tester.pump();
+
+      expect(find.text('Still possible today'), findsNothing);
+      expect(tester.getRect(find.byType(StillPossibleCard)).height, 0);
     });
   });
 }

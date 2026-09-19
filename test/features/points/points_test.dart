@@ -216,6 +216,31 @@ void main() {
         expect(active[1] - active[0], 3, reason: 'three days apart, still');
       });
 
+      test('STAT-04 · the window is what the caller asked for', () async {
+        expect(
+          (await points.overview(now: may4, chartDays: 7)).dailyStars,
+          hasLength(7),
+        );
+        expect(
+          (await points.overview(now: may4, chartDays: 365)).dailyStars,
+          hasLength(365),
+        );
+      });
+
+      test('HOME-05 · the sparkline is the same shape, read cheaply', () async {
+        // Its own query, so opening the home screen does not derive every
+        // badge and achievement to draw seven bars — but the seven days it
+        // returns have to be the seven the chart would have drawn.
+        await hear('Species sp0', at: may4.subtract(const Duration(days: 2)));
+
+        final sparkline = await points.dailyStars(now: may4, days: 7);
+        final chart =
+            (await points.overview(now: may4, chartDays: 7)).dailyStars;
+
+        expect(sparkline.map((d) => d.dayKey), chart.map((d) => d.dayKey));
+        expect(sparkline.map((d) => d.stars), chart.map((d) => d.stars));
+      });
+
       test('day bonuses are in the column too', () async {
         await hearMany(5);
 

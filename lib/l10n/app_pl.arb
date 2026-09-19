@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Przegląd",
   "pointsTabBadges": "Odznaki",
   "pointsTabAchievements": "Osiągnięcia",
-  "pointsLast30Days": "Ostatnie 30 dni",
   "pointsChartA11y": "Gwiazdki dziennie przez {days} dni, najlepszy dzień {peak}",
   "pointsFigureTotalStars": "Gwiazdek łącznie",
   "pointsFigureSpecies": "Zebranych gatunków",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "Jeszcze {stars} do poziomu {number}",
   "backupIncludeAudio": "Dołącz nagrania",
   "backupIncludeAudioNote": "Wrócą na nowym urządzeniu. Plik będzie znacznie większy – rok nagrań to nawet kilkaset megabajtów.",
-  "journalClipShare": "Udostępnij to nagranie"
+  "journalClipShare": "Udostępnij to nagranie",
+  "chartRangeWeek": "7 dni",
+  "chartRangeMonth": "30 dni",
+  "chartRangeYear": "Rok",
+  "pointsChartTitle": "Gwiazdki dziennie",
+  "pointsChartTapHint": "Dotknij słupka, aby otworzyć ten dzień.",
+  "pointsChartBarA11y": "{date}: {stars} gwiazdek",
+  "homeStillPossibleTitle": "Dziś jeszcze możliwe",
+  "homeSparklineA11y": "Gwiazdki z ostatnich {days} dni"
 }

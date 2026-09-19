@@ -696,10 +696,10 @@ The phase-3 list in this document was built from the requirements the transition
 
 | | |
 |---|---|
-| `HOME-05` | A 7-day sparkline in the star header |
-| `HOME-06` | A "Still possible today" card naming 1–2 open daily badges — cheap now that `AUS-04` knows which are open |
-| `STAT-03` | Tapping a bar in the 30-day chart jumps to that day in the journal |
-| `STAT-04` | A 7 / 30 / 365 range switch on the chart (`PointsRepository.overview` already takes `chartDays`) |
+| ~~`HOME-05`~~ | ~~A 7-day sparkline in the star header~~ — **done**, see below |
+| ~~`HOME-06`~~ | ~~A "Still possible today" card naming 1–2 open daily badges~~ — **done**, see below |
+| ~~`STAT-03`~~ | ~~Tapping a bar in the chart jumps to that day in the journal~~ — **done**, see below |
+| ~~`STAT-04`~~ | ~~A 7 / 30 / 365 range switch on the chart~~ — **done**, see below |
 | `SAM-04b` | Per-species silhouettes for undetected cells, replacing the shared placeholder |
 | `SAM-08` | A sample call on the species page — blocked on licence-free recordings, not on code |
 | `SET-04` | Sounds and haptics separately switchable |
@@ -859,6 +859,92 @@ German bird names take all three genders — *der* Zilpzalp, *die* Amsel, *das* 
 ⚠️ **The same sentence has a second grammar bug, which is not fixed.** `{month}` is rendered with `DateFormat.MMMM`, which yields the **nominative**: `апрель`, `kwiecień`, `duben`. Russian, Polish and Czech all need a case after the preposition — *с апреля*, *od kwietnia*, *od dubna* — so those three read as broken to a native speaker. This one cannot be dodged by rephrasing the way the article could, and hand-inflecting twelve month names in three languages I cannot check with a speaker is the same bet `SAM-11` declined to make. **It needs 36 short strings from someone who speaks them.**
 
 **~~A second home-screen redesign direction is being explored, not yet built.~~ Built — see the section above.** The sketch as it stood: Phase 2's `HOME-01/02/03/08` header and tile grid shipped and works; a two-tone layout is under discussion as its successor — a colour block at the top carrying the avatar and the star figures, and a lower, surface-coloured area carrying the tile navigation, both still adapting to light/dark/dynamic-colour/high-contrast the way `AppTheme` already does today. **Neither the colours nor the tile split are settled** — mockups exist in four theme variants purely to show that the header can carry any accent, not to pick one, and the sketched 1-large-Live + 2 + 3 tile arrangement is a rough placement, not a layout requirement. The one piece meant to survive into the real design: the lower area should be built so it can later be **dragged further down** — collapsing to a small handle at the screen's bottom edge and freeing the screen above it. That is the surface a future per-level bird unlock would use, letting a child arrange their unlocked birds on screen like a small diorama before pulling the handle back up to restore the tile navigation. No requirement ID exists for this yet — it is a UI direction, not a scored feature.
+
+### Four small things on two screens — `HOME-05`, `HOME-06`, `STAT-03`, `STAT-04`
+
+**All four are done** ✅ — 32 new tests, 1,622 green. They were taken together because they are two pairs on two screens that had just been rebuilt, and each pair is one idea: *a chart that can be looked at over different spans and looked into*, and *a home screen that says what you have and what is left*.
+
+#### `STAT-04` — three windows, and a year that is not 365 bars
+
+`ChartRange` is `week(7)`, `month(30)`, `year(365)`, and `PointsRepository.overview` already took `chartDays`, so the repository needed nothing. The interesting part is what a bar *means* in each.
+
+A year drawn as 365 bars would be one pixel each on a phone. That breaks two things at once: nobody can read an individual day, and `STAT-03`'s tap has no target. So **a year is 52 weekly columns**, grouped on ISO weeks — the same week `PKT-05` and the journal already count, rather than a rolling seven from today, so the columns line up with the weeks the rest of the app talks about.
+
+`STAT-02`'s rule survives the bucketing intact: a week nobody went out is an empty column, it is just a wider one.
+
+The chart also rescales itself per range. A weekly column is the sum of seven days, so the overview's per-*day* peak would send most of a year's bars off the top; the ceiling is re-derived from the columns actually drawn.
+
+#### `STAT-03` — a bar is a way back into the afternoon that produced it
+
+Tapping a column opens that day in the journal. Two details carry the requirement:
+
+**An empty column opens nothing.** A day with no detections has no journal entry, and sending a child to a blank screen for aiming at a gap is worse than not reacting. The rule lives in the data rather than in the gesture: `ChartColumn.dayKey` is null for an empty column, and a column without a day key is not wrapped in a tap target at all. For a weekly column the key is the first day in that week that produced something — the day a child tapping a tall bar was actually asking about.
+
+**The tap target is the whole column, not the drawn bar.** An empty day is a two-pixel sliver and a quiet day barely more, and the height above a short bar belongs to the same day as the bar does.
+
+The chart's own screen-reader label stayed, but without `excludeSemantics` — every bar is now a button, and excluding them would have traded the way in for a sentence describing it. Each bar carries its date and its stars.
+
+#### `HOME-05` — seven bars in the header
+
+Its own provider (`homeSparklineProvider`, over a new `PointsRepository.dailyStars`) rather than the Points overview, so opening the home screen does not derive every badge and achievement to draw seven bars. Same rule as the big chart: an empty day is a column, never a day left out.
+
+It is drawn in the header's own two colours — the surface for what counts, a wash of the ink for what does not — which is the pairing the level bar underneath it already uses, so the two read as one block rather than as two charts. **It disappears with the figures when scoring is off** (`LIVE-18`): seven bars of stars is a point count like any other.
+
+#### `HOME-06` — what is still possible today
+
+The specification calls this *the single best lever for daily return — without a push notification*, and the second half is the design. Nothing goes looking for a child; the card is what they find when they open the app anyway, and it answers one question: is there anything left worth going outside for?
+
+Two words in the name do all the work, and both live in `still_possible.dart` rather than in the widget:
+
+**Today.** A badge earned this morning is not a suggestion this afternoon, so "open" means open *today* — `EarnedBadge.lastEarnedOn` against today's day key, not never-earned.
+
+**Possible.** 🌅 *The early bird* suggested at three in the afternoon is worse than suggesting nothing: it is the app asking for something that can no longer be done, which teaches a child that the card is noise. Every badge with a clock on it is filtered by the clock — before 09:00 for the two morning badges, before 23:00 for 🦉 *Night owl*.
+
+When there is nothing to suggest the card is **absent, not empty**. An encouraging placeholder would make it furniture, and furniture is not read.
+
+It sits directly above the Live tile and quieter than it: the reading order runs *here is something open* → *here is the button that does it*. The gap beneath the card is the card's own margin, so a day with nothing to say costs no space at all.
+
+#### The part that was not free: a small phone has no spare height
+
+Both home additions take room from a screen that had none. On a 360 × 640 phone the header and the panel are sized from one fixed budget, and measuring showed the cost exactly: the suggestion pushed the bottom tile row 116 pixels below the fold, and the sparkline pushed the header's content past the height the header box allots it.
+
+`KID-04` decides that argument — a destination below the fold is not one tap away — so **below 720 logical pixels the additions make themselves smaller rather than pushing a tile off the screen**:
+
+| | |
+|---|---|
+| The sparkline | Not drawn. It is the only thing in the header that repeats a figure shown beside it, and losing it costs less than a clipped level bar |
+| The suggestion | One badge instead of two. `HOME-06` asks for *one or two*, so a short screen gets the shorter form rather than a squeezed version of the longer one |
+| The tiles | Slightly tighter vertical padding, and the header's budget drops from 200 to 184 |
+
+Together that is 44 pixels recovered against 70 spent, and the last tile row ends above the fold on the smallest screen the app claims to support. Held sideways the same applies — there height is the scarce dimension too.
+
+The card itself was rebuilt smaller in the process: it started as a heading with each badge's full condition underneath, which measured 174 pixels, and ended as **one wrapped line** — the heading and the badge names. What a badge requires is in the Points area, one tap away in the same panel.
+
+The existing regression test that keeps the buttons at the bottom of the panel now measures from the **Live tile** rather than from `HomeTiles`, because the suggestion lives inside the same widget and is content rather than slack.
+
+#### One thing only the wiring showed
+
+Changing the window rebuilds `pointsOverviewProvider`, and the whole Points screen hangs off that one read — key figures, chart, badges, achievements. Tapping *Year* therefore blinked all three tabs to a spinner and back. `skipLoadingOnReload: true` keeps the previous read on screen while the new window loads, and a test asserts the frame immediately after the tap still has a chart in it.
+
+#### Strings
+
+Eight new keys × 12 locales. `pointsLast30Days` was retired rather than left behind: the heading above the chart cannot say "the last 30 days" when the window is a switch, so it became `pointsChartTitle` and the three window names carry the span. The sparkline's label is `chartRangeWeek` — the chart's own word for seven days, so the two screens cannot end up calling one span two different things.
+
+### The panel is now as tall as what is in it
+
+Two changes to the lower panel, both asked for directly after the four above landed.
+
+**It sizes itself to its content.** It used to take the whole remainder of the screen below the header and push its contents to the bottom of that, which meant the surface-coloured block ran up behind a region that belonged to nothing — empty surface on a phone, and on a tablet a 200-pixel band of it under the footer, because there the contents were *centred* in the same oversized panel. Now the panel is exactly its content, parked at the bottom edge, and the room that used to be inside it is on the coloured side — which is where the sketch put the diorama of unlocked birds in the first place.
+
+The header's budget is unchanged and became the panel's **cap**: the panel never grows past where it used to start, and when the content is taller than that — a short phone, or large text — it scrolls inside what is left rather than pushing a destination off the edge (`KID-04`).
+
+That cap is also why `MainAxisAlignment.end` and `MainAxisAlignment.center` are both gone. They were two ways of spending slack inside a panel bigger than its contents, and there is no slack left to spend.
+
+**How it is positioned changed with it.** `AnimatedPositioned` has to be told a height, and the only honest answer here is *whatever the tiles come to* — a number only the layout pass knows. So the panel sits in a `CustomSingleChildLayout` whose delegate asks for the content height and places it at the bottom; sliding down is the same delegate with the target moved, so the panel still keeps its layout while it moves and nothing reflows mid-animation. The reason the old `DraggableScrollableSheet` was thrown out — a widget that sizes itself in fractions of its parent — is the same reason this one measures instead.
+
+**The handle answers to twice the area.** It was a 24-pixel band; it is 48 now, the full width, with the peek that stays on screen raised from 56 to 64 so what is left at the edge reads as the top of a panel rather than a stray grab bar. The grip itself is still drawn small — a big one would be furniture — but a child aiming at five pixels of grip with a thumb misses, and the thing that reacts should not be the thing that is drawn.
+
+Three tests hold it: the surface under the footer is a margin rather than a block on a tablet, every destination is still above the fold on a 360 × 640 phone, and the handle is at least 48 high across the full width.
 
 ### What to watch during the two-week test
 

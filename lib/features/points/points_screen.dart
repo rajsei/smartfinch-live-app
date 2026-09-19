@@ -51,6 +51,10 @@ class PointsScreen extends ConsumerWidget {
         ),
         body: ContentWidthConstraint(
           child: overview.when(
+            // Switching the window (`STAT-04`) rebuilds the whole overview,
+            // and without this the three tabs would blink to a spinner and
+            // back every time a child tries a different span.
+            skipLoadingOnReload: true,
             loading: () => const Center(child: CircularProgressIndicator()),
             error: (_, _) => Center(child: Text(l10n.pointsUnavailable)),
             data:
@@ -74,16 +78,17 @@ class PointsScreen extends ConsumerWidget {
   }
 }
 
-/// Key figures and the 30-day chart (`STAT-02`, `STAT-06`).
-class _OverviewTab extends StatelessWidget {
+/// Key figures and the chart (`STAT-02`, `STAT-04`, `STAT-06`).
+class _OverviewTab extends ConsumerWidget {
   const _OverviewTab({required this.overview});
 
   final PointsOverview overview;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final figures = overview.figures;
+    final range = ref.watch(chartRangeProvider);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 32),
@@ -101,13 +106,33 @@ class _OverviewTab extends StatelessWidget {
         KeyFiguresGrid(figures: figures),
         const SizedBox(height: 24),
         Text(
-          l10n.pointsLast30Days,
+          l10n.pointsChartTitle,
           style: Theme.of(
             context,
           ).textTheme.titleSmall?.copyWith(fontWeight: FontWeight.w700),
         ),
-        const SizedBox(height: 12),
-        DailyStarsChart(days: overview.dailyStars, peak: overview.peakDayStars),
+        const SizedBox(height: 10),
+        ChartRangeSelector(
+          range: range,
+          onChanged:
+              (next) => ref.read(chartRangeProvider.notifier).state = next,
+        ),
+        const SizedBox(height: 16),
+        DailyStarsChart(
+          days: overview.dailyStars,
+          peak: overview.peakDayStars,
+          range: range,
+        ),
+        const SizedBox(height: 8),
+        // Said once, under the chart, rather than on every bar: a child who
+        // has not worked out that the bars open has no reason to try, and a
+        // hint next to the thing it describes is cheaper than a tutorial.
+        Text(
+          l10n.pointsChartTapHint,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(
+            color: Theme.of(context).colorScheme.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }

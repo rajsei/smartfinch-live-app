@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Обзор",
   "pointsTabBadges": "Значки",
   "pointsTabAchievements": "Достижения",
-  "pointsLast30Days": "Последние 30 дней",
   "pointsChartA11y": "Звёзды по дням за {days} дней, лучший день {peak}",
   "pointsFigureTotalStars": "Звёзд всего",
   "pointsFigureSpecies": "Видов собрано",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "Ещё {stars} до уровня {number}",
   "backupIncludeAudio": "Включить записи",
   "backupIncludeAudioNote": "На новом устройстве они снова будут на месте. Файл станет заметно больше — за год записи могут занять несколько сотен мегабайт.",
-  "journalClipShare": "Поделиться этой записью"
+  "journalClipShare": "Поделиться этой записью",
+  "chartRangeWeek": "7 дней",
+  "chartRangeMonth": "30 дней",
+  "chartRangeYear": "Год",
+  "pointsChartTitle": "Звёзды за день",
+  "pointsChartTapHint": "Нажми на столбик, чтобы открыть этот день.",
+  "pointsChartBarA11y": "{date}: {stars} звёзд",
+  "homeStillPossibleTitle": "Сегодня ещё возможно",
+  "homeSparklineA11y": "Звёзды за последние {days} дней"
 }

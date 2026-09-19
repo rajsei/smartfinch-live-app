@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Resumo",
   "pointsTabBadges": "Emblemas",
   "pointsTabAchievements": "Conquistas",
-  "pointsLast30Days": "Os últimos 30 dias",
   "pointsChartA11y": "Estrelas por dia ao longo de {days} dias, melhor dia {peak}",
   "pointsFigureTotalStars": "Estrelas no total",
   "pointsFigureSpecies": "Espécies recolhidas",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "Faltam {stars} para o nível {number}",
   "backupIncludeAudio": "Incluir as gravações",
   "backupIncludeAudioNote": "Voltam a estar no novo dispositivo. O ficheiro fica muito maior — um ano de gravações pode ter várias centenas de megabytes.",
-  "journalClipShare": "Partilhar esta gravação"
+  "journalClipShare": "Partilhar esta gravação",
+  "chartRangeWeek": "7 dias",
+  "chartRangeMonth": "30 dias",
+  "chartRangeYear": "Ano",
+  "pointsChartTitle": "Estrelas por dia",
+  "pointsChartTapHint": "Toca numa barra para abrir esse dia.",
+  "pointsChartBarA11y": "{date}: {stars} estrelas",
+  "homeStillPossibleTitle": "Ainda possível hoje",
+  "homeSparklineA11y": "Estrelas dos últimos {days} dias"
 }

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' show lerpDouble;
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -171,9 +172,16 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 // star figures and cut the tiles off mid-row.
 //
 // So the split is computed instead. The header gets what its content needs —
-// the status-bar inset plus a fixed content height — and the panel takes the
-// rest. Both numbers are exact, and the panel keeps its height while it moves,
-// so nothing re-lays-out mid-animation.
+// the status-bar inset plus a fixed content height — and the panel takes **as
+// much of the rest as its own content needs**, no more.
+//
+// That last part matters. The panel used to take the whole remainder and push
+// its contents to the bottom of it, which meant the surface-coloured block ran
+// up behind an empty region that belonged to nothing. Sizing it to its content
+// puts that region back on the coloured side, where the sketch wanted it: the
+// space above the panel is the diorama's, not dead surface inside the panel.
+// The cap is still the old number, so the panel never grows past where it used
+// to start, and when the content is taller than that it scrolls.
 //
 // ### The panel still pulls down, and that is the load-bearing part
 //
@@ -203,10 +211,23 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   /// A tablet gets more, and the header's contents grow to use it — otherwise
   /// the extra height on a 1,280-pixel screen turns into a band of empty
   /// colour above a block of empty surface.
-  static double headerHeight({required bool isTablet}) => isTablet ? 300 : 200;
+  static double headerHeight({required bool isTablet, bool dense = false}) =>
+      isTablet ? 300 : (dense ? 184 : 200);
 
   /// How much of the panel stays on screen when it is down.
-  static const double handleHeight = 56;
+  ///
+  /// Comfortably more than the handle's own tap target, so what is left at the
+  /// edge reads as the top of a panel rather than as a stray grab bar.
+  static const double handleHeight = 64;
+
+  /// Below this the screen cannot carry everything at full size.
+  ///
+  /// The header and the panel are both sized from the same fixed budget, so on
+  /// a short phone the two additions of 2.9 — the sparkline and the suggestion
+  /// above the Live tile — come straight out of the room the destinations need.
+  /// `KID-04` wins that argument: below this height both make themselves
+  /// smaller rather than pushing a tile below the fold.
+  static const double denseBelow = 720;
 
   @override
   ConsumerState<_PortraitHomeLayout> createState() =>
@@ -227,12 +248,17 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
         builder: (context, constraints) {
           final height = constraints.maxHeight;
 
+          final dense = height < _PortraitHomeLayout.denseBelow;
+
+          // Where the header stops, and so the highest the panel may reach.
           // Clamped, so a very short screen still leaves the panel room to be
           // a panel rather than a strip with three tiles in it.
-          final openTop = (topInset +
-                  _PortraitHomeLayout.headerHeight(isTablet: widget.isTablet))
+          final headerBottom = (topInset +
+                  _PortraitHomeLayout.headerHeight(
+                    isTablet: widget.isTablet,
+                    dense: dense,
+                  ))
               .clamp(0.0, height * 0.55);
-          final closedTop = height - _PortraitHomeLayout.handleHeight;
 
           return Stack(
             children: [
@@ -240,31 +266,44 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                 top: topInset,
                 left: 0,
                 right: 0,
-                height: (openTop - topInset).clamp(0.0, height),
+                height: (headerBottom - topInset).clamp(0.0, height),
                 // Scrollable rather than clipped: on a short screen the clamp
                 // above can hand the header less than its content wants, and
                 // scrolling is the graceful answer to that.
                 child: SingleChildScrollView(
-                  child: HomeHeader(large: widget.isTablet),
+                  child: HomeHeader(large: widget.isTablet, dense: dense),
                 ),
               ),
 
-              AnimatedPositioned(
-                duration: const Duration(milliseconds: 220),
-                curve: Curves.easeOutCubic,
-                top: _down ? closedTop : openTop,
-                left: 0,
-                right: 0,
-                // A fixed height rather than `bottom: 0`: the panel keeps its
-                // layout while it slides, so the tiles do not reflow on every
-                // frame of the animation.
-                height: height - openTop,
-                child: _TilePanel(
-                  l10n: widget.l10n,
-                  theme: theme,
-                  isTablet: widget.isTablet,
-                  isDown: _down,
-                  onToggle: () => setState(() => _down = !_down),
+              // Laid out rather than positioned, because the number that
+              // decides where the panel starts is its own content height —
+              // which only the layout pass knows. The delegate asks for it,
+              // then puts the panel at the bottom of the screen; sliding down
+              // is the same delegate with the target moved, so the panel keeps
+              // its layout while it moves and nothing reflows mid-animation.
+              Positioned.fill(
+                child: TweenAnimationBuilder<double>(
+                  tween: Tween<double>(end: _down ? 1 : 0),
+                  duration: const Duration(milliseconds: 220),
+                  curve: Curves.easeOutCubic,
+                  builder: (context, slide, child) {
+                    return CustomSingleChildLayout(
+                      delegate: _PanelPosition(
+                        maxHeight: height - headerBottom,
+                        peek: _PortraitHomeLayout.handleHeight,
+                        slide: slide,
+                      ),
+                      child: child,
+                    );
+                  },
+                  child: _TilePanel(
+                    l10n: widget.l10n,
+                    theme: theme,
+                    isTablet: widget.isTablet,
+                    dense: dense,
+                    isDown: _down,
+                    onToggle: () => setState(() => _down = !_down),
+                  ),
                 ),
               ),
             ],
@@ -275,12 +314,59 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
   }
 }
 
+/// Sizes the panel to its content and parks it at the bottom edge.
+///
+/// [slide] runs 0 (open, sitting on the bottom of the screen) to 1 (down, with
+/// only [peek] of it left). Both ends are computed from the panel's measured
+/// height, which is the whole reason this is a layout delegate and not an
+/// `AnimatedPositioned`: a `Positioned` has to be told a height, and the only
+/// honest answer here is "whatever the tiles come to".
+class _PanelPosition extends SingleChildLayoutDelegate {
+  const _PanelPosition({
+    required this.maxHeight,
+    required this.peek,
+    required this.slide,
+  });
+
+  /// How far up the panel may grow — the header's bottom edge.
+  final double maxHeight;
+
+  /// What stays on screen when it is down.
+  final double peek;
+
+  final double slide;
+
+  @override
+  BoxConstraints getConstraintsForChild(BoxConstraints constraints) {
+    // Full width, and free to be any height up to the header. Loose rather
+    // than tight is the point: a tight height is what made the panel bigger
+    // than its contents in the first place.
+    return BoxConstraints(
+      minWidth: constraints.maxWidth,
+      maxWidth: constraints.maxWidth,
+      maxHeight: maxHeight,
+    );
+  }
+
+  @override
+  Offset getPositionForChild(Size size, Size childSize) {
+    final open = size.height - childSize.height;
+    final down = size.height - peek;
+    return Offset(0, lerpDouble(open, down, slide)!);
+  }
+
+  @override
+  bool shouldRelayout(_PanelPosition old) =>
+      old.maxHeight != maxHeight || old.peek != peek || old.slide != slide;
+}
+
 /// The lower half: a handle, the tiles, the footer.
 class _TilePanel extends StatelessWidget {
   const _TilePanel({
     required this.l10n,
     required this.theme,
     required this.isTablet,
+    required this.dense,
     required this.isDown,
     required this.onToggle,
   });
@@ -288,6 +374,7 @@ class _TilePanel extends StatelessWidget {
   final AppLocalizations l10n;
   final ThemeData theme;
   final bool isTablet;
+  final bool dense;
   final bool isDown;
   final VoidCallback onToggle;
 
@@ -298,6 +385,9 @@ class _TilePanel extends StatelessWidget {
       borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
       clipBehavior: Clip.antiAlias,
       child: Column(
+        // The panel is as tall as what is in it; the delegate above puts it at
+        // the bottom edge. Nothing here stretches to fill a box any more.
+        mainAxisSize: MainAxisSize.min,
         children: [
           // Visible, tappable and draggable. A gesture nobody can see is a
           // gesture a child does not have (KID-04), so the handle answers to a
@@ -313,12 +403,17 @@ class _TilePanel extends StatelessWidget {
                 if (velocity > 100 && !isDown) onToggle();
                 if (velocity < -100 && isDown) onToggle();
               },
+              // A band, not a bar. The grip is drawn small because a big one
+              // would be furniture, but a child aiming at five pixels with a
+              // thumb misses — so the thing that answers is the full width and
+              // comfortably past the 48-pixel target the rest of the app uses.
               child: SizedBox(
-                height: 24,
+                height: 48,
+                width: double.infinity,
                 child: Center(
                   child: Container(
-                    width: 44,
-                    height: 5,
+                    width: 52,
+                    height: 6,
                     decoration: BoxDecoration(
                       color: theme.colorScheme.onSurfaceVariant.withValues(
                         alpha: 0.4,
@@ -330,47 +425,28 @@ class _TilePanel extends StatelessWidget {
               ),
             ),
           ),
-          // Bottom-aligned, and scrollable when that is not possible.
+          // `Flexible`, not `Expanded`: the tiles get the height they ask for
+          // and the panel ends there. Only when they ask for more than the
+          // header leaves — a short phone, or large text — does the cap bite,
+          // and then this scrolls rather than pushing a destination off the
+          // edge (`KID-04`).
           //
-          // The tiles sit at the **bottom** of the panel rather than at its
-          // top: that is where a thumb is, and it means the spare height ends
-          // up in one block above them instead of as a gap under the last row.
-          // That block is also the space the sketch earmarked for the diorama
-          // of unlocked birds, so leaving it whole is the point rather than a
-          // side effect.
-          //
-          // `minHeight` plus `MainAxisAlignment.end` is the standard pairing
-          // for "push to the bottom, but scroll if the content is taller than
-          // the box" — on a short phone the tiles simply scroll instead of
-          // being pushed off the edge.
-          Expanded(
-            child: LayoutBuilder(
-              builder: (context, constraints) {
-                return SingleChildScrollView(
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: constraints.maxHeight,
-                    ),
-                    child: Column(
-                      // Bottom on a phone, centred on a tablet. The bottom
-                      // edge is a thumb argument, and a tablet is not held by
-                      // one — there the same alignment would leave half a
-                      // screen of blank surface above the buttons, which reads
-                      // as a void rather than as room.
-                      mainAxisAlignment:
-                          isTablet
-                              ? MainAxisAlignment.center
-                              : MainAxisAlignment.end,
-                      children: [
-                        HomeTiles(isTablet: isTablet),
-                        SizedBox(height: isTablet ? 20 : 14),
-                        _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
-                        SizedBox(height: isTablet ? 28 : 20),
-                      ],
-                    ),
-                  ),
-                );
-              },
+          // There is no alignment to choose any more. Bottom-on-a-phone and
+          // centred-on-a-tablet were two ways of spending slack inside a panel
+          // that was bigger than its contents; there is no slack to spend now,
+          // and the room that used to be it is the coloured block above, which
+          // is where the sketch put the diorama of unlocked birds.
+          Flexible(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  HomeTiles(isTablet: isTablet, dense: dense),
+                  SizedBox(height: isTablet ? 20 : 14),
+                  _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
+                  SizedBox(height: isTablet ? 28 : 20),
+                ],
+              ),
             ),
           ),
         ],
@@ -455,7 +531,14 @@ class _LandscapeHomeLayout extends ConsumerWidget {
                     padding: EdgeInsets.symmetric(vertical: isTablet ? 20 : 14),
                     child: Column(
                       children: [
-                        HomeTiles(isTablet: isTablet, compact: true),
+                        // Sideways the scarce dimension is height, so the
+                        // suggestion above the tiles takes its short form on a
+                        // phone and its full one on a tablet.
+                        HomeTiles(
+                          isTablet: isTablet,
+                          compact: true,
+                          dense: !isTablet,
+                        ),
                         SizedBox(height: isTablet ? 20 : 14),
                         _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
                       ],

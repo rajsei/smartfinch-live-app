@@ -7,6 +7,7 @@
 //   • the bird on the left, with its level on a chip
 //   • ⭐ the total, large, with its label to the right of it
 //   • a rule, then the two smaller figures side by side: 30 days, and today
+//   • seven bars for the seven days behind them (`HOME-05`)
 //   • the level line and its bar across the full width
 //
 // ### What is not here any more, and why
@@ -34,12 +35,19 @@ import '../../avatar/level_ladder.dart';
 import '../../avatar/widgets/avatar_card.dart';
 import '../../avatar/avatar_providers.dart';
 import '../../live/widgets/day_summary_bar.dart';
+import '../../points/points_models.dart';
+import '../../points/points_providers.dart';
 import '../../scoring/live_score_board.dart';
 import '../../scoring/scoring_providers.dart';
 
 /// The coloured block at the top of the home screen.
 class HomeHeader extends ConsumerWidget {
-  const HomeHeader({super.key, this.compact = false, this.large = false});
+  const HomeHeader({
+    super.key,
+    this.compact = false,
+    this.large = false,
+    this.dense = false,
+  });
 
   /// Tightens the bird and the big number for the landscape column, which is
   /// narrower than the full width portrait gives them.
@@ -48,6 +56,11 @@ class HomeHeader extends ConsumerWidget {
   /// Opens them up for a tablet, which has height to spare and would
   /// otherwise show a phone-sized header floating in a band of colour.
   final bool large;
+
+  /// A screen too short for everything. The sparkline is what goes: it is the
+  /// only thing in this block that repeats a figure already shown beside it,
+  /// and losing it costs less than a clipped level bar.
+  final bool dense;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -91,6 +104,14 @@ class HomeHeader extends ConsumerWidget {
               ),
             ],
           ),
+          // Hidden along with the figures while scoring is off (`LIVE-18`):
+          // seven bars of stars is a point count like any other, and a header
+          // that keeps drawing them under a "paused" notice is the app
+          // contradicting itself.
+          if (scoring && !dense) ...[
+            SizedBox(height: large ? 22 : 14),
+            _Sparkline(ink: ink, large: large),
+          ],
           SizedBox(height: large ? 28 : 18),
           _LevelLine(progress: progress, ink: ink, large: large),
         ],
@@ -296,6 +317,121 @@ class _SmallFigure extends StatelessWidget {
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The last seven days, seven bars wide (`HOME-05`).
+///
+/// The same rule as the big chart (`STAT-02`): a day with nothing on it is an
+/// empty column, never a day that was left out. Seven bars is too few to show
+/// a trend and that is the point — it shows *yesterday and the day before*,
+/// which is the span a child actually remembers.
+///
+/// Its own provider rather than the Points overview, so opening the home
+/// screen does not derive every badge and achievement to draw seven bars.
+class _Sparkline extends ConsumerWidget {
+  const _Sparkline({required this.ink, this.large = false});
+
+  final Color ink;
+  final bool large;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    // Absent rather than empty while the database opens: the header would
+    // otherwise jump by a bar's height a moment after it is drawn.
+    final days = ref.watch(homeSparklineProvider).value ?? const <DayStars>[];
+    if (days.isEmpty) return const SizedBox.shrink();
+
+    final peak = days.fold<int>(
+      0,
+      (best, day) => day.stars > best ? day.stars : best,
+    );
+    final barHeight = large ? 40.0 : 28.0;
+
+    return Semantics(
+      label: l10n.homeSparklineA11y(days.length),
+      excludeSemantics: true,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: [
+          // The chart's own word for this window, not a second one: the home
+          // screen and the Points screen should not call seven days two
+          // different things.
+          Text(
+            l10n.chartRangeWeek,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: ink.withValues(alpha: 0.75),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: SizedBox(
+              height: barHeight,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  for (final day in days)
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 2),
+                        child: _SparkBar(
+                          day: day,
+                          peak: peak,
+                          maxHeight: barHeight,
+                          ink: ink,
+                        ),
+                      ),
+                    ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SparkBar extends StatelessWidget {
+  const _SparkBar({
+    required this.day,
+    required this.peak,
+    required this.maxHeight,
+    required this.ink,
+  });
+
+  final DayStars day;
+  final int peak;
+  final double maxHeight;
+  final Color ink;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    final fraction = peak == 0 ? 0.0 : day.stars / peak;
+    final height =
+        day.isEmpty ? 3.0 : (fraction * maxHeight).clamp(4.0, maxHeight);
+
+    return Align(
+      alignment: Alignment.bottomCenter,
+      child: Container(
+        height: height,
+        decoration: BoxDecoration(
+          // The same pairing as the level bar below it — the header's own
+          // surface for what counts, a wash of the ink for what does not —
+          // so the two read as one block rather than as two charts.
+          color:
+              day.isEmpty
+                  ? ink.withValues(alpha: 0.22)
+                  : theme.colorScheme.surface,
+          borderRadius: BorderRadius.circular(3),
+        ),
+      ),
     );
   }
 }

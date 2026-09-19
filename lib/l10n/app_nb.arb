@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Oversikt",
   "pointsTabBadges": "Merker",
   "pointsTabAchievements": "Prestasjoner",
-  "pointsLast30Days": "De siste 30 dagene",
   "pointsChartA11y": "Stjerner per dag over {days} dager, beste dag {peak}",
   "pointsFigureTotalStars": "Stjerner totalt",
   "pointsFigureSpecies": "Arter samlet",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "{stars} igjen til nivå {number}",
   "backupIncludeAudio": "Ta med opptakene",
   "backupIncludeAudioNote": "De er tilbake på den nye enheten. Fila blir mye større – et år med opptak kan bli flere hundre megabyte.",
-  "journalClipShare": "Del dette opptaket"
+  "journalClipShare": "Del dette opptaket",
+  "chartRangeWeek": "7 dager",
+  "chartRangeMonth": "30 dager",
+  "chartRangeYear": "År",
+  "pointsChartTitle": "Stjerner per dag",
+  "pointsChartTapHint": "Trykk på en stolpe for å åpne dagen.",
+  "pointsChartBarA11y": "{date}: {stars} stjerner",
+  "homeStillPossibleTitle": "Fortsatt mulig i dag",
+  "homeSparklineA11y": "Stjerner de siste {days} dagene"
 }

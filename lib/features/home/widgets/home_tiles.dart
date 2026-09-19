@@ -32,6 +32,7 @@ import '../../journal/journal_screen.dart';
 import '../../live/live_screen.dart';
 import '../../points/points_screen.dart';
 import '../../settings/settings_screen.dart';
+import 'still_possible_card.dart';
 
 /// One secondary destination.
 class _HomeTile {
@@ -86,12 +87,22 @@ String _settingsLabel(AppLocalizations l10n) => l10n.settings;
 
 /// The home screen's navigation: one large Live tile plus secondary tiles.
 class HomeTiles extends ConsumerWidget {
-  const HomeTiles({super.key, this.isTablet = false, this.compact = false});
+  const HomeTiles({
+    super.key,
+    this.isTablet = false,
+    this.compact = false,
+    this.dense = false,
+  });
 
   final bool isTablet;
 
   /// Landscape: shorter primary tile, tiles in one row.
   final bool compact;
+
+  /// A screen with no height to spare, which the suggestion above the tiles
+  /// answers by making itself shorter rather than by pushing a destination
+  /// below the fold (`KID-04`).
+  final bool dense;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -105,9 +116,15 @@ class HomeTiles extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            // HOME-06 sits here rather than in the header, because the thing
+            // it suggests is done by the button directly underneath it. It
+            // takes no room on a day with nothing left to suggest — the gap
+            // below it belongs to the card, so an absent card leaves none.
+            StillPossibleCard(dense: dense),
             _LiveTile(
               isTablet: isTablet,
               compact: compact,
+              dense: dense,
               onTap:
                   () => Navigator.of(context).push(
                     MaterialPageRoute<void>(builder: (_) => const LiveScreen()),
@@ -123,18 +140,21 @@ class HomeTiles extends ConsumerWidget {
                 tiles: _secondaryTiles,
                 isTablet: isTablet,
                 compact: compact,
+                dense: dense,
               )
             else ...[
               _TileRow(
                 tiles: _secondaryTiles.take(2).toList(),
                 isTablet: isTablet,
                 compact: compact,
+                dense: dense,
               ),
               SizedBox(height: isTablet ? 14 : 10),
               _TileRow(
                 tiles: _secondaryTiles.skip(2).toList(),
                 isTablet: isTablet,
                 compact: compact,
+                dense: dense,
               ),
             ],
           ],
@@ -150,11 +170,13 @@ class _TileRow extends StatelessWidget {
     required this.tiles,
     required this.isTablet,
     required this.compact,
+    required this.dense,
   });
 
   final List<_HomeTile> tiles;
   final bool isTablet;
   final bool compact;
+  final bool dense;
 
   @override
   Widget build(BuildContext context) {
@@ -168,6 +190,7 @@ class _TileRow extends StatelessWidget {
               icon: tile.icon,
               label: tile.label(l10n),
               isTablet: isTablet,
+              dense: dense,
               onTap:
                   () => Navigator.of(context).push(
                     MaterialPageRoute<void>(builder: (_) => tile.builder()),
@@ -187,11 +210,13 @@ class _LiveTile extends StatelessWidget {
     required this.onTap,
     required this.isTablet,
     required this.compact,
+    required this.dense,
   });
 
   final VoidCallback onTap;
   final bool isTablet;
   final bool compact;
+  final bool dense;
 
   @override
   Widget build(BuildContext context) {
@@ -212,7 +237,7 @@ class _LiveTile extends StatelessWidget {
             width: double.infinity,
             padding: EdgeInsets.symmetric(
               horizontal: isTablet ? 28 : 22,
-              vertical: compact ? 20 : (isTablet ? 46 : 34),
+              vertical: compact ? 20 : (isTablet ? 46 : (dense ? 26 : 34)),
             ),
             child: Row(
               children: [
@@ -265,12 +290,14 @@ class _SecondaryTile extends StatelessWidget {
     required this.label,
     required this.onTap,
     required this.isTablet,
+    required this.dense,
   });
 
   final IconData icon;
   final String label;
   final VoidCallback onTap;
   final bool isTablet;
+  final bool dense;
 
   @override
   Widget build(BuildContext context) {
@@ -287,7 +314,9 @@ class _SecondaryTile extends StatelessWidget {
           onTap: onTap,
           borderRadius: BorderRadius.circular(14),
           child: Padding(
-            padding: EdgeInsets.symmetric(vertical: isTablet ? 30 : 22),
+            padding: EdgeInsets.symmetric(
+              vertical: isTablet ? 30 : (dense ? 18 : 22),
+            ),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [

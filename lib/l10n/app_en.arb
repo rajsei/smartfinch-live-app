@@ -5108,10 +5108,6 @@
   "@pointsTabAchievements": {
     "description": "STAT-05: third tab of the Points area"
   },
-  "pointsLast30Days": "The last 30 days",
-  "@pointsLast30Days": {
-    "description": "Heading above the 30-day bar chart (STAT-02)"
-  },
   "pointsChartA11y": "Stars per day over {days} days, best day {peak}",
   "@pointsChartA11y": {
     "description": "Screen-reader label for the daily bar chart",
@@ -6044,5 +6040,50 @@
   "journalClipShare": "Share this recording",
   "@journalClipShare": {
     "description": "Sharing one recording from the journal's clip player — the child's own data, on their own device"
+  },
+  "chartRangeWeek": "7 days",
+  "@chartRangeWeek": {
+    "description": "STAT-04: the seven-day window on the chart switch; also labels the home sparkline"
+  },
+  "chartRangeMonth": "30 days",
+  "@chartRangeMonth": {
+    "description": "STAT-04: the thirty-day window on the chart switch"
+  },
+  "chartRangeYear": "Year",
+  "@chartRangeYear": {
+    "description": "STAT-04: the year window on the chart switch, drawn as weekly columns"
+  },
+  "pointsChartTitle": "Stars per day",
+  "@pointsChartTitle": {
+    "description": "Heading above the bar chart, now that the window is switchable (STAT-04)"
+  },
+  "pointsChartTapHint": "Tap a bar to open that day.",
+  "@pointsChartTapHint": {
+    "description": "STAT-03: says once, under the chart, that tapping a bar opens that day"
+  },
+  "pointsChartBarA11y": "{date}: {stars} stars",
+  "@pointsChartBarA11y": {
+    "description": "STAT-03: screen-reader label for one bar, which is a button",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "stars": {
+        "type": "int"
+      }
+    }
+  },
+  "homeStillPossibleTitle": "Still possible today",
+  "@homeStillPossibleTitle": {
+    "description": "HOME-06: heading of the card naming the badges still open today"
+  },
+  "homeSparklineA11y": "Stars over the last {days} days",
+  "@homeSparklineA11y": {
+    "description": "HOME-05: screen-reader label for the seven-day sparkline in the home header",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
   }
 }

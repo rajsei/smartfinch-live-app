@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Přehled",
   "pointsTabBadges": "Odznaky",
   "pointsTabAchievements": "Úspěchy",
-  "pointsLast30Days": "Posledních 30 dní",
   "pointsChartA11y": "Hvězdy za den po {days} dní, nejlepší den {peak}",
   "pointsFigureTotalStars": "Hvězd celkem",
   "pointsFigureSpecies": "Nasbíraných druhů",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "Ještě {stars} do levelu {number}",
   "backupIncludeAudio": "Zálohovat i nahrávky",
   "backupIncludeAudioNote": "Na novém zařízení budou zase k dispozici. Soubor bude výrazně větší – rok nahrávek může mít několik set megabajtů.",
-  "journalClipShare": "Sdílet tuto nahrávku"
+  "journalClipShare": "Sdílet tuto nahrávku",
+  "chartRangeWeek": "7 dní",
+  "chartRangeMonth": "30 dní",
+  "chartRangeYear": "Rok",
+  "pointsChartTitle": "Hvězdy za den",
+  "pointsChartTapHint": "Klepni na sloupec a otevřeš ten den.",
+  "pointsChartBarA11y": "{date}: {stars} hvězd",
+  "homeStillPossibleTitle": "Dnes je ještě možné",
+  "homeSparklineA11y": "Hvězdy za posledních {days} dní"
 }

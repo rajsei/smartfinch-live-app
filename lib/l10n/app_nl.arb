@@ -1174,7 +1174,6 @@
   "pointsTabOverview": "Overzicht",
   "pointsTabBadges": "Badges",
   "pointsTabAchievements": "Prestaties",
-  "pointsLast30Days": "De laatste 30 dagen",
   "pointsChartA11y": "Sterren per dag over {days} dagen, beste dag {peak}",
   "pointsFigureTotalStars": "Sterren in totaal",
   "pointsFigureSpecies": "Soorten verzameld",
@@ -1368,5 +1367,13 @@
   "levelToNextShort": "Nog {stars} tot level {number}",
   "backupIncludeAudio": "Opnames meenemen",
   "backupIncludeAudioNote": "Ze staan weer op het nieuwe apparaat. Het bestand wordt veel groter — een jaar aan opnames kan honderden megabytes zijn.",
-  "journalClipShare": "Deze opname delen"
+  "journalClipShare": "Deze opname delen",
+  "chartRangeWeek": "7 dagen",
+  "chartRangeMonth": "30 dagen",
+  "chartRangeYear": "Jaar",
+  "pointsChartTitle": "Sterren per dag",
+  "pointsChartTapHint": "Tik op een balk om die dag te openen.",
+  "pointsChartBarA11y": "{date}: {stars} sterren",
+  "homeStillPossibleTitle": "Vandaag nog mogelijk",
+  "homeSparklineA11y": "Sterren van de afgelopen {days} dagen"
 }

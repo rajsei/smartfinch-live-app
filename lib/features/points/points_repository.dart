@@ -195,6 +195,27 @@ class PointsRepository {
     return earned;
   }
 
+  /// Just the daily totals, for the home screen's sparkline (`HOME-05`).
+  ///
+  /// Its own query rather than a slice of [overview]: that one derives every
+  /// badge and achievement from the whole score journal, and a seven-bar
+  /// sparkline does not need a year of history read to draw itself.
+  Future<List<DayStars>> dailyStars({
+    required DateTime now,
+    int days = 7,
+  }) async {
+    final events =
+        await (_db.select(_db.scoreEvents)
+          ..where((e) => e.profileId.equals(profileId))).get();
+
+    final starsByDay = <String, int>{};
+    for (final event in events) {
+      starsByDay[event.dayKey] = (starsByDay[event.dayKey] ?? 0) + event.total;
+    }
+
+    return _chart(now: now, days: days, starsByDay: starsByDay);
+  }
+
   /// The last [days] days, oldest first, **including the empty ones**.
   ///
   /// Days without activity are columns of zero rather than gaps. Omitting them
