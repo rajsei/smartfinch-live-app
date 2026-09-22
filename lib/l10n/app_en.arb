@@ -8,18 +8,6 @@
   "@liveMode": {
     "description": "Live mode tab label"
   },
-  "surveyMode": "Survey",
-  "@surveyMode": {
-    "description": "Survey mode tab label"
-  },
-  "pointCountMode": "Point Count",
-  "@pointCountMode": {
-    "description": "Point Count mode tab label"
-  },
-  "fileAnalysisMode": "File Analysis",
-  "@fileAnalysisMode": {
-    "description": "File Analysis mode tab label"
-  },
   "settings": "Settings",
   "@settings": {
     "description": "Settings screen title"
@@ -40,15 +28,11 @@
   "@onboardingHowItWorksTitle": {
     "description": "Onboarding how it works screen title"
   },
-  "onboardingHowItWorksBody": "Smartfinch continuously listens to your surroundings. It analyzes audio using an on-device artificial intelligence model to identify species in real-time. Detections are highlighted on a live scrolling spectrogram. Everything is processed locally, meaning it works entirely offline and protects your privacy.",
+  "onboardingHowItWorksBody": "The app listens through the microphone and recognizes from the song which bird is singing. An AI does this right on your phone – so it works without the internet, and the app never uploads recordings.",
   "@onboardingHowItWorksBody": {
     "description": "Onboarding how it works body text"
   },
-  "onboardingFeaturesTitle": "Multiple Modes",
-  "@onboardingFeaturesTitle": {
-    "description": "Onboarding features screen title"
-  },
-  "onboardingFeaturesBody": "Choose the workflow that fits your field task, from live monitoring and structured surveys to file-based analysis and longer deployments — all with real-time spectrogram visualization.",
+  "onboardingFeaturesBody": "The birds you find earn you stars. New species go into your collection, and in the journal you can listen to every day again.",
   "@onboardingFeaturesBody": {
     "description": "Onboarding features screen body text"
   },
@@ -56,7 +40,7 @@
   "@onboardingPermissionsTitle": {
     "description": "Onboarding permissions screen title"
   },
-  "onboardingPermissionsBody": "Smartfinch needs microphone access for audio capture and (optionally) location access for geotagging detections, GPS tracks in surveys, and location-based species filtering. Both can be revoked at any time in system settings.",
+  "onboardingPermissionsBody": "The app needs the microphone to hear birds. It needs your location to know which birds live in your area – instead of GPS, you can also pick it on the map. You can turn both off again at any time in your phone’s settings.",
   "@onboardingPermissionsBody": {
     "description": "Onboarding permissions screen body text"
   },
@@ -64,7 +48,7 @@
   "@onboardingTermsTitle": {
     "description": "Onboarding acceptable use and privacy screen title"
   },
-  "onboardingTermsBody": "Detections are AI predictions, not confirmed observations — verify before reporting. Audio is processed on-device and never uploaded. The only network requests are optional map tiles and a single reverse-geocoding lookup per Session to resolve coordinates into a place name; both require your one-time consent. Models (Apache 2.0) and the app should not be used to harm wildlife, ecosystems, or people. Tap below to read the full Acceptable Use Policy and Privacy Policy.",
+  "onboardingTermsBody": "The app can be wrong: what it recognizes is the AI’s guess, not a sure identification. Recordings stay on your device and are never uploaded. The app only goes online if you allow it – for map images, for place names and for the weather, each one separately. The app and its AI must not be used to harm animals, nature or people. Below you can read the full rules and the privacy policy.",
   "@onboardingTermsBody": {
     "description": "Onboarding acceptable use and privacy screen body text"
   },
@@ -80,14 +64,6 @@
   "@onboardingTermsAccept": {
     "description": "Onboarding acceptable-use acceptance checkbox"
   },
-  "onboardingReadyTitle": "Ready to Start",
-  "@onboardingReadyTitle": {
-    "description": "Onboarding ready screen title"
-  },
-  "onboardingReadyBody": "You're all set. Head into the field and start monitoring.",
-  "@onboardingReadyBody": {
-    "description": "Onboarding ready screen body text"
-  },
   "getStarted": "Get Started",
   "@getStarted": {
     "description": "Get started button label"
@@ -100,63 +76,11 @@
   "@next": {
     "description": "Next button label"
   },
-  "done": "Done",
-  "@done": {
-    "description": "Done button label"
-  },
-  "quickListenBlockedTitle": "Finish the current Session first",
-  "@quickListenBlockedTitle": {
-    "description": "Title shown after a Quick Listen widget tap is blocked by another recording mode"
-  },
-  "quickListenBlockedMessage": "Quick Listen can’t start while a {mode} Session is running or starting. Stop that Session first, then tap the widget again.",
-  "@quickListenBlockedMessage": {
-    "description": "Explains that Quick Listen will not replace another active recording mode",
-    "placeholders": {
-      "mode": {
-        "type": "String",
-        "example": "Survey"
-      }
-    }
-  },
-  "sharedAudioBusyTitle": "Session in progress",
-  "@sharedAudioBusyTitle": {
-    "description": "Title shown when a shared audio file arrives while another Session is still running"
-  },
-  "sharedAudioBusyMessage": "Wait for the current {mode} Session to finish, then share the recording again.",
-  "@sharedAudioBusyMessage": {
-    "description": "Explains that a shared audio file cannot be opened while another Session is running",
-    "placeholders": {
-      "mode": {
-        "type": "String",
-        "example": "Point Count"
-      }
-    }
-  },
-  "termsOfUseTitle": "Acceptable Use Policy",
-  "@termsOfUseTitle": {
-    "description": "Acceptable use policy dialog title"
-  },
-  "privacyPolicyTitle": "Privacy Policy",
-  "@privacyPolicyTitle": {
-    "description": "Privacy policy dialog title"
-  },
-  "acceptTerms": "Accept",
-  "@acceptTerms": {
-    "description": "Accept policy button"
-  },
-  "declineTerms": "Decline",
-  "@declineTerms": {
-    "description": "Decline policy button"
-  },
-  "termsRequiredMessage": "You must accept the Acceptable Use Policy and Privacy Policy to use this app.",
-  "@termsRequiredMessage": {
-    "description": "Message shown when policy is not accepted"
-  },
   "permissionMicrophoneTitle": "Microphone",
   "@permissionMicrophoneTitle": {
     "description": "Microphone permission label"
   },
-  "permissionMicrophoneDescription": "Required for audio capture and species identification",
+  "permissionMicrophoneDescription": "So the app can hear birds",
   "@permissionMicrophoneDescription": {
     "description": "Microphone permission description"
   },
@@ -164,33 +88,9 @@
   "@permissionLocationTitle": {
     "description": "Location permission label"
   },
-  "permissionLocationDescription": "Used for geotagging detections and survey GPS tracking",
+  "permissionLocationDescription": "So the app knows which birds live in your area",
   "@permissionLocationDescription": {
     "description": "Location permission description"
-  },
-  "permissionStorageTitle": "Storage",
-  "@permissionStorageTitle": {
-    "description": "Storage permission label"
-  },
-  "permissionStorageDescription": "Required for saving recordings and exporting data",
-  "@permissionStorageDescription": {
-    "description": "Storage permission description"
-  },
-  "permissionNotificationTitle": "Notifications",
-  "@permissionNotificationTitle": {
-    "description": "Notification permission label"
-  },
-  "permissionNotificationDescription": "Used for background survey alerts",
-  "@permissionNotificationDescription": {
-    "description": "Notification permission description"
-  },
-  "permissionGranted": "Granted",
-  "@permissionGranted": {
-    "description": "Permission granted status"
-  },
-  "permissionDenied": "Denied",
-  "@permissionDenied": {
-    "description": "Permission denied status"
   },
   "permissionRequest": "Grant",
   "@permissionRequest": {
@@ -199,22 +99,6 @@
   "openSettings": "Open Settings",
   "@openSettings": {
     "description": "Open system settings button"
-  },
-  "consentMapTilesTitle": "Map Tiles",
-  "@consentMapTilesTitle": {
-    "description": "Map tile consent title"
-  },
-  "consentMapTilesDescription": "Download map tiles from OpenStreetMap for GPS visualization. This requires an internet connection.",
-  "@consentMapTilesDescription": {
-    "description": "Map tile consent description"
-  },
-  "consentAllow": "Allow",
-  "@consentAllow": {
-    "description": "Allow consent button"
-  },
-  "consentDeny": "Deny",
-  "@consentDeny": {
-    "description": "Deny consent button"
   },
   "settingsAudio": "Audio",
   "@settingsAudio": {
@@ -232,29 +116,13 @@
   "@settingsRecording": {
     "description": "Recording settings category"
   },
-  "settingsSurvey": "Survey",
-  "@settingsSurvey": {
-    "description": "Survey mode settings category"
-  },
-  "settingsPointCount": "Point Count",
-  "@settingsPointCount": {
-    "description": "Point Count mode settings category"
-  },
-  "settingsExport": "Export & Sync",
+  "settingsExport": "Backup",
   "@settingsExport": {
     "description": "Export settings category"
-  },
-  "settingsMap": "Map",
-  "@settingsMap": {
-    "description": "Map settings category"
   },
   "settingsGeneral": "General",
   "@settingsGeneral": {
     "description": "General settings category"
-  },
-  "settingsLanguage": "Language",
-  "@settingsLanguage": {
-    "description": "Language selection setting"
   },
   "settingsAppLanguage": "App Language",
   "@settingsAppLanguage": {
@@ -304,13 +172,9 @@
   "@settingsHelpDynamicColor": {
     "description": "Help text for the Dynamic Color setting"
   },
-  "settingsHighContrastThemeDescription": "Use a black-and-white UI palette with stronger contrast and heavier text.",
-  "settingsHelpHighContrastTheme": "Uses a black-and-white UI palette with stronger contrast and heavier text. Danger, warning, validation, mode, score, and spectrogram colors stay unchanged.",
+  "settingsHelpHighContrastTheme": "Shows the app in black and white with stronger contrast and bolder text. Colors that mean something – warnings, for example – and the colors in the spectrogram, the picture of sound, stay as they are.",
   "@settingsHelpHighContrastTheme": {
     "description": "Help text for the High Contrast Theme setting"
-  },
-  "@settingsHighContrastThemeDescription": {
-    "description": "High contrast theme toggle description"
   },
   "settingsResetOnboarding": "Reset Onboarding",
   "@settingsResetOnboarding": {
@@ -324,7 +188,7 @@
   "@settingsClearDataConfirmTitle": {
     "description": "Clear data confirmation dialog title"
   },
-  "settingsClearDataConfirmMessage": "This will permanently delete sessions, detections, recordings, voice memos, custom species lists, settings, and cached map, place, and weather data. The app will close when the wipe finishes. This action cannot be undone.",
+  "settingsClearDataConfirmMessage": "This permanently deletes all recordings, your settings and saved map and place data. The app then closes. This cannot be undone.",
   "@settingsClearDataConfirmMessage": {
     "description": "Clear data confirmation message"
   },
@@ -348,7 +212,7 @@
   "@settingsDataCleared": {
     "description": "Snackbar message after clearing all data"
   },
-  "settingsDataClearFailed": "Some data could not be cleared. Please close Smartfinch and try again.",
+  "settingsDataClearFailed": "Some data could not be deleted. Close the app and try again.",
   "@settingsDataClearFailed": {
     "description": "Snackbar message when clearing all data fails"
   },
@@ -356,7 +220,7 @@
   "@settingsResetAll": {
     "description": "Reset all settings to their defaults"
   },
-  "settingsResetAllSubtitle": "Restore every preference to its default. Sessions, recordings and exports are kept.",
+  "settingsResetAllSubtitle": "Resets every setting. Your collection, your stars and your recordings stay.",
   "@settingsResetAllSubtitle": {
     "description": "Subtitle for reset all settings tile"
   },
@@ -364,7 +228,7 @@
   "@settingsResetAllConfirmTitle": {
     "description": "Reset all settings confirmation dialog title"
   },
-  "settingsResetAllConfirmMessage": "Every setting goes back to its default value. Sessions, recordings, voice memos and downloaded maps are kept. The app will close so the new defaults take effect on next launch.",
+  "settingsResetAllConfirmMessage": "Every setting goes back to its default. Your collection, your stars, the journal and all recordings are kept. The app closes so the new settings apply the next time it starts.",
   "@settingsResetAllConfirmMessage": {
     "description": "Reset all settings confirmation dialog body"
   },
@@ -379,10 +243,6 @@
   "confirm": "Confirm",
   "@confirm": {
     "description": "Confirm button"
-  },
-  "aboutVersion": "Version",
-  "@aboutVersion": {
-    "description": "Version label in about screen"
   },
   "aboutModelVersion": "Audio Model",
   "@aboutModelVersion": {
@@ -465,10 +325,6 @@
   "@aboutTermsOfUse": {
     "description": "Acceptable use policy link label"
   },
-  "aboutUserGuide": "User Guide",
-  "@aboutUserGuide": {
-    "description": "User guide link label"
-  },
   "aboutDonate": "Donate to BirdNET",
   "@aboutDonate": {
     "description": "Donate link label on the About screen"
@@ -477,409 +333,13 @@
   "@errorPermissionRequired": {
     "description": "Error message when permission is not granted"
   },
-  "errorMicrophoneRequired": "Microphone access is required for species identification. Please grant microphone permission in settings.",
+  "errorMicrophoneRequired": "Without the microphone, the app can’t hear any birds. Allow microphone access in your phone’s settings.",
   "@errorMicrophoneRequired": {
     "description": "Error message when microphone permission is denied"
-  },
-  "homeSubtitle": "Professional bioacoustics in your pocket",
-  "@homeSubtitle": {
-    "description": "Subtitle shown on the main menu screen"
-  },
-  "liveModeDescription": "Listen and identify species in real time",
-  "@liveModeDescription": {
-    "description": "Description for Live mode on the main menu"
-  },
-  "surveyModeDescription": "Record in the background while walking",
-  "@surveyModeDescription": {
-    "description": "Description for Survey mode on the main menu"
-  },
-  "pointCountModeDescription": "Record species at a fixed location for a set duration",
-  "@pointCountModeDescription": {
-    "description": "Description for Point Count mode on the main menu"
-  },
-  "fileAnalysisModeDescription": "Analyze pre-recorded audio files offline",
-  "@fileAnalysisModeDescription": {
-    "description": "Description for File Analysis mode on the main menu"
-  },
-  "batchAnalysisMode": "Batch Analysis",
-  "@batchAnalysisMode": {
-    "description": "Label for Batch Analysis mode on the main menu"
-  },
-  "batchAnalysisModeDescription": "Analyze multiple files at once",
-  "@batchAnalysisModeDescription": {
-    "description": "Description for Batch Analysis mode on the main menu"
-  },
-  "aruMode": "ARU Mode",
-  "@aruMode": {
-    "description": "Label for ARU mode on the main menu"
-  },
-  "aruModeDescription": "Schedule fixed-site recording cycles",
-  "@aruModeDescription": {
-    "description": "Description for ARU mode on the main menu"
-  },
-  "comingSoon": "Coming Soon",
-  "@comingSoon": {
-    "description": "Badge label for unimplemented features"
-  },
-  "aruSetupTitle": "ARU Setup",
-  "@aruSetupTitle": {
-    "description": "Title for the ARU setup wizard"
-  },
-  "aruSetupDetails": "Deployment",
-  "@aruSetupDetails": {
-    "description": "ARU setup step title for deployment details"
-  },
-  "aruSetupSchedule": "Schedule",
-  "@aruSetupSchedule": {
-    "description": "ARU setup step title for schedule settings"
-  },
-  "aruSetupReady": "Ready",
-  "@aruSetupReady": {
-    "description": "ARU setup step title for review"
-  },
-  "aruSetupHelpTitle": "ARU Mode Help",
-  "@aruSetupHelpTitle": {
-    "description": "Title for ARU setup help"
-  },
-  "aruSetupHelpBody": "Use ARU Mode for unattended recordings at a fixed site. The app saves the deployment schedule so it can resume later, records full audio or selected detection clips during scheduled cycles, and identifies species on the device. Android shows a persistent notification while a deployment is active; iOS background behavior still needs field validation.",
-  "@aruSetupHelpBody": {
-    "description": "Help text for the first ARU setup implementation"
-  },
-  "aruSessionGrouping": "Session grouping",
-  "@aruSessionGrouping": {
-    "description": "Label for session grouping setting in ARU parameters"
-  },
-  "aruSessionGroupingAll": "Combined Session",
-  "@aruSessionGroupingAll": {
-    "description": "Option to group all recording cycles into a single session"
-  },
-  "aruSessionGroupingEach": "Per-cycle Session",
-  "@aruSessionGroupingEach": {
-    "description": "Switch title for saving each recording cycle as its own session"
-  },
-  "aruSessionGroupingEachDesc": "One Session per cycle",
-  "@aruSessionGroupingEachDesc": {
-    "description": "Subtitle shown when the per-cycle session switch is on"
-  },
-  "aruSessionGroupingAllDesc": "One combined Session",
-  "@aruSessionGroupingAllDesc": {
-    "description": "Subtitle shown when the per-cycle session switch is off"
-  },
-  "aruDeploymentName": "Project name",
-  "@aruDeploymentName": {
-    "description": "Label for ARU project name field"
-  },
-  "aruStationId": "ARU / station ID",
-  "@aruStationId": {
-    "description": "Label for ARU station id field"
-  },
-  "aruObserverName": "Observer name",
-  "@aruObserverName": {
-    "description": "Label for ARU observer name field"
-  },
-  "aruCycleDuration": "Cycle duration",
-  "@aruCycleDuration": {
-    "description": "Label for ARU cycle duration selector"
-  },
-  "aruRepeatInterval": "Repeat interval",
-  "@aruRepeatInterval": {
-    "description": "Label for ARU repeat interval selector"
-  },
-  "aruMaxCycles": "Number of cycles",
-  "@aruMaxCycles": {
-    "description": "Label for ARU maximum cycle count control"
-  },
-  "aruCycleCount": "{count, plural, =1{1 cycle} other{{count} cycles}}",
-  "@aruCycleCount": {
-    "description": "ARU summary value for a fixed number of deployment cycles",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "aruLowBatteryStop": "Pause recording below",
-  "@aruLowBatteryStop": {
-    "description": "Label for the ARU battery level at or below which recording cycles pause"
-  },
-  "aruLowBatteryResume": "Resume recording at",
-  "@aruLowBatteryResume": {
-    "description": "Label for the ARU battery level at or above which recording cycles resume after a low-battery pause"
-  },
-  "aruLowBatteryHint": "Recording cycles pause when the battery falls to the pause level and resume once it charges back to the resume level. The deployment keeps running in between, which is useful with an occasional charge source such as a solar panel.",
-  "@aruLowBatteryHint": {
-    "description": "Explanation for the ARU low-battery pause/resume thresholds"
-  },
-  "aruBatteryPaused": "Paused (low battery)",
-  "@aruBatteryPaused": {
-    "description": "ARU status shown while recording cycles are paused for low battery"
-  },
-  "aruNotificationStats": "{cycles} cycles · {species} species · {detections} detections",
-  "@aruNotificationStats": {
-    "description": "Compact ARU deployment progress shown in the foreground notification",
-    "placeholders": {
-      "cycles": {
-        "type": "int"
-      },
-      "species": {
-        "type": "int"
-      },
-      "detections": {
-        "type": "int"
-      }
-    }
-  },
-  "aruStorageEstimate": "Estimated audio storage",
-  "@aruStorageEstimate": {
-    "description": "Label for ARU storage estimate"
-  },
-  "aruClipStorageEstimateNote": "Clip estimate assumes up to {count} retained clips across 50 species; actual use depends on detections.",
-  "@aruClipStorageEstimateNote": {
-    "description": "ARU storage estimate note for detection-only clip recording",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "aruOptionalTestCycle": "Run a one-minute test cycle first",
-  "@aruOptionalTestCycle": {
-    "description": "Label for ARU optional test cycle toggle"
-  },
-  "aruTestRun": "Test run",
-  "@aruTestRun": {
-    "description": "Short label for the immediate one-minute ARU test recording cycle"
-  },
-  "aruTestRunReadyHint": "A one-minute test run will start immediately before the scheduled cycles.",
-  "@aruTestRunReadyHint": {
-    "description": "Ready-screen hint shown when the ARU test run option is enabled"
-  },
-  "aruReadySummary": "Review the deployment before starting. The session is saved immediately so schedule state can be recovered later.",
-  "@aruReadySummary": {
-    "description": "Summary text on ARU ready step"
-  },
-  "aruManualLocationInvalid": "Enter valid manual coordinates before continuing.",
-  "@aruManualLocationInvalid": {
-    "description": "Validation message when ARU manual coordinates are invalid"
-  },
-  "aruGpsFixRequired": "Wait for a GPS fix, refresh location, or switch to Manual/Skip.",
-  "@aruGpsFixRequired": {
-    "description": "Validation message when ARU GPS mode has no fix yet"
-  },
-  "aruPerHourEstimate": "Per hour",
-  "@aruPerHourEstimate": {
-    "description": "Label for ARU storage estimate per hour"
-  },
-  "aruPerDayEstimate": "Per day",
-  "@aruPerDayEstimate": {
-    "description": "Label for ARU storage estimate per day"
-  },
-  "aruReadyReminderAirplane": "Turn on Airplane Mode manually when possible, then re-enable only the connections your deployment needs.",
-  "@aruReadyReminderAirplane": {
-    "description": "ARU readiness reminder about using Airplane Mode"
-  },
-  "aruReadyReminderMount": "Use a stable mount, keep the microphone clear, and shelter the device from direct rain and handling noise.",
-  "@aruReadyReminderMount": {
-    "description": "ARU readiness reminder about mounting and protecting the recorder"
-  },
-  "aruReadyPlatformNote": "Android can keep the deployment active with a persistent notification while waiting between cycles. On iOS, background recording and scheduled wakeups should still be treated as unvalidated.",
-  "@aruReadyPlatformNote": {
-    "description": "ARU readiness note about current platform limitations"
-  },
-  "aruScheduleEnd": "Deployment end",
-  "@aruScheduleEnd": {
-    "description": "Label for how an ARU deployment ends"
-  },
-  "aruScheduleEndManual": "Manual",
-  "@aruScheduleEndManual": {
-    "description": "ARU schedule end option for running until the user stops it"
-  },
-  "aruScheduleEndCycles": "Cycles",
-  "@aruScheduleEndCycles": {
-    "description": "ARU schedule end option for stopping after a fixed number of cycles"
-  },
-  "aruScheduleEndDateTime": "Date & time",
-  "@aruScheduleEndDateTime": {
-    "description": "ARU schedule end option for stopping at a fixed date and time"
-  },
-  "aruScheduleNoLimit": "Until stopped",
-  "@aruScheduleNoLimit": {
-    "description": "ARU summary label for deployments with no fixed end"
-  },
-  "aruRecordingWindow": "Recording window",
-  "@aruRecordingWindow": {
-    "description": "Label for choosing when ARU recording cycles are allowed during the day"
-  },
-  "aruDielAnyTime": "Continuous",
-  "@aruDielAnyTime": {
-    "description": "ARU recording window option with no day/night restriction"
-  },
-  "aruDielDayOnly": "Daylight",
-  "@aruDielDayOnly": {
-    "description": "ARU recording window option for daylight hours"
-  },
-  "aruDielNightOnly": "Night",
-  "@aruDielNightOnly": {
-    "description": "ARU recording window option for night hours"
-  },
-  "aruDielAroundSunrise": "Around sunrise",
-  "@aruDielAroundSunrise": {
-    "description": "ARU recording window option around estimated sunrise"
-  },
-  "aruDielAroundSunset": "Around sunset",
-  "@aruDielAroundSunset": {
-    "description": "ARU recording window option around estimated sunset"
-  },
-  "aruDielAroundSunriseAndSunset": "Around sunrise and sunset",
-  "@aruDielAroundSunriseAndSunset": {
-    "description": "ARU recording window option around estimated sunrise and sunset"
-  },
-  "aruRecordingWindowEstimate": "Records {ranges}",
-  "@aruRecordingWindowEstimate": {
-    "description": "ARU setup estimate of the schedule-aligned recording ranges for the selected recording window",
-    "placeholders": {
-      "ranges": { "type": "String" }
-    }
-  },
-  "aruSunTimesEstimate": "Sunrise {sunrise} · sunset {sunset}",
-  "@aruSunTimesEstimate": {
-    "description": "ARU setup estimate of local sunrise and sunset used for recording windows",
-    "placeholders": {
-      "sunrise": { "type": "String" },
-      "sunset": { "type": "String" }
-    }
-  },
-  "aruStartDeployment": "Start Deployment",
-  "@aruStartDeployment": {
-    "description": "Button label to start ARU deployment"
-  },
-  "aruActiveTitle": "ARU Deployment",
-  "@aruActiveTitle": {
-    "description": "Title for active ARU screen"
-  },
-  "aruTabStatus": "Status",
-  "@aruTabStatus": {
-    "description": "Tab label for the active ARU status dashboard"
-  },
-  "aruTabSpectrogram": "Audio",
-  "@aruTabSpectrogram": {
-    "description": "Short tab label for the active ARU spectrogram dashboard"
-  },
-  "aruTabSchedule": "Schedule",
-  "@aruTabSchedule": {
-    "description": "Short tab label for the active ARU schedule dashboard"
-  },
-  "aruTabSummary": "Summary",
-  "@aruTabSummary": {
-    "description": "Short tab label for the active ARU summary dashboard"
-  },
-  "aruActiveWaiting": "Waiting for next cycle",
-  "@aruActiveWaiting": {
-    "description": "Status text when ARU is waiting"
-  },
-  "aruStatusWaiting": "Waiting",
-  "@aruStatusWaiting": {
-    "description": "Status text when ARU is waiting between cycles"
-  },
-  "aruStatusRecording": "Recording",
-  "@aruStatusRecording": {
-    "description": "Status text when ARU is recording a cycle"
-  },
-  "aruWaitingDetectionsTitle": "Waiting for the next cycle",
-  "@aruWaitingDetectionsTitle": {
-    "description": "Empty-state title for ARU detections while waiting between recording cycles"
-  },
-  "aruWaitingDetectionsBody": "Detections from the next recording cycle will appear here.",
-  "@aruWaitingDetectionsBody": {
-    "description": "Empty-state body for ARU detections while waiting between recording cycles"
-  },
-  "aruHelpStatusIcons": "Status icons show the current audio level, completed cycles, total detections, unique species, active recording state, waiting state, and the optional one-minute test run.",
-  "@aruHelpStatusIcons": {
-    "description": "Help text explaining icons on the active ARU screen"
-  },
-  "aruActiveRecording": "Recording cycle",
-  "@aruActiveRecording": {
-    "description": "Status text when ARU is recording"
-  },
-  "aruActiveCompleted": "Deployment complete",
-  "@aruActiveCompleted": {
-    "description": "Status text when ARU deployment is complete"
-  },
-  "aruNextCycle": "Next cycle",
-  "@aruNextCycle": {
-    "description": "Label for next ARU cycle time"
-  },
-  "aruNextCyclesPreview": "Next 10 cycles",
-  "@aruNextCyclesPreview": {
-    "description": "Heading for the ARU schedule tab showing only the next 10 upcoming cycles"
-  },
-  "aruCompletedCycles": "Completed cycles",
-  "@aruCompletedCycles": {
-    "description": "Label for completed ARU cycles count"
-  },
-  "aruRecordedAudio": "Recorded audio",
-  "@aruRecordedAudio": {
-    "description": "Label for ARU recorded audio duration"
-  },
-  "aruElapsedTime": "Elapsed time",
-  "@aruElapsedTime": {
-    "description": "Label for elapsed wall-clock time on the active ARU summary tab"
-  },
-  "aruSummaryElapsed": "Time",
-  "@aruSummaryElapsed": {
-    "description": "Short label for elapsed time on the compact ARU summary tab"
-  },
-  "aruSummaryAudio": "Audio",
-  "@aruSummaryAudio": {
-    "description": "Short label for recorded audio duration on the compact ARU summary tab"
-  },
-  "aruCyclesShort": "Cycles",
-  "@aruCyclesShort": {
-    "description": "Short label for ARU cycle counts"
-  },
-  "aruCycleProgress": "Cycle progress",
-  "@aruCycleProgress": {
-    "description": "Label for ARU cycle completion progress"
-  },
-  "aruNextIn": "Next in",
-  "@aruNextIn": {
-    "description": "Label for the time remaining until the next ARU cycle"
-  },
-  "aruStopDeployment": "Stop Deployment",
-  "@aruStopDeployment": {
-    "description": "Button label to stop ARU deployment"
-  },
-  "aruStopConfirmTitle": "Stop ARU deployment?",
-  "@aruStopConfirmTitle": {
-    "description": "Title for stop ARU confirmation dialog"
-  },
-  "aruStopConfirmBody": "The current deployment will be finalized and saved.",
-  "@aruStopConfirmBody": {
-    "description": "Body for stop ARU confirmation dialog"
-  },
-  "aruNoActiveDeployment": "No active ARU deployment",
-  "@aruNoActiveDeployment": {
-    "description": "Shown when active ARU screen has no session"
-  },
-  "aruNotificationChannelName": "BirdNET ARU",
-  "@aruNotificationChannelName": {
-    "description": "Android notification channel name for ARU foreground deployments"
-  },
-  "aruNotificationChannelDescription": "Active ARU deployment",
-  "@aruNotificationChannelDescription": {
-    "description": "Android notification channel description for ARU foreground deployments"
-  },
-  "aruNotificationTitle": "ARU Deployment",
-  "@aruNotificationTitle": {
-    "description": "Foreground notification title for active ARU deployments"
   },
   "exploreMode": "Explore",
   "@exploreMode": {
     "description": "Explore mode tab label"
-  },
-  "exploreModeDescription": "Explore species at your study site",
-  "@exploreModeDescription": {
-    "description": "Description for Explore mode on the main menu"
   },
   "exploreTitle": "Explore",
   "@exploreTitle": {
@@ -905,26 +365,9 @@
   "@exploreNoSpecies": {
     "description": "Shown when no species are predicted for the location"
   },
-  "exploreSpeciesCount": "{count} species",
-  "@exploreSpeciesCount": {
-    "description": "Species count label for explore screen",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "exploreInfoNote": "Species predicted to occur at this location, based on BirdNET's geo-model.",
-  "@exploreInfoNote": {
-    "description": "Short note explaining what the explore species list shows"
-  },
-  "explorePredictionSummary": "Geomodel species predictions for your location",
+  "explorePredictionSummary": "Which birds can occur in your area",
   "@explorePredictionSummary": {
     "description": "Short explore header summary explaining that the list is based on geomodel predictions at the current location"
-  },
-  "exploreTapHint": "Tap a species to learn more.",
-  "@exploreTapHint": {
-    "description": "Short explore header hint telling users that species cards are tappable"
   },
   "exploreSearchHint": "Search species…",
   "@exploreSearchHint": {
@@ -1033,7 +476,7 @@
   "@settingsManualCoordinates": {
     "description": "Label above the manual latitude/longitude entry fields"
   },
-  "settingsHelpManualCoordinates": "Type or paste a precise location to use when GPS is off. Enter decimal degrees (for example 52.5200 and 13.4050). You can also paste a combined \"latitude, longitude\" string into either field and both will be filled at once.",
+  "settingsHelpManualCoordinates": "Type or paste your location as coordinates – the app uses them when GPS is off. Use decimal degrees, for example 52.5200 and 13.4050. You can also paste “latitude, longitude” together into one field, and both will be filled in.",
   "@settingsHelpManualCoordinates": {
     "description": "Help text for the manual coordinates entry"
   },
@@ -1077,34 +520,17 @@
   "@settingsGeoThreshold": {
     "description": "Geo-model probability threshold setting label"
   },
-  "sessionStopTitle": "End Session?",
+  "sessionStopTitle": "Stop listening?",
   "@sessionStopTitle": {
     "description": "Stop confirmation dialog title"
   },
-  "sessionStopMessage": "This will stop recording and open the session review.",
+  "sessionStopMessage": "The recording stops, and you’ll see what you heard today.",
   "@sessionStopMessage": {
     "description": "Stop confirmation dialog message"
   },
-  "sessionStopConfirm": "End Session",
+  "sessionStopConfirm": "Stop",
   "@sessionStopConfirm": {
     "description": "Stop confirmation dialog confirm button"
-  },
-  "sessionReviewTitle": "Session Review",
-  "@sessionReviewTitle": {
-    "description": "Session review screen title"
-  },
-  "sessionNoDetections": "No detections in this session.",
-  "@sessionNoDetections": {
-    "description": "Empty state text for session review"
-  },
-  "sessionSpeciesCount": "{count} species",
-  "@sessionSpeciesCount": {
-    "description": "Species count label",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "sessionDetectionCount": "{count} detections",
   "@sessionDetectionCount": {
@@ -1114,31 +540,6 @@
         "type": "int"
       }
     }
-  },
-  "sessionClusterShowMore": "Show {count} more",
-  "@sessionClusterShowMore": {
-    "description": "Button label to reveal more clusters without an audio clip in the expanded species row",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "sessionDiscard": "Discard",
-  "@sessionDiscard": {
-    "description": "Discard session button label"
-  },
-  "sessionDiscardTitle": "Discard Session?",
-  "@sessionDiscardTitle": {
-    "description": "Discard confirmation dialog title"
-  },
-  "sessionDiscardMessage": "This session and its recording will be permanently deleted.",
-  "@sessionDiscardMessage": {
-    "description": "Discard confirmation dialog message"
-  },
-  "sessionNoLocation": "No location",
-  "@sessionNoLocation": {
-    "description": "Shown in session review and library card when the session has no GPS coordinates"
   },
   "sessionWeatherSection": "Weather",
   "@sessionWeatherSection": {
@@ -1220,42 +621,6 @@
   "@windDirectionSouthWest": {"description": "Localized compass abbreviation for southwest"},
   "@windDirectionWest": {"description": "Localized compass abbreviation for west"},
   "@windDirectionNorthWest": {"description": "Localized compass abbreviation for northwest"},
-  "sessionShare": "Share",
-  "@sessionShare": {
-    "description": "Share session button label"
-  },
-  "sessionLibraryTitle": "Sessions",
-  "@sessionLibraryTitle": {
-    "description": "Session library screen title"
-  },
-  "sessionLibraryEmpty": "No saved sessions yet.",
-  "@sessionLibraryEmpty": {
-    "description": "Empty state text for session library"
-  },
-  "sessionLibrarySearchHint": "Search sessions…",
-  "@sessionLibrarySearchHint": {
-    "description": "Hint text for the session library search field"
-  },
-  "sessionLibraryNoResults": "No matching sessions.",
-  "@sessionLibraryNoResults": {
-    "description": "Shown when no sessions match the search query"
-  },
-  "sessionLibrarySortTooltip": "Sort sessions",
-  "@sessionLibrarySortTooltip": {
-    "description": "Tooltip for the sort button in the session library"
-  },
-  "sessionLibraryFilterTooltip": "Filter by session type",
-  "@sessionLibraryFilterTooltip": {
-    "description": "Tooltip for the session type filter button in the session library"
-  },
-  "sessionSortDateNewest": "Newest first",
-  "@sessionSortDateNewest": {
-    "description": "Sort sessions by date, newest first"
-  },
-  "sessionSortDateOldest": "Oldest first",
-  "@sessionSortDateOldest": {
-    "description": "Sort sessions by date, oldest first"
-  },
   "sessionSortNameAZ": "Name A–Z",
   "@sessionSortNameAZ": {
     "description": "Sort sessions alphabetically by name, A to Z"
@@ -1264,227 +629,15 @@
   "@sessionSortNameZA": {
     "description": "Sort sessions alphabetically by name, Z to A"
   },
-  "sessionSortDurationLongest": "Longest first",
-  "@sessionSortDurationLongest": {
-    "description": "Sort sessions by recording duration, longest first"
-  },
-  "sessionSortDurationShortest": "Shortest first",
-  "@sessionSortDurationShortest": {
-    "description": "Sort sessions by recording duration, shortest first"
-  },
-  "sessionLibraryExpand": "Show details",
-  "@sessionLibraryExpand": {
-    "description": "Tooltip on the expand affordance in compact session rows"
-  },
-  "sessionLibraryCollapse": "Hide details",
-  "@sessionLibraryCollapse": {
-    "description": "Tooltip on the collapse affordance shown when a compact session row is expanded"
-  },
-  "sessionLibraryRowMenuTooltip": "More",
-  "@sessionLibraryRowMenuTooltip": {
-    "description": "Tooltip on the per-row overflow menu in the session library"
-  },
-  "sessionLibraryRowOpen": "Open",
-  "@sessionLibraryRowOpen": {
-    "description": "Per-row menu entry to open the session in the review screen"
-  },
-  "sessionLibraryRowShare": "Share",
-  "@sessionLibraryRowShare": {
-    "description": "Per-row menu entry to share the session export"
-  },
-  "sessionLibraryRowDelete": "Delete",
-  "@sessionLibraryRowDelete": {
-    "description": "Per-row menu entry to delete the session"
-  },
-  "sessionLibrarySelectedCount": "{count, plural, =1{1 selected} other{{count} selected}}",
-  "@sessionLibrarySelectedCount": {
-    "description": "Selected session count in selection mode",
-    "placeholders": {
-      "count": {
-        "type": "num",
-        "format": "compact"
-      }
-    }
-  },
-  "sessionLibrarySelectAll": "Select all",
-  "@sessionLibrarySelectAll": {
-    "description": "Button to select all sessions in the list"
-  },
-  "sessionLibraryDeselectAll": "Deselect all",
-  "@sessionLibraryDeselectAll": {
-    "description": "Button to clear the selection"
-  },
-  "sessionLibraryDeleteSelectedTitle": "Delete selected sessions?",
-  "@sessionLibraryDeleteSelectedTitle": {
-    "description": "Title for bulk delete confirmation dialog"
-  },
-  "sessionLibraryDeleteSelectedMessage": "Permanently delete {count} selected sessions and their recordings?",
-  "@sessionLibraryDeleteSelectedMessage": {
-    "description": "Message for bulk delete confirmation dialog",
-    "placeholders": {
-      "count": {
-        "type": "num"
-      }
-    }
-  },
-  "sessionLibraryPreparingExport": "Preparing export…",
-  "@sessionLibraryPreparingExport": {
-    "description": "Progress indicator message shown while packaging multiple sessions for bulk export"
-  },
-  "sessionDeleteDetectionTitle": "Remove Detection?",
-  "@sessionDeleteDetectionTitle": {
-    "description": "Title for detection deletion confirmation dialog"
-  },
-  "sessionDeleteDetectionMessage": "Remove this detection from the session? Save to apply.",
-  "@sessionDeleteDetectionMessage": {
-    "description": "Body text for detection deletion confirmation dialog"
-  },
-  "sessionRemove": "Remove",
-  "@sessionRemove": {
-    "description": "Remove button label"
-  },
-  "detectionConfirmTooltip": "Mark as confirmed",
-  "@detectionConfirmTooltip": {
-    "description": "Tooltip on the per-detection confirm icon when the detection is not yet confirmed"
-  },
-  "detectionUnconfirmTooltip": "Remove confirmation",
-  "@detectionUnconfirmTooltip": {
-    "description": "Tooltip on the per-detection confirm icon when the detection is already confirmed"
-  },
-  "detectionShareTooltip": "Share detection",
-  "@detectionShareTooltip": {
-    "description": "Tooltip on the per-detection share icon and label of the share entry in the cluster row's long-press context menu"
-  },
-  "detectionActionsTooltip": "More actions",
-  "@detectionActionsTooltip": {
-    "description": "Tooltip on the per-detection more_vert overflow menu button (houses share / replace / delete)"
-  },
-  "detectionDeleteTooltip": "Delete detection",
-  "@detectionDeleteTooltip": {
-    "description": "Label of the delete entry in the per-detection overflow menu"
-  },
-  "detectionDeleteSpecies": "Delete species",
-  "@detectionDeleteSpecies": {
-    "description": "Label of the overflow-menu entry that removes every detection of this species from the session"
-  },
-  "detectionAddNote": "Add note",
-  "@detectionAddNote": {
-    "description": "Overflow-menu entry that opens the note editor when no note exists yet"
-  },
-  "detectionEditNote": "Edit note",
-  "@detectionEditNote": {
-    "description": "Overflow-menu entry that opens the note editor when a note already exists"
-  },
-  "detectionNoteDialogTitle": "Detection note",
-  "@detectionNoteDialogTitle": {
-    "description": "Title of the dialog used to edit a per-detection text note"
-  },
-  "detectionNoteHint": "e.g. juvenile, distant, behind tree …",
-  "@detectionNoteHint": {
-    "description": "Placeholder text in the note text field"
-  },
-  "detectionNoteSaved": "Note saved",
-  "@detectionNoteSaved": {
-    "description": "Snackbar shown after a detection note is added or updated"
-  },
-  "detectionNoteCleared": "Note removed",
-  "@detectionNoteCleared": {
-    "description": "Snackbar shown after a detection note is cleared"
-  },
-  "detectionDeleteNote": "Delete",
-  "@detectionDeleteNote": {
-    "description": "Button label in the note editor dialog that removes the existing note"
-  },
-  "detectionNoteTooltip": "Has note",
-  "@detectionNoteTooltip": {
-    "description": "Tooltip on the note glyph shown next to a detection that has a note"
-  },
-  "detectionRecordVoiceMemo": "Record voice memo",
-  "@detectionRecordVoiceMemo": {
-    "description": "Overflow-menu entry that opens the voice-memo recorder when no memo exists yet"
-  },
-  "detectionReplaceVoiceMemo": "Replace voice memo",
-  "@detectionReplaceVoiceMemo": {
-    "description": "Overflow-menu entry that opens the voice-memo recorder when a memo already exists; recording will overwrite it on save"
-  },
-  "detectionDeleteVoiceMemo": "Delete voice memo",
-  "@detectionDeleteVoiceMemo": {
-    "description": "Overflow-menu entry that removes the voice memo attached to a detection"
-  },
-  "detectionVoiceMemoDialogTitle": "Voice memo",
-  "@detectionVoiceMemoDialogTitle": {
-    "description": "Title of the dialog used to record / play back a per-detection voice memo"
-  },
-  "detectionVoiceMemoHint": "Tap the mic to record a short voice note",
-  "@detectionVoiceMemoHint": {
-    "description": "Hint shown in the voice-memo dialog before any recording exists"
-  },
-  "detectionVoiceMemoSaved": "Voice memo saved",
-  "@detectionVoiceMemoSaved": {
-    "description": "Snackbar shown after a voice memo is recorded and saved"
-  },
-  "detectionVoiceMemoDeleted": "Voice memo deleted",
-  "@detectionVoiceMemoDeleted": {
-    "description": "Snackbar shown after a voice memo is removed from a detection"
-  },
-  "detectionVoiceMemoTooltip": "Play voice memo",
-  "@detectionVoiceMemoTooltip": {
-    "description": "Tooltip on the inline voice-memo glyph shown next to a detection that has a memo"
-  },
-  "detectionVoiceMemoMicPermissionDenied": "Microphone permission denied. Enable it in system settings to record voice memos.",
-  "@detectionVoiceMemoMicPermissionDenied": {
-    "description": "Error shown when the user denies microphone permission while trying to record a voice memo"
-  },
-  "detectionVoiceMemoRecording": "Recording…",
-  "@detectionVoiceMemoRecording": {
-    "description": "Status label shown while a voice memo is actively being recorded"
-  },
-  "detectionVoiceMemoTapToStop": "Tap to stop",
-  "@detectionVoiceMemoTapToStop": {
-    "description": "Help text shown under the recording indicator while a voice memo is being captured"
-  },
-  "detectionVoiceMemoTapToRecord": "Tap to record",
-  "@detectionVoiceMemoTapToRecord": {
-    "description": "Help text shown under the mic button when no recording is in progress yet"
-  },
-  "sessionDetectionRemoved": "Detection removed",
-  "@sessionDetectionRemoved": {
-    "description": "Snackbar text after a detection cluster is dismissed via swipe or the overflow menu's delete entry"
-  },
-  "sessionSpeciesRemoved": "Species removed",
-  "@sessionSpeciesRemoved": {
-    "description": "Snackbar text after every detection of a species is removed via the overflow menu's Delete species entry"
-  },
   "sessionSave": "Save",
   "@sessionSave": {
     "description": "Save session button label"
-  },
-  "sessionSaved": "Session saved",
-  "@sessionSaved": {
-    "description": "Snackbar text after saving session"
-  },
-  "sessionUnsavedChanges": "You have unsaved changes. Save or discard?",
-  "@sessionUnsavedChanges": {
-    "description": "Warning when leaving session review with unsaved changes"
-  },
-  "sessionUnsavedSession": "This session hasn't been saved yet. Save or discard it?",
-  "@sessionUnsavedSession": {
-    "description": "Prompt when leaving review of a session that was never saved (automatic saving disabled)"
-  },
-  "sessionDetections": "{count} detections",
-  "@sessionDetections": {
-    "description": "Detection count label within a species row",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
   },
   "sessionDurationWarningTitle": "Still Recording",
   "@sessionDurationWarningTitle": {
     "description": "Title for the 10-minute session duration warning dialog"
   },
-  "sessionDurationWarningMessage": "You have been recording for 10 minutes. Do you want to continue?",
+  "sessionDurationWarningMessage": "You have been recording for 10 minutes. Do you want to keep going?",
   "@sessionDurationWarningMessage": {
     "description": "Body text for the session duration warning dialog"
   },
@@ -1492,264 +645,15 @@
   "@sessionContinue": {
     "description": "Continue button label in the session duration warning dialog"
   },
-  "sessionAddSpecies": "Add Species",
-  "@sessionAddSpecies": {
-    "description": "Button label to add a species to the session"
-  },
-  "sessionSearchSpecies": "Search species…",
-  "@sessionSearchSpecies": {
-    "description": "Hint text for the species search field"
-  },
-  "sessionInsertGlobally": "Insert globally",
-  "@sessionInsertGlobally": {
-    "description": "Option to insert a species detection for the entire session"
-  },
-  "sessionInsertAtTimestamp": "Insert at playback position",
-  "@sessionInsertAtTimestamp": {
-    "description": "Option to insert a species detection at the current playback timestamp"
-  },
-  "sessionReplaceDetection": "Replace this detection",
-  "@sessionReplaceDetection": {
-    "description": "Option to replace an existing detection with a different species"
-  },
-  "sessionUnknownSpecies": "Unknown / Other",
-  "@sessionUnknownSpecies": {
-    "description": "Label for the unknown or unidentified species category"
-  },
-  "sessionOtherSpecies": "Other (specify)",
-  "@sessionOtherSpecies": {
-    "description": "Label for the free-text 'Other species' entry in the add-species picker; opens a small dialog where the user types any label (dog, frog, helicopter, etc.) that isn't a taxonomy species"
-  },
-  "sessionOtherSpeciesDialogTitle": "Other species",
-  "@sessionOtherSpeciesDialogTitle": {
-    "description": "Title of the dialog opened by the 'Other (specify)' entry where the user types a free-text species / sound label"
-  },
-  "sessionOtherSpeciesHint": "Type a name (e.g. dog, frog, helicopter)",
-  "@sessionOtherSpeciesHint": {
-    "description": "Hint text shown in the 'Other species' dialog's input field, plus as the subtitle on the 'Other (specify)' tile"
-  },
-  "sessionReplacingLabel": "Replacing",
-  "@sessionReplacingLabel": {
-    "description": "Label shown above the detection being replaced in the species picker"
-  },
-  "sessionSearchHint": "Type a common or scientific name to find a species.",
-  "@sessionSearchHint": {
-    "description": "Helper text shown when the species search field is empty"
-  },
-  "sessionNoResultsFor": "No species match \"{query}\".",
-  "@sessionNoResultsFor": {
-    "description": "Empty state when species search returns nothing",
-    "placeholders": {
-      "query": {
-        "type": "String"
-      }
-    }
-  },
-  "sessionAnnotations": "Annotations",
-  "@sessionAnnotations": {
-    "description": "Section title for session annotations"
-  },
-  "sessionAddAnnotation": "Add annotation…",
-  "@sessionAddAnnotation": {
-    "description": "Hint text for the annotation input field"
-  },
-  "sessionAnnotationGlobal": "Global",
-  "@sessionAnnotationGlobal": {
-    "description": "Label for an annotation not tied to a specific timestamp"
-  },
-  "sessionTrimRecording": "Trim Recording",
-  "@sessionTrimRecording": {
-    "description": "Button label to enter trim mode for the recording"
-  },
-  "sessionTrimApply": "Apply Trim",
-  "@sessionTrimApply": {
-    "description": "Button label to apply the current trim selection"
-  },
-  "sessionTrimReset": "Reset Trim",
-  "@sessionTrimReset": {
-    "description": "Button label to reset trim handles to full recording"
-  },
-  "sessionTrimWarning": "Detections outside the trimmed range will be removed.",
-  "@sessionTrimWarning": {
-    "description": "Warning shown when applying a trim that removes detections"
-  },
-  "sessionTrimCommitTitle": "Trim recording permanently?",
-  "@sessionTrimCommitTitle": {
-    "description": "Title of the dialog confirming that saving will permanently cut the recording to the trimmed range"
-  },
-  "sessionTrimCommitMessage": "Saving deletes the audio outside the trimmed range from this recording. This cannot be undone.",
-  "@sessionTrimCommitMessage": {
-    "description": "Body of the dialog confirming that saving will permanently cut the recording to the trimmed range"
-  },
-  "sessionTrimCommitConfirm": "Trim and Save",
-  "@sessionTrimCommitConfirm": {
-    "description": "Confirm button label for the destructive trim dialog"
-  },
-  "sessionTrimCommitFailed": "The recording could not be trimmed. The session was saved and the trim still applies to playback and exports.",
-  "@sessionTrimCommitFailed": {
-    "description": "Snack bar shown when the recording file could not be cut, so the trim stays as an editable range"
-  },
-  "sessionTrimExportFailed": "The trimmed audio could not be prepared for sharing.",
-  "@sessionTrimExportFailed": {
-    "description": "Snack bar shown when a trimmed recording cannot be materialized for export"
-  },
   "shareSheetFailed": "The share sheet could not be opened.",
   "@shareSheetFailed": {
     "description": "Snack bar shown when the platform share sheet fails to open"
-  },
-  "sessionHelpTitle": "Session Review Help",
-  "@sessionHelpTitle": {
-    "description": "Title for the session review help dialog"
-  },
-  "sessionHelpOverview": "The session review lets you examine, edit, and export your detection session. Tap species rows to see individual detections. Use the spectrogram to navigate the recording.",
-  "@sessionHelpOverview": {
-    "description": "Overview section of the session review help"
-  },
-  "sessionHelpAddSpecies": "Add Species: Tap the + button to manually add a species. You can insert it globally (for the entire session), at the current playback position, or replace an existing detection. After picking a species, a confirmation sheet lets you tick Heard and/or Seen before the entry is added. Use \"Unknown / Other\" for unidentified calls.",
-  "@sessionHelpAddSpecies": {
-    "description": "Help text explaining the add species feature"
-  },
-  "sessionHelpAnnotations": "Annotations: Add text notes to your session. Annotations can be global or tied to a specific timestamp. They are included in exported bundles.",
-  "@sessionHelpAnnotations": {
-    "description": "Help text explaining annotations"
-  },
-  "sessionHelpTrimming": "Trim Recording: Drag the left and right handles on the spectrogram to trim the recording. Detections outside the trimmed range are removed when you apply the trim. Saving the session then cuts the audio outside that range from the recording for good.",
-  "@sessionHelpTrimming": {
-    "description": "Help text explaining recording trimming"
-  },
-  "sessionHelpExport": "Export & Share: Use the share button to export your session as a ZIP bundle containing the recording, detections (CSV, JSON, Raven Pro), and annotations.",
-  "@sessionHelpExport": {
-    "description": "Help text explaining export and sharing"
-  },
-  "sessionManualDetection": "Manual",
-  "@sessionManualDetection": {
-    "description": "Badge label for manually added detections"
-  },
-  "sessionAddContent": "Add to Session",
-  "@sessionAddContent": {
-    "description": "Title for the bottom sheet with add options"
-  },
-  "sessionAddAnnotationOption": "Add Annotation",
-  "@sessionAddAnnotationOption": {
-    "description": "Option to add an annotation from the + menu"
-  },
-  "sessionAddVoiceMemoOption": "Add Voice Memo",
-  "@sessionAddVoiceMemoOption": {
-    "description": "Option to add a session-level voice memo from the + menu"
-  },
-  "sessionAnnotationVoiceMemoLabel": "Voice memo",
-  "@sessionAnnotationVoiceMemoLabel": {
-    "description": "Placeholder text shown for memo-only annotations that have no text"
-  },
-  "sessionAnnotationName": "Name (optional)",
-  "@sessionAnnotationName": {
-    "description": "Hint for the optional name/title field shown when adding or editing a session annotation"
-  },
-  "sessionEditAnnotation": "Edit annotation",
-  "@sessionEditAnnotation": {
-    "description": "Tooltip and dialog title for editing an existing session annotation"
-  },
-  "sessionEditVoiceMemo": "Edit voice memo",
-  "@sessionEditVoiceMemo": {
-    "description": "Tooltip and dialog title for editing an existing voice-memo annotation"
-  },
-  "sessionTypeLive": "Live Session",
-  "@sessionTypeLive": {
-    "description": "Title for a live recording session"
-  },
-  "sessionTypeFileUpload": "File Upload",
-  "@sessionTypeFileUpload": {
-    "description": "Title for a file upload analysis session"
-  },
-  "sessionTypePointCount": "Point Count",
-  "@sessionTypePointCount": {
-    "description": "Title for a point-count survey session"
-  },
-  "sessionTypeSurvey": "Survey Session",
-  "@sessionTypeSurvey": {
-    "description": "Title for a background survey session"
-  },
-  "sessionTypeBatchAnalysis": "Batch Analysis",
-  "@sessionTypeBatchAnalysis": {
-    "description": "Title for a batch analysis session"
-  },
-  "sessionTypeAru": "ARU Session",
-  "@sessionTypeAru": {
-    "description": "Title for an autonomous recording unit session"
-  },
-  "sessionUndo": "Undo",
-  "@sessionUndo": {
-    "description": "Tooltip for the undo button in session review"
-  },
-  "sessionRedo": "Redo",
-  "@sessionRedo": {
-    "description": "Tooltip for the redo button in session review"
-  },
-  "sessionTitleLiveNum": "Live Session #{number}",
-  "@sessionTitleLiveNum": {
-    "description": "AppBar title for a numbered live session review",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionTitleFileUploadNum": "File Upload #{number}",
-  "@sessionTitleFileUploadNum": {
-    "description": "AppBar title for a numbered file-upload session review",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionTitlePointCountNum": "Point Count #{number}",
-  "@sessionTitlePointCountNum": {
-    "description": "AppBar title for a numbered point-count session review",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionTitleSurveyNum": "Survey #{number}",
-  "@sessionTitleSurveyNum": {
-    "description": "AppBar title for a numbered survey session review",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionTitleBatchAnalysisNum": "Batch Analysis #{number}",
-  "@sessionTitleBatchAnalysisNum": {
-    "description": "AppBar title for a numbered batch analysis session review",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionTitleAruNum": "ARU Session #{number}",
-  "@sessionTitleAruNum": {
-    "description": "AppBar title for a numbered ARU session review",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionCardLiveNum": "Live Session #{number}",
-  "@sessionCardLiveNum": {
-    "description": "Card title for a numbered live session",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionCardFileUploadNum": "File Upload #{number}",
-  "@sessionCardFileUploadNum": {
-    "description": "Card title for a numbered file-upload session",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionCardPointCountNum": "Point Count #{number}",
-  "@sessionCardPointCountNum": {
-    "description": "Card title for a numbered point-count session",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionCardSurveyNum": "Survey #{number}",
-  "@sessionCardSurveyNum": {
-    "description": "Card title for a numbered survey session",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionCardBatchAnalysisNum": "Batch Analysis #{number}",
-  "@sessionCardBatchAnalysisNum": {
-    "description": "Card title for a numbered batch analysis session",
-    "placeholders": { "number": { "type": "int" } }
-  },
-  "sessionCardAruNum": "ARU Session #{number}",
-  "@sessionCardAruNum": {
-    "description": "Card title for a numbered ARU session",
-    "placeholders": { "number": { "type": "int" } }
   },
   "mapTileConsentTitle": "Map Tiles",
   "@mapTileConsentTitle": {
     "description": "Title for the map tile consent dialog"
   },
-  "mapTileConsentBody": "Loading the map connects to OpenStreetMap tile servers. Your IP address and approximate location will be visible to the tile server. This also enables place-name lookup, which you can turn off separately in Settings.\n\nDo you agree to load map tiles?",
+  "mapTileConsentBody": "To show the map, the app loads map images from OpenStreetMap. The map service can see your IP address and roughly where you are. This also turns on the place name lookup – you can turn it off again in the settings.\n\nLoad the map?",
   "@mapTileConsentBody": {
     "description": "Body text for the map tile consent dialog"
   },
@@ -1769,89 +673,9 @@
   "@mapLoadHint": {
     "description": "Hint shown below the Load Map button"
   },
-  "recordingLocation": "Recording Location",
-  "@recordingLocation": {
-    "description": "Title for the map screen showing the recording location"
-  },
-  "sessionRenameTitle": "Rename Session",
-  "@sessionRenameTitle": {
-    "description": "Title for the session rename dialog"
-  },
-  "sessionRenameHint": "Enter a custom name",
-  "@sessionRenameHint": {
-    "description": "Hint text in the session rename text field"
-  },
-  "sessionRenameTap": "Tap to rename",
-  "@sessionRenameTap": {
-    "description": "Tooltip on the session title edit icon"
-  },
   "settingsShowSciNames": "Show scientific names",
   "@settingsShowSciNames": {
     "description": "Toggle to show or hide scientific names below common names"
-  },
-  "settingsShowSciNamesDescription": "Display scientific names below common names on all screens",
-  "@settingsShowSciNamesDescription": {
-    "description": "Subtitle for the show scientific names toggle"
-  },
-  "settingsPlayback": "Playback",
-  "@settingsPlayback": {
-    "description": "Settings section header for playback options"
-  },
-  "settingsPlaybackDescription": "Session review playback behavior",
-  "@settingsPlaybackDescription": {
-    "description": "Subtitle for the Playback settings section"
-  },
-  "settingsPlaybackVoiceMemos": "Auto-play voice memos",
-  "@settingsPlaybackVoiceMemos": {
-    "description": "Toggle to auto-play voice memos during session review playback"
-  },
-  "settingsPlaybackVoiceMemosDescription": "Play attached voice memos when the playhead reaches their timestamp",
-  "@settingsPlaybackVoiceMemosDescription": {
-    "description": "Subtitle for the auto-play voice memos toggle"
-  },
-  "settingsHelpPlaybackVoiceMemos": "When enabled, any voice memo linked to a timed annotation plays automatically during session review when the playhead crosses its recorded position. Off by default.",
-  "@settingsHelpPlaybackVoiceMemos": {
-    "description": "Help text for the auto-play voice memos setting"
-  },
-  "settingsPlaybackVoiceMemoDucking": "Voice memo ducking",
-  "@settingsPlaybackVoiceMemoDucking": {
-    "description": "Slider title for how strongly the main recording is reduced while automatic voice memos play"
-  },
-  "settingsHelpPlaybackVoiceMemoDucking": "Controls how much the main recording is lowered while an automatic voice memo plays. Higher values make memos easier to hear; lower values keep more of the original recording audible.",
-  "@settingsHelpPlaybackVoiceMemoDucking": {
-    "description": "Help text for the voice memo ducking setting"
-  },
-  "settingsPlaybackOverlay": "Playback overlay in review",
-  "@settingsPlaybackOverlay": {
-    "description": "Toggle to show a modal player sheet with a spectrogram when reviewing clips"
-  },
-  "settingsPlaybackOverlayDescription": "Trigger a modal player with a spectrogram preview and detailed actions when reviewing audio clips",
-  "@settingsPlaybackOverlayDescription": {
-    "description": "Subtitle for the playback overlay toggle"
-  },
-  "settingsTimestampDisplayMode": "Timestamp display",
-  "@settingsTimestampDisplayMode": {
-    "description": "Title for the timestamp display mode setting"
-  },
-  "settingsTimestampDisplayModeDescription": "How per-detection times appear in session review",
-  "@settingsTimestampDisplayModeDescription": {
-    "description": "Subtitle for the timestamp display mode setting"
-  },
-  "settingsTimestampDisplayModeRelative": "Relative",
-  "@settingsTimestampDisplayModeRelative": {
-    "description": "Segmented-button label: session-relative offset, e.g. 00:12:34"
-  },
-  "settingsTimestampDisplayModeAbsolute": "Absolute",
-  "@settingsTimestampDisplayModeAbsolute": {
-    "description": "Segmented-button label: local clock time, e.g. 08:42:17"
-  },
-  "settingsTimestampShowSeconds": "Show seconds in timestamps",
-  "@settingsTimestampShowSeconds": {
-    "description": "Title for the show-seconds toggle"
-  },
-  "settingsTimestampShowSecondsDescription": "Include seconds in absolute detection times shown in the app",
-  "@settingsTimestampShowSecondsDescription": {
-    "description": "Subtitle for the show-seconds toggle"
   },
   "monthJ": "J",
   "@monthJ": {
@@ -1905,7 +729,7 @@
   "@exploreHelpTitle": {
     "description": "Title for explore screen help overlay"
   },
-  "exploreHelpBody": "Explore ranks species for the current location and season using the BirdNET geo-model. Use refresh to rebuild the list, and tap a species card to open the detail overlay. Treat it as a quick in-app reference, not as a replacement for your own site knowledge.",
+  "exploreHelpBody": "Explore shows which birds occur in your area at this time of year, the most likely first. Refresh makes the app work out the list again. Tap a bird to see more about it. The list is an estimate – what is really there, you can only find out outside.",
   "@exploreHelpBody": {
     "description": "Body text for explore screen help overlay"
   },
@@ -1930,63 +754,9 @@
   "@speciesListenOnEbird": {
     "description": "Tappable link opening the eBird/Macaulay Library audio catalog for the species"
   },
-  "settingsIgnoreSpecies": "Ignore species",
-  "@settingsIgnoreSpecies": {"description": "Title for inference-time species ignore settings"},
-  "settingsIgnoreSpeciesDescription": "Select taxonomic groups to suppress and set the geo-model score above which very common species are ignored.",
-  "@settingsIgnoreSpeciesDescription": {"description": "Description of species ignore settings"},
-  "settingsHelpIgnoreSpecies": "Selected species are assigned a score of zero before temporal pooling, so they cannot become displayed or saved detections.",
-  "@settingsHelpIgnoreSpecies": {"description": "Help text for species ignore settings"},
-  "settingsIgnoreCommonSpecies": "Ignore common species above",
-  "@settingsIgnoreCommonSpecies": {"description": "Label for common-species geo-score cutoff"},
-  "settingsIgnoreCommonSpeciesDescription": "Species with a geo-model score above this cutoff are ignored. The default is 100%, which ignores none by commonness.",
-  "@settingsIgnoreCommonSpeciesDescription": {"description": "Description of common-species cutoff"},
-  "settingsHelpIgnoreCommonSpecies": "Requires a location-based geo-model score. Lowering the cutoff ignores more common species; raising it ignores fewer.",
-  "@settingsHelpIgnoreCommonSpecies": {"description": "Help text for common-species cutoff"},
-  "settingsIgnoredSpeciesCount": "{count} species ignored",
-  "@settingsIgnoredSpeciesCount": {"description": "Number of species suppressed by the current ignore settings", "placeholders": {"count": {"type": "int"}}},
-  "settingsIgnoredSpeciesCountLoading": "Calculating for the current location…",
-  "@settingsIgnoredSpeciesCountLoading": {"description": "Loading label while the ignored-species count is calculated"},
-  "settingsIgnoredSpeciesCountUnavailable": "Ignored-species count unavailable",
-  "@settingsIgnoredSpeciesCountUnavailable": {"description": "Fallback when the ignored-species count cannot be calculated"},
-  "settingsSensitivity": "Sensitivity",
-  "@settingsSensitivity": {
-    "description": "Sensitivity setting label"
-  },
-  "settingsSensitivityDescription": "Higher values detect more species but increase false positives",
-  "@settingsSensitivityDescription": {
-    "description": "Subtitle for sensitivity slider"
-  },
-  "settingsScorePooling": "Score pooling",
-  "@settingsScorePooling": {
-    "description": "Temporal score pooling setting label"
-  },
-  "settingsScorePoolingWindows": "Pooling window count",
-  "@settingsScorePoolingWindows": {
-    "description": "Label for the slider that controls how many consecutive inference windows are pooled together"
-  },
-  "settingsPoolingOff": "Off",
-  "@settingsPoolingOff": {
-    "description": "No temporal pooling"
-  },
-  "settingsPoolingAverage": "Average",
-  "@settingsPoolingAverage": {
-    "description": "Average temporal pooling"
-  },
-  "settingsPoolingMax": "Max",
-  "@settingsPoolingMax": {
-    "description": "Max temporal pooling"
-  },
-  "settingsPoolingLME": "LME",
-  "@settingsPoolingLME": {
-    "description": "Log-mean-exp temporal pooling"
-  },
   "settingsDangerZone": "Danger Zone",
   "@settingsDangerZone": {
     "description": "Section header for destructive settings"
-  },
-  "settingsSampleRate": "Sample rate",
-  "@settingsSampleRate": {
-    "description": "Audio sample rate setting label"
   },
   "settingsGeneralDescription": "Appearance, language, and display preferences. Toggle scientific names for detailed species identification.",
   "@settingsGeneralDescription": {
@@ -2000,7 +770,7 @@
   "@settingsInferenceDescription": {
     "description": "Subtitle for Inference settings section"
   },
-  "settingsSpectrogramDescription": "Visual display of audio frequencies over time. Larger FFT sizes give finer frequency resolution; shorter durations scroll faster.",
+  "settingsSpectrogramDescription": "The spectrogram is a picture of sound: time runs horizontally, frequency vertically (low at the bottom, high at the top), and intensity shows as color. Larger FFT values give a finer frequency resolution; a shorter duration makes it scroll faster.",
   "@settingsSpectrogramDescription": {
     "description": "Subtitle for Spectrogram settings section"
   },
@@ -2008,11 +778,11 @@
   "@settingsRecordingDescription": {
     "description": "Subtitle for Recording settings section"
   },
-  "settingsLocationDescription": "GPS and geographic species filtering. The geo-model uses your coordinates to predict local species and filter unlikely detections.",
+  "settingsLocationDescription": "GPS and the location-based species filter. With your location, the app predicts which birds live in your area and hides unlikely ones.",
   "@settingsLocationDescription": {
     "description": "Subtitle for Location settings section"
   },
-  "settingsExportDescription": "File format and content for session exports. Raven tables are compatible with Cornell\u0027s Raven Pro software.",
+  "settingsExportDescription": "What the backup file contains",
   "@settingsExportDescription": {
     "description": "Subtitle for Export settings section"
   },
@@ -2021,176 +791,16 @@
     "description": "Subtitle for Danger Zone settings section"
   },
 
-  "fileAnalysisStepFile": "File",
-  "@fileAnalysisStepFile": {
-    "description": "Step indicator label for file selection step"
-  },
-  "fileAnalysisStepLocation": "Location",
-  "@fileAnalysisStepLocation": {
-    "description": "Step indicator label for location step"
-  },
-  "fileAnalysisStepParams": "Settings",
-  "@fileAnalysisStepParams": {
-    "description": "Step indicator label for parameters step"
-  },
-  "fileAnalysisStepAnalyze": "Analyze",
-  "@fileAnalysisStepAnalyze": {
-    "description": "Step indicator label for analysis step"
-  },
 
-  "fileAnalysisPickTitle": "Select Audio File",
-  "@fileAnalysisPickTitle": {
-    "description": "Title for file selection step"
-  },
-  "fileAnalysisPickSubtitle": "Choose an audio recording to analyze for species. Supports WAV, FLAC, MP3, OGG, M4A, OPUS, and more.",
-  "@fileAnalysisPickSubtitle": {
-    "description": "Subtitle for file selection step"
-  },
-  "fileAnalysisPickButton": "Choose File",
-  "@fileAnalysisPickButton": {
-    "description": "Button label to open file picker"
-  },
-  "fileAnalysisChangeFile": "Change File",
-  "@fileAnalysisChangeFile": {
-    "description": "Button label to pick a different file"
-  },
-  "fileAnalysisReading": "Reading file…",
-  "@fileAnalysisReading": {
-    "description": "Shown while inspecting the selected audio file"
-  },
-  "fileAnalysisFormat": "Format",
-  "@fileAnalysisFormat": {
-    "description": "Label for audio format metadata"
-  },
-  "fileAnalysisDuration": "Duration",
-  "@fileAnalysisDuration": {
-    "description": "Label for audio duration metadata"
-  },
-  "fileAnalysisSize": "Size",
-  "@fileAnalysisSize": {
-    "description": "Label for file size metadata"
-  },
-  "fileAnalysisSampleRate": "Sample rate",
-  "@fileAnalysisSampleRate": {
-    "description": "Label for sample rate metadata"
-  },
 
-  "fileAnalysisLocationTitle": "Recording Location",
-  "@fileAnalysisLocationTitle": {
-    "description": "Title for location step"
-  },
-  "fileAnalysisLocationSubtitle": "Adding a location enables geographic species filtering for more accurate results.",
-  "@fileAnalysisLocationSubtitle": {
-    "description": "Subtitle for location step"
-  },
-  "fileAnalysisLocationGps": "Current",
-  "@fileAnalysisLocationGps": {
-    "description": "Segmented button label: use current GPS location"
-  },
-  "fileAnalysisLocationManual": "Manual",
-  "@fileAnalysisLocationManual": {
-    "description": "Segmented button label: enter coordinates manually"
-  },
-  "fileAnalysisLocationSkip": "None",
-  "@fileAnalysisLocationSkip": {
-    "description": "Segmented button label: skip location"
-  },
-  "fileAnalysisLocationRefresh": "Refresh location",
-  "@fileAnalysisLocationRefresh": {
-    "description": "Button to re-fetch GPS location"
-  },
-  "fileAnalysisLocationFetch": "Get location",
-  "@fileAnalysisLocationFetch": {
-    "description": "Button to fetch GPS location"
-  },
-  "fileAnalysisLatitude": "Latitude",
-  "@fileAnalysisLatitude": {
-    "description": "Label for latitude input field"
-  },
-  "fileAnalysisLongitude": "Longitude",
-  "@fileAnalysisLongitude": {
-    "description": "Label for longitude input field"
-  },
-  "fileAnalysisPickOnMap": "Pick on map",
-  "@fileAnalysisPickOnMap": {
-    "description": "Button to open map picker for location"
-  },
-  "fileAnalysisMapConfirm": "Use this location",
-  "@fileAnalysisMapConfirm": {
-    "description": "Button to confirm map-picked location"
-  },
 
-  "fileAnalysisDateTitle": "Recording Date (optional)",
-  "@fileAnalysisDateTitle": {
-    "description": "Title for recording date section in file upload"
-  },
-  "fileAnalysisDateSubtitle": "Optional. Used for seasonal species filtering if set.",
-  "@fileAnalysisDateSubtitle": {
-    "description": "Subtitle explaining why recording date matters"
-  },
-  "fileAnalysisDateToday": "Today (default)",
-  "@fileAnalysisDateToday": {
-    "description": "Label shown when no recording date is selected"
-  },
-  "fileAnalysisDateClear": "Reset to today",
-  "@fileAnalysisDateClear": {
-    "description": "Tooltip for clearing the selected recording date"
-  },
 
-  "fileAnalysisParamsTitle": "Analysis Settings",
-  "@fileAnalysisParamsTitle": {
-    "description": "Title for parameters step"
-  },
-  "fileAnalysisParamsSubtitle": "Configure how the audio will be analyzed. Defaults come from your global settings.",
-  "@fileAnalysisParamsSubtitle": {
-    "description": "Subtitle for parameters step"
-  },
-  "fileAnalysisOverlap": "Window overlap",
-  "@fileAnalysisOverlap": {
-    "description": "Label for overlap parameter"
-  },
 
-  "fileAnalysisAnalyzeTitle": "Run Analysis",
-  "@fileAnalysisAnalyzeTitle": {
-    "description": "Title for analysis step"
-  },
-  "fileAnalysisReadyMessage": "Everything is set. Tap the button below to start analyzing your file.",
-  "@fileAnalysisReadyMessage": {
-    "description": "Message shown before starting analysis"
-  },
-  "fileAnalysisProgressWindows": "Window {current} of {total}",
-  "@fileAnalysisProgressWindows": {
-    "description": "Progress label showing current and total windows",
-    "placeholders": {
-      "current": {
-        "type": "int"
-      },
-      "total": {
-        "type": "int"
-      }
-    }
-  },
   "fileAnalysisDetections": "Detections",
   "@fileAnalysisDetections": {
     "description": "Label for detections count"
   },
-  "fileAnalysisSpecies": "Species",
-  "@fileAnalysisSpecies": {
-    "description": "Label for species count"
-  },
-  "fileAnalysisError": "Analysis Error",
-  "@fileAnalysisError": {
-    "description": "Error card title"
-  },
-  "fileAnalysisCouldNotProcessFile": "We couldn't process this file. Check that it uses a supported audio format and has the correct file extension, then try again.",
-  "@fileAnalysisCouldNotProcessFile": {
-    "description": "Friendly message shown when File Analysis cannot inspect or process a selected file"
-  },
 
-  "fileAnalysisBack": "Back",
-  "@fileAnalysisBack": {
-    "description": "Back button in wizard navigation"
-  },
   "wizardStepLabel": "Step {current} of {total}",
   "@wizardStepLabel": {
     "description": "Accessibility label announced for the wizard step indicator",
@@ -2225,67 +835,13 @@
       "percent": { "type": "int", "example": "60" }
     }
   },
-  "a11ySurveyMapMarkerAudio": "Audio clip available",
-  "@a11ySurveyMapMarkerAudio": {
-    "description": "Screen-reader value fragment for a survey-map detection marker that has an audio clip"
-  },
-  "a11ySurveyMapMarkerConfirmed": "Confirmed",
-  "@a11ySurveyMapMarkerConfirmed": {
-    "description": "Screen-reader value fragment for a survey-map detection marker that has been confirmed by the user"
-  },
-  "a11ySurveyMapMarkerCurrentPosition": "Current position",
-  "@a11ySurveyMapMarkerCurrentPosition": {
-    "description": "Screen-reader label for the current-position marker on the survey map"
-  },
-  "a11ySurveyMapMarkerStart": "Survey start",
-  "@a11ySurveyMapMarkerStart": {
-    "description": "Screen-reader label for the start marker on the survey map"
-  },
-  "a11ySurveyMapMarkerEnd": "Survey end",
-  "@a11ySurveyMapMarkerEnd": {
-    "description": "Screen-reader label for the end marker on the survey map"
-  },
-  "fileAnalysisEtaRemaining": "≈ {time} remaining",
-  "@fileAnalysisEtaRemaining": {
-    "description": "Estimated time remaining shown below the progress bar",
-    "placeholders": {
-      "time": { "type": "String", "example": "1m 23s" }
-    }
-  },
-  "fileAnalysisEtaCalculating": "Estimating time remaining…",
-  "@fileAnalysisEtaCalculating": {
-    "description": "Placeholder shown before enough samples exist to estimate ETA"
-  },
-  "sessionAutoStopMaxDuration": "Auto-stopped: maximum duration reached",
-  "@sessionAutoStopMaxDuration": {
-    "description": "Banner shown on the review screen when a survey ended because it hit its max duration"
-  },
-  "sessionAutoStopLowBattery": "Auto-stopped: battery dropped to {percent}%",
-  "@sessionAutoStopLowBattery": {
-    "description": "Banner shown on the review screen when a survey ended because the battery dropped below the configured threshold",
-    "placeholders": {
-      "percent": { "type": "int", "example": "15" }
-    }
-  },
   "settingsHelpTooltip": "About this setting",
   "@settingsHelpTooltip": {
     "description": "Tooltip on the help (?) icon next to a setting"
   },
-  "settingsHelpShowSciNames": "When enabled, scientific names appear in grey under common names throughout the app. Useful when you want unambiguous identification or are working with field guides that use Latin names.",
+  "settingsHelpShowSciNames": "Shows the scientific names in gray under the common names. Handy if you use a bird book that lists the Latin names.",
   "@settingsHelpShowSciNames": {
     "description": "Help text for the show scientific names setting"
-  },
-  "settingsHelpPlaybackOverlay": "When enabled, tapping a detection plays its clip in a dedicated modal overlay with transport controls and a spectrogram preview. When disabled, playback is triggered in the background. Active by default for sessions that only have clips and don't show a spectrogram.",
-  "@settingsHelpPlaybackOverlay": {
-    "description": "Help text for the playback overlay setting"
-  },
-  "settingsHelpTimestampDisplayMode": "Choose how per-detection times are rendered in session review. 'Relative' shows the offset from the start of the recording (00:12:34) — best for reviewing a single session and matching the spectrogram playhead. 'Absolute' shows the local clock time when the detection was captured (08:42:17) — best for cross-referencing field notes, weather logs, or other recordings. Storage and exports always use UTC instants regardless of this setting, so the choice never affects your data.",
-  "@settingsHelpTimestampDisplayMode": {
-    "description": "Help text for timestamp display mode setting"
-  },
-  "settingsHelpTimestampShowSeconds": "When enabled, absolute detection times include the trailing seconds component (08:42:17). When disabled, they stop at minute precision (08:42), which can be easier to scan in long lists. Only affects absolute mode — relative offsets always show seconds for spectrogram alignment, and exported CSV and JSON files always include seconds regardless.",
-  "@settingsHelpTimestampShowSeconds": {
-    "description": "Help text for timestamp show seconds setting"
   },
   "settingsHelpGain": "Multiplies the microphone signal in the app. Use values above 1.0 only for very quiet recordings — high gain amplifies noise too and can cause clipping. Most built-in mics work best at 1.0.",
   "@settingsHelpGain": {
@@ -2303,15 +859,11 @@
   "@settingsHelpConfidenceThreshold": {
     "description": "Help text for confidence threshold setting"
   },
-  "settingsHelpSensitivity": "X-axis offset applied to raw model probabilities before filtering. The app converts probabilities back to logit space, adds the sensitivity bias, then converts them back. Higher values catch fainter calls but can increase false positives.",
-  "@settingsHelpSensitivity": {
-    "description": "Help text for sensitivity setting"
-  },
   "settingsHelpInferenceRate": "How often BirdNET runs inference per second. Higher rates catch brief calls but use more battery and CPU; lower rates are gentler on the device but may miss short vocalizations.",
   "@settingsHelpInferenceRate": {
     "description": "Help text for inference rate setting"
   },
-  "settingsHelpShowAllDetectedSpecies": "Controls which species cards Live Mode and Point Count keep visible during a running session. The default shows only species detected in the latest inference cycle, so the list behaves like a currently vocalizing display. Show all detected species keeps each species visible after it drops below the threshold, making the list a running session species list.",
+  "settingsHelpShowAllDetectedSpecies": "Decides which birds stay in the list while you listen. Normally you only see the ones singing right now. When enabled, all birds from this session stay visible, even once they have gone quiet.",
   "@settingsHelpShowAllDetectedSpecies": {
     "description": "Help text for the Live Mode and Point Count species-list display setting"
   },
@@ -2331,19 +883,11 @@
   "@settingsHelpDetectedSpeciesSortOccurrences": {
     "description": "Help text for occurrence-count all-species sorting"
   },
-  "settingsHelpScorePooling": "How scores from overlapping analysis windows are combined. 'Max' is most reactive; 'average' smooths flickering; 'LME' (log-mean-exp) is a soft maximum that balances both, requires repeated per-window support before a new species first appears, and keeps supported high scores close to their strongest recent per-window score.",
-  "@settingsHelpScorePooling": {
-    "description": "Help text for score pooling setting"
-  },
-  "settingsHelpScorePoolingWindows": "Number of consecutive inference windows that contribute to the pooled score. Larger values smooth detections over a longer time horizon — better for steady, distant calls but slower to react to brief vocalizations. Smaller values are more responsive but noisier.",
-  "@settingsHelpScorePoolingWindows": {
-    "description": "Help text for score pooling windows setting"
-  },
-  "settingsHelpFftSize": "Resolution of the spectrogram. Larger sizes give finer frequency detail but coarser timing; smaller sizes show transient calls more sharply but blur frequencies. 1024–2048 works well for most species.",
+  "settingsHelpFftSize": "FFT window size used to compute the spectrogram – the picture of sound. Larger values give finer frequency but coarser time resolution; smaller values show short calls more sharply but smear the frequencies. 1024–2048 works well for most species.",
   "@settingsHelpFftSize": {
     "description": "Help text for FFT size setting"
   },
-  "settingsHelpColorMap": "Color palette used to render spectrogram intensity. Turbo is a modern Jet-like rainbow palette; Viridis, Magma, Plasma, and Cividis are perceptual palettes; Grayscale is print-friendly.",
+  "settingsHelpColorMap": "Color palette the spectrogram – the picture of sound – uses to show intensity. Turbo is a modern, Jet-like rainbow palette; Viridis, Magma, Plasma and Cividis are perceptually uniform palettes; Grayscale is print-friendly.",
   "@settingsHelpColorMap": {
     "description": "Help text for spectrogram color map setting"
   },
@@ -2351,15 +895,15 @@
   "@settingsHelpSpectrogramDuration": {
     "description": "Help text for spectrogram duration setting"
   },
-  "settingsHelpFrequencyRange": "Upper limit of the spectrogram's vertical axis. Reduce to focus on low-frequency vocalizations (owls, grouse) or increase to see ultrasonic calls and high-pitched insects.",
+  "settingsHelpFrequencyRange": "Upper limit of the vertical axis in the spectrogram, the picture of sound. Lower it to focus on low-frequency sounds (owls, grouse), or raise it to see high calls and insect sounds. More than 16 kHz is not possible because the app records at 32 kHz.",
   "@settingsHelpFrequencyRange": {
     "description": "Help text for spectrogram frequency range setting"
   },
-  "settingsHelpLogAmplitude": "Applies a logarithmic scale to spectrogram intensity. Makes quiet calls more visible at the cost of also showing more background noise. Helpful for distant or faint species.",
+  "settingsHelpLogAmplitude": "Applies a logarithmic scale to the intensity in the spectrogram – the picture of sound. Makes quiet calls more visible but also shows more background noise. Helpful for distant or quiet species.",
   "@settingsHelpLogAmplitude": {
     "description": "Help text for log amplitude setting"
   },
-  "settingsHelpSpectrogramQuality": "Controls the GPU filtering used to render the live spectrogram. 'High' looks smoothest and is recommended on modern phones. Drop to 'Medium' or 'Low' on older devices if you see frame drops or excessive battery drain.",
+  "settingsHelpSpectrogramQuality": "Controls GPU filtering when drawing the live spectrogram, the picture of sound. “High” looks cleanest and is recommended for modern devices. On older devices, choose “Medium” or “Low” if you see dropped frames or higher battery use.",
   "@settingsHelpSpectrogramQuality": {
     "description": "Help text for spectrogram quality setting"
   },
@@ -2371,7 +915,7 @@
   "@settingsHelpRecordingFormat": {
     "description": "Help text for recording format setting"
   },
-  "settingsHelpUseGps": "Use the device's GPS for live location. When off, the app uses the manual coordinates you set below — useful for stationary deployments or when GPS reception is poor indoors.",
+  "settingsHelpUseGps": "Uses your phone’s GPS for your location. When disabled, the app uses the location you set yourself – handy when GPS is poor.",
   "@settingsHelpUseGps": {
     "description": "Help text for use GPS setting"
   },
@@ -2383,201 +927,11 @@
   "@settingsHelpGeoThreshold": {
     "description": "Help text for geo threshold setting"
   },
-  "settingsHelpExportFormat": "Pick any combination of formats to bundle into the export. Each ticked format is written as its own file inside the ZIP, alongside the audio, app metadata, and HTML report you enable below. Untick every format here and leave only \"Include audio files\" on to share the raw recording on its own, with no ZIP.",
-  "@settingsHelpExportFormat": {
-    "description": "Help text for export format setting"
-  },
-  "settingsHelpExportRaven": "Writes a Raven selection table (`.selections.txt`) for use in Cornell Raven Pro. Each detection becomes a selection with its time range, frequency band, score, and species labels so you can review the recording against the model's marks.",
-  "@settingsHelpExportRaven": {
-    "description": "Help text for the Raven export format checkbox"
-  },
-  "settingsHelpExportCsv": "Writes a comma-separated table (`.csv`) with one row per detection — time, species, score, and any notes — that opens in any spreadsheet app. Best for quick filtering, sorting, and summarizing your detections.",
-  "@settingsHelpExportCsv": {
-    "description": "Help text for the CSV export format checkbox"
-  },
-  "settingsHelpExportJson": "Writes a structured `.json` document carrying the full session: every detection plus the complete per-session metadata (settings, model identity, weather, and integrity info). Best for programmatic processing and re-import.",
-  "@settingsHelpExportJson": {
-    "description": "Help text for the JSON export format checkbox"
-  },
-  "settingsHelpExportGpx": "Writes a `.gpx` file with the recorded GPS track and a waypoint for each located detection, for use in mapping tools. Only meaningful for sessions recorded with GPS on; surveys also bundle a GPX automatically when other formats are selected.",
-  "@settingsHelpExportGpx": {
-    "description": "Help text for the GPX export format checkbox"
-  },
-  "settingsHelpIncludeAudioFiles": "When enabled, exported sessions include the saved audio files alongside the metadata table. Useful for archiving and re-analysis; results in much larger exports.",
+  "settingsHelpIncludeAudioFiles": "When enabled, the backup file also contains the saved recordings; when restoring, they are put back on the new device. This makes the file much larger – a year of recordings can take up several hundred megabytes.",
   "@settingsHelpIncludeAudioFiles": {
     "description": "Help text for include audio files setting"
   },
-  "settingsHelpExportHtmlReport": "When enabled, the export ZIP also contains a self-contained HTML report named after the session (`<session>_report.html`), so reports from several exports never overwrite each other. Open it in any browser to see a styled session summary with map, per-detection cards, and inline audio players. Species images are loaded from the BirdNET taxonomy service when online.",
-  "@settingsHelpExportHtmlReport": {
-    "description": "Help text for export HTML report setting"
-  },
-  "settingsHelpExportAppMetadata": "When enabled, the export ZIP includes a `*.metadata.json` side-file with Smartfinch provenance: app and model version, weather snapshot at the start of the session, and audio integrity warnings. Turn off to share only audio and the selected formats without any app-specific files.",
-  "@settingsHelpExportAppMetadata": {
-    "description": "Help text for the include app metadata setting"
-  },
-  "fileAnalysisNext": "Next",
-  "@fileAnalysisNext": {
-    "description": "Next button in wizard navigation"
-  },
-  "fileAnalysisStart": "Start Analysis",
-  "@fileAnalysisStart": {
-    "description": "Button to begin file analysis"
-  },
 
-  "pointCountSetupTitle": "Point Count Setup",
-  "@pointCountSetupTitle": {
-    "description": "Title for the point count setup wizard"
-  },
-  "pointCountName": "Point Count Name",
-  "@pointCountName": {
-    "description": "Label for point count name field"
-  },
-  "pointCountNameHint": "e.g. Pond Stop 1",
-  "@pointCountNameHint": {
-    "description": "Hint for point count name field"
-  },
-  "pointCountDuration": "Duration",
-  "@pointCountDuration": {
-    "description": "Label for point count duration setting"
-  },
-  "pointCountDurationMinutes": "{minutes} min",
-  "@pointCountDurationMinutes": {
-    "description": "Duration in minutes",
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "pointCountLocationDate": "Location & Date",
-  "@pointCountLocationDate": {
-    "description": "Section header for location and date info"
-  },
-  "pointCountLocationAcquiring": "Acquiring GPS…",
-  "@pointCountLocationAcquiring": {
-    "description": "Shown while waiting for GPS fix"
-  },
-  "pointCountLocationUnavailable": "Location unavailable",
-  "@pointCountLocationUnavailable": {
-    "description": "Shown when GPS is not available"
-  },
-  "pointCountFieldTips": "Field Tips",
-  "@pointCountFieldTips": {
-    "description": "Section header for field tips"
-  },
-  "pointCountTipStableSurface": "Place phone on a stable surface (tree stump, tripod, fence post).",
-  "@pointCountTipStableSurface": {
-    "description": "Tip about stable placement"
-  },
-  "pointCountTipWind": "Avoid windy conditions — wind noise masks animal calls.",
-  "@pointCountTipWind": {
-    "description": "Tip about wind avoidance"
-  },
-  "pointCountTipQuiet": "Stay quiet and minimize movement during the count.",
-  "@pointCountTipQuiet": {
-    "description": "Tip about staying quiet"
-  },
-  "pointCountTipMicrophone": "Keep the microphone unobstructed — don't cover it with your hand or a case.",
-  "@pointCountTipMicrophone": {
-    "description": "Tip about microphone placement"
-  },
-  "pointCountTipDisturbance": "Avoid starting near loud anthropogenic noise sources (roads, machinery).",
-  "@pointCountTipDisturbance": {
-    "description": "Tip about avoiding disturbance"
-  },
-  "pointCountTipConsistency": "Use the same duration and settings for all counts in a study.",
-  "@pointCountTipConsistency": {
-    "description": "Tip about methodological consistency"
-  },
-  "pointCountReady": "Ready to Start",
-  "@pointCountReady": {
-    "description": "Header shown on the ready-to-start step"
-  },
-  "pointCountReadyMessage": "The count will run for {minutes} minutes. Audio capture and species identification will begin immediately when you press Start.",
-  "@pointCountReadyMessage": {
-    "description": "Message shown before starting",
-    "placeholders": {
-      "minutes": {
-        "type": "int"
-      }
-    }
-  },
-  "pointCountStart": "Start Count",
-  "@pointCountStart": {
-    "description": "Button to begin the point count"
-  },
-  "pointCountBack": "Back",
-  "@pointCountBack": {
-    "description": "Back button in wizard navigation"
-  },
-  "pointCountNext": "Next",
-  "@pointCountNext": {
-    "description": "Next button in wizard navigation"
-  },
-  "pointCountTimeRemaining": "{minutes}:{seconds}",
-  "@pointCountTimeRemaining": {
-    "description": "Countdown timer display mm:ss",
-    "placeholders": {
-      "minutes": {
-        "type": "String"
-      },
-      "seconds": {
-        "type": "String"
-      }
-    }
-  },
-  "pointCountComplete": "Point count complete.",
-  "@pointCountComplete": {
-    "description": "Snackbar message when countdown finishes"
-  },
-  "pointCountStopEarly": "End Count Early",
-  "@pointCountStopEarly": {
-    "description": "Button to stop the count before time expires"
-  },
-  "pointCountStopEarlyTitle": "End Point Count?",
-  "@pointCountStopEarlyTitle": {
-    "description": "Dialog title for early stop confirmation"
-  },
-  "pointCountStopEarlyMessage": "The count has not reached the full duration. End now and save results?",
-  "@pointCountStopEarlyMessage": {
-    "description": "Dialog message for early stop confirmation"
-  },
-  "pointCountIdentifying": "Identifying species…",
-  "@pointCountIdentifying": {
-    "description": "Status text during active point count"
-  },
-  "pointCountLocationGps": "Current",
-  "@pointCountLocationGps": {
-    "description": "GPS location option in point count setup"
-  },
-  "pointCountLocationManual": "Manual",
-  "@pointCountLocationManual": {
-    "description": "Manual location entry option in point count setup"
-  },
-  "pointCountLocationSkip": "None",
-  "@pointCountLocationSkip": {
-    "description": "Skip location option in point count setup"
-  },
-  "pointCountLocationRefresh": "Refresh location",
-  "@pointCountLocationRefresh": {
-    "description": "Tooltip for GPS refresh button in point count setup"
-  },
-  "pointCountLatitude": "Latitude",
-  "@pointCountLatitude": {
-    "description": "Label for latitude text field in point count setup"
-  },
-  "pointCountLongitude": "Longitude",
-  "@pointCountLongitude": {
-    "description": "Label for longitude text field in point count setup"
-  },
-  "pointCountPickOnMap": "Pick on map",
-  "@pointCountPickOnMap": {
-    "description": "Button to open map picker in point count setup"
-  },
-  "pointCountLocationSkipHint": "No location will be saved with this point count.",
-  "@pointCountLocationSkipHint": {
-    "description": "Hint text when location is set to None/Skip"
-  },
   "mapPickerTitle": "Pick on Map",
   "@mapPickerTitle": {
     "description": "Title for the shared map picker screen"
@@ -2587,129 +941,13 @@
     "description": "Button to confirm map-picked location"
   },
 
-  "surveySetupTitle": "Survey Setup",
-  "@surveySetupTitle": {
-    "description": "Title of the survey setup wizard"
-  },
-  "surveyBack": "Back",
-  "@surveyBack": {
-    "description": "Back button in survey wizard"
-  },
-  "surveyNext": "Next",
-  "@surveyNext": {
-    "description": "Next button in survey wizard"
-  },
-  "surveyStart": "Start Survey",
-  "@surveyStart": {
-    "description": "Start survey button"
-  },
-  "surveyName": "Survey Name",
-  "@surveyName": {
-    "description": "Label for survey name field"
-  },
-  "surveyNameHint": "e.g. Morning Transect A",
-  "@surveyNameHint": {
-    "description": "Hint for survey name field"
-  },
-  "surveyTransectId": "Transect ID",
-  "@surveyTransectId": {
-    "description": "Label for transect ID field"
-  },
-  "surveyTransectIdHint": "e.g. T-001",
-  "@surveyTransectIdHint": {
-    "description": "Hint for transect ID field"
-  },
-  "surveyObserverName": "Observer Name",
-  "@surveyObserverName": {
-    "description": "Label for observer name field"
-  },
-  "surveyObserverNameHint": "e.g. Jane Doe",
-  "@surveyObserverNameHint": {
-    "description": "Hint for observer name field"
-  },
-  "surveyLocation": "Location",
-  "@surveyLocation": {
-    "description": "Label for location mode selector"
-  },
-  "surveyLocationGps": "GPS",
-  "@surveyLocationGps": {
-    "description": "Continuous GPS tracking option"
-  },
-  "surveyLocationManual": "Manual",
-  "@surveyLocationManual": {
-    "description": "Manual GPS capture option"
-  },
-  "surveyLocationSkip": "Skip",
-  "@surveyLocationSkip": {
-    "description": "No GPS tracking option"
-  },
   "surveyLocationUnavailable": "Location unavailable",
   "@surveyLocationUnavailable": {
     "description": "Shown when GPS is not available"
   },
-  "surveyManualGpsWarning": "Location only updates when the app is open. Tap here to grant background location permission in Settings.",
-  "@surveyManualGpsWarning": {
-    "description": "Warning about manual GPS mode limitations"
-  },
-  "surveyBackgroundGpsNotice": "During the survey, your GPS location is tracked in the background to map species detections along your path. No location data is shared — everything stays on your device.",
-  "@surveyBackgroundGpsNotice": {
-    "description": "Privacy notice shown when GPS mode is selected and background location permission has been granted"
-  },
-  "surveyLatitude": "Latitude",
-  "@surveyLatitude": {
-    "description": "Latitude label"
-  },
-  "surveyLongitude": "Longitude",
-  "@surveyLongitude": {
-    "description": "Longitude label"
-  },
-  "surveyPickOnMap": "Pick on map",
-  "@surveyPickOnMap": {
-    "description": "Button to pick location on map"
-  },
   "settingsPickOnMap": "Pick on map",
   "@settingsPickOnMap": {
     "description": "Button to pick the manual location on a map in settings"
-  },
-  "surveyLocationSkipNote": "No GPS track will be recorded.",
-  "@surveyLocationSkipNote": {
-    "description": "Note when skipping location"
-  },
-  "surveyParametersTitle": "Parameters",
-  "@surveyParametersTitle": {
-    "description": "Title for survey parameters step"
-  },
-  "surveyInferenceRate": "Inference Rate",
-  "@surveyInferenceRate": {
-    "description": "Label for inference rate slider"
-  },
-  "surveyGpsInterval": "GPS Interval",
-  "@surveyGpsInterval": {
-    "description": "Label for GPS interval selector"
-  },
-  "surveyMaxDuration": "Max Duration",
-  "@surveyMaxDuration": {
-    "description": "Label for max duration slider"
-  },
-  "surveyHours": "hours",
-  "@surveyHours": {
-    "description": "Unit label for hours"
-  },
-  "surveyRecordingMode": "Recording",
-  "@surveyRecordingMode": {
-    "description": "Label for recording mode selector"
-  },
-  "surveyRecordingFull": "Full",
-  "@surveyRecordingFull": {
-    "description": "Full continuous recording option"
-  },
-  "surveyRecordingDetections": "Clips",
-  "@surveyRecordingDetections": {
-    "description": "Record only around detections option"
-  },
-  "surveyRecordingOff": "Off",
-  "@surveyRecordingOff": {
-    "description": "No recording option"
   },
   "surveyClipContext": "Clip Context",
   "@surveyClipContext": {
@@ -2719,459 +957,9 @@
   "@surveyClipContextDescription": {
     "description": "Subtitle explaining clip context setting"
   },
-  "surveyClipBefore": "Before",
-  "@surveyClipBefore": {
-    "description": "Label for pre-detection clip buffer"
-  },
-  "surveyClipAfter": "After",
-  "@surveyClipAfter": {
-    "description": "Label for post-detection clip buffer"
-  },
-  "surveyDetectionSampling": "Detection Sampling",
-  "@surveyDetectionSampling": {
-    "description": "Label for detection sampling mode selector"
-  },
-  "surveySamplingAll": "All",
-  "@surveySamplingAll": {
-    "description": "Keep all detections sampling mode"
-  },
-  "surveySamplingTopN": "Top N",
-  "@surveySamplingTopN": {
-    "description": "Keep top N per species sampling mode"
-  },
-  "surveySamplingSmart": "Smart",
-  "@surveySamplingSmart": {
-    "description": "Spatially distributed sampling mode"
-  },
-  "surveyTopNPerSpecies": "Top N per Species",
-  "@surveyTopNPerSpecies": {
-    "description": "Label for top N slider"
-  },
-  "surveyReadyTitle": "Ready",
-  "@surveyReadyTitle": {
-    "description": "Title for the ready step"
-  },
-  "surveyAlertsTitle": "Species Alerts",
-  "@surveyAlertsTitle": {
-    "description": "Title for the species alerts step in the survey wizard"
-  },
-  "surveyAlertsSubtitle": "Get a heads-up notification the moment a species is detected.",
-  "@surveyAlertsSubtitle": {
-    "description": "Subtitle / explainer for the species alerts wizard step"
-  },
-  "surveyAlertModeOff": "Off",
-  "@surveyAlertModeOff": {
-
-    "description": "Metadata for surveyAlertModeOff"
-
-  },
-  "surveyAlertModeFirstInSession": "First in session",
-  "@surveyAlertModeFirstInSession": {
-    "description": "Alert mode: notify the first time a species is heard during this survey"
-  },
-  "surveyAlertModeFirstEver": "First ever",
-  "@surveyAlertModeFirstEver": {
-    "description": "Alert mode: notify only the very first time the app has ever heard this species"
-  },
-  "surveyAlertModeRare": "Rare for this location",
-  "@surveyAlertModeRare": {
-    "description": "Alert mode: notify when a species is unlikely at the current location per the geo model"
-  },
-  "surveyAlertModeWatchlist": "Watchlist",
-  "@surveyAlertModeWatchlist": {
-    "description": "Alert mode: notify only species on a saved custom list"
-  },
-  "surveyAlertModeOffDescription": "No species alerts during this survey.",
-  "@surveyAlertModeOffDescription": {
-
-    "description": "Metadata for surveyAlertModeOffDescription"
-
-  },
-  "surveyAlertModeFirstInSessionDescription": "Alert the first time each species is heard in this survey.",
-  "@surveyAlertModeFirstInSessionDescription": {
-
-    "description": "Metadata for surveyAlertModeFirstInSessionDescription"
-
-  },
-  "surveyAlertModeFirstEverDescription": "Alert only when the app encounters a species for the very first time.",
-  "@surveyAlertModeFirstEverDescription": {
-
-    "description": "Metadata for surveyAlertModeFirstEverDescription"
-
-  },
-  "surveyAlertModeRareDescription": "Alert when a species is below the geo-model probability threshold for your current location.",
-  "@surveyAlertModeRareDescription": {
-
-    "description": "Metadata for surveyAlertModeRareDescription"
-
-  },
-  "surveyAlertModeWatchlistDescription": "Alert only for species on the selected saved list.",
-  "@surveyAlertModeWatchlistDescription": {
-
-    "description": "Metadata for surveyAlertModeWatchlistDescription"
-
-  },
-  "surveyAlertRareThresholdLabel": "Rarity threshold",
-  "@surveyAlertRareThresholdLabel": {
-
-    "description": "Metadata for surveyAlertRareThresholdLabel"
-
-  },
-  "surveyAlertRareThresholdHelp": "Detected species with a geo-model probability below this value count as rare.",
-  "@surveyAlertRareThresholdHelp": {
-
-    "description": "Metadata for surveyAlertRareThresholdHelp"
-
-  },
-  "surveyAlertWatchlistLabel": "Watchlist",
-  "@surveyAlertWatchlistLabel": {
-
-    "description": "Metadata for surveyAlertWatchlistLabel"
-
-  },
-  "surveyAlertWatchlistNone": "No watchlist selected",
-  "@surveyAlertWatchlistNone": {
-
-    "description": "Metadata for surveyAlertWatchlistNone"
-
-  },
-  "surveyAlertWatchlistEmpty": "No saved species lists. Create one in Settings → Species → Custom Lists.",
-  "@surveyAlertWatchlistEmpty": {
-
-    "description": "Metadata for surveyAlertWatchlistEmpty"
-
-  },
-  "surveyAlertSoundLabel": "Sound",
-  "@surveyAlertSoundLabel": {
-
-    "description": "Metadata for surveyAlertSoundLabel"
-
-  },
-  "surveyAlertVibrateLabel": "Vibration",
-  "@surveyAlertVibrateLabel": {
-
-    "description": "Metadata for surveyAlertVibrateLabel"
-
-  },
-  "surveyAlertMinConfidenceLabel": "Minimum confidence",
-  "@surveyAlertMinConfidenceLabel": {
-
-    "description": "Metadata for surveyAlertMinConfidenceLabel"
-
-  },
-  "surveyAlertMinConfidenceHelp": "Detections below this confidence are never alerted on. The floor is your session confidence threshold, so alerts can never be more sensitive than the detections themselves.",
-  "@surveyAlertMinConfidenceHelp": {
-
-    "description": "Metadata for surveyAlertMinConfidenceHelp"
-
-  },
-  "surveyAlertWatchlistRequired": "Select or create a watchlist to continue.",
-  "@surveyAlertWatchlistRequired": {
-
-    "description": "Metadata for surveyAlertWatchlistRequired"
-
-  },
-  "surveyAlertCreateListButton": "New watchlist",
-  "@surveyAlertCreateListButton": {
-
-    "description": "Metadata for surveyAlertCreateListButton"
-
-  },
-  "surveyAlertCreateListTitle": "New watchlist",
-  "@surveyAlertCreateListTitle": {
-
-    "description": "Metadata for surveyAlertCreateListTitle"
-
-  },
-  "surveyAlertCreateListNameLabel": "List name",
-  "@surveyAlertCreateListNameLabel": {
-
-    "description": "Metadata for surveyAlertCreateListNameLabel"
-
-  },
-  "surveyAlertCreateListSpeciesLabel": "Scientific names (one per line)",
-  "@surveyAlertCreateListSpeciesLabel": {
-
-    "description": "Metadata for surveyAlertCreateListSpeciesLabel"
-
-  },
-  "surveyAlertCreateListSpeciesHint": "Parus major\nTurdus merula\nFringilla coelebs",
-  "@surveyAlertCreateListSpeciesHint": {
-
-    "description": "Metadata for surveyAlertCreateListSpeciesHint"
-
-  },
-  "surveyAlertCreateListImportFile": "Import from file",
-  "@surveyAlertCreateListImportFile": {
-
-    "description": "Metadata for surveyAlertCreateListImportFile"
-
-  },
-  "surveyAlertCreateListImportError": "Could not read file. Make sure it's a plain-text list with one scientific name per line.",
-  "@surveyAlertCreateListImportError": {
-
-    "description": "Metadata for surveyAlertCreateListImportError"
-
-  },
-  "surveyAlertCreateListSearchHint": "Search species…",
-  "@surveyAlertCreateListSearchHint": {
-
-    "description": "Metadata for surveyAlertCreateListSearchHint"
-
-  },
-  "surveyAlertCreateListSelectedHeader": "Selected ({count})",
-  "@surveyAlertCreateListSelectedHeader": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "surveyAlertCreateListNoSelection": "No species selected yet. Search above or import a file.",
-  "@surveyAlertCreateListNoSelection": {
-
-    "description": "Metadata for surveyAlertCreateListNoSelection"
-
-  },
-  "surveyAlertCreateListPaste": "Paste from clipboard",
-  "@surveyAlertCreateListPaste": {
-
-    "description": "Metadata for surveyAlertCreateListPaste"
-
-  },
-  "surveyAlertCreateListSave": "Save",
-  "@surveyAlertCreateListSave": {
-
-    "description": "Metadata for surveyAlertCreateListSave"
-
-  },
-  "surveyAlertCreateListCancel": "Cancel",
-  "@surveyAlertCreateListCancel": {
-
-    "description": "Metadata for surveyAlertCreateListCancel"
-
-  },
-  "surveyAlertCreateListEmpty": "Add at least one scientific name.",
-  "@surveyAlertCreateListEmpty": {
-
-    "description": "Metadata for surveyAlertCreateListEmpty"
-
-  },
-  "surveyAlertCreateListNameTaken": "A list with this name already exists.",
-  "@surveyAlertCreateListNameTaken": {
-
-    "description": "Metadata for surveyAlertCreateListNameTaken"
-
-  },
-  "surveyAlertWatchlistDeleteConfirm": "Delete watchlist '{name}'?",
-  "@surveyAlertWatchlistDeleteConfirm": {
-    "placeholders": {
-      "name": { "type": "String" }
-    }
-  },
-  "surveyAlertSpeciesCount": "{count, plural, =1{1 species} other{{count} species}}",
-  "@surveyAlertSpeciesCount": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "surveyAlertUnlimited": "Unlimited",
-  "@surveyAlertUnlimited": {
-
-    "description": "Metadata for surveyAlertUnlimited"
-
-  },
-  "surveyAlertHelpModesTitle": "What triggers an alert?",
-  "@surveyAlertHelpModesTitle": {
-
-    "description": "Metadata for surveyAlertHelpModesTitle"
-
-  },
-  "surveyAlertHelpModesBody": "Pick a single rule. 'First in session' is the most chatty — every species new to this survey buzzes you. 'First ever' only fires for species the app has never recorded for you. 'Rare for this location' uses the on-device geographic model to flag unlikely visitors. 'Watchlist' restricts alerts to a saved species list.",
-  "@surveyAlertHelpModesBody": {
-
-    "description": "Metadata for surveyAlertHelpModesBody"
-
-  },
-  "surveyAlertHelpThrottlingTitle": "Why aren't I being spammed?",
-  "@surveyAlertHelpThrottlingTitle": {
-
-    "description": "Metadata for surveyAlertHelpThrottlingTitle"
-
-  },
-  "surveyAlertHelpThrottlingBody": "At survey start, many common species can trigger first-in-session alerts at once. The startup grace window suppresses those for the first minute. The minimum interval prevents back-to-back buzzes. Over the per-minute cap, extra alerts queue into a single summary instead of being dropped. Rare and Watchlist alerts always bypass the grace window.",
-  "@surveyAlertHelpThrottlingBody": {
-
-    "description": "Metadata for surveyAlertHelpThrottlingBody"
-
-  },
-  "surveyAlertRareLiveLabel": "Alerts on species with under {pct}% likelihood at this location.",
-  "@surveyAlertRareLiveLabel": {
-    "placeholders": {
-      "pct": { "type": "String" }
-    }
-  },
-  "surveyAlertAdvancedTitle": "Frequency control",
-  "@surveyAlertAdvancedTitle": {
-
-    "description": "Metadata for surveyAlertAdvancedTitle"
-
-  },
-  "surveyAlertGraceLabel": "Startup grace (s)",
-  "@surveyAlertGraceLabel": {
-
-    "description": "Metadata for surveyAlertGraceLabel"
-
-  },
-  "surveyAlertGraceHelp": "Suppress First-in-session alerts during this many seconds at the start of the survey. Rare and Watchlist alerts always fire.",
-  "@surveyAlertGraceHelp": {
-
-    "description": "Metadata for surveyAlertGraceHelp"
-
-  },
-  "surveyAlertMinIntervalLabel": "Minimum interval (s)",
-  "@surveyAlertMinIntervalLabel": {
-
-    "description": "Metadata for surveyAlertMinIntervalLabel"
-
-  },
-  "surveyAlertMinIntervalHelp": "Hard cooldown between any two alerts.",
-  "@surveyAlertMinIntervalHelp": {
-
-    "description": "Metadata for surveyAlertMinIntervalHelp"
-
-  },
-  "surveyAlertMaxPerMinuteLabel": "Max per minute",
-  "@surveyAlertMaxPerMinuteLabel": {
-
-    "description": "Metadata for surveyAlertMaxPerMinuteLabel"
-
-  },
-  "surveyAlertMaxPerMinuteHelp": "Set to 0 for unlimited.",
-  "@surveyAlertMaxPerMinuteHelp": {
-
-    "description": "Metadata for surveyAlertMaxPerMinuteHelp"
-
-  },
-  "surveyAlertCoalesceLabel": "Coalesce extra alerts",
-  "@surveyAlertCoalesceLabel": {
-
-    "description": "Metadata for surveyAlertCoalesceLabel"
-
-  },
-  "surveyAlertCoalesceHelp": "When over the per-minute cap, queue extra alerts into a summary instead of dropping them.",
-  "@surveyAlertCoalesceHelp": {
-
-    "description": "Metadata for surveyAlertCoalesceHelp"
-
-  },
-  "surveyAlertChannelName": "Species alerts",
-  "@surveyAlertChannelName": {
-    "description": "Android notification channel name"
-  },
-  "surveyAlertChannelDescription": "Heads-up alerts when interesting species are detected during a survey.",
-  "@surveyAlertChannelDescription": {
-
-    "description": "Metadata for surveyAlertChannelDescription"
-
-  },
-  "surveyAlertBodyFirstInSession": "First detection in this survey",
-  "@surveyAlertBodyFirstInSession": {
-
-    "description": "Metadata for surveyAlertBodyFirstInSession"
-
-  },
-  "surveyAlertBodyFirstEver": "First detection ever in Smartfinch",
-  "@surveyAlertBodyFirstEver": {
-
-    "description": "Metadata for surveyAlertBodyFirstEver"
-
-  },
-  "surveyAlertBodyRare": "Rare here ({pct}% prior)",
-  "@surveyAlertBodyRare": {
-    "placeholders": {
-      "pct": { "type": "String" }
-    }
-  },
-  "surveyAlertBodyWatchlist": "On your watchlist",
-  "@surveyAlertBodyWatchlist": {
-
-    "description": "Metadata for surveyAlertBodyWatchlist"
-
-  },
-  "surveyAlertSummaryTitle": "{count} more new species",
-  "@surveyAlertSummaryTitle": {
-    "placeholders": {
-      "count": { "type": "int" }
-    }
-  },
-  "surveyAlertSummaryBody": "{count} more: {names}",
-  "@surveyAlertSummaryBody": {
-    "placeholders": {
-      "count": { "type": "int" },
-      "names": { "type": "String" }
-    }
-  },
-  "surveyManualGpsReadyWarning": "Background location not enabled — location will only update while the app is open.",
-  "@surveyManualGpsReadyWarning": {
-    "description": "Warning on ready screen about manual GPS"
-  },
-  "surveyStopTitle": "Stop Survey?",
-  "@surveyStopTitle": {
-    "description": "Title of stop survey confirmation dialog"
-  },
-  "surveyStopMessage": "This will finalize the survey and save results.",
-  "@surveyStopMessage": {
-    "description": "Body of stop survey confirmation dialog"
-  },
-  "surveyStopConfirm": "Stop & Save",
-  "@surveyStopConfirm": {
-    "description": "Confirm button in stop survey dialog"
-  },
-  "surveyStop": "Stop",
-  "@surveyStop": {
-    "description": "Stop button label"
-  },
-  "surveyAddObservation": "Add observation",
-  "@surveyAddObservation": {
-    "description": "FAB / button label on the live survey screen for logging a manual species observation."
-  },
-  "surveyAddObservationTitle": "Log observation",
-  "@surveyAddObservationTitle": {
-    "description": "Title of the species picker shown when adding a manual observation during a live survey."
-  },
-  "surveyAddObservationSnackbar": "Logged {commonName}",
-  "@surveyAddObservationSnackbar": {
-    "description": "Snackbar confirmation after the user logs a manual observation.",
-    "placeholders": {
-      "commonName": { "type": "String" }
-    }
-  },
-  "surveyAddMenuTitle": "Add to survey",
-  "@surveyAddMenuTitle": {
-    "description": "Header label on the bottom sheet that opens when the user taps the survey-live FAB and exposes 'add species' and 'add note' actions."
-  },
-  "surveyAddNoteSnackbar": "Note saved",
-  "@surveyAddNoteSnackbar": {
-    "description": "Snackbar confirmation after the user attaches a session-level note to a live survey."
-  },
   "detectionSourceManual": "Manual",
   "@detectionSourceManual": {
     "description": "Short label/badge shown on a detection that was entered manually by the user (not produced by the model)."
-  },
-  "detectionEvidenceLabel": "Observation type",
-  "@detectionEvidenceLabel": {
-    "description": "Label above the heard/seen checkboxes in the confirm sheet shown after picking a species."
-  },
-  "detectionEvidenceHint": "Optional — leave both unticked to record no observation type.",
-  "@detectionEvidenceHint": {
-    "description": "Helper text below the heard/seen checkboxes explaining that the choice is optional."
-  },
-  "sessionAddSpeciesConfirm": "Add",
-  "@sessionAddSpeciesConfirm": {
-    "description": "Confirm button in the sheet that inserts the picked species into the session."
-  },
-  "sessionReplaceSpeciesConfirm": "Replace",
-  "@sessionReplaceSpeciesConfirm": {
-    "description": "Confirm button in the same sheet when the picked species replaces an existing detection."
   },
   "detectionEvidenceHeard": "Heard",
   "@detectionEvidenceHeard": {
@@ -3185,280 +973,12 @@
   "@detectionEvidenceHeardAndSeen": {
     "description": "Badge tooltip shown when the user ticked both the heard and the seen checkbox for a manual detection."
   },
-  "detectionSeekToPosition": "Jump to position",
-  "@detectionSeekToPosition": {
-    "description": "Tooltip on the seek button for a manually-added detection — tapping scrolls the audio player to that entry's timestamp."
-  },
-  "sessionSpeciesSortMenu": "Sort species",
-  "@sessionSpeciesSortMenu": {
-    "description": "Tooltip on the sort button above the species list in session review."
-  },
-  "sessionSpeciesSortAlphabetical": "A → Z",
-  "@sessionSpeciesSortAlphabetical": {
-    "description": "Sort option: alphabetical by common name."
-  },
-  "sessionSpeciesSortCount": "Most detections",
-  "@sessionSpeciesSortCount": {
-    "description": "Sort option: most detections first."
-  },
-  "sessionSpeciesSortConfidence": "Highest confidence",
-  "@sessionSpeciesSortConfidence": {
-    "description": "Sort option: highest peak confidence first."
-  },
-  "sessionSpeciesSortFirstSeen": "First detected",
-  "@sessionSpeciesSortFirstSeen": {
-    "description": "Sort option: order by first-detection timestamp (the historical default)."
-  },
-  "surveyListening": "Listening...",
-  "@surveyListening": {
-    "description": "Status text while survey is actively listening"
-  },
-  "surveyStarting": "Starting...",
-  "@surveyStarting": {
-    "description": "Status text while survey is loading"
-  },
-  "surveyJustNow": "just now",
-  "@surveyJustNow": {
-    "description": "Time label for very recent detection"
-  },
-  "surveyAutoStopped": "Survey auto-stopped: {reason}",
-  "@surveyAutoStopped": {
-    "description": "Snackbar message when survey auto-stops",
-    "placeholders": {
-      "reason": {
-        "type": "String"
-      }
-    }
-  },
-  "surveyMinutesAgo": "{count} min ago",
-  "@surveyMinutesAgo": {
-    "description": "Time label for minutes ago",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "surveySecondsAgo": "{count}s ago",
-  "@surveySecondsAgo": {
-    "description": "Short time label for seconds ago (used in foreground notification recent-detections list)",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "surveyHoursAgo": "{count}h ago",
-  "@surveyHoursAgo": {
-    "description": "Short time label for hours ago (used in foreground notification recent-detections list)",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "surveyContinue": "Continue Survey",
-  "@surveyContinue": {
-    "description": "Tooltip for resume/continue button on unfinished survey sessions"
-  },
-  "surveyTabMap": "Map",
-  "@surveyTabMap": {
-    "description": "Tab label for map view in survey live screen"
-  },
-  "surveyTabSpectrogram": "Audio",
-  "@surveyTabSpectrogram": {
-    "description": "Tab label for audio view in survey live screen"
-  },
-  "surveyTabSummary": "Summary",
-  "@surveyTabSummary": {
-    "description": "Tab label for summary view in survey live screen"
-  },
-  "surveyTabSummarySpecies": "Species",
-  "@surveyTabSummarySpecies": {
-    "description": "Label for species count in survey summary"
-  },
-  "surveyTabSummaryDetections": "Detections",
-  "@surveyTabSummaryDetections": {
-    "description": "Label for detection count in survey summary"
-  },
-  "surveyTabSummaryRate": "Rate",
-  "@surveyTabSummaryRate": {
-    "description": "Label for detection rate in survey summary"
-  },
-  "sessionShowOnMap": "Show on map",
-  "@sessionShowOnMap": {
-    "description": "Tooltip for showing a detection on the map in session review"
-  },
-  "surveyTrackMap": "Survey Track",
-  "@surveyTrackMap": {
-    "description": "Title for the fullscreen survey track map screen"
-  },
-  "surveyMapFilterTitle": "Show on map",
-  "@surveyMapFilterTitle": {
-    "description": "Title of the survey map filter sheet"
-  },
-  "surveyMapFilterTooltip": "Filter map markers",
-  "@surveyMapFilterTooltip": {
-    "description": "Tooltip for the survey map filter button"
-  },
-  "surveyMapFullscreen": "Full screen map",
-  "@surveyMapFullscreen": {
-    "description": "Tooltip for the button that opens the survey map full screen"
-  },
-  "surveyMapRecenter": "Center on current position",
-  "@surveyMapRecenter": {
-    "description": "Tooltip for the button that recenters the full screen live survey map on the current GPS position"
-  },
-  "surveyMapFilterChipAll": "All detections",
-  "@surveyMapFilterChipAll": {
-    "description": "Persistent map filter chip label when no filter is active"
-  },
-  "surveyMapFilterAll": "All detections",
-  "@surveyMapFilterAll": {
-    "description": "Filter option: show every detection"
-  },
-  "surveyMapFilterWithAudio": "With audio clip",
-  "@surveyMapFilterWithAudio": {
-    "description": "Filter option: only detections that still have a saved audio clip"
-  },
-  "surveyMapFilterMinConfidence": "Minimum confidence",
-  "@surveyMapFilterMinConfidence": {
-    "description": "Label for the confidence-floor slider in the survey map filter sheet"
-  },
-  "surveyMapFilterSpeciesSearchHint": "Search species",
-  "@surveyMapFilterSpeciesSearchHint": {
-    "description": "Placeholder for the species search field inside the survey map filter sheet"
-  },
-  "surveyMapFilterManual": "Manual additions",
-  "@surveyMapFilterManual": {
-    "description": "Filter option: only manually added detections"
-  },
-  "surveyMapFilterSpecies": "Limit to species",
-  "@surveyMapFilterSpecies": {
-    "description": "Header for the species picker inside the map filter sheet"
-  },
-  "surveyMapFilterAllSpecies": "All species",
-  "@surveyMapFilterAllSpecies": {
-    "description": "Species picker entry meaning no species restriction"
-  },
-  "surveyMapFilterEmpty": "No detections match the current filter.",
-  "@surveyMapFilterEmpty": {
-    "description": "Message shown on the map when the active filter excludes every detection"
-  },
-  "clearFilters": "Reset",
-  "@clearFilters": {
-    "description": "Reset/clear button label inside filter sheets"
-  },
-  "apply": "Apply",
-  "@apply": {
-    "description": "Generic apply/confirm button label"
-  },
-  "surveyMapMatchCount": "{count, plural, =1{1 detection} other{{count} detections}}",
-  "@surveyMapMatchCount": {
-    "description": "Match count shown in the map app bar subtitle",
-    "placeholders": {
-      "count": {"type": "int"}
-    }
-  },
-  "surveyFieldTips": "Field Tips",
-  "@surveyFieldTips": {
-    "description": "Section title for survey best-practice tips"
-  },
-  "surveyTipWalkSteady": "Walk at a steady, slow pace. Stopping frequently helps the classifier capture clean audio windows free from footstep and clothing noise.",
-  "@surveyTipWalkSteady": {
-    "description": "Survey tip about walking pace"
-  },
-  "surveyTipWind": "Avoid windy conditions — wind noise masks animal calls and reduces detection accuracy.",
-  "@surveyTipWind": {
-    "description": "Survey tip about wind"
-  },
-  "surveyTipMic": "Keep the microphone unobstructed. Don\u2019t cover it with your hand or put the phone in a pocket.",
-  "@surveyTipMic": {
-    "description": "Survey tip about microphone placement"
-  },
-  "surveyTipSilence": "Stay quiet during the survey. Talking, music, and other human sounds create false positives.",
-  "@surveyTipSilence": {
-    "description": "Survey tip about silence"
-  },
-  "surveyTipTime": "Survey during dawn chorus (first 3 hours after sunrise) for peak vocal activity and species diversity.",
-  "@surveyTipTime": {
-    "description": "Survey tip about timing"
-  },
-  "surveyTipRepeat": "Repeat the same route under similar conditions for comparable results across sessions.",
-  "@surveyTipRepeat": {
-    "description": "Survey tip about repeatability"
-  },
-  "surveyTipBattery": "Enable battery saver or plug in for long surveys. GPS and inference can drain the battery quickly.",
-  "@surveyTipBattery": {
-    "description": "Survey tip about battery"
-  },
-  "surveyResumeTitle": "Resume Survey?",
-  "@surveyResumeTitle": {
-    "description": "Title for the resume survey confirmation dialog"
-  },
-  "surveyResumeMessage": "This will continue the survey from where it left off. New detections will be appended to the existing session.",
-  "@surveyResumeMessage": {
-    "description": "Body text for the resume survey confirmation dialog"
-  },
-  "surveyResumeConfirm": "Resume",
-  "@surveyResumeConfirm": {
-    "description": "Confirm button for resume survey dialog"
-  },
-  "sessionViewDetailed": "Detailed",
-  "@sessionViewDetailed": {
-    "description": "Label for detailed session list view mode"
-  },
-  "sessionViewCompact": "Compact",
-  "@sessionViewCompact": {
-    "description": "Label for compact session list view mode"
-  },
-  "sessionViewBySpecies": "By Species",
-  "@sessionViewBySpecies": {
-    "description": "Label for group-by-species session view mode"
-  },
-  "sessionViewTooltip": "View mode",
-  "@sessionViewTooltip": {
-    "description": "Tooltip for the session list view-mode toggle"
-  },
-  "sessionSpeciesSessionCount": "{count, plural, =1{1 session} other{{count} sessions}}",
-  "@sessionSpeciesSessionCount": {
-    "description": "Number of sessions containing a species",
-    "placeholders": {
-      "count": {
-        "type": "int"
-      }
-    }
-  },
-  "surveyLiveHelpTitle": "Survey Dashboard",
-  "@surveyLiveHelpTitle": {
-    "description": "Title of the survey live screen help sheet"
-  },
-  "surveyLiveHelpOverview": "The survey runs in the background while you walk. GPS, audio capture, and detection continue even if you switch apps.",
-  "@surveyLiveHelpOverview": {
-    "description": "General overview help text"
-  },
-  "surveyLiveHelpSignal": "The signal bars next to the mic icon show audio quality: 3 green bars = good conditions for detection, 2 amber bars = marginal (too quiet or somewhat loud), 1 red bar = poor (silence, clipping, or heavy noise).",
-  "@surveyLiveHelpSignal": {
-    "description": "Help text explaining the audio quality signal bars"
-  },
-  "surveyLiveHelpStats": "The stats bar shows distance walked, number of detections, and unique species count. Tap the tabs above to switch between the live map, audio, and summary views.",
-  "@surveyLiveHelpStats": {
-    "description": "Help text for the stats bar and tabs"
-  },
-  "surveyLiveHelpDetections": "Detected species appear in the list below the stats. Tap a species to see detailed information. The survey automatically records GPS coordinates for each detection.",
-  "@surveyLiveHelpDetections": {
-    "description": "Help text for the detections list"
-  },
-  "surveyLiveHelpStop": "Press the stop button (top left) to end the survey. Your session will be saved automatically and you can review it immediately.",
-  "@surveyLiveHelpStop": {
-    "description": "Help text for the stop button"
-  },
 
   "helpTitle": "Help",
   "@helpTitle": {
     "description": "Help screen title and menu label"
   },
-  "helpIntro": "Smartfinch is built around a small set of repeatable screens: Home, mode screens, Session Review, and Settings. This help page explains what the app is showing and where the main controls live.",
+  "helpIntro": "This page explains what each part of the app is for: Live, Explore, your collection, the journal and points. Tap a section to read more.",
   "@helpIntro": {
     "description": "Introduction paragraph on the help screen"
   },
@@ -3466,92 +986,32 @@
   "@helpLiveTitle": {
     "description": "Section title for Live mode help"
   },
-  "helpLiveBody": "Live Mode opens the microphone, shows model status in the top bar, and updates the spectrogram and detection list continuously. The large center button changes between mic, play, and stop depending on state, and the settings button opens the Live-specific controls.",
+  "helpLiveBody": "In Live mode, the app listens through the microphone. At the top you see the spectrogram – a picture of sound: high notes at the top, low notes at the bottom. Below it are the birds the app recognizes, and they earn you stars. With the big button you start, pause and stop.",
   "@helpLiveBody": {
     "description": "Help body text for Live mode"
-  },
-  "helpPointCountTitle": "Point Count Mode",
-  "@helpPointCountTitle": {
-    "description": "Section title for Point Count help"
-  },
-  "helpPointCountBody": "Point Count Mode uses a short setup flow for duration and location, then switches to a timed live screen. The top bar shows stop, remaining time, and settings, while the info bar summarizes detections and unique species during the count.",
-  "@helpPointCountBody": {
-    "description": "Help body text for Point Count mode"
-  },
-  "helpSurveyTitle": "Survey Mode",
-  "@helpSurveyTitle": {
-    "description": "Section title for Survey mode help"
-  },
-  "helpSurveyBody": "Survey Mode starts with details and parameter steps, then opens a live dashboard with Map, Audio, and Summary tabs. The top bar holds stop, help, and settings, and recent detections below the tabs open the species overlay when tapped.",
-  "@helpSurveyBody": {
-    "description": "Help body text for Survey mode"
-  },
-  "helpFileAnalysisTitle": "File Analysis",
-  "@helpFileAnalysisTitle": {
-    "description": "Section title for File Analysis help"
-  },
-  "helpFileAnalysisBody": "File Analysis is a four-step wizard: pick a file, set location and date, choose parameters, and run analysis. The settings button opens the File Analysis settings subset, and completed analyses open in Session Review.",
-  "@helpFileAnalysisBody": {
-    "description": "Help body text for File Analysis mode"
-  },
-  "helpBatchAnalysisTitle": "Batch Analysis",
-  "@helpBatchAnalysisTitle": {
-    "description": "Section title for Batch Analysis help"
-  },
-  "helpBatchAnalysisBody": "Batch Analysis is designed for many files at once. Select multiple recordings, confirm shared parameters, and run one queue that processes each file and stores results for later review.",
-  "@helpBatchAnalysisBody": {
-    "description": "Help body text for Batch Analysis mode"
-  },
-  "helpAruTitle": "ARU Mode",
-  "@helpAruTitle": {
-    "description": "Section title for ARU help"
-  },
-  "helpAruBody": "ARU Mode is for unattended recordings at one fixed site. Choose when the recorder should run, how cycles are grouped into Sessions, and whether to keep full audio or selected detection clips. During scheduled recording windows, the app records and identifies species on the device; on Android it keeps a persistent notification with Stop and Open controls.",
-  "@helpAruBody": {
-    "description": "Help body text for ARU mode"
   },
   "helpExploreTitle": "Explore",
   "@helpExploreTitle": {
     "description": "Section title for Explore help"
   },
-  "helpExploreBody": "Explore builds a location-based species list from the BirdNET geo-model. Use refresh to rebuild the list, the help button in the location header for context, and tap any species card to open images, descriptions, links, and the seasonal chart.",
+  "helpExploreBody": "Explore shows you which birds occur in your area at this time of year, the most likely first. A tick means you have already collected that one. Tap a bird to see pictures and a description.",
   "@helpExploreBody": {
     "description": "Help body text for Explore feature"
-  },
-  "helpSessionsTitle": "Sessions & Review",
-  "@helpSessionsTitle": {
-    "description": "Section title for Sessions help"
-  },
-  "helpSessionsBody": "Session Library stores saved sessions and processed files. From there you can search, sort, change view mode, and open Session Review. Session Review adds playback, spectrogram navigation, trimming, annotations, export, and save or discard actions.",
-  "@helpSessionsBody": {
-    "description": "Help body text for Sessions feature"
   },
   "helpTipsTitle": "App Basics",
   "@helpTipsTitle": {
     "description": "Section title for general tips"
   },
-  "helpTipQuiet": "Use the settings button to open only the controls relevant to the current screen.",
-  "@helpTipQuiet": {
-    "description": "Tip about keeping quiet"
-  },
-  "helpTipMic": "The main action button changes by state: mic starts Live Mode, play starts or resumes, and stop ends an active run.",
+  "helpTipMic": "The big button in Live mode changes: the microphone starts, play carries on after a pause, and stop ends.",
   "@helpTipMic": {
     "description": "Tip about microphone placement"
   },
-  "helpTipBasics": "Completed Live, Point Count, Survey, and File Analysis runs all open in Session Review for inspection, editing, and export.",
-  "@helpTipBasics": {
-    "description": "Tip explaining how the app processes audio locally"
-  },
-  "helpTipGuide": "For a complete explanation of all settings and features, open the User Guide from the Help or About screen.",
-  "@helpTipGuide": {
-    "description": "Tip referencing the online user guide"
-  },
-  "helpTipThreshold": "Confidence threshold is the main control for detection strictness. Lower values show more candidates; higher values keep only stronger matches.",
+  "helpTipThreshold": "In the advanced settings you set how sure the app must be before it shows a bird. Lower shows more birds, but also more mistakes.",
   "@helpTipThreshold": {
     "description": "Tip about confidence threshold"
   },
-  "helpTipGeoFilter": "Location-aware workflows can use current GPS, manual coordinates, or no location. Explore and location-based filtering depend on that choice.",
-  "helpControlsTitle": "Common Controls",
+  "helpTipGeoFilter": "The app needs your location to know which birds live in your area. You can use GPS or pick your location on the map. Without a location there are no stars.",
+  "helpControlsTitle": "Buttons you’ll see often",
   "@helpControlsTitle": {
     "description": "Section title for common controls on the help screen"
   },
@@ -3563,23 +1023,15 @@
   "@helpToolsTitle": {
     "description": "Section title introducing the Explore and Sessions tools on the help screen"
   },
-  "helpControlSettings": "Open the settings filtered for the current workflow.",
+  "helpControlSettings": "Opens the settings: how the app looks and sounds, which area it picks the birds for, and what it may do online. At the very bottom you’ll find the advanced settings.",
   "@helpControlSettings": {
     "description": "Description of the settings button on the help screen"
   },
-  "helpControlExplore": "Open the location-based species list.",
-  "@helpControlExplore": {
-    "description": "Description of the Explore button on the help screen"
-  },
-  "helpControlSessions": "Open saved sessions and reviewed analyses.",
-  "@helpControlSessions": {
-    "description": "Description of the session library button on the help screen"
-  },
-  "helpControlHelp": "Open help for the current screen or workflow.",
+  "helpControlHelp": "Opens an explanation of the screen you’re on.",
   "@helpControlHelp": {
     "description": "Description of the help button on the help screen"
   },
-  "helpControlAbout": "Open version, model, links, and documentation shortcuts.",
+  "helpControlAbout": "Opens the app info: which version you have, which AI is inside it, who made it and where the privacy rules are.",
   "@helpControlAbout": {
     "description": "Description of the about button on the help screen"
   },
@@ -3615,53 +1067,9 @@
   "@tooltipBack": {
     "description": "Tooltip for back navigation button"
   },
-  "tooltipClose": "Close",
-  "@tooltipClose": {
-    "description": "Generic tooltip for close buttons"
-  },
-  "playerPreviousDetection": "Previous detection",
-  "@playerPreviousDetection": {
-    "description": "Tooltip + semantics label for the skip-previous button on the clip player; jumps to the previous detection in the active filtered list"
-  },
-  "playerNextDetection": "Next detection",
-  "@playerNextDetection": {
-    "description": "Tooltip + semantics label for the skip-next button on the clip player; jumps to the next detection in the active filtered list"
-  },
-  "tooltipSearch": "Search",
-  "@tooltipSearch": {
-    "description": "Tooltip for the search icon button"
-  },
   "tooltipClearSearch": "Clear search",
   "@tooltipClearSearch": {
     "description": "Tooltip for clearing a search field"
-  },
-  "tooltipDeleteSession": "Delete session",
-  "@tooltipDeleteSession": {
-    "description": "Tooltip for the delete session icon button"
-  },
-  "tooltipCancelAnalysis": "Cancel analysis",
-  "@tooltipCancelAnalysis": {
-    "description": "Tooltip for cancelling a running file analysis"
-  },
-  "fileAnalysisCancelTitle": "Cancel analysis?",
-  "@fileAnalysisCancelTitle": {
-    "description": "Title of the confirmation dialog shown when the user cancels a running file analysis"
-  },
-  "fileAnalysisCancelMessage": "Detected species so far will be discarded.",
-  "@fileAnalysisCancelMessage": {
-    "description": "Body of the confirmation dialog shown when the user cancels a running file analysis"
-  },
-  "fileAnalysisCancelKeep": "Keep analyzing",
-  "@fileAnalysisCancelKeep": {
-    "description": "Button label that dismisses the cancel-analysis confirmation and resumes analysis"
-  },
-  "fileAnalysisCancelConfirm": "Stop analysis",
-  "@fileAnalysisCancelConfirm": {
-    "description": "Button label that confirms cancellation of a running file analysis"
-  },
-  "tooltipSendAnnotation": "Send annotation",
-  "@tooltipSendAnnotation": {
-    "description": "Tooltip for the send button in the annotation composer"
   },
   "aboutVersionLabel": "Version {version} · build {build}",
   "@aboutVersionLabel": {
@@ -3671,7 +1079,7 @@
       "build":   { "type": "String", "example": "46" }
     }
   },
-  "modelLoadFailed": "Model loading failed. Check assets.",
+  "modelLoadFailed": "The bird recognition could not be loaded. Try restarting the app.",
   "@modelLoadFailed": {
     "description": "Error message when ONNX model fails to load"
   },
@@ -3682,10 +1090,6 @@
   "settingsLogAmplitude": "Log amplitude",
   "@settingsLogAmplitude": {
     "description": "Setting title for logarithmic amplitude scaling"
-  },
-  "settingsLogAmplitudeDescription": "Logarithmic scaling for better visibility",
-  "@settingsLogAmplitudeDescription": {
-    "description": "Setting subtitle for logarithmic amplitude scaling"
   },
   "settingsSpectrogramQuality": "Spectrogram quality",
   "@settingsSpectrogramQuality": {
@@ -3703,17 +1107,9 @@
   "@settingsSpectrogramQualityHigh": {
     "description": "Spectrogram quality option: high"
   },
-  "settingsIncludeAudioFiles": "Include audio files",
+  "settingsIncludeAudioFiles": "Include the recordings",
   "@settingsIncludeAudioFiles": {
     "description": "Setting to include audio files in export"
-  },
-  "settingsShareAudioAsWav": "Always share audio as WAV",
-  "@settingsShareAudioAsWav": {
-    "description": "Setting to convert FLAC audio to WAV before sharing"
-  },
-  "settingsHelpShareAudioAsWav": "When enabled, FLAC recordings are converted to WAV before sharing or exporting. WAV files are universally compatible but significantly larger than FLAC.",
-  "@settingsHelpShareAudioAsWav": {
-    "description": "Help text for the share audio as WAV setting"
   },
   "settingsOfflineMapDownload": "Download offline maps",
   "@settingsOfflineMapDownload": {
@@ -3743,19 +1139,11 @@
   "@settingsOfflineMapTooLarge": {
     "description": "Warning when the requested area exceeds the polite-OSM cap"
   },
-  "settingsExportHtmlReport": "Include HTML report",
-  "@settingsExportHtmlReport": {
-    "description": "Toggle: bundle a self-contained HTML report inside the export ZIP"
-  },
-  "settingsExportAppMetadata": "Include app metadata",
-  "@settingsExportAppMetadata": {
-    "description": "Checkbox: bundle the Smartfinch metadata side-file inside the export ZIP"
-  },
   "settingsPrivacy": "Privacy",
   "@settingsPrivacy": {
     "description": "Settings section header for third-party network gates"
   },
-  "settingsPrivacyDescription": "Choose which third-party services Smartfinch may contact on your behalf. All toggles are off by default.",
+  "settingsPrivacyDescription": "Here you decide which online services the app may talk to. At the start, everything is off.",
   "@settingsPrivacyDescription": {
     "description": "Settings section subtitle"
   },
@@ -3767,7 +1155,7 @@
   "@settingsPrivacyAllowMapSubtitle": {
     "description": "Subtitle naming the third-party service for map tiles"
   },
-  "settingsHelpPrivacyAllowMap": "When enabled, map widgets in the app fetch raster tiles from the public OpenStreetMap servers. Coordinates around your location are sent with each tile request. Disable to keep map screens blank.",
+  "settingsHelpPrivacyAllowMap": "When enabled, the app loads map images from OpenStreetMap. Each request includes which part of the map is being loaded – so, roughly, where you are. When disabled, maps stay empty.",
   "@settingsHelpPrivacyAllowMap": {
     "description": "Long-form help for the OSM tile privacy toggle"
   },
@@ -3775,11 +1163,11 @@
   "@settingsPrivacyAllowReverseGeocoding": {
     "description": "Privacy toggle for Nominatim reverse geocoding"
   },
-  "settingsPrivacyAllowReverseGeocodingSubtitle": "Sends coordinates to OpenStreetMap Nominatim to resolve a human-readable place name.",
+  "settingsPrivacyAllowReverseGeocodingSubtitle": "Asks OpenStreetMap what your place is called.",
   "@settingsPrivacyAllowReverseGeocodingSubtitle": {
     "description": "Subtitle naming the third-party service for reverse geocoding"
   },
-  "settingsHelpPrivacyAllowReverseGeocoding": "When enabled, recorded coordinates are sent to OpenStreetMap's Nominatim service to resolve a short place name (for example: 'Berlin, Germany') that is shown next to the session. Coordinates are not shared with anyone else.",
+  "settingsHelpPrivacyAllowReverseGeocoding": "When enabled, the app sends coordinates to OpenStreetMap’s Nominatim to find a short place name – for example “Berlin, Germany”. Explore shows the name. The coordinates are not passed on.",
   "@settingsHelpPrivacyAllowReverseGeocoding": {
     "description": "Long-form help for the Nominatim privacy toggle"
   },
@@ -3787,17 +1175,17 @@
   "@settingsPrivacyAllowWeather": {
     "description": "Privacy toggle for Open-Meteo weather requests"
   },
-  "settingsPrivacyAllowWeatherSubtitle": "Fetches local temperature, wind, and conditions from Open-Meteo when a session is saved.",
+  "settingsPrivacyAllowWeatherSubtitle": "Asks Open-Meteo for the weather in your area.",
   "@settingsPrivacyAllowWeatherSubtitle": {
     "description": "Subtitle naming the third-party service for weather"
   },
-  "settingsHelpPrivacyAllowWeather": "When enabled, the app sends your recording coordinates and the session time to Open-Meteo once per session and stores the returned conditions (temperature, precipitation, wind, cloud cover) with the session for context. Open-Meteo is a free service that does not require an account or API key.",
+  "settingsHelpPrivacyAllowWeather": "When enabled, the app may send your coordinates and the time to Open-Meteo to look up the weather: temperature, precipitation, wind and cloud cover. Open-Meteo is free and needs no account.",
   "@settingsHelpPrivacyAllowWeather": {
     "description": "Long-form help for the Open-Meteo privacy toggle"
   },
   "settingsAnnouncements": "Announcements",
   "@settingsAnnouncements": {"description": "Settings section header for spoken detection announcements"},
-  "settingsAnnouncementsDescription": "Speak detections aloud through your headphones or the phone speaker while a session is recording.",
+  "settingsAnnouncementsDescription": "The app announces birds through headphones or the speaker while you listen.",
   "@settingsAnnouncementsDescription": {"description": "Settings section subtitle"},
   "settingsAnnouncementsEnabled": "Speak detections aloud",
   "@settingsAnnouncementsEnabled": {"description": "Master toggle for the announcements feature"},
@@ -3817,7 +1205,7 @@
   "@settingsAnnouncementsVerbosityChatty": {"description": "Verbosity preset: longer, more conversational phrases"},
   "settingsAnnouncementsVerbosityCustom": "Custom",
   "@settingsAnnouncementsVerbosityCustom": {"description": "Verbosity preset shown when advanced fields were edited individually"},
-  "settingsHelpAnnouncementsVerbosity": "Minimal speaks just the species name. Balanced uses short, varied phrases (the default). Chatty adds a touch more context. Custom appears when you tweak the advanced fields by hand.",
+  "settingsHelpAnnouncementsVerbosity": "Minimal says just the bird’s name. Balanced uses short, varied sentences (the default). Chatty tells you a bit more.",
   "@settingsHelpAnnouncementsVerbosity": {"description": "Long-form help for verbosity preset"},
   "settingsAnnouncementsFrequency": "Frequency",
   "@settingsAnnouncementsFrequency": {"description": "Frequency preset label"},
@@ -3835,7 +1223,7 @@
   "@settingsAnnouncementsFrequencyConstant": {"description": "Frequency preset: no startup delay, speak almost every cycle"},
   "settingsAnnouncementsFrequencyCustom": "Custom",
   "@settingsAnnouncementsFrequencyCustom": {"description": "Frequency preset shown when advanced fields were edited individually"},
-  "settingsHelpAnnouncementsFrequency": "Five steps from quietest to most talkative. Rare and Sparse wait a long time between announcements and cap the rate — good for surveys. Normal is the default conversational cadence. Frequent is closer to a running commentary. Constant has no startup delay and lets the app speak on almost every detection cycle, useful for demos or accessibility. Custom appears when you change the timing fields by hand.",
+  "settingsHelpAnnouncementsFrequency": "Five steps from quiet to talkative. Rare and Sparse wait a long time between two announcements. Normal is the default. Frequent comments almost non-stop. Constant speaks at almost every detection – good if you can’t look at the screen at all.",
   "@settingsHelpAnnouncementsFrequency": {"description": "Long-form help for frequency preset"},
   "settingsAnnouncementsVoice": "Voice",
   "@settingsAnnouncementsVoice": {"description": "Voice subsection label"},
@@ -3847,9 +1235,9 @@
   "@settingsAnnouncementsVoiceDefault": {"description": "Voice picker: the automatic device-default voice option"},
   "settingsAnnouncementsVoicePickTitle": "Choose a voice",
   "@settingsAnnouncementsVoicePickTitle": {"description": "Title of the voice selection bottom sheet"},
-  "settingsAnnouncementsVoiceUnavailable": "No selectable voices for this language. You can add more in your device's Text-to-speech settings.",
+  "settingsAnnouncementsVoiceUnavailable": "There are no voices to choose from for this language. You can add more in your phone’s text-to-speech settings.",
   "@settingsAnnouncementsVoiceUnavailable": {"description": "Shown in the voice picker when the device exposes no voices for the current language"},
-  "settingsHelpAnnouncementsVoice": "Voices come from your device, not the app, and their quality varies a lot between phones. If the default sounds robotic or uses the wrong accent, pick another here. You can install more voices in your device's Text-to-speech settings.",
+  "settingsHelpAnnouncementsVoice": "Voices come from your phone, not the app, and sound very different from phone to phone. If the default voice sounds like a robot or has the wrong accent, pick another one here. You can install more voices in your phone’s text-to-speech settings.",
   "@settingsHelpAnnouncementsVoice": {"description": "Long-form help for the voice picker"},
   "settingsAnnouncementsPreview": "Speak a sample",
   "@settingsAnnouncementsPreview": {"description": "Button: speak a sample utterance with current settings"},
@@ -3857,11 +1245,11 @@
   "@settingsAnnouncementsAdvanced": {"description": "Disclosure heading for advanced numeric settings"},
   "settingsAnnouncementsSpeakerOutputAllowed": "Allow phone speaker",
   "@settingsAnnouncementsSpeakerOutputAllowed": {"description": "Toggle: allow announcements through the built-in speaker"},
-  "settingsHelpAnnouncementsSpeakerOutputAllowed": "When off, announcements are skipped if no headphones or external speaker is connected. When on, the phone speaker is used as a fallback — useful for casual listening at home, but expect a short mic mute around each utterance to avoid feedback.",
+  "settingsHelpAnnouncementsSpeakerOutputAllowed": "When disabled, announcements are skipped as long as neither headphones nor an external speaker is connected. When enabled, the phone speaker is used instead – handy at home; the microphone is then muted briefly for each announcement to avoid feedback.",
   "@settingsHelpAnnouncementsSpeakerOutputAllowed": {"description": "Long-form help for the speaker-output toggle"},
   "settingsAnnouncementsMuteCaptureDuringSpeech": "Mute mic while speaking",
   "@settingsAnnouncementsMuteCaptureDuringSpeech": {"description": "Toggle: feed silence to the recorder while TTS is speaking"},
-  "settingsHelpAnnouncementsMuteCaptureDuringSpeech": "Replaces incoming audio with silence while the app speaks, so the speaker output cannot be picked up by the mic and re-detected. Highly recommended; turn off only if your microphone is acoustically isolated from the phone speaker (e.g. a clip-on lapel mic).",
+  "settingsHelpAnnouncementsMuteCaptureDuringSpeech": "Replaces the microphone signal with silence during an announcement, so the app does not detect its own announcement as a bird. Best left enabled; only disable it if your microphone is acoustically isolated from the speaker, for example a clip-on mic.",
   "@settingsHelpAnnouncementsMuteCaptureDuringSpeech": {"description": "Long-form help for the mute-capture toggle"},
   "settingsAnnouncementsDuckOtherAudio": "Lower other audio",
   "@settingsAnnouncementsDuckOtherAudio": {"description": "Toggle: duck other apps while announcing"},
@@ -3869,28 +1257,14 @@
   "@settingsHelpAnnouncementsDuckOtherAudio": {"description": "Long-form help for the audio-duck toggle"},
   "settingsAnnouncementsPrerollCue": "Cue tone before speaking",
   "@settingsAnnouncementsPrerollCue": {"description": "Toggle: play a short tone before each utterance"},
-  "settingsHelpAnnouncementsPrerollCue": "Plays a short, quiet tone before each utterance so your ear has a moment to switch to listening — helps when you have music playing or when announcements are infrequent.",
+  "settingsHelpAnnouncementsPrerollCue": "Plays a short, quiet tone before each announcement so your ear has time to tune in – helpful when music is playing or announcements are rare.",
   "@settingsHelpAnnouncementsPrerollCue": {"description": "Long-form help for the preroll cue"},
-  "settingsAnnouncementsStartupGraceSeconds": "Startup grace ({seconds} s)",
-  "@settingsAnnouncementsStartupGraceSeconds": {"description": "Slider label: how long to stay silent at session start", "placeholders": {"seconds": {"type": "int"}}},
-  "settingsAnnouncementsMinIntervalSeconds": "Minimum gap ({seconds} s)",
-  "@settingsAnnouncementsMinIntervalSeconds": {"description": "Slider label: minimum seconds between announcements", "placeholders": {"seconds": {"type": "int"}}},
-  "settingsAnnouncementsMaxPerMinute": "Max per minute ({count})",
-  "@settingsAnnouncementsMaxPerMinute": {"description": "Slider label: rate cap", "placeholders": {"count": {"type": "int"}}},
-  "settingsAnnouncementsStreakSilenceSeconds": "Streak silence ({seconds} s)",
-  "@settingsAnnouncementsStreakSilenceSeconds": {"description": "Slider label: per-species silence after a streak", "placeholders": {"seconds": {"type": "int"}}},
-  "settingsAnnouncementsRecencyResetSeconds": "Recency reset ({seconds} s)",
-  "@settingsAnnouncementsRecencyResetSeconds": {"description": "Slider label: how long until a species is no longer 'recent'", "placeholders": {"seconds": {"type": "int"}}},
   "announcementsSampleSpecies1": "Robin",
   "@announcementsSampleSpecies1": {"description": "Sample species name used when previewing the announcement voice (any common bird the local TTS will pronounce well)"},
   "announcementsSampleSpecies2": "Blue Jay",
   "@announcementsSampleSpecies2": {"description": "Sample species name used in the multi-detection preview"},
   "announcementsSampleSpecies3": "Great Tit",
   "@announcementsSampleSpecies3": {"description": "Sample species name used in the multi-detection preview"},
-  "siteContextOfflineNote": "Offline — you can add place name and weather later from the session review.",
-  "@siteContextOfflineNote": {
-    "description": "Note shown on the site-context card when reverse-geocoding or weather lookup failed (typically no internet). Tells the user the data can be filled in later from the session review screen, which retries both services on open."
-  },
   "sessionWeatherTapToLoad": "Tap to load",
   "@sessionWeatherTapToLoad": {
     "description": "Brief label next to the cloud-off icon suggesting the user tap to authorize and fetch weather data"
@@ -3899,7 +1273,7 @@
   "@settingsAudioSource": {
     "description": "Label for the setting that picks the microphone and how much processing the OS applies to it"
   },
-  "settingsHelpAudioSource": "Choose which microphone records audio. On Android, Processing also controls how much speech-oriented noise reduction and automatic gain the phone applies. Unprocessed preserves the original signal when supported; Voice recognition is a widely supported fallback.",
+  "settingsHelpAudioSource": "Choose the microphone that should record. On Android, “Processing” also sets how much speech-optimized noise suppression and automatic gain the phone applies: “Unprocessed” delivers the original signal where the device supports it; “Voice recognition” is a widely supported alternative.",
   "@settingsHelpAudioSource": {
     "description": "Help text for the audio source setting"
   },
@@ -3907,7 +1281,7 @@
   "@settingsSelectAudioSource": {
     "description": "Title of the audio source picker bottom sheet"
   },
-  "audioSourcePickerHint": "Phones process microphone audio for speech, which can blur bird sounds. If detections seem poor, try another source — support varies by phone.",
+  "audioSourcePickerHint": "Phones process microphone audio for speech, which can blur bird sounds. If recognition is poor, try another source – not every phone supports all of them.",
   "@audioSourcePickerHint": {
     "description": "Explanatory text under the audio source picker title. Android only, where the processing options are offered."
   },
@@ -3927,7 +1301,7 @@
   "@settingsSystemDefault": {
     "description": "Label for system default microphone option"
   },
-  "audioSourceSystemDefaultDescription": "Whatever your phone uses normally, including its noise reduction.",
+  "audioSourceSystemDefaultDescription": "Whatever your phone normally uses – including its noise suppression.",
   "@audioSourceSystemDefaultDescription": {
     "description": "Description of the system default audio source option in the picker"
   },
@@ -3943,7 +1317,7 @@
   "@audioSourceVoiceRecognition": {
     "description": "Label for the Android VOICE_RECOGNITION audio source option"
   },
-  "audioSourceVoiceRecognitionDescription": "Also turns off noise reduction and automatic gain, and works on nearly every phone. Try this if Unprocessed makes no difference.",
+  "audioSourceVoiceRecognitionDescription": "Also turns off noise suppression and automatic gain control, and works on almost every phone. Try it if “Unprocessed” makes no difference.",
   "@audioSourceVoiceRecognitionDescription": {
     "description": "Description of the Voice recognition audio source option in the picker"
   },
@@ -3976,21 +1350,9 @@
   "@settingsLiveAutoStartDescription": {
     "description": "Subtitle for the auto-start switch"
   },
-  "settingsHelpLiveAutoStart": "When enabled, Live mode skips the manual mic-button tap and starts a session as soon as the model finishes loading. Useful for kiosk-style installations or hands-free use. Disabled by default so accidental taps on the Live tile do not begin recording.",
+  "settingsHelpLiveAutoStart": "When enabled, Live mode starts listening automatically as soon as the model has loaded – without tapping the microphone button. Disabled by default, so an accidental tap on the Live tile does not start a recording.",
   "@settingsHelpLiveAutoStart": {
     "description": "Help text for the auto-start setting"
-  },
-  "settingsSaveSessionAutomatically": "Save sessions automatically",
-  "@settingsSaveSessionAutomatically": {
-    "description": "Switch label for automatically saving finished sessions to the library"
-  },
-  "settingsSaveSessionAutomaticallyDescription": "Keep every finished session in the library.",
-  "@settingsSaveSessionAutomaticallyDescription": {
-    "description": "Subtitle for the automatic session-saving switch"
-  },
-  "settingsHelpSaveSessionAutomatically": "When enabled, completed Live and Point Count sessions are added to your library automatically as soon as they finish. When disabled, a finished session opens in review marked as unsaved: the save icon is highlighted and you must tap it to keep the session. Leaving review without saving discards the session and its recordings. Survey and ARU deployments always save automatically.",
-  "@settingsHelpSaveSessionAutomatically": {
-    "description": "Help text for the automatic session-saving setting"
   },
 
   "settingsGpsRefresh": "Refresh GPS now",
@@ -4110,25 +1472,13 @@
   "@settingsFrequencyRange": {
     "description": "Spectrogram frequency range setting label"
   },
-  "settingsExportFormat": "Format",
-  "@settingsExportFormat": {
-    "description": "Export format setting label"
-  },
   "liveListening": "Listening…",
   "@liveListening": {
     "description": "Status text while actively listening for species"
   },
-  "liveDetections": "Detections",
-  "@liveDetections": {
-    "description": "Title for detection list empty state"
-  },
   "liveSpeciesWillAppear": "Species will appear here when detected",
   "@liveSpeciesWillAppear": {
     "description": "Subtitle when actively listening but no detections yet"
-  },
-  "liveStartSession": "Start a session to identify species",
-  "@liveStartSession": {
-    "description": "Subtitle prompting user to start a session"
   },
   "liveTipsHeader": "DID YOU KNOW?",
   "@liveTipsHeader": {
@@ -4140,7 +1490,7 @@
     "description": "Metadata for liveTipAnnouncementsTitle"
 
   },
-  "liveTipAnnouncementsBody": "Enable spoken announcements in Settings to hear new species named while you keep your eyes on the sky.",
+  "liveTipAnnouncementsBody": "Turn on announcements in the settings. Then the app tells you about new birds, and you can keep looking up into the trees.",
   "@liveTipAnnouncementsBody": {
 
     "description": "Metadata for liveTipAnnouncementsBody"
@@ -4152,7 +1502,7 @@
     "description": "Metadata for liveTipWindTitle"
 
   },
-  "liveTipWindBody": "Wind across the mic adds noise that hides quiet calls. Shelter the device with your body or a foam windscreen.",
+  "liveTipWindBody": "Wind on the microphone makes a rushing noise that drowns out quiet calls. Stand so that your body shields the phone from the wind.",
   "@liveTipWindBody": {
 
     "description": "Metadata for liveTipWindBody"
@@ -4164,7 +1514,7 @@
     "description": "Metadata for liveTipQuietPlaybackTitle"
 
   },
-  "liveTipQuietPlaybackBody": "The clip player automatically boosts very quiet recordings on playback so distant birds become easier to hear.",
+  "liveTipQuietPlaybackBody": "The app automatically makes quiet recordings louder when playing them, so you can hear even distant birds well.",
   "@liveTipQuietPlaybackBody": {
 
     "description": "Metadata for liveTipQuietPlaybackBody"
@@ -4176,34 +1526,10 @@
     "description": "Metadata for liveTipGeoFilterTitle"
 
   },
-  "liveTipGeoFilterBody": "Turn on the geographic species filter so detections are limited to species likely to occur where you are.",
+  "liveTipGeoFilterBody": "The species filter makes sure the app only recognizes birds that can occur in your area. If it is off, there are no stars.",
   "@liveTipGeoFilterBody": {
 
     "description": "Metadata for liveTipGeoFilterBody"
-
-  },
-  "liveTipSaveClipsTitle": "Keep the receipts",
-  "@liveTipSaveClipsTitle": {
-
-    "description": "Metadata for liveTipSaveClipsTitle"
-
-  },
-  "liveTipSaveClipsBody": "Enable 'Save detection clips' to attach a short audio snippet to every detection for later review.",
-  "@liveTipSaveClipsBody": {
-
-    "description": "Metadata for liveTipSaveClipsBody"
-
-  },
-  "liveTipNotesTitle": "Add a field note",
-  "@liveTipNotesTitle": {
-
-    "description": "Metadata for liveTipNotesTitle"
-
-  },
-  "liveTipNotesBody": "Open a detection to type a quick note or record a voice memo before you forget what you saw.",
-  "@liveTipNotesBody": {
-
-    "description": "Metadata for liveTipNotesBody"
 
   },
   "liveTipSpectrogramTitle": "Watch the sound",
@@ -4212,46 +1538,22 @@
     "description": "Metadata for liveTipSpectrogramTitle"
 
   },
-  "liveTipSpectrogramBody": "The live spectrogram shows energy over time and frequency — a great way to spot calls before the model does.",
+  "liveTipSpectrogramBody": "The spectrogram is a picture of sound: high notes at the top, low notes at the bottom. Often you can see a call in it before the app recognizes it.",
   "@liveTipSpectrogramBody": {
 
     "description": "Metadata for liveTipSpectrogramBody"
 
   },
-  "liveTipThresholdTitle": "Tune the threshold",
+  "liveTipThresholdTitle": "How sure should the app be?",
   "@liveTipThresholdTitle": {
 
     "description": "Metadata for liveTipThresholdTitle"
 
   },
-  "liveTipThresholdBody": "Lower the confidence threshold to catch more candidates, raise it to keep only the surest calls.",
+  "liveTipThresholdBody": "In the advanced settings you decide how sure the app must be. Lower shows more birds, but also more mistakes.",
   "@liveTipThresholdBody": {
 
     "description": "Metadata for liveTipThresholdBody"
-
-  },
-  "liveTipWatchlistTitle": "Star your targets",
-  "@liveTipWatchlistTitle": {
-
-    "description": "Metadata for liveTipWatchlistTitle"
-
-  },
-  "liveTipWatchlistBody": "Build a watchlist for species you're hoping to find and get a louder cue when one is detected.",
-  "@liveTipWatchlistBody": {
-
-    "description": "Metadata for liveTipWatchlistBody"
-
-  },
-  "liveTipFileAnalysisTitle": "Got a recording?",
-  "@liveTipFileAnalysisTitle": {
-
-    "description": "Metadata for liveTipFileAnalysisTitle"
-
-  },
-  "liveTipFileAnalysisBody": "Use File Analysis to identify species in any WAV or FLAC you have recorded outside the app.",
-  "@liveTipFileAnalysisBody": {
-
-    "description": "Metadata for liveTipFileAnalysisBody"
 
   },
   "liveTipBluetoothMicTitle": "Use a better mic",
@@ -4260,34 +1562,10 @@
     "description": "Metadata for liveTipBluetoothMicTitle"
 
   },
-  "liveTipBluetoothMicBody": "For surveys, pair a Bluetooth or wired external microphone — pointing it at the source improves range and clarity over the built-in mic.",
+  "liveTipBluetoothMicBody": "An external microphone – wired or Bluetooth – hears further and more clearly than the built-in one. Point it to where the bird is singing.",
   "@liveTipBluetoothMicBody": {
 
     "description": "Metadata for liveTipBluetoothMicBody"
-
-  },
-  "liveTipSurveyNotificationsTitle": "Surveys keep going",
-  "@liveTipSurveyNotificationsTitle": {
-
-    "description": "Metadata for liveTipSurveyNotificationsTitle"
-
-  },
-  "liveTipSurveyNotificationsBody": "Surveys run as a foreground service with a persistent notification, so recording continues even when your screen is off or the app is in the background.",
-  "@liveTipSurveyNotificationsBody": {
-
-    "description": "Metadata for liveTipSurveyNotificationsBody"
-
-  },
-  "liveTipStudyDesignTitle": "Be consistent",
-  "@liveTipStudyDesignTitle": {
-
-    "description": "Metadata for liveTipStudyDesignTitle"
-
-  },
-  "liveTipStudyDesignBody": "For comparable results, keep the device, mic, threshold and session length the same across surveys at a site — change one thing at a time.",
-  "@liveTipStudyDesignBody": {
-
-    "description": "Metadata for liveTipStudyDesignBody"
 
   },
   "liveTipAiMistakesTitle": "AI gets it wrong",
@@ -4296,7 +1574,7 @@
     "description": "Metadata for liveTipAiMistakesTitle"
 
   },
-  "liveTipAiMistakesBody": "Even high-confidence detections can be wrong. Review the spectrogram and audio clip before trusting a record — especially for rare species.",
+  "liveTipAiMistakesBody": "Even when the app is very sure, it can be wrong. Listen to the recording before you believe it – especially with rare birds.",
   "@liveTipAiMistakesBody": {
 
     "description": "Metadata for liveTipAiMistakesBody"
@@ -4308,19 +1586,19 @@
     "description": "Metadata for liveTipBatteryTitle"
 
   },
-  "liveTipBatteryBody": "Long surveys with the screen on and GPS active drain the battery quickly. Pack a power bank for anything longer than an hour.",
+  "liveTipBatteryBody": "Listening with the screen and GPS on uses a lot of battery. For long outings, take a power bank.",
   "@liveTipBatteryBody": {
 
     "description": "Metadata for liveTipBatteryBody"
 
   },
-  "liveTipScoresTitle": "Scores aren't probabilities",
+  "liveTipScoresTitle": "The percentage is not a probability",
   "@liveTipScoresTitle": {
 
     "description": "Metadata for liveTipScoresTitle"
 
   },
-  "liveTipScoresBody": "Confidence scores show how well the audio matched the model's pattern, not the statistical chance that a species is actually present.",
+  "liveTipScoresBody": "The percentage next to a bird says how well the sound matches what the app knows about that bird – not how likely it is that the bird is really there.",
   "@liveTipScoresBody": {
 
     "description": "Metadata for liveTipScoresBody"
@@ -4332,7 +1610,7 @@
     "description": "Metadata for liveTipDistanceTitle"
 
   },
-  "liveTipDistanceBody": "Distant calls lose high frequencies over long ranges and might not trigger a detection, even if human ears can pick them out.",
+  "liveTipDistanceBody": "Distant calls lose their high notes. Then the app sometimes does not recognize them, even though you can still hear them.",
   "@liveTipDistanceBody": {
 
     "description": "Metadata for liveTipDistanceBody"
@@ -4342,87 +1620,13 @@
   "@settingsGain": {
     "description": "Audio gain slider label"
   },
-  "fileAnalysisReadFailed": "Could not read file: {error}",
-  "@fileAnalysisReadFailed": {
-    "description": "Shown when the selected audio file cannot be inspected",
-    "placeholders": {
-      "error": {
-        "type": "String"
-      }
-    }
-  },
-  "fileAnalysisModelError": "Model error",
-  "@fileAnalysisModelError": {
-    "description": "Fallback error shown when file analysis model loading fails"
-  },
-  "fileAnalysisDecodedSize": "Decoded audio",
-  "@fileAnalysisDecodedSize": {
-    "description": "Metadata row label for estimated decoded PCM size"
-  },
-  "fileAnalysisLargeFileTitle": "Large audio file",
-  "@fileAnalysisLargeFileTitle": {
-    "description": "Warning title shown when selected audio expands to a large decoded PCM buffer"
-  },
-  "fileAnalysisLargeFileBody": "This file expands to about {size} of decoded audio. Analysis uses windowed reads where possible, but review may limit the spectrogram on memory-constrained devices.",
-  "@fileAnalysisLargeFileBody": {
-    "description": "Warning body shown when selected audio has a large decoded PCM footprint",
-    "placeholders": {
-      "size": { "type": "String" }
-    }
-  },
-  "sessionReviewAudioShortTitle": "Audio is shorter than the session",
-  "@sessionReviewAudioShortTitle": {
-    "description": "Warning title shown when recording duration is shorter than session events"
-  },
-  "sessionReviewAudioShortBody": "The recording ends before the latest session event. Playback and exports may stop early, but detections remain available.",
-  "@sessionReviewAudioShortBody": {
-    "description": "Warning body shown when recording duration is shorter than session events"
-  },
-  "sessionReviewSpectrogramLimitedTitle": "",
-  "@sessionReviewSpectrogramLimitedTitle": {
-    "description": "Warning title shown when the review spectrogram is downsampled for memory (empty to keep the warning to a single sentence)"
-  },
-  "sessionReviewSpectrogramLimitedBody": "Spectrogram detail loads as you play, pan, or zoom.",
-  "@sessionReviewSpectrogramLimitedBody": {
-    "description": "Warning body shown when the review spectrogram is downsampled for memory"
-  },
   "speciesChartLoadFailed": "Failed to load chart",
   "@speciesChartLoadFailed": {
     "description": "Shown when the seasonal species chart fails to load"
   },
-  "surveyNotificationChannelName": "BirdNET Survey",
-  "@surveyNotificationChannelName": {
-    "description": "Android notification channel name for the survey foreground service"
-  },
-  "surveyNotificationChannelDescription": "Active Survey recording",
-  "@surveyNotificationChannelDescription": {
-    "description": "Android notification channel description for the survey foreground service"
-  },
-  "surveyNotificationTitle": "Survey Recording",
-  "@surveyNotificationTitle": {
-    "description": "Foreground notification title shown while a survey is active"
-  },
-  "surveyNotificationStats": "⏱ {elapsed}   🐦 {detections} det · {species} spp   📍 {distanceKm} km",
-  "@surveyNotificationStats": {
-    "description": "Stats footer in the survey foreground notification: elapsed time, total detections, unique species, distance walked. Emoji are decorative.",
-    "placeholders": {
-      "elapsed": { "type": "String" },
-      "detections": { "type": "int" },
-      "species": { "type": "int" },
-      "distanceKm": { "type": "String" }
-    }
-  },
   "notificationStop": "Stop",
   "@notificationStop": {
     "description": "Foreground notification action label to stop the current task"
-  },
-  "notificationOpen": "Open",
-  "@notificationOpen": {
-    "description": "Foreground notification action label to open the app"
-  },
-  "surveyNotificationMicContested": "⚠ Microphone in use by another app — audio paused",
-  "@surveyNotificationMicContested": {
-    "description": "Status line shown in the survey foreground notification when another app (e.g. an audiobook player or voice recorder) is holding the microphone, so the user understands why audio appears to be paused."
   },
   "monthJanShort": "Jan",
   "@monthJanShort": {
@@ -4456,7 +1660,7 @@
   "@speciesExpectedFrequency": {
     "description": "Title for the weekly geo-model probability chart"
   },
-  "speciesExpectedFrequencySubtitle": "Predicted presence across 48 weeks based on your location.",
+  "speciesExpectedFrequencySubtitle": "When in the year this bird occurs in your area",
   "@speciesExpectedFrequencySubtitle": {
     "description": "Subtitle explaining the weekly geo-model probability chart"
   },
@@ -4505,34 +1709,19 @@
   "@speciesFrequencyRare": {
     "description": "Lowest frequency category label for geo-model probability"
   },
-  "speciesYouHaveDetected": "{detections, plural, =1{You have detected this species once} other{You have detected this species {detections} times}} across {sessions, plural, =1{1 session} other{{sessions} sessions}}",
-  "@speciesYouHaveDetected": {
-    "description": "Personal detection summary line shown in the species info overlay",
-    "placeholders": {
-      "detections": {"type": "int"},
-      "sessions": {"type": "int"}
-    }
-  },
-  "speciesLastSeen": "Last detected: {date}",
-  "@speciesLastSeen": {
-    "description": "Last detection date line in the species info overlay",
-    "placeholders": {
-      "date": {"type": "String"}
-    }
-  },
   "liveScreenHelpTitle": "Live Mode Help",
   "@liveScreenHelpTitle": {
     "description": "Title for the Live Mode help overlay"
   },
-  "liveScreenHelpOverview": "Live Mode opens the microphone, updates the spectrogram continuously, and adds species detections to the list below.",
+  "liveScreenHelpOverview": "In Live mode, the app listens through the microphone. At the top runs the spectrogram – a picture of sound – and below it the birds it recognizes appear.",
   "@liveScreenHelpOverview": {
     "description": "Overview text for the Live Mode help overlay"
   },
-  "liveScreenHelpControls": "Use back to leave the screen, help to reopen this overlay, and settings for Live-specific options. The large center button changes between mic, play, and stop depending on the current state.",
+  "liveScreenHelpControls": "Back leaves the screen, Help reopens this explanation, and the settings button opens the same settings as on the home screen. The big button in the middle switches between microphone, play and stop.",
   "@liveScreenHelpControls": {
     "description": "Explains the top controls and center action button on the Live Mode help overlay"
   },
-  "liveScreenHelpInfoBar": "The info line under the spectrogram summarizes the current session, including visible detections, unique species, total detections, elapsed time, and recording size when audio capture is enabled.",
+  "liveScreenHelpInfoBar": "The line under the spectrogram, the picture of sound, shows how many birds and species the app has found so far, how long you have been listening and – if it is recording – how large the recording is.",
   "@liveScreenHelpInfoBar": {
     "description": "Explains the session info bar on the Live Mode help overlay"
   },
@@ -4563,118 +1752,11 @@
       }
     }
   },
-  "liveScreenHelpDetections": "Tap any species row to open the species details sheet. When you stop the session, Smartfinch saves it and opens Session Review.",
+  "liveScreenHelpDetections": "Tap a bird in the list to find out more about it. When you stop, the journal shows you your day.",
   "@liveScreenHelpDetections": {
     "description": "Explains the detection list on the Live Mode help overlay"
   },
-  "pointCountSetupHelpTitle": "Point Count Setup Help",
-  "@pointCountSetupHelpTitle": {
-    "description": "Title for the Point Count setup help overlay"
-  },
-  "pointCountSetupHelpSteps": "This wizard moves through duration and location, a short in-app tips page, and a ready screen before the count begins. Use the step buttons at the bottom to move forward or back.",
-  "@pointCountSetupHelpSteps": {
-    "description": "Explains the Point Count setup flow"
-  },
-  "pointCountSetupHelpLocation": "Choose whether the count uses current GPS, manual coordinates, a map-picked point, or no location. The settings button opens the Point Count settings subset without leaving the workflow.",
-  "@pointCountSetupHelpLocation": {
-    "description": "Explains the location and settings controls on the Point Count setup help overlay"
-  },
-  "pointCountSetupHelpStart": "The final step summarizes the configured duration and location. Start Count begins the timed session immediately and opens the live count screen.",
-  "@pointCountSetupHelpStart": {
-    "description": "Explains the start action on the Point Count setup help overlay"
-  },
-  "pointCountLiveHelpTitle": "Point Count Help",
-  "@pointCountLiveHelpTitle": {
-    "description": "Title for the Point Count live-screen help overlay"
-  },
-  "pointCountLiveHelpTimer": "The top bar combines stop, remaining time, help, and settings. The progress bar below shows how much of the timed count is complete.",
-  "@pointCountLiveHelpTimer": {
-    "description": "Explains the top controls on the Point Count live help overlay"
-  },
-  "pointCountLiveHelpDetections": "The spectrogram and detection list update during the count. The info bar summarizes current detections, unique species, and total detections for this session.",
-  "@pointCountLiveHelpDetections": {
-    "description": "Explains the live detection area on the Point Count help overlay"
-  },
-  "pointCountLiveHelpFinish": "Use stop to end the count early or wait for the timer to finish. Either way, the session is saved and opened in Session Review.",
-  "@pointCountLiveHelpFinish": {
-    "description": "Explains how the Point Count live screen ends"
-  },
-  "surveySetupHelpTitle": "Survey Setup Help",
-  "@surveySetupHelpTitle": {
-    "description": "Title for the Survey setup help overlay"
-  },
-  "surveySetupHelpSteps": "Survey Setup moves through details, parameters, field tips, and a ready screen. Use the bottom buttons to move between steps before starting.",
-  "@surveySetupHelpSteps": {
-    "description": "Explains the Survey setup flow"
-  },
-  "surveySetupHelpLocation": "The details step lets you use current GPS, manual coordinates, or no starting location. If background GPS is available, the setup flow also prompts for the permissions needed by the live survey.",
-  "@surveySetupHelpLocation": {
-    "description": "Explains the location behavior on the Survey setup help overlay"
-  },
-  "surveySetupHelpStart": "The ready step summarizes the survey configuration. Start Survey begins audio capture and route tracking and opens the live survey dashboard.",
-  "@surveySetupHelpStart": {
-    "description": "Explains the start action on the Survey setup help overlay"
-  },
-  "fileAnalysisHelpTitle": "File Analysis Help",
-  "@fileAnalysisHelpTitle": {
-    "description": "Title for the File Analysis help overlay"
-  },
-  "fileAnalysisHelpSteps": "File Analysis is a four-step wizard: choose a recording, set location and date, adjust analysis parameters, and run analysis.",
-  "@fileAnalysisHelpSteps": {
-    "description": "Explains the File Analysis workflow"
-  },
-  "fileAnalysisHelpLocation": "Location and date are optional but affect geographic and seasonal filtering. Use current GPS, manual coordinates, a map-picked point, or no location for the file.",
-  "@fileAnalysisHelpLocation": {
-    "description": "Explains the location and date step on the File Analysis help overlay"
-  },
-  "fileAnalysisHelpAnalyze": "The app bar help button reopens this guide, settings opens the File Analysis settings subset, and close cancels an active analysis. When analysis finishes, the result opens in Session Review.",
-  "@fileAnalysisHelpAnalyze": {
-    "description": "Explains the active controls and result behavior on the File Analysis help overlay"
-  },
-  "sessionLibraryHelpTitle": "Session Library Help",
-  "@sessionLibraryHelpTitle": {
-    "description": "Title for the Session Library help overlay"
-  },
-  "sessionLibraryHelpSearch": "The search icon opens library search. It filters by Session titles, locations, dates, observers, transects, annotations, notes, and species names in any bundled locale.",
-  "@sessionLibraryHelpSearch": {
-    "description": "Explains the search control on the Session Library help overlay"
-  },
-  "sessionLibraryHelpView": "The expand arrow opens compact rows and species groups. In By Species, each species expands to the Sessions that contain it.",
-  "@sessionLibraryHelpView": {
-    "description": "Explains the view mode menu on the Session Library help overlay"
-  },
-  "sessionLibraryHelpSort": "The three-dot menu on a Session row opens actions for opening, sharing, or deleting that Session.",
-  "@sessionLibraryHelpSort": {
-    "description": "Explains the sort menu on the Session Library help overlay"
-  },
-  "sessionLibraryHelpFilter": "The filter/options icon opens sorting, view mode, and Session-type filters. Clear the type chips to return to all saved Sessions.",
-  "@sessionLibraryHelpFilter": {
-    "description": "Explains the session-type filter on the Session Library help overlay"
-  },
-  "sessionLibraryHelpOpen": "The up arrow on New Session opens the mode picker. Long-press Session rows or cards to select multiple Sessions for sharing or deletion.",
-  "@sessionLibraryHelpOpen": {
-    "description": "Explains opening a saved session from the Session Library help overlay"
-  },
-  "sessionLibraryNewSession": "New session",
-  "@sessionLibraryNewSession": {
-    "description": "Floating action button label on the Session Library screen for starting a new recording session in the last-used mode."
-  },
-  "sessionLibraryNewSessionTooltip": "Start a new {mode} session",
-  "@sessionLibraryNewSessionTooltip": {
-    "description": "Tooltip on the Session Library new-session FAB. {mode} is replaced with the current mode label (e.g. Live, Point Count, Survey, File Analysis).",
-    "placeholders": {
-      "mode": {"type": "String", "example": "Live"}
-    }
-  },
-  "sessionLibraryChangeNewSessionMode": "Choose mode",
-  "@sessionLibraryChangeNewSessionMode": {
-    "description": "Tooltip / label for the small chevron next to the new-session FAB in the Session Library that opens the mode-picker bottom sheet."
-  },
-  "sessionLibraryNewSessionSheetTitle": "Start a new session",
-  "@sessionLibraryNewSessionSheetTitle": {
-    "description": "Title of the bottom sheet shown when the user taps the chevron next to the new-session FAB on the Session Library screen."
-  },
-  "exploreHelpRefresh": "Use refresh in the app bar to reload the current location and rebuild the predicted species list.",
+  "exploreHelpRefresh": "Refresh at the top reloads your location and works out the bird list again.",
   "@exploreHelpRefresh": {
     "description": "Explains the refresh icon on the Explore help overlay"
   },
@@ -4682,37 +1764,13 @@
   "@exploreHelpLocation": {
     "description": "Explains the location header on the Explore help overlay"
   },
-  "exploreHelpCards": "Each species card shows the current geo-model ranking for that species. Tap a card to open images, description text, external links, and the seasonal chart.",
+  "exploreHelpCards": "Each species card shows how likely this bird is in your area right now. Tap it to see pictures, a description, links and the year curve.",
   "@exploreHelpCards": {
     "description": "Explains species cards on the Explore help overlay"
   },
-  "exploreHelpTiers": "Each card shows an abundance tier for the current place and season. The circle fills up and its color shifts along the score scale from red to green as a species becomes more likely. Tiers are relative to this location: they adapt to how strongly the model predicts species here, so the same score can land in different tiers in different areas.",
+  "exploreHelpTiers": "The circle on each species card fills up and turns from red to green the more likely the bird is here. The levels only apply to this place: the same value can be a different level somewhere else.",
   "@exploreHelpTiers": {
     "description": "Explains the abundance tier chips (colors, tiers, pie fill) on the Explore help overlay"
-  },
-  "surveyLiveHelpTopBar": "The top row combines stop, elapsed timer, help, and settings. Stop ends the survey and saves the session; settings opens the Survey settings subset.",
-  "@surveyLiveHelpTopBar": {
-    "description": "Explains the top bar on the Survey live help overlay"
-  },
-  "surveyLiveHelpTabs": "Use the tabs to switch between the live map, audio, and summary views while the survey keeps running.",
-  "@surveyLiveHelpTabs": {
-    "description": "Explains the tab row on the Survey live help overlay"
-  },
-  "sessionHelpTopBar": "The top bar uses close to leave Session Review and settings to open the full settings screen. Your current session stays loaded while you inspect playback, detections, and notes.",
-  "@sessionHelpTopBar": {
-    "description": "Explains the top app bar on the Session Review help overlay"
-  },
-  "sessionHelpUndoRedo": "Undo and redo step backward and forward through review edits made during the current session.",
-  "@sessionHelpUndoRedo": {
-    "description": "Explains the undo and redo buttons on the Session Review help overlay"
-  },
-  "sessionHelpSaveDiscard": "Save writes your edits, share exports the session bundle, discard removes the saved session, and the help button reopens this overlay.",
-  "@sessionHelpSaveDiscard": {
-    "description": "Explains save, share, discard, and help on the Session Review help overlay"
-  },
-  "sessionHelpContinueSurvey": "For survey sessions, the play button continues recording into the same survey instead of starting a separate one.",
-  "@sessionHelpContinueSurvey": {
-    "description": "Explains the continue survey action on the Session Review help overlay"
   },
   "linkOpenFailedCopied": "Couldn't open link. URL copied to clipboard.",
   "@linkOpenFailedCopied": {
@@ -4722,23 +1780,11 @@
   "@permissionRequestIOS": {
     "description": "Request permission button for iOS compliant with Guideline 5.1.1(iv)"
   },
-  "openInAppleMaps": "Open in Apple Maps",
-  "@openInAppleMaps": {
-    "description": "Action to open the location in the external Apple Maps app"
-  },
-  "aruCombinedSessionWarningTitle": "Full Audio Conflict",
-  "@aruCombinedSessionWarningTitle": {
-    "description": "Title of the warning shown when a combined ARU session is configured with full audio recording mode"
-  },
-  "aruCombinedSessionWarningBody": "Combined sessions do not support Full Audio. The system will fall back to saving clips with Smart sampling. Go to the previous screen to review recording settings if you wish to change this.",
-  "@aruCombinedSessionWarningBody": {
-    "description": "Body of the warning shown when a combined ARU session is configured with full audio recording mode"
-  },
   "settingsAdvanced": "Advanced settings",
   "@settingsAdvanced": {
     "description": "Title of the advanced settings screen and of the tile that opens it"
   },
-  "settingsAdvancedDescription": "Audio, detection, spectrogram, recordings and export",
+  "settingsAdvancedDescription": "Audio, detection, spectrogram (the picture of sound), recordings and backup",
   "@settingsAdvancedDescription": {
     "description": "Subtitle of the tile that opens advanced settings"
   },
@@ -5140,14 +2186,6 @@
   "@pointsUnavailable": {
     "description": "Shown when the points area cannot be read"
   },
-  "pointsNoBadgesTitle": "No badges yet",
-  "@pointsNoBadgesTitle": {
-    "description": "Empty state of the badges tab"
-  },
-  "pointsNoBadgesSubtitle": "Ten species in one day earns your first one.",
-  "@pointsNoBadgesSubtitle": {
-    "description": "Second line of the badges empty state"
-  },
   "pointsNoAchievementsTitle": "The first medal is close",
   "@pointsNoAchievementsTitle": {
     "description": "Empty state of the achievements tab"
@@ -5334,7 +2372,7 @@
   "@rulesWhereBody": {
     "description": "SET-11: why the same species is worth something else elsewhere"
   },
-  "onboardingHomeRegionTitle": "Where do you live?",
+  "onboardingHomeRegionTitle": "Where do you usually listen?",
   "@onboardingHomeRegionTitle": {
     "description": "SET-09: heading of the home-region block on the onboarding permissions page"
   },
@@ -5342,11 +2380,11 @@
   "@onboardingHomeRegionFromGps": {
     "description": "SET-09: shown when location was granted and nothing needs picking"
   },
-  "onboardingHomeRegionWhy": "Without a place the app cannot tell which animals live here — and then there are no stars. Pick your home on the map instead.",
+  "onboardingHomeRegionWhy": "Without a location, the app doesn’t know which animals live here — and then there are no stars. Pick your area on the map instead.",
   "@onboardingHomeRegionWhy": {
     "description": "SET-09: shown when location is unavailable and a place still has to be picked"
   },
-  "onboardingHomeRegionPicked": "Your home is set. You can change it later in the settings.",
+  "onboardingHomeRegionPicked": "Your area is saved. You can change it later in the settings.",
   "@onboardingHomeRegionPicked": {
     "description": "SET-09: shown once a home has been picked on the map"
   },
@@ -6085,5 +3123,13 @@
         "type": "int"
       }
     }
+  },
+  "helpCollectionTitle": "Collection, journal & points",
+  "@helpCollectionTitle": {
+    "description": "Help screen: the section that replaced \"Sessions & Review\" — where a child's finds end up"
+  },
+  "helpCollectionBody": "Your collection has every species you have heard so far. The journal keeps every day you went listening, with your recordings to play back. Points shows your stars, your badges and your level.",
+  "@helpCollectionBody": {
+    "description": "Help screen: body of the collection / journal / points section"
   }
 }

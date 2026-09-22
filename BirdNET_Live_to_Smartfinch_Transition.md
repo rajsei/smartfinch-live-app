@@ -946,6 +946,84 @@ That cap is also why `MainAxisAlignment.end` and `MainAxisAlignment.center` are 
 
 Three tests hold it: the surface under the footer is a margin rather than a block on a tablet, every destination is still above the fold on a 360 × 640 phone, and the handle is at least 48 high across the full width.
 
+### The strings, cleaned up — and what the texts were still saying
+
+**669 strings are gone from all twelve languages; 709 remain.** The open editorial point "648 of 1,369 l10n keys orphaned" is closed, and a test now keeps it closed.
+
+#### The orphans
+
+A key counted as unused when nothing in `lib/` reads it. That was measured twice: once by pattern, which is fast and catches most of it, and once by the compiler, which cannot be fooled — every candidate was removed, the localizations regenerated, and `flutter analyze` asked whether anything still referred to one. Nothing did. (The pattern pass alone would have been wrong in ten places: `TextInputAction.done`, `PrefKeys.surveyMaxDuration` and eight others share a name with a string without being one.)
+
+639 went in the first pass — Survey, Point Count, ARU, File Analysis, Batch, Session Review and the Session Library, the research export formats, notes and voice memos, map markers, the old onboarding pages. 30 more followed once the texts below took their widgets with them.
+
+**Twenty are kept on purpose**, and the hygiene test lists them with their reasons:
+
+| | |
+|---|---|
+| 17 weather strings | `AUS-11`, 🌧️ the bad-weather hero, sits behind a weather consent that already exists; it will need the condition names and the snapshot labels |
+| 3 microphone strings | A denied microphone currently ends in a bare “Error” in live mode. These are the words for doing better: why, and the way to settings |
+
+`test/l10n_hygiene_test.dart` fails on any template key that nothing reads and that is not on that list — and fails the other way round too, once a reserved key starts being read, so the list cannot turn into a second orphanage.
+
+#### The texts that were used, but wrong
+
+The harder half. About fifty strings were *read* by the app and still described the research app: onboarding “for field researchers and citizen scientists”, a help page organised around Session Review, a stop dialog promising to “open the session review” that no longer exists, live tips recommending File Analysis. Decided: **delete what describes a removed feature, rewrite the rest for a child, German first for proofreading, then the other eleven languages.**
+
+**Deleted, with the UI that carried them:**
+
+| | |
+|---|---|
+| Six live tips | File Analysis, field notes and voice memos, watchlists, the survey foreground service, study design across surveys, and a “save clips” switch clips no longer need |
+| Help: Sessions & Review | Replaced by one section for collection, journal and points — to a child, one question: *where did my birds go?* |
+| Help and About: the user guide | It links to the **BirdNET Live** manual — surveys, ARU deployments, Raven exports — which is a different app from the one a child is holding. It can come back when there is a Smartfinch guide. |
+| Settings: “save sessions automatically” | It chose between the session library and a save-or-discard review; both are gone. It turned out to control only whether a legacy JSON file is written that nothing reads any more — the journal, the collection and the stars are written while listening and never depended on it. |
+| Settings: timestamp display, show seconds | They decided how Session Review printed a detection's time. Nothing reads them now. |
+| `SiteContextCard`, `WeatherSetupCard` | Never built into any screen. |
+
+**Rewritten in German, for review:** 59 strings across onboarding, the help page, the live tips and live help, Explore's help, the privacy texts and the settings help; two new ones for the help page's new section; and 21 more that did not describe a removed feature but addressed an eight-year-old as *Sie*. The other eleven languages follow once the German is signed off.
+
+**After the first proofreading round**, three rules came back that apply to every language, not just German:
+
+- **The word is *Spektrogramm*, and it is always explained where it stands** — “das Spektrogramm, ein Bild vom Klang: hohe Töne oben, tiefe unten”. The first rewrite had replaced the word with “buntes Bild”; the word is worth learning, it just must never arrive alone. Twelve German strings carry it now, including the technical help texts in the advanced spectrogram section, and a check in the rewrite script refuses any string that names it without the gloss. Only two tile titles are exempt, because the section description directly beneath them explains it.
+- **“Karte” is also the map.** On a species card it is *Artenkarte*.
+- **The three control cards on the help page start the same way**: “Öffnet …”.
+
+The round also caught two claims that were wrong in the *original* texts, not just in the rewrite: the help tip “the settings button opens only what matters on this screen”, and the live help saying its settings button opens “Live-specific options”. Both describe the per-screen settings filter, which ended when `SET-01` split settings into a plain and an advanced page — every settings button now opens the same plain page. The tip is gone; the live help says what actually happens.
+
+**The second round settled the register of the settings:**
+
+- **The plain settings page is read by a child; the advanced page by an adult.** Plain texts stay simple but exact. Advanced texts may be technical — FFT window size, GPU filtering, automatic gain, perceptually uniform colour maps — and must be precise. The first rewrite had simplified some advanced texts until they were no longer quite true (“the microphone hears nothing” for a signal replaced by silence; “far from the speaker” for acoustically isolated); those went back to the exact statement, in *du*.
+- **Toggle help reads “Wenn aktiv, …” / “Wenn nicht aktiv, …”**, not “Wenn an / aus”.
+- **Full imperatives** — *wähle, schließe, versuche, probiere, stelle, höre* — and examples in parentheses: “tieffrequente Laute (Eulen, Raufußhühner)”.
+- **Never “where you live”.** The onboarding step asked a child *“Wo wohnst du?”* and had them mark *“dein Zuhause”* on a map, and the help page described the settings as covering *“wo du wohnst”*. The app needs neither: the rarity scale and the geo-model need an **area**, and any point in it will do. So the words say *“Wo lauschst du meistens?”* and *“deine Gegend”* — not a softer phrasing of the same request, but the accurate one. Privacy disclosures keep saying plainly what a third party learns (the map server sees *ungefähr, wo du bist*), because there the point is to be clear, not reassuring.
+- One sentence was wrong in the original, not just in the rewrite: the frequency-range help promised **ultrasonic calls**. The app records at 32 kHz, so the spectrogram can show at most 16 kHz — which is also the highest option in the menu. The German text says so, and since the translation pass so do the other eleven languages.
+
+#### The other eleven languages
+
+After five German proofreading rounds, the 93 changed strings were translated into English, Spanish, French, Italian, Portuguese, Dutch, Norwegian, Polish, Czech, Russian and Chinese — about a thousand strings, with every rule from the rounds carried over rather than re-decided per language:
+
+- **The spectrogram is named and explained** in each language’s own words (*picture of sound*, *image du son*, *obraz dźwięku*, *картинка звука*, *声音的图像* …), in every grammatical case the sentences need.
+- **Toggles use the language’s standard word for *enabled***, the equivalent of *aktiv* rather than of the colloquial *an*.
+- **No home, only an area.** Dutch says *omgeving* rather than *buurt*, which reads as the child’s street.
+- **The register follows what each language already used for children** — *tu*, *tú*, *ty*, *ты*, *je*, *du* — and each string refers to the app’s screens by the names that language actually shows. Only German calls live mode *Lauschen*; French says *En direct*, Norwegian *Direkte*, the rest *Live*.
+- **Advanced settings stay technical and precise** in every language; the ultrasonic claim is gone everywhere.
+
+**Polish, Czech and Russian needed one extra rule.** Their second-person past tense is gendered — *usłyszałeś* / *usłyszałaś* — so a sentence like *“every species you have heard”* forces the app to guess whether it is talking to a boy or a girl. The translations never make that guess: they use constructions without a gendered form (*udało ci się usłyszeć*, *podařilo se ti uslyšet*, *тебе удалось услышать*), the present tense, or a noun.
+
+Two option labels were fixed on the way because the new help texts name them: the Russian spectrogram quality *“Середина”* (“the middle”, a machine translation of *Medium*) is now *“Средний”*, and the Chinese colour map that still read *“Grayscale”* is now *“灰度”*. Other Russian labels show the same machine-translation marks — *“Передовой”* for *Advanced*, *“Останавливаться”* for *Stop*, *“Используйте GPS”* — and are left for a native-speaker pass, the same one the Russian, Polish and Czech month names are waiting for.
+
+The hygiene test now also holds the two rules that span all languages: **every language carries exactly the template’s strings** — a missing one would silently fall back to English — and **wherever a string names the spectrogram, it explains it**.
+
+#### What the rewrite turned up
+
+Writing a sentence that has to be true meant checking what each setting really does, and three answers were not what the old texts said:
+
+1. **“Clear all data” does not clear the database.** It deletes the recordings, the settings and the caches. The collection, the stars, the badges, the level and the journal entries survive — and the journal entries then point at recordings that no longer exist. The old confirmation claimed detections were deleted; they are not. The German text now says what the button actually does; the button itself is a bug to fix, and for a children's app with a right-to-erasure promise it is the most important of the three.
+2. **The weather lookup does not happen.** It lived in the session list's background backfill and in the two dead widgets above; nothing reads either. Onboarding and settings ask consent for something the app does not do. The rewritten texts describe the permission without promising when it is used; `AUS-11` has to wire it.
+3. **When it does happen, it would send precise coordinates.** `WeatherService` caches on 0.1° cells but sends the request with four decimals — about eleven metres. `NFA-08` asks for the 0.1° cell and never precise coordinates. Dormant today; it has to change before `AUS-11` switches the lookup on.
+
+The privacy summary in onboarding was also incomplete: it named map tiles and place names, but not the weather lookup the app asks consent for on the very same screen. It now names all three.
+
 ### What to watch during the two-week test
 
 Not "was it used", but the four things the design is betting on:

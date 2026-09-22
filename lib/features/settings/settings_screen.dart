@@ -284,60 +284,9 @@ class SettingsScreen extends ConsumerWidget {
                           .read(detectedSpeciesSortModeProvider.notifier)
                           .set(v),
                 ),
-              ListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsTimestampDisplayMode,
-                  helpBody: l10n.settingsHelpTimestampDisplayMode,
-                ),
-                subtitle: Text(l10n.settingsTimestampDisplayModeDescription),
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
-                child: SizedBox(
-                  width: double.infinity,
-                  child: SegmentedButton<String>(
-                    segments: [
-                      ButtonSegment(
-                        value: 'relative',
-                        label: _SegmentLabel(
-                          text: l10n.settingsTimestampDisplayModeRelative,
-                        ),
-                      ),
-                      ButtonSegment(
-                        value: 'absolute',
-                        label: _SegmentLabel(
-                          text: l10n.settingsTimestampDisplayModeAbsolute,
-                        ),
-                      ),
-                    ],
-                    selected: {ref.watch(timestampDisplayModeProvider)},
-                    onSelectionChanged: (selected) {
-                      HapticFeedback.selectionClick();
-                      ref
-                          .read(timestampDisplayModeProvider.notifier)
-                          .set(selected.first);
-                    },
-                    showSelectedIcon: false,
-                    style: ButtonStyle(
-                      visualDensity: VisualDensity.compact,
-                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    ),
-                  ),
-                ),
-              ),
-              if (ref.watch(timestampDisplayModeProvider) == 'absolute')
-                SwitchListTile(
-                  title: _TitleWithHelp(
-                    title: l10n.settingsTimestampShowSeconds,
-                    helpBody: l10n.settingsHelpTimestampShowSeconds,
-                  ),
-                  subtitle: Text(l10n.settingsTimestampShowSecondsDescription),
-                  value: ref.watch(timestampShowSecondsProvider),
-                  onChanged:
-                      (v) => ref
-                          .read(timestampShowSecondsProvider.notifier)
-                          .set(v),
-                ),
+              // No timestamp format here any more. Relative-or-absolute and
+              // seconds-or-not were choices about how Session Review printed a
+              // detection's time; with the review gone nothing reads them.
               const Divider(),
             ],
 
@@ -544,20 +493,11 @@ class SettingsScreen extends ConsumerWidget {
                   onChanged:
                       (v) => ref.read(recordingFormatProvider.notifier).set(v),
                 ),
-              SwitchListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsSaveSessionAutomatically,
-                  helpBody: l10n.settingsHelpSaveSessionAutomatically,
-                ),
-                subtitle: Text(
-                  l10n.settingsSaveSessionAutomaticallyDescription,
-                ),
-                value: ref.watch(saveSessionAutomaticallyProvider),
-                onChanged:
-                    (v) => ref
-                        .read(saveSessionAutomaticallyProvider.notifier)
-                        .set(v),
-              ),
+              // No "save sessions automatically" here any more. It chose
+              // between the session library and a save-or-discard review;
+              // both are gone. What a child's day consists of — the journal,
+              // the collection, the stars — is written while listening and
+              // never depended on it.
               SwitchListTile(
                 title: _TitleWithHelp(
                   title: l10n.settingsLiveAutoStart,
@@ -1894,31 +1834,6 @@ class _ColorMapChoiceTile extends StatelessWidget {
           if (v != null) onChanged(v);
         },
       ),
-    );
-  }
-}
-
-/// Two-line auto-shrinking label for a [SegmentedButton] segment.
-///
-/// Some locales (notably German "Nur Detektionen" and French
-/// "Détections uniquement") overflow the default single-line label when
-/// three segments share the row. Allowing two lines plus a small
-/// font-scale fallback keeps every locale legible without forcing tiny
-/// fixed text everywhere.
-class _SegmentLabel extends StatelessWidget {
-  const _SegmentLabel({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      maxLines: 2,
-      softWrap: true,
-      overflow: TextOverflow.ellipsis,
-      style: const TextStyle(fontSize: 13, height: 1.1),
     );
   }
 }

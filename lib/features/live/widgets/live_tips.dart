@@ -6,7 +6,14 @@
 // detection panel has a lot of unused vertical space. Instead of showing a
 // static "listening for species" placeholder, this widget cycles through a
 // short list of practical tips and feature pointers so newcomers discover
-// announcements, wind handling, watchlists, the spectrogram, etc.
+// announcements, wind handling, the spectrogram, etc.
+//
+// Every tip points at something the app does *today*. Six of the inherited
+// ones did not — File Analysis, field notes and voice memos, watchlists, the
+// survey foreground service, study design across surveys, and a "save clips"
+// switch that clips no longer need — and a tip for a feature that is not there
+// is worse than no tip: it sends a child looking for a button that does not
+// exist.
 //
 // Design choices:
 //
@@ -61,16 +68,6 @@ List<LiveTip> buildLiveTips(AppLocalizations l10n) => <LiveTip>[
     body: l10n.liveTipGeoFilterBody,
   ),
   LiveTip(
-    icon: AppIcons.saveAlt,
-    title: l10n.liveTipSaveClipsTitle,
-    body: l10n.liveTipSaveClipsBody,
-  ),
-  LiveTip(
-    icon: AppIcons.editNote,
-    title: l10n.liveTipNotesTitle,
-    body: l10n.liveTipNotesBody,
-  ),
-  LiveTip(
     icon: AppIcons.graphicEq,
     title: l10n.liveTipSpectrogramTitle,
     body: l10n.liveTipSpectrogramBody,
@@ -81,29 +78,9 @@ List<LiveTip> buildLiveTips(AppLocalizations l10n) => <LiveTip>[
     body: l10n.liveTipThresholdBody,
   ),
   LiveTip(
-    icon: AppIcons.bookmarkAdded,
-    title: l10n.liveTipWatchlistTitle,
-    body: l10n.liveTipWatchlistBody,
-  ),
-  LiveTip(
-    icon: AppIcons.audioFileOutlined,
-    title: l10n.liveTipFileAnalysisTitle,
-    body: l10n.liveTipFileAnalysisBody,
-  ),
-  LiveTip(
     icon: AppIcons.bluetoothAudio,
     title: l10n.liveTipBluetoothMicTitle,
     body: l10n.liveTipBluetoothMicBody,
-  ),
-  LiveTip(
-    icon: AppIcons.notificationsActiveOutlined,
-    title: l10n.liveTipSurveyNotificationsTitle,
-    body: l10n.liveTipSurveyNotificationsBody,
-  ),
-  LiveTip(
-    icon: AppIcons.scienceOutlined,
-    title: l10n.liveTipStudyDesignTitle,
-    body: l10n.liveTipStudyDesignBody,
   ),
   LiveTip(
     icon: AppIcons.reportProblem,

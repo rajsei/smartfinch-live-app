@@ -199,17 +199,10 @@ class AboutScreen extends ConsumerWidget {
 
             const SizedBox(height: 24),
 
-            // Links
-            ListTile(
-              leading: const Icon(AppIcons.menuBook),
-              title: Text(l10n.aboutUserGuide),
-              trailing: const Icon(AppIcons.openInNew),
-              onTap:
-                  () => openExternalUrl(
-                    context,
-                    '${AppConstants.docsUrl}${AppConstants.docsLocalePrefix(Localizations.localeOf(context).languageCode)}/user/',
-                  ),
-            ),
+            // Links. No user guide: the one on the docs site is the BirdNET
+            // Live manual — surveys, ARU deployments, Raven exports — and a
+            // child following it would be looking for screens this app does
+            // not have. The policies stay, because they are not optional.
             ListTile(
               leading: const Icon(AppIcons.privacyTip),
               title: Text(l10n.aboutPrivacyPolicy),

@@ -1,24 +1,31 @@
 // =============================================================================
-// Help Screen — Comprehensive app help clustered by mode
+// Help Screen — what each part of the app is for
 // =============================================================================
 //
-// A dedicated help screen accessible from the home screen footer. Explains
-// each app mode and general tips for best results, organized into expandable
-// sections.
+// A dedicated help screen accessible from the home screen footer, in the order
+// a child meets things: listening first, then the places the finds end up,
+// then the controls every screen shares, then a few tips.
+//
+// ### What is not here any more
+//
+// The Sessions & Review section, the tip that sent every finished run to
+// Session Review, and the card linking out to the online user guide. The first
+// two described a branch that was removed; the guide is the BirdNET Live
+// manual — surveys, ARU deployments, Raven exports — which is a different app
+// from the one a child is holding. When there is a Smartfinch guide, the link
+// can come back.
 // =============================================================================
 
 import 'package:flutter/material.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 
-import '../../core/constants/app_constants.dart';
 import '../../core/theme/app_theme.dart';
-import '../../shared/services/link_launcher.dart';
 import '../../shared/utils/session_type_visuals.dart';
 import '../../shared/widgets/content_width_constraint.dart';
 import '../live/live_session.dart';
 
-/// Comprehensive help screen with mode-by-mode explanations.
+/// What each part of the app is for.
 class HelpScreen extends StatelessWidget {
   const HelpScreen({super.key});
 
@@ -75,10 +82,9 @@ class HelpScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
-            // ── 3. Discover & revisit (Explore + Session Library) ──
-            // Once the user has captured something — or wants to know
-            // *what to expect* before recording — these two screens are
-            // where they go.
+            // ── 3. Discover & revisit (Explore + where the finds go) ──
+            // Once a child has heard something — or wants to know *what to
+            // expect* before going out — these are the screens they use.
             _SectionHeader(
               icon: AppIcons.travelExplore,
               title: l10n.helpToolsTitle,
@@ -91,12 +97,14 @@ class HelpScreen extends StatelessWidget {
               title: l10n.helpExploreTitle,
               body: l10n.helpExploreBody,
             ),
+            // One section for the three, because to a child they are one
+            // question — *where did my birds go?* — answered three ways.
             _HelpSection(
-              icon: AppIcons.libraryBooks,
+              icon: AppIcons.gridViewRounded,
               color: theme.colorScheme.secondary,
               containerColor: theme.colorScheme.secondaryContainer,
-              title: l10n.helpSessionsTitle,
-              body: l10n.helpSessionsBody,
+              title: l10n.helpCollectionTitle,
+              body: l10n.helpCollectionBody,
             ),
             const SizedBox(height: 20),
 
@@ -135,62 +143,13 @@ class HelpScreen extends StatelessWidget {
               title: l10n.helpTipsTitle,
             ),
             const SizedBox(height: 12),
-            _TipRow(text: l10n.helpTipQuiet),
+            // No "the settings button opens only what matters here" any more:
+            // that was the per-screen settings filter, and since SET-01 split
+            // settings into a plain and an advanced page, every settings
+            // button opens the same plain one.
             _TipRow(text: l10n.helpTipMic),
-            _TipRow(text: l10n.helpTipBasics),
             _TipRow(text: l10n.helpTipThreshold),
             _TipRow(text: l10n.helpTipGeoFilter),
-            _TipRow(text: l10n.helpTipGuide),
-            const SizedBox(height: 12),
-
-            // ── 6. Deeper dive — link out to the online user guide ──
-            Card(
-              color:
-                  highContrast
-                      ? theme.colorScheme.surface
-                      : theme.colorScheme.surfaceContainerLow,
-              child: Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        Icon(
-                          AppIcons.menuBook,
-                          size: 20,
-                          color: theme.colorScheme.primary,
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          l10n.aboutUserGuide,
-                          style: theme.textTheme.titleSmall?.copyWith(
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 8),
-                    Text(
-                      l10n.helpTipGuide,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        color:
-                            highContrast
-                                ? theme.colorScheme.onSurface
-                                : theme.colorScheme.onSurface.withAlpha(180),
-                        height: 1.4,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    FilledButton.tonalIcon(
-                      onPressed: () => _launchUserGuide(context),
-                      icon: const Icon(AppIcons.openInNew),
-                      label: Text(l10n.aboutUserGuide),
-                    ),
-                  ],
-                ),
-              ),
-            ),
             const SizedBox(height: 24),
           ],
         ),
@@ -432,10 +391,4 @@ class _TipRow extends StatelessWidget {
       ),
     );
   }
-}
-
-Future<void> _launchUserGuide(BuildContext context) async {
-  final localeCode = Localizations.localeOf(context).languageCode;
-  final basePath = AppConstants.docsLocalePrefix(localeCode);
-  await openExternalUrl(context, '${AppConstants.docsUrl}$basePath/user/');
 }
