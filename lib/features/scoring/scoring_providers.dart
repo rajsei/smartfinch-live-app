@@ -38,8 +38,9 @@ final scoringRepositoryProvider = Provider<ScoringRepository>((ref) {
 /// Connects an inference cycle to the repository.
 ///
 /// A `FutureProvider` because it needs the scale cache, which needs the loaded
-/// geo model. **Resolve it once when a session starts** — after that every
-/// detection uses the synchronous cache and nothing waits on inference.
+/// geo model. **Resolve it once when a session starts.** The scales themselves
+/// are built per cell and week, in the background; scoring waits for one only
+/// in its own queue, never in the inference loop.
 ///
 /// The coordinator reads its conditions and publishes its results through
 /// *this* provider's `ref`, which lives as long as the app. That matters: a

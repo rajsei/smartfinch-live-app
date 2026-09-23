@@ -77,8 +77,14 @@ void main() {
       expect(container.read(recordingFormatProvider), 'flac');
     });
 
-    test('recordingMode defaults to full', () {
-      expect(container.read(recordingModeProvider), 'full');
+    test('recordingMode defaults to a clip per detection', () {
+      // Not "full": that recorded the whole session into a file nothing in
+      // the app could play or delete, and wrote no clips at all — so the
+      // journal had nothing to play back (LIVE-14).
+      expect(
+        container.read(recordingModeProvider),
+        RecordingModeSettingNotifier.clips,
+      );
     });
 
     test('clipContext defaults to 1', () {
@@ -509,6 +515,61 @@ void main() {
       expect(container.read(colorMapProvider), 'magma');
       expect(container.read(includeAudioProvider), true);
       expect(container.read(confidenceThresholdProvider), 50);
+    });
+  });
+
+  group('the recording setting has no "full" any more', () {
+    /// A container reading [prefs].
+    Future<ProviderContainer> containerWith(Map<String, Object> prefs) async {
+      SharedPreferences.setMockInitialValues(prefs);
+      final preferences = await SharedPreferences.getInstance();
+      final container = ProviderContainer(
+        overrides: [sharedPreferencesProvider.overrideWithValue(preferences)],
+      );
+      addTearDown(container.dispose);
+      return container;
+    }
+
+    test('a stored "full" becomes a clip per detection', () async {
+      // An older build could store it; the settings screen no longer offers
+      // it, and a mode with no control is a mode nobody can get out of.
+      final container = await containerWith(const {'recording_mode': 'full'});
+
+      expect(
+        container.read(recordingModeProvider),
+        RecordingModeSettingNotifier.clips,
+      );
+    });
+
+    test('and the correction is written back', () async {
+      final container = await containerWith(const {'recording_mode': 'full'});
+      container.read(recordingModeProvider);
+
+      final prefs = await SharedPreferences.getInstance();
+      expect(
+        prefs.getString(PrefKeys.recordingMode),
+        RecordingModeSettingNotifier.clips,
+      );
+    });
+
+    test('"off" is kept — it is still one of the two answers', () async {
+      final container = await containerWith(const {'recording_mode': 'off'});
+
+      expect(
+        container.read(recordingModeProvider),
+        RecordingModeSettingNotifier.off,
+      );
+    });
+
+    test('and it cannot be set back to "full" either', () async {
+      final container = await containerWith(const {});
+
+      await container.read(recordingModeProvider.notifier).set('full');
+
+      expect(
+        container.read(recordingModeProvider),
+        RecordingModeSettingNotifier.clips,
+      );
     });
   });
 }

@@ -337,6 +337,46 @@ void main() {
       expect(find.textContaining('recordings are kept'), findsOneWidget);
     });
 
+    testWidgets('each species says why it did not count', (tester) async {
+      // Not "no stars" three times: the reason is what an adult needs to fix
+      // anything, and "scoring was off" for a bird heard without a location
+      // sent one looking for a switch that was never off.
+      await pump(
+        tester,
+        const JournalDayScreen(dayKey: '2026-05-04'),
+        detail: JournalDayDetail(
+          day: dayWith(speciesCount: 0, unscored: 3),
+          outsideScoring: [
+            JournalSpecies(
+              scientificName: 'Sitta europaea',
+              firstHeardAt: may4,
+              scored: false,
+              outsideReason: OutsideScoringReason.scoringPaused,
+            ),
+            JournalSpecies(
+              scientificName: 'Upupa epops',
+              firstHeardAt: may4,
+              scored: false,
+              outsideReason: OutsideScoringReason.noLocation,
+            ),
+            JournalSpecies(
+              scientificName: 'Corvus corax',
+              firstHeardAt: may4,
+              scored: false,
+              outsideReason: OutsideScoringReason.notExpectedHere,
+            ),
+          ],
+        ),
+      );
+
+      expect(find.text('scoring was off'), findsOneWidget);
+      expect(find.text('no location'), findsOneWidget);
+      expect(find.text('not expected here'), findsOneWidget);
+      expect(find.text('no stars'), findsNothing);
+      // The explainer promises exactly that.
+      expect(find.textContaining('Each bird shows why'), findsOneWidget);
+    });
+
     testWidgets('it is a note, not a warning', (tester) async {
       // Principle 1: the child did nothing wrong, so nothing here is styled
       // as an error.

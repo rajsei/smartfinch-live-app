@@ -274,18 +274,37 @@ class JournalRepository {
         ),
     ]..sort((a, b) => b.stars.compareTo(a.stars));
 
-    final outsideNames = {for (final d in detections) d.scientificName}
-      ..removeAll(scoredNames);
+    // Why each of the rest earned nothing, from what their rows stored: the
+    // pause flag, and whether a cell was recorded. The engine's own verdict
+    // is not stored, so this is the most the data can say — and the
+    // strongest reason across a species' detections wins (see
+    // [OutsideScoringReason]).
+    final outsideReasons = <String, OutsideScoringReason>{};
+    for (final detection in detections) {
+      final name = detection.scientificName;
+      if (scoredNames.contains(name)) continue;
+      final reason =
+          detection.scoringPaused
+              ? OutsideScoringReason.scoringPaused
+              : detection.gridCell == null
+              ? OutsideScoringReason.noLocation
+              : OutsideScoringReason.notExpectedHere;
+      final previous = outsideReasons[name];
+      if (previous == null || reason.index > previous.index) {
+        outsideReasons[name] = reason;
+      }
+    }
 
     final outsideScoring = [
-      for (final name in outsideNames)
+      for (final entry in outsideReasons.entries)
         JournalSpecies(
-          scientificName: name,
-          firstHeardAt: firstHeard[name] ?? _dateOf(dayKey),
-          detectionCount: counts[name] ?? 1,
+          scientificName: entry.key,
+          firstHeardAt: firstHeard[entry.key] ?? _dateOf(dayKey),
+          detectionCount: counts[entry.key] ?? 1,
           scored: false,
-          peakConfidence: peaks[name],
-          detections: byName[name] ?? const [],
+          outsideReason: entry.value,
+          peakConfidence: peaks[entry.key],
+          detections: byName[entry.key] ?? const [],
         ),
     ]..sort((a, b) => a.firstHeardAt.compareTo(b.firstHeardAt));
 

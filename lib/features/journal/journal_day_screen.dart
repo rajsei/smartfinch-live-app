@@ -191,6 +191,19 @@ class _DayHeader extends StatelessWidget {
   }
 }
 
+/// The short reason beside a species that earned nothing (`LOG-15`).
+String _outsideReasonLabel(
+  AppLocalizations l10n,
+  OutsideScoringReason? reason,
+) => switch (reason) {
+  OutsideScoringReason.scoringPaused => l10n.journalOutsideReasonPaused,
+  OutsideScoringReason.noLocation => l10n.journalOutsideReasonNoLocation,
+  OutsideScoringReason.notExpectedHere => l10n.journalOutsideReasonNotExpected,
+  // A row built without a reason: say only what is certain, rather than
+  // guess "scoring was off" — the guess this whole distinction replaced.
+  null => l10n.journalOutsideScoringShort,
+};
+
 /// One species row, which opens into the times it was heard (`LOG-03`,
 /// `LOG-09`, `LOG-07`).
 ///
@@ -266,8 +279,10 @@ class _JournalSpeciesTileState extends ConsumerState<JournalSpeciesTile> {
         children: [
           species.scored
               ? _Award(species: species)
+              // Why, not just that: "no stars" alone sent an adult looking
+              // for a switch that was never off.
               : Text(
-                l10n.journalOutsideScoringShort,
+                _outsideReasonLabel(l10n, species.outsideReason),
                 style: theme.textTheme.labelSmall?.copyWith(
                   color: theme.colorScheme.onSurfaceVariant,
                 ),

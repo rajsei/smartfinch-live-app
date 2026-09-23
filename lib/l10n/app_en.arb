@@ -774,11 +774,11 @@
   "@settingsSpectrogramDescription": {
     "description": "Subtitle for Spectrogram settings section"
   },
-  "settingsRecordingDescription": "Save audio to disk during live sessions. Full mode records everything; detection-only mode saves clips around identified species.",
+  "settingsRecordingDescription": "Short clips of every bird the app hears, to play back in the journal.",
   "@settingsRecordingDescription": {
-    "description": "Subtitle for Recording settings section"
+    "description": "Subtitle of the Recording settings section, now that it is clips only"
   },
-  "settingsLocationDescription": "GPS and the location-based species filter. With your location, the app predicts which birds live in your area and hides unlikely ones.",
+  "settingsLocationDescription": "The app finds the location by GPS, or you set it yourself. That tells the app which birds are around in your area right now, and how many stars each one is worth here. Without a location there are no stars.",
   "@settingsLocationDescription": {
     "description": "Subtitle for Location settings section"
   },
@@ -906,10 +906,6 @@
   "settingsHelpSpectrogramQuality": "Controls GPU filtering when drawing the live spectrogram, the picture of sound. “High” looks cleanest and is recommended for modern devices. On older devices, choose “Medium” or “Low” if you see dropped frames or higher battery use.",
   "@settingsHelpSpectrogramQuality": {
     "description": "Help text for spectrogram quality setting"
-  },
-  "settingsHelpRecordingMode": "Whether and how audio is saved to disk. 'Full' keeps everything (large files); 'Detections only' saves short clips around each detection; 'Off' analyzes in real time without writing audio.",
-  "@settingsHelpRecordingMode": {
-    "description": "Help text for recording mode setting"
   },
   "settingsHelpRecordingFormat": "Container format for saved audio. WAV is uncompressed and universally supported; FLAC is lossless but ~50% smaller and supported by most analysis software.",
   "@settingsHelpRecordingFormat": {
@@ -1324,22 +1320,6 @@
   "settingsRecordingFormat": "Format",
   "@settingsRecordingFormat": {
     "description": "Recording format setting label"
-  },
-  "settingsRecordingMode": "Mode",
-  "@settingsRecordingMode": {
-    "description": "Recording mode setting label"
-  },
-  "settingsRecordingModeOff": "Off",
-  "@settingsRecordingModeOff": {
-    "description": "Recording mode option: off"
-  },
-  "settingsRecordingModeFull": "Full",
-  "@settingsRecordingModeFull": {
-    "description": "Recording mode option: full continuous recording"
-  },
-  "settingsRecordingModeDetections": "Detections only",
-  "@settingsRecordingModeDetections": {
-    "description": "Recording mode option: record only when detections occur"
   },
 
   "settingsLiveAutoStart": "Auto-start recording",
@@ -1900,10 +1880,6 @@
   "@liveTestModeTitle": {
     "description": "LIVE-18: permanent notice replacing the day total while scoring is paused"
   },
-  "liveTestModeHowToFix": "In Advanced settings: turn the species filter on and set confidence to at least 35 %.",
-  "@liveTestModeHowToFix": {
-    "description": "LIVE-18: one line saying what to change to get stars back"
-  },
   "liveTestModeRecordingsKept": "Everything heard is still recorded and kept in your journal.",
   "@liveTestModeRecordingsKept": {
     "description": "LIVE-18: one line reassuring that nothing is thrown away"
@@ -2000,9 +1976,9 @@
       }
     }
   },
-  "journalOutsideScoringExplainer": "Heard while scoring was off. The recordings are kept — they just did not count.",
+  "journalOutsideScoringExplainer": "Heard, but no stars. Each bird shows why. The recordings are kept.",
   "@journalOutsideScoringExplainer": {
-    "description": "LOG-15: one line saying why these did not count and that they are kept"
+    "description": "LOG-15: one line under the outside-scoring heading: these earned nothing, each row says why, the recordings are kept"
   },
   "journalOutsideScoringShort": "no stars",
   "@journalOutsideScoringShort": {
@@ -3131,5 +3107,100 @@
   "helpCollectionBody": "Your collection has every species you have heard so far. The journal keeps every day you went listening, with your recordings to play back. Points shows your stars, your badges and your level.",
   "@helpCollectionBody": {
     "description": "Help screen: body of the collection / journal / points section"
+  },
+  "liveNoLocationTitle": "Without a location there are no stars",
+  "@liveNoLocationTitle": {
+    "description": "LIVE-18: headline of the day bar when the only reason there are no stars is a missing location"
+  },
+  "liveBlockerFilterOff": "The species filter is switched off.",
+  "@liveBlockerFilterOff": {
+    "description": "Reason line (live bar and settings banner): the species filter is off, which pauses scoring (PKT-20)"
+  },
+  "liveBlockerThresholdLow": "The confidence threshold is below {floor} %.",
+  "@liveBlockerThresholdLow": {
+    "description": "Reason line (live bar and settings banner): the confidence threshold is below the scoring floor",
+    "placeholders": {
+      "floor": {
+        "type": "int"
+      }
+    }
+  },
+  "liveBlockerNoLocation": "The app can’t find a location right now. Check that GPS is on and the app may use it, or pick your area yourself.",
+  "@liveBlockerNoLocation": {
+    "description": "Reason line (live bar and settings banner): no position, so no rarity level and no stars; says what to check"
+  },
+  "liveBlockerOpenSettings": "Show in settings",
+  "@liveBlockerOpenSettings": {
+    "description": "Button in the live day bar that opens settings on the page with the responsible setting, highlighted"
+  },
+  "liveChipNoLocation": "no stars — no location",
+  "@liveChipNoLocation": {
+    "description": "Chip on a detection card: no stars because there was no location"
+  },
+  "liveChipNoLocationA11y": "No stars, because the app has no location right now",
+  "@liveChipNoLocationA11y": {
+    "description": "Screen-reader label for the no-location chip"
+  },
+  "liveChipNotExpectedHere": "no stars — not expected here this week",
+  "@liveChipNotExpectedHere": {
+    "description": "Chip on a detection card: no stars because the species has no rarity level here this week (D20)"
+  },
+  "liveChipNotExpectedHereA11y": "No stars, because this bird isn’t expected here this week",
+  "@liveChipNotExpectedHereA11y": {
+    "description": "Screen-reader label for the not-expected-here chip"
+  },
+  "settingsBlockersTitle": "Why there are no stars right now",
+  "@settingsBlockersTitle": {
+    "description": "Settings: heading of the banner listing what stops the stars right now"
+  },
+  "settingsBlockerHighlight": "This is why there are no stars right now",
+  "@settingsBlockerHighlight": {
+    "description": "Settings: line above a highlighted setting that is stopping the stars right now"
+  },
+  "settingsBlockerShow": "Show",
+  "@settingsBlockerShow": {
+    "description": "Settings banner button that scrolls to the highlighted setting"
+  },
+  "journalOutsideReasonPaused": "scoring was off",
+  "@journalOutsideReasonPaused": {
+    "description": "LOG-15: short label beside a species heard while scoring was paused"
+  },
+  "journalOutsideReasonNoLocation": "no location",
+  "@journalOutsideReasonNoLocation": {
+    "description": "LOG-15: short label beside a species heard without a location"
+  },
+  "journalOutsideReasonNotExpected": "not expected here",
+  "@journalOutsideReasonNotExpected": {
+    "description": "LOG-15: short label beside a species that is not expected where it was heard that week, so it had no rarity level"
+  },
+  "settingsSaveRecordings": "Save recordings",
+  "@settingsSaveRecordings": {
+    "description": "LIVE-14: switch that decides whether a clip is saved for each detection"
+  },
+  "settingsSaveRecordingsDescription": "A short clip is saved for every bird the app hears.",
+  "@settingsSaveRecordingsDescription": {
+    "description": "Subtitle of the save-recordings switch"
+  },
+  "settingsHelpSaveRecordings": "When active, the app saves a short clip for every detection: the seconds the model scored, plus the clip context before and after. The clips are in your journal to play back. When not active, the app only listens and saves nothing on the device — then there is nothing to play back in the journal.",
+  "@settingsHelpSaveRecordings": {
+    "description": "Help sheet for the save-recordings switch: what a clip contains, and what is lost when it is off"
+  },
+  "settingsGeoThresholdFloorHint": "From {floor} up, a species has a level here and earns stars.",
+  "@settingsGeoThresholdFloorHint": {
+    "description": "Hint under the geo-filter slider at or above the level limit the rarity scale uses",
+    "placeholders": {
+      "floor": {
+        "type": "String"
+      }
+    }
+  },
+  "settingsGeoThresholdBelowFloor": "Below {floor} the app also shows species that have no level here. Those earn no stars.",
+  "@settingsGeoThresholdBelowFloor": {
+    "description": "Hint under the geo-filter slider below that limit: species without a level here are shown but earn nothing (D20)",
+    "placeholders": {
+      "floor": {
+        "type": "String"
+      }
+    }
   }
 }

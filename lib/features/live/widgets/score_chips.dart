@@ -16,19 +16,29 @@
 // **The repeat line is not an error message.** It answers a question a child
 // asks out loud — *why didn't I get anything?* — before they ask it, and the ✓
 // says the species is safely collected rather than missed.
+//
+// **Neither is the no-stars line.** The same question has two more answers
+// that used to go unsaid: the bird is not expected here this week, so it has
+// no rarity level and earns nothing (D20); or the app does not know where it
+// is yet. Both left the card blank, and a blank card next to a bird the child
+// can hear reads as the app not working. A pause an adult switched on is the
+// one case still left blank — the day bar above the list says that once, for
+// every card.
 // =============================================================================
 
 import 'package:flutter/material.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 
 import '../../scoring/live_score_board.dart';
+import '../../scoring/scoring_engine.dart';
 import '../../scoring/scoring_rules.dart';
 
 /// The points half of a detection card.
 ///
-/// Renders nothing at all when the species has no score yet — a detection that
-/// arrived while scoring was paused, or one still being written. An empty gap
-/// is better than a zero: a zero looks like a verdict.
+/// Renders nothing at all when the species has no score yet — one still being
+/// written — or when scoring is paused for a species not collected today,
+/// which the day bar already says. An empty gap is better than a zero: a zero
+/// looks like a verdict.
 class DetectionScoreChips extends StatelessWidget {
   const DetectionScoreChips({super.key, required this.score});
 
@@ -40,7 +50,21 @@ class DetectionScoreChips extends StatelessWidget {
     if (value == null) return const SizedBox.shrink();
 
     if (value.isRepeat) return _RepeatChip(hadStars: value.stars > 0);
-    if (!value.scored) return const SizedBox.shrink();
+    if (!value.scored) {
+      // Collected earlier today. Whatever stopped this detection, it would
+      // have been a repeat anyway, and "already collected ✓" is the truer
+      // line — the child does not lose a species they have.
+      if (value.stars > 0) return const _RepeatChip(hadStars: true);
+      return switch (value.skipReason) {
+        ScoringSkipReason.notOnLocalList => const _NoStarsChip(
+          reason: ScoringSkipReason.notOnLocalList,
+        ),
+        ScoringSkipReason.noLocation => const _NoStarsChip(
+          reason: ScoringSkipReason.noLocation,
+        ),
+        _ => const SizedBox.shrink(),
+      };
+    }
 
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -155,6 +179,49 @@ class _RepeatChip extends StatelessWidget {
       hadStars ? l10n.liveAlreadyCollectedToday : l10n.liveHeardAgain,
       style: theme.textTheme.labelMedium?.copyWith(
         color: theme.colorScheme.onSurfaceVariant,
+      ),
+    );
+  }
+}
+
+/// Why this bird earned nothing, when the reason is not a pause.
+///
+/// Quiet on purpose — the neutral surface and the muted text of the repeat
+/// chip, not an error colour. Nothing went wrong that the child could have
+/// done differently.
+class _NoStarsChip extends StatelessWidget {
+  const _NoStarsChip({required this.reason});
+
+  final ScoringSkipReason reason;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    final (label, a11y) = switch (reason) {
+      ScoringSkipReason.noLocation => (
+        l10n.liveChipNoLocation,
+        l10n.liveChipNoLocationA11y,
+      ),
+      _ => (l10n.liveChipNotExpectedHere, l10n.liveChipNotExpectedHereA11y),
+    };
+
+    return Semantics(
+      label: a11y,
+      excludeSemantics: true,
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+        decoration: BoxDecoration(
+          color: theme.colorScheme.surfaceContainerHighest,
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Text(
+          label,
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
       ),
     );
   }

@@ -8,11 +8,16 @@
 // requirement, a `_RepeatChip` is an implementation detail.
 // =============================================================================
 
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:smartfinch/core/services/location_service.dart';
+import 'package:smartfinch/features/audio/audio_providers.dart';
+import 'package:smartfinch/features/explore/explore_providers.dart';
 import 'package:smartfinch/features/live/widgets/day_summary_bar.dart';
 import 'package:smartfinch/features/live/widgets/first_find_celebration.dart';
 import 'package:smartfinch/features/live/widgets/score_chips.dart';
@@ -20,30 +25,48 @@ import 'package:smartfinch/features/scoring/live_score_board.dart';
 import 'package:smartfinch/features/scoring/scoring_providers.dart';
 import 'package:smartfinch/features/scoring/scoring_engine.dart';
 import 'package:smartfinch/features/scoring/scoring_rules.dart';
+import 'package:smartfinch/features/settings/settings_screen.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
+
+/// Somewhere with a position, which is the ordinary case.
+const _berlin = AppLocation(latitude: 52.52, longitude: 13.405);
 
 void main() {
   /// Pumps [child] with the scoring providers wired.
   ///
   /// [board] replaces the shared score board; [scoringPaused] turns the species
   /// filter off through the real setting rather than stubbing the provider, so
-  /// the test exercises the same path `PKT-20` runs in the app.
+  /// the test exercises the same path `PKT-20` runs in the app. [prefs] adds
+  /// any other stored setting.
+  ///
+  /// [location] is what the position lookup returns. A real position unless a
+  /// test says otherwise: left to itself the lookup asks the platform, finds
+  /// no GPS in a test, and every day bar would report "no location".
   Future<void> pump(
     WidgetTester tester,
     Widget child, {
     LiveScoreBoard? board,
     bool scoringPaused = false,
+    Map<String, Object> prefs = const {},
+    Future<AppLocation?> Function()? location,
   }) async {
     SharedPreferences.setMockInitialValues({
       if (scoringPaused) 'species_filter_mode': 'off',
+      ...prefs,
     });
-    final prefs = await SharedPreferences.getInstance();
+    final preferences = await SharedPreferences.getInstance();
 
     await tester.pumpWidget(
       ProviderScope(
         overrides: [
-          sharedPreferencesProvider.overrideWithValue(prefs),
+          sharedPreferencesProvider.overrideWithValue(preferences),
+          currentLocationProvider.overrideWith(
+            (ref) => (location ?? () async => _berlin)(),
+          ),
+          // For the tests that open settings: the Audio section's device
+          // picker would otherwise build a real capture service.
+          inputDevicesProvider.overrideWith((ref) async => const []),
           if (board != null)
             liveScoreBoardProvider.overrideWith((ref) => board),
         ],
@@ -92,6 +115,87 @@ void main() {
       );
 
       expect(find.textContaining('⭐'), findsNothing);
+      // The day bar says it once for every card; the card stays quiet.
+      expect(find.textContaining('no stars'), findsNothing);
+    });
+  });
+
+  // A blank card next to a bird the child can hear reads as the app not
+  // working. These two reasons used to leave it blank.
+  group('why a bird earned nothing', () {
+    testWidgets('not expected here this week says so', (tester) async {
+      await pump(
+        tester,
+        const DetectionScoreChips(
+          score: LiveSpeciesScore(
+            stars: 0,
+            multiplier: ScoreMultiplier.none,
+            skipReason: ScoringSkipReason.notOnLocalList,
+          ),
+        ),
+      );
+
+      expect(
+        find.text('no stars — not expected here this week'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('no location says so', (tester) async {
+      await pump(
+        tester,
+        const DetectionScoreChips(
+          score: LiveSpeciesScore(
+            stars: 0,
+            multiplier: ScoreMultiplier.none,
+            skipReason: ScoringSkipReason.noLocation,
+          ),
+        ),
+      );
+
+      expect(find.text('no stars — no location'), findsOneWidget);
+    });
+
+    testWidgets('and is read out with its reason', (tester) async {
+      final semantics = tester.ensureSemantics();
+      await pump(
+        tester,
+        const DetectionScoreChips(
+          score: LiveSpeciesScore(
+            stars: 0,
+            multiplier: ScoreMultiplier.none,
+            skipReason: ScoringSkipReason.noLocation,
+          ),
+        ),
+      );
+
+      expect(
+        find.bySemanticsLabel(
+          'No stars, because the app has no location right now',
+        ),
+        findsOneWidget,
+      );
+      semantics.dispose();
+    });
+
+    testWidgets('a species collected earlier today stays collected', (
+      tester,
+    ) async {
+      // It scored this morning; now the position is gone. It would have been
+      // a repeat either way, and "already collected" is the truer line.
+      await pump(
+        tester,
+        const DetectionScoreChips(
+          score: LiveSpeciesScore(
+            stars: 100,
+            multiplier: ScoreMultiplier.none,
+            skipReason: ScoringSkipReason.noLocation,
+          ),
+        ),
+      );
+
+      expect(find.text('already collected today ✓'), findsOneWidget);
+      expect(find.textContaining('no location'), findsNothing);
     });
   });
 
@@ -248,18 +352,34 @@ void main() {
       expect(find.text('850'), findsNothing);
     });
 
-    testWidgets('says what to change and that recordings are kept', (
-      tester,
-    ) async {
+    testWidgets('says why, and that recordings are kept', (tester) async {
       await pump(tester, const DaySummaryBar(), scoringPaused: true);
 
-      expect(find.textContaining('turn the species filter on'), findsOneWidget);
+      expect(find.text('The species filter is switched off.'), findsOneWidget);
       expect(find.textContaining('still recorded'), findsOneWidget);
     });
 
-    testWidgets('names the effect, not the cause', (tester) async {
+    testWidgets('names every reason that applies', (tester) async {
+      // Both switches an adult might have moved, one line each — the fix for
+      // one must not look like the fix for both.
+      await pump(
+        tester,
+        const DaySummaryBar(),
+        scoringPaused: true,
+        prefs: const {'confidence_threshold': 20},
+      );
+
+      expect(find.text('The species filter is switched off.'), findsOneWidget);
+      expect(
+        find.text('The confidence threshold is below 35 %.'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('names the effect first, then the cause', (tester) async {
       // "No stars" is something an eight-year-old can act on; "species filter
-      // disabled" is not — so the headline must not be phrased that way.
+      // disabled" is not — so the headline must not be phrased that way. The
+      // cause follows underneath, for the adult.
       await pump(tester, const DaySummaryBar(), scoringPaused: true);
 
       final headline = tester.widget<Text>(
@@ -290,6 +410,93 @@ void main() {
 
       expect(decoration.color, isNot(scheme.error));
       expect(decoration.color, isNot(scheme.errorContainer));
+    });
+  });
+
+  // A session without a position earns nothing, and it used to do so in
+  // silence: the bar showed the total, the cards stayed blank, and the
+  // journal said "outside scoring" afterwards.
+  group('no location is said, not swallowed', () {
+    // A fresh one per test: the provider scope disposes the board it was
+    // given when the test ends.
+    LiveScoreBoard board() => LiveScoreBoard(
+      const LiveScoreBoardState(
+        summary: DaySummary(dayKey: '2026-05-04', stars: 850, speciesCount: 9),
+      ),
+    );
+
+    testWidgets('it replaces the total, and is not called test mode', (
+      tester,
+    ) async {
+      await pump(
+        tester,
+        const DaySummaryBar(),
+        board: board(),
+        location: () async => null,
+      );
+
+      expect(
+        find.text('Without a location there are no stars'),
+        findsOneWidget,
+      );
+      expect(find.textContaining('find a location'), findsOneWidget);
+      // "Test mode" would send an adult looking for a switch that is not
+      // there.
+      expect(find.textContaining('Test mode'), findsNothing);
+      expect(find.text('850'), findsNothing);
+    });
+
+    testWidgets('a fix still on its way is not a warning', (tester) async {
+      // Flashing "no location" for the seconds a fix takes would teach a
+      // child that the warning is noise.
+      final pending = Completer<AppLocation?>();
+      await pump(
+        tester,
+        const DaySummaryBar(),
+        board: board(),
+        location: () => pending.future,
+      );
+
+      expect(find.text('850'), findsOneWidget);
+      expect(find.textContaining('location'), findsNothing);
+
+      pending.complete(_berlin);
+      await tester.pump();
+      expect(find.text('850'), findsOneWidget);
+    });
+  });
+
+  group('the way to the setting', () {
+    testWidgets('a paused setting opens the advanced page, to reveal it', (
+      tester,
+    ) async {
+      await pump(tester, const DaySummaryBar(), scoringPaused: true);
+
+      await tester.tap(find.text('Show in settings'));
+      await tester.pumpAndSettle();
+
+      final screen = tester.widget<SettingsScreen>(find.byType(SettingsScreen));
+      expect(screen.view, SettingsView.advanced);
+      expect(screen.revealBlocker, isTrue);
+      // And the page names the same reason the bar did.
+      expect(find.text('The species filter is switched off.'), findsWidgets);
+    });
+
+    testWidgets('a missing location opens the plain page', (tester) async {
+      await pump(tester, const DaySummaryBar(), location: () async => null);
+
+      await tester.tap(find.text('Show in settings'));
+      await tester.pumpAndSettle();
+
+      final screen = tester.widget<SettingsScreen>(find.byType(SettingsScreen));
+      expect(screen.view, SettingsView.plain);
+      expect(screen.revealBlocker, isTrue);
+    });
+
+    testWidgets('there is no button when nothing is wrong', (tester) async {
+      await pump(tester, const DaySummaryBar());
+
+      expect(find.text('Show in settings'), findsNothing);
     });
   });
 

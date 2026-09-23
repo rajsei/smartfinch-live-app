@@ -12,6 +12,8 @@
 //     each other into the same `DaySpecies` row.
 // =============================================================================
 
+import 'dart:async';
+
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 
@@ -55,6 +57,47 @@ class _StubScaleCache implements RarityScaleCache {
 
   @override
   int get size => 1;
+
+  @override
+  int get maxEntries => 6;
+
+  @override
+  noSuchMethod(Invocation invocation) => super.noSuchMethod(invocation);
+}
+
+/// A cache that starts empty, like the real one after an app start.
+///
+/// `peek` answers only once `get` has finished building — which is the
+/// situation every first session after launch is in, unless the child happened
+/// to open Explore first. The stub above never is, which is how the cold start
+/// went untested.
+class _ColdScaleCache implements RarityScaleCache {
+  _ColdScaleCache(this._scale);
+
+  final RarityScale _scale;
+  RarityScale? _built;
+
+  /// Lets a test decide when the 48 inferences "finish".
+  final Completer<void> release = Completer<void>();
+
+  int builds = 0;
+
+  @override
+  RarityScale? peek(RarityScaleKey key) => key == _scale.key ? _built : null;
+
+  @override
+  Future<RarityScale> get(RarityScaleKey key) async {
+    if (_built != null) return _built!;
+    builds++;
+    await release.future;
+    return _built = _scale;
+  }
+
+  @override
+  void clear() => _built = null;
+
+  @override
+  int get size => _built == null ? 0 : 1;
 
   @override
   int get maxEntries => 6;
@@ -497,6 +540,62 @@ void main() {
           reason: 'the cell the scale belongs to',
         );
       }
+    });
+  });
+
+  group('a cold start', () {
+    // The field report: a session after a fresh app start scored almost
+    // nothing, the live screen said nothing, and the journal filed the birds
+    // under "outside scoring" — while one bird later in the same session
+    // earned its first-find stars. The scale was being built on the first
+    // detection and every detection before it finished was valued with no
+    // scale at all, which the engine reports as "no location".
+    late _ColdScaleCache cold;
+
+    setUp(() async {
+      cold = _ColdScaleCache(scales._scale);
+      coordinator = LiveScoringCoordinator(
+        repository: repo,
+        scales: cold,
+        conditions: () => conditions,
+      );
+      await coordinator.beginSession(startedAt: may4, cell: cell);
+    });
+
+    test('the first detection of a session still scores', () async {
+      coordinator.submitCycle(cycle(opened: [recordOf('Turdus merula', 0.9)]));
+
+      // The scale finishes building a moment later, as it does on a phone.
+      await Future<void>.delayed(Duration.zero);
+      cold.release.complete();
+      await coordinator.drain();
+
+      expect(await repo.totalStars(), 150, reason: '50 × 3 first find');
+    });
+
+    test('so do the ones queued behind it while the scale builds', () async {
+      coordinator.submitCycle(
+        cycle(
+          opened: [
+            recordOf('Turdus merula', 0.9),
+            recordOf('Erithacus rubecula', 0.8),
+          ],
+        ),
+      );
+      await Future<void>.delayed(Duration.zero);
+      cold.release.complete();
+      await coordinator.drain();
+
+      final days = await db.select(db.daySpecies).get();
+      expect(days.map((d) => d.scientificName).toSet(), {
+        'Turdus merula',
+        'Erithacus rubecula',
+      });
+    });
+
+    test('the session start already warms the scale', () async {
+      // Most of the time the first bird then never has to wait at all.
+      expect(cold.builds, 1);
     });
   });
 }

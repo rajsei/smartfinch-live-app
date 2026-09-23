@@ -141,6 +141,13 @@ class LiveScoringCoordinator {
       startedAt: startedAt,
       cell: cell,
     );
+
+    // Start building the scale for where the session begins, now, rather than
+    // on the first detection. The cache holds only a handful of scales and
+    // lives in memory, so after an app start it is empty — and a first bird
+    // that finds no scale has, until this line existed, been worth nothing.
+    // Not awaited: the session should start listening immediately.
+    if (cell != null) unawaited(_warm(RarityScaleKey.at(cell, startedAt)));
   }
 
   /// Closes the session once every queued detection has been written.
@@ -285,12 +292,26 @@ class LiveScoringCoordinator {
     if (cell != null) {
       final key = RarityScaleKey.at(cell, when);
       scale = _scales.peek(key);
-      if (scale == null) {
-        // Warm it for the detections behind this one, but do not wait.
+      if (scale != null) {
+        _lastScale = scale;
+      } else if (_lastScale != null) {
+        // Walked into a new cell, or a new week began: value this detection
+        // with the scale just left behind — off by at most a few minutes, and
+        // always explainable — and build the new one for the detections
+        // behind it.
         unawaited(_warm(key));
         scale = _lastScale;
       } else {
-        _lastScale = scale;
+        // Nothing has been built yet: a cold start. Waiting is right here.
+        // This is the scoring queue, not the audio pipeline — listening,
+        // the spectrogram and the detection list carry on untouched, and the
+        // stars for this bird arrive a moment late instead of never.
+        //
+        // The previous behaviour did not wait. It fell back to "the last
+        // scale", which after an app start does not exist, and the engine
+        // then reported the bird as heard with no location: no stars, no
+        // word on the live screen, and "outside scoring" in the journal.
+        scale = await _buildNow(key);
       }
     }
 
@@ -310,10 +331,21 @@ class LiveScoringCoordinator {
   /// Builds a scale in the background so the detections behind this one find
   /// it ready. Failure is logged and dropped — the fallback scale still works.
   Future<void> _warm(RarityScaleKey key) async {
+    await _buildNow(key);
+  }
+
+  /// Builds (or joins the build of) the scale for [key] and remembers it.
+  ///
+  /// The cache de-duplicates builds in flight, so the session-start warm-up
+  /// and a first detection waiting here share one run of the geo model.
+  /// Returns null only if the build fails — then the detection is recorded
+  /// without a scale, as before, rather than holding up the queue forever.
+  Future<RarityScale?> _buildNow(RarityScaleKey key) async {
     try {
-      _lastScale = await _scales.get(key);
+      return _lastScale = await _scales.get(key);
     } catch (error) {
       debugPrint('[LiveScoringCoordinator] scale build failed: $error');
+      return null;
     }
   }
 

@@ -1024,6 +1024,97 @@ Writing a sentence that has to be true meant checking what each setting really d
 
 The privacy summary in onboarding was also incomplete: it named map tiles and place names, but not the weather lookup the app asks consent for on the very same screen. It now names all three.
 
+### Stars that went missing without a word — a debug report
+
+**Reported:** after a live session the journal filed most of the birds under *“außerhalb der Wertung”*, with the explainer *“heard while scoring was off”*. Nothing during the recording had said scoring was off, the adult could not find out why, and one bird in the same session **did** score — with first-find stars. The suspicion was that species recorded before were not being counted.
+
+**Fixed** ✅ — 36 new tests, 1,665 green.
+
+#### Reproduction
+
+A coordinator test with a scale cache that starts empty, the way the real one does after an app start: the first detection of a session was recorded as *no location* and earned nothing. The test failed before the fix and passes after it.
+
+#### Root cause
+
+The rarity scale for a cell and week is 48 geo-model inferences, kept in a small **in-memory** cache (`RarityScaleCache`). After an app start that cache is empty. `LiveScoringCoordinator._contextFor` only ever *peeked* into it — waiting for a build would have blocked the queue — and on a miss fell back to *the last scale it had used*. After an app start there is no last scale. So the context went to the engine with no scale and no cell, and the engine did exactly what it is written to do with that: `noLocation`, no stars, a `Detection` row with `gridCell = null`, no `DaySpecies` row.
+
+Everything downstream then told the story wrong:
+
+- **The live bar showed the day total**, because the only thing it checked was `isScoring` — filter on, threshold fine — which was true.
+- **The cards stayed blank**, because every non-scoring reason except a repeat rendered nothing.
+- **The journal said “heard while scoring was off”**, because *outside scoring* only ever had one explanation.
+
+Meanwhile the miss had started the build in the background. Once it finished, the next detections found the scale — which is the one bird that scored. The *already recorded* suspicion was a red herring: repeats are recognised (`alreadyScoredToday`) and say *“heute schon gesammelt ✓”*. The birds that went missing were simply the ones that came first.
+
+#### The fix
+
+- **The scale is built when the session starts**, not on the first detection — in the background, so listening starts immediately.
+- **A detection that finds no scale at all waits for it.** In the scoring queue, never in the inference loop: listening, the spectrogram and the detection list carry on, and the stars for that bird arrive a moment late instead of never. The session-start build and the waiting detection share one run of the geo model, because the cache already de-duplicates builds in flight.
+- **A build that fails** is logged and the detection is recorded without a scale, as before, rather than holding the queue forever.
+- A walk into a new cell, or a new week, still uses the previous scale for the few detections while the new one builds — that path was always right, it only never had a previous scale on the first detection.
+
+#### Saying why, everywhere it matters
+
+The second half of the report was that nobody could find out why. **`LIVE-18`'s principle is reversed at the user's request**: the bar used to name only the effect (*no stars*), deliberately not the cause, on the reasoning that a child can act on the effect and not on *species filter disabled*. The report is where that ends — an adult with no way to learn the cause. The bar now names the **effect first, then the cause**.
+
+One list, `scoringBlockersProvider`, holds every reason there are no stars right now, and every screen that has to give the answer reads it — so no two screens can disagree:
+
+| Reason | When |
+|---|---|
+| Species filter off | `PKT-20`'s pause |
+| Threshold below 35 % | `PKT-20`'s pause |
+| **No location** | No position, or the lookup failed. **Not** while a fix is still on its way — a warning that flashes for the two seconds a fix takes teaches a child the warning is noise |
+
+*No location* is not a pause in the engine's sense, but to a child it is the same thing — a bird on the screen and nothing for it — and it was the one that used to happen in silence.
+
+| Where | What it says |
+|---|---|
+| **Live bar** | The headline (*Testmodus — keine Sterne …*, or *Ohne Standort gibt es keine Sterne* when the location is the only reason — calling that *test mode* would send an adult looking for a switch that is not there), one line per reason, and **“In den Einstellungen zeigen”**, which opens the page the fix is on and scrolls to it |
+| **Detection cards** | *keine Sterne — hier diese Woche nicht erwartet* (no rarity level here this week, D20) and *keine Sterne — ohne Standort*. A pause stays blank on the card — the bar says it once for every card. A species collected earlier today keeps *heute schon gesammelt ✓*, whatever stopped this detection |
+| **Settings** | A banner at the top of the page with the same reasons, and **the setting itself marked** — an amber frame and the line *“Deshalb gibt es gerade keine Sterne”*, so the mark does not rely on colour. The plain page marks the location block, or the door to the advanced page when the fix is behind it; the advanced page marks the species filter or the threshold slider. *Zeigen* scrolls there |
+| **Journal** | Each species outside scoring says why: *Wertung war aus*, *ohne Standort* or *hier nicht erwartet*, read back from what the detection rows stored. A species heard several ways takes the strongest reason — heard with a location and scoring on and still unscored, it was not going to score, whatever else happened that day |
+
+Two implementation notes. **The settings page is now built all at once** rather than as a lazy list, because a tile that has not been built cannot be scrolled to, and the species filter is at the bottom of a long page. And **the mark never changes the widget tree**, only its styling: it disappears at exactly the moment someone is using what it marks — halfway through typing coordinates, the location resolves — and a mark that added or removed a layer would rebuild the field and drop what was typed. A test holds that, and was checked against a deliberately broken version to be sure it fails.
+
+#### On the way
+
+A settings test asserted that the advanced page does not carry the plain page's “Advanced settings” subtitle — by its old wording, which the string cleanup had changed. It could no longer fail. It checks the current wording now, and a second test asserts that wording exists on the plain page, so a future rewording cannot silently empty it again.
+
+The location section's description still read *“GPS und der Artenfilter nach Ort …”* — but `SET-01` had moved the species filter to the advanced page, so the section it describes no longer contains one. The mark made that visible: the description sits directly above the highlighted GPS block. It now says what the section holds and what the location is for, in all twelve languages: *“Den Standort bestimmt die App per GPS, oder du stellst ihn selbst ein. Daran erkennt sie, welche Vögel gerade in deiner Gegend vorkommen und wie viele Sterne jeder hier wert ist. Ohne Standort gibt es keine Sterne.”*
+
+#### Strings
+
+15 new keys × 12 locales, one rewritten (the journal's explainer, which no longer claims every unscored bird was heard while scoring was off) and one retired (`liveTestModeHowToFix`, whose one fixed sentence the per-reason lines replace). German first; the other eleven follow the rules above — *du*-register, *Gegend* rather than home, no gendered past tense.
+
+#### Open
+
+⚠️ **Detections recorded while the bug was live stay unscored.** They are marked *ohne Standort* in the journal now, which is what was stored — but it is not what happened, and the stars are missing. They are repairable: every session row keeps the 0.1° cell it started in, so each such detection could be re-scored against its session's cell and week. That rewrites history, though — stars, first finds and possibly a streak — and is a decision rather than a fix.
+
+### Recording: a switch, and a default that saved nothing you could listen to
+
+Found while answering a question about the shipped defaults, and worse than the question expected.
+
+**The default recording mode was `full`.** In that mode the app records the whole session into one file and writes **no per-detection clips** — `_saveDetectionClips` is only true for `detections`. So out of the box:
+
+* every hearing in the journal said *no recording*, and a child could not play back a single bird — while `settingsScoringPauseBody`, `LIVE-18` and `LOG-15` all promise the opposite in as many words;
+* the file it did write was unreachable. Its path lives in the in-memory session object and in the legacy session JSON that nothing reads any more; `Sessions` has no column for it, and the session list that once opened it is gone;
+* nothing ever deleted it. `SET-12`'s retention job ranks *clips* — rows with an `audioClipPath` — so a mode that writes no clips leaves a pile that grows at roughly 100 MB an hour and never shrinks.
+
+**So `full` is gone from the settings and the default is `detections`.** With two answers left — a clip per bird, or nothing — the three-way mode became a switch, *“Aufnahmen speichern”*, and the mode labels went with it. `RecordingModeSettingNotifier` sanitises like `ColorMapSettingNotifier` does: a stored `full` from an older build is rewritten to `detections` on the first read and written back, because a mode with no control on the screen is a mode nobody can get out of. `RecordingMode.full` stays in the recording service — it is the pipeline, and the parser still has to read old session files — but nothing in the app can select it any more.
+
+⚠️ **The `full.*` files already on a device are left alone.** They are the user's audio, deleting them is not a migration, and there is no screen that shows what they cost yet.
+
+### The geo-filter slider says where a level begins
+
+The species filter's threshold decides what the app **shows**; what a bird is **worth** is the rarity scale's business, and the scale has its own fixed limit — `kAbundanceInclusionThreshold`, 0.03. Both sit at 0.03 out of the box, so filter and scoring agree exactly, and they only part company when this one slider moves:
+
+* **above the line** nothing is lost — fewer species get through, and everything that does still scores;
+* **below it** species come through that have no level here, so they are shown and earn nothing (D20). That is where most *“hier nicht erwartet”* cards come from.
+
+The slider now draws 0.03 on its track (`secondaryTrackValue`, the same device the confidence slider uses for the scoring floor) and says underneath which side of it the setting is on. Deliberately **not** a `ScoringBlocker` and not a warning colour: every species that does have a level here still scores, and a banner saying *there are no stars right now* would be false.
+
+What was **not** done: letting the rarity scale follow the slider. That limit is shared with the collection's *“Hier, diese Woche: X ⭐”*, so a slider in the advanced settings would change what every bird in the collection is worth — and a false positive could be paid out as a mega-rarity, which is exactly the off-list rule D20 removed.
+
 ### What to watch during the two-week test
 
 Not "was it used", but the four things the design is betting on:

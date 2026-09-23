@@ -17,11 +17,37 @@
 // scoring** (`LOG-15`, `PKT-20`) — recorded, kept, listed, and worth nothing.
 // Keeping them apart in the data rather than in the UI is what stops a day
 // total quietly including recordings that never counted.
+//
+// A species outside scoring also carries **why** ([OutsideScoringReason]).
+// "Outside scoring" on its own reads as "scoring was off", and a field report
+// showed the cost of that: an adult checking settings that were fine, while
+// the real cause — no location — went unnamed.
 // =============================================================================
 
 import 'package:meta/meta.dart';
 
 import '../scoring/scoring_rules.dart';
+
+/// Why a species heard that day earned nothing.
+///
+/// Read back from what the detection rows stored, not from the engine's
+/// verdict, which is not stored. Declared from the weakest reason to the
+/// strongest, and a species heard several times takes the strongest one:
+/// a bird that went unscored even with a location and scoring on was not
+/// going to score, whatever else happened to it that day.
+enum OutsideScoringReason {
+  /// Heard while scoring was paused — the species filter off, or the
+  /// threshold below the floor (`PKT-20`).
+  scoringPaused,
+
+  /// Heard with no location, so no rarity level to value it by.
+  noLocation,
+
+  /// Heard with a location and scoring on, and still worth nothing: the
+  /// species is not expected there that week, so it has no rarity level
+  /// (2.3, D20).
+  notExpectedHere,
+}
 
 /// One row in the day list (`LOG-02`).
 @immutable
@@ -228,6 +254,7 @@ class JournalSpecies {
     this.detectionCount = 1,
     this.isNew = false,
     this.scored = true,
+    this.outsideReason,
     this.peakConfidence,
     this.detections = const [],
   });
@@ -254,6 +281,9 @@ class JournalSpecies {
 
   /// False when the species was only ever heard outside scoring (`LOG-15`).
   final bool scored;
+
+  /// Why it did not score. Null when it did.
+  final OutsideScoringReason? outsideReason;
 
   /// Highest confidence reached, written back when the detection closed (D15).
   final double? peakConfidence;
@@ -286,7 +316,8 @@ class JournalDayDetail {
   /// Species that earned stars, richest first.
   final List<JournalSpecies> scored;
 
-  /// Species heard while scoring was paused (`LOG-15`).
+  /// Species heard that day that earned nothing (`LOG-15`), each with its
+  /// [JournalSpecies.outsideReason].
   ///
   /// A separate list rather than a flag on one list, so a screen cannot
   /// accidentally total them in.

@@ -366,14 +366,24 @@ final recordingFormatProvider =
       return StringSettingNotifier(prefs, PrefKeys.recordingFormat, 'flac');
     });
 
-/// Recording mode ('full', 'detections', 'off' — default 'full').
+/// Recording mode — 'detections' (the default) or 'off'.
 ///
-/// Used by live and point-count sessions.  Surveys use their own
-/// [surveyRecordingModeProvider] configured in the survey-setup screen.
+/// ### Why "full" is gone
+///
+/// It recorded the whole session into one file and wrote **no per-detection
+/// clips**, so with the shipped default a child could not play back a single
+/// bird: every hearing in the journal said "no recording". The file it did
+/// write was unreachable — its path lived only in the session object, the
+/// database has no column for it, and the session list that once opened it is
+/// gone — and the `SET-12` retention job only ever looks at clips, so those
+/// files were never cleaned up either.
+///
+/// A stored 'full' from an older build is rewritten to 'detections' on the
+/// first read, so the setting cannot keep a value the app no longer offers.
 final recordingModeProvider =
-    StateNotifierProvider<StringSettingNotifier, String>((ref) {
+    StateNotifierProvider<RecordingModeSettingNotifier, String>((ref) {
       final prefs = ref.watch(sharedPreferencesProvider);
-      return StringSettingNotifier(prefs, PrefKeys.recordingMode, 'full');
+      return RecordingModeSettingNotifier(prefs);
     });
 
 /// Clip context in seconds (default 1).
@@ -972,6 +982,36 @@ class StringSettingNotifier extends StateNotifier<String> {
     state = value;
     await _prefs.setString(_key, value);
   }
+}
+
+/// The recording setting, with anything the app no longer offers mapped onto
+/// something it does.
+///
+/// Sanitises on construction and writes the correction back, like
+/// [ColorMapSettingNotifier]: a value only an older build could have stored
+/// must not survive as a mode with no control on the settings screen.
+class RecordingModeSettingNotifier extends StringSettingNotifier {
+  RecordingModeSettingNotifier(this._recordingPrefs)
+    : super(_recordingPrefs, PrefKeys.recordingMode, clips) {
+    final sanitized = _sanitize(state);
+    if (sanitized != state) {
+      state = sanitized;
+      _recordingPrefs.setString(PrefKeys.recordingMode, sanitized);
+    }
+  }
+
+  /// A short clip around every detection (`LIVE-14`).
+  static const String clips = 'detections';
+
+  /// Nothing is written to disk.
+  static const String off = 'off';
+
+  final SharedPreferences _recordingPrefs;
+
+  static String _sanitize(String value) => value == off ? off : clips;
+
+  @override
+  Future<void> set(String value) => super.set(_sanitize(value));
 }
 
 class ColorMapSettingNotifier extends StringSettingNotifier {

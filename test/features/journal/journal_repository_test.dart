@@ -290,6 +290,89 @@ void main() {
     });
   });
 
+  // "Outside scoring" alone reads as "scoring was off". A field report showed
+  // what that costs: an adult checking settings that were fine, while the
+  // real cause — no location — went unnamed. So each species says why.
+  group('LOG-15 · why a species did not count', () {
+    /// A detection with no scale and no cell — what the engine records when
+    /// it has no position.
+    Future<void> hearWithoutLocation(String name) => scoring
+        .recordDetection(
+          sessionId: sessionId,
+          scientificName: name,
+          confidence: 0.9,
+          context: ScoringContext(
+            now: may4,
+            appliedThreshold: 35,
+            filterEnabled: true,
+          ),
+        )
+        .then((_) {});
+
+    Future<OutsideScoringReason?> reasonFor(String name) async {
+      final detail = await journal.detailFor('2026-05-04');
+      return detail.outsideScoring
+          .singleWhere((s) => s.scientificName == name)
+          .outsideReason;
+    }
+
+    test('heard while paused: scoring was off', () async {
+      await hear('Sitta europaea', filterEnabled: false);
+
+      expect(
+        await reasonFor('Sitta europaea'),
+        OutsideScoringReason.scoringPaused,
+      );
+    });
+
+    test('heard without a location: no location', () async {
+      await hearWithoutLocation('Sitta europaea');
+
+      expect(
+        await reasonFor('Sitta europaea'),
+        OutsideScoringReason.noLocation,
+      );
+    });
+
+    test(
+      'heard with a location and still worth nothing: not expected',
+      () async {
+        // Not on this cell's scale at all, so it has no rarity level (D20).
+        await hear('Corvus corax');
+
+        expect(
+          await reasonFor('Corvus corax'),
+          OutsideScoringReason.notExpectedHere,
+        );
+      },
+    );
+
+    test('heard several ways, the strongest reason wins', () async {
+      // Paused, then without a location: the location is what stopped it
+      // once scoring was back on.
+      await hear('Corvus corax', filterEnabled: false);
+      await hearWithoutLocation('Corvus corax');
+      expect(await reasonFor('Corvus corax'), OutsideScoringReason.noLocation);
+
+      // And once it was heard with a location too, it simply was not going
+      // to score here — whatever else happened to it that day.
+      await hear('Corvus corax');
+      expect(
+        await reasonFor('Corvus corax'),
+        OutsideScoringReason.notExpectedHere,
+      );
+    });
+
+    test('a species that scored has no reason', () async {
+      await hearWithoutLocation('Turdus merula');
+      await hear('Turdus merula');
+
+      final detail = await journal.detailFor('2026-05-04');
+      expect(detail.outsideScoring, isEmpty);
+      expect(detail.scored.single.outsideReason, isNull);
+    });
+  });
+
   group('LOG-13 · the child names the place', () {
     test('a day lists the sessions a name can attach to', () async {
       await hear('Turdus merula');

@@ -457,9 +457,11 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
 
   /// Opens the scoring session and connects it to the inference loop.
   ///
-  /// Awaited so the geo model and the scale cache are resolved before the
-  /// first detection arrives; after this every detection uses the synchronous
-  /// cache and nothing waits on inference (NFA-13).
+  /// Awaited so the geo model is loaded before the first detection arrives.
+  /// The rarity scale for where the session starts is then built in the
+  /// background (`beginSession`), and a detection that arrives before it is
+  /// ready waits for it in the scoring queue — never in the inference loop,
+  /// which waits on nothing (NFA-13).
   ///
   /// A failure here must not stop a session. Detection and recording work
   /// without the scoring layer — the child would lose stars for that outing,

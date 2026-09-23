@@ -15,7 +15,9 @@ import '../about/about_screen.dart';
 import '../announcements/widgets/announcements_settings_section.dart';
 import '../audio/widgets/audio_source_tile.dart';
 import '../explore/explore_providers.dart';
+import '../explore/explore_tier.dart';
 import '../rules/rules_screen.dart';
+import '../scoring/scoring_blockers.dart';
 import '../scoring/scoring_rules.dart';
 import '../spectrogram/color_maps.dart';
 import 'animation_level.dart';
@@ -95,10 +97,21 @@ enum SettingsView {
 /// Renders either half of the settings depending on [view]; the plain screen
 /// carries a tile that pushes the advanced one.
 class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key, this.view = SettingsView.plain});
+  const SettingsScreen({
+    super.key,
+    this.view = SettingsView.plain,
+    this.revealBlocker = false,
+  });
 
   /// Which half to render.
   final SettingsView view;
+
+  /// Scrolls to the setting that is stopping the stars as soon as it is on
+  /// the page.
+  ///
+  /// Set by the live screen's "show in settings" button: the adult who taps it
+  /// is looking for one switch, not for a page to search.
+  final bool revealBlocker;
 
   /// Which view each section belongs to.
   ///
@@ -131,6 +144,21 @@ class SettingsScreen extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final theme = Theme.of(context);
 
+    // Whatever is stopping the stars right now, and where on this page it
+    // lives. Highlighted, not only listed: an adult looking for the cause
+    // should not have to match a sentence against thirty switches.
+    final blockers = ref.watch(scoringBlockersProvider);
+    final locationBlocks = blockers.contains(ScoringBlocker.noLocation);
+    final advancedBlocks = blockers.any((b) => b.isAdvancedSetting);
+    final thresholdBlocks = blockers.contains(
+      ScoringBlocker.thresholdBelowFloor,
+    );
+    final filterBlocks = blockers.contains(ScoringBlocker.speciesFilterOff);
+    final highlightHere =
+        view == SettingsView.plain
+            ? locationBlocks || advancedBlocks
+            : thresholdBlocks || filterBlocks;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -138,8 +166,17 @@ class SettingsScreen extends ConsumerWidget {
         ),
       ),
       body: ContentWidthConstraint(
-        child: ListView(
+        child: _EagerList(
           children: [
+            // First, above everything: the one thing on this page that is
+            // wrong right now. The same sentences as the live screen's day
+            // bar, from the same list.
+            if (blockers.isNotEmpty)
+              _ScoringBlockersBanner(
+                blockers: blockers,
+                canShow: highlightHere,
+              ),
+
             // A standing reminder rather than a one-off warning: the screen is
             // reachable at any time, and the settings on it change what the app
             // counts as a detection.
@@ -336,7 +373,11 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged:
                     (v) => ref.read(windowDurationProvider.notifier).set(v),
               ),
-              const _ConfidenceThresholdTile(),
+              _BlockerHighlight(
+                active: thresholdBlocks,
+                reveal: revealBlocker && thresholdBlocks,
+                children: const [_ConfidenceThresholdTile()],
+              ),
               _DiscreteSliderTile<double>(
                 title: l10n.settingsInferenceRate,
                 helpBody: l10n.settingsHelpInferenceRate,
@@ -443,20 +484,31 @@ class SettingsScreen extends ConsumerWidget {
                 title: l10n.settingsRecording,
                 subtitle: l10n.settingsRecordingDescription,
               ),
-              _ChoiceTile<String>(
-                title: l10n.settingsRecordingMode,
-                helpBody: l10n.settingsHelpRecordingMode,
-                value: ref.watch(recordingModeProvider),
-                options: {
-                  'full': l10n.settingsRecordingModeFull,
-                  'detections': l10n.settingsRecordingModeDetections,
-                  'off': l10n.settingsRecordingModeOff,
-                },
+              // A switch rather than a mode, because there are two answers
+              // left: a clip per bird, or nothing. "Full" recorded the whole
+              // session into a file nothing in the app could play or delete —
+              // and wrote no clips, so the journal had nothing to play back.
+              SwitchListTile(
+                title: _TitleWithHelp(
+                  title: l10n.settingsSaveRecordings,
+                  helpBody: l10n.settingsHelpSaveRecordings,
+                ),
+                subtitle: Text(l10n.settingsSaveRecordingsDescription),
+                value:
+                    ref.watch(recordingModeProvider) !=
+                    RecordingModeSettingNotifier.off,
                 onChanged:
-                    (v) => ref.read(recordingModeProvider.notifier).set(v),
+                    (on) => ref
+                        .read(recordingModeProvider.notifier)
+                        .set(
+                          on
+                              ? RecordingModeSettingNotifier.clips
+                              : RecordingModeSettingNotifier.off,
+                        ),
               ),
-              // Clip context (visible only when recording mode = detections)
-              if (ref.watch(recordingModeProvider) == 'detections') ...[
+              // How much of the surrounding audio a clip carries.
+              if (ref.watch(recordingModeProvider) !=
+                  RecordingModeSettingNotifier.off) ...[
                 ListTile(
                   title: Text(l10n.surveyClipContext),
                   subtitle: Text(l10n.surveyClipContextDescription),
@@ -482,9 +534,10 @@ class SettingsScreen extends ConsumerWidget {
                 const SizedBox(height: 16),
               ],
               // Audio file format only matters when something is being
-              // recorded; hiding it for mode = off avoids implying that the
-              // setting has any effect.
-              if (ref.watch(recordingModeProvider) != 'off')
+              // recorded; hiding it with the switch off avoids implying that
+              // the setting has any effect.
+              if (ref.watch(recordingModeProvider) !=
+                  RecordingModeSettingNotifier.off)
                 _ChoiceTile<String>(
                   title: l10n.settingsRecordingFormat,
                   helpBody: l10n.settingsHelpRecordingFormat,
@@ -528,21 +581,30 @@ class SettingsScreen extends ConsumerWidget {
                 title: l10n.settingsLocation,
                 subtitle: l10n.settingsLocationDescription,
               ),
-              SwitchListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsUseGps,
-                  helpBody: l10n.settingsHelpUseGps,
-                ),
-                subtitle: Text(l10n.settingsUseGpsDescription),
-                value: ref.watch(useGpsProvider),
-                onChanged: (v) => ref.read(useGpsProvider.notifier).set(v),
+              // The whole block, not the switch alone: with GPS on the fix
+              // is the thing to try, with it off the coordinates are.
+              _BlockerHighlight(
+                active: locationBlocks,
+                reveal: revealBlocker && locationBlocks,
+                children: [
+                  SwitchListTile(
+                    title: _TitleWithHelp(
+                      title: l10n.settingsUseGps,
+                      helpBody: l10n.settingsHelpUseGps,
+                    ),
+                    subtitle: Text(l10n.settingsUseGpsDescription),
+                    value: ref.watch(useGpsProvider),
+                    onChanged: (v) => ref.read(useGpsProvider.notifier).set(v),
+                  ),
+                  if (!ref.watch(useGpsProvider)) ...[
+                    const _ManualCoordinatesTile(),
+                  ],
+                  if (ref.watch(useGpsProvider)) const _GpsRefreshTile(),
+                  if (_showOfflineMapDownloadSetting &&
+                      ref.watch(useGpsProvider))
+                    const OfflineMapDownloadTile(),
+                ],
               ),
-              if (!ref.watch(useGpsProvider)) ...[
-                const _ManualCoordinatesTile(),
-              ],
-              if (ref.watch(useGpsProvider)) const _GpsRefreshTile(),
-              if (_showOfflineMapDownloadSetting && ref.watch(useGpsProvider))
-                const OfflineMapDownloadTile(),
               const Divider(),
             ],
 
@@ -562,42 +624,40 @@ class SettingsScreen extends ConsumerWidget {
                 title: l10n.settingsLocation,
                 subtitle: l10n.settingsSpeciesFilterSectionDescription,
               ),
-              _ChoiceTile<String>(
-                title: l10n.settingsSpeciesFilter,
-                helpBody: l10n.settingsHelpSpeciesFilter,
-                value: ref.watch(speciesFilterModeProvider),
-                options: {
-                  'off': l10n.settingsFilterOff,
-                  'geoExclude': l10n.settingsFilterGeoExclude,
-                  'geoAdaptive': l10n.settingsFilterGeoAdaptive,
-                  'geoMerge': l10n.settingsFilterGeoMerge,
-                },
-                onChanged: (v) async {
-                  // Turning the filter off pauses scoring entirely (PKT-20),
-                  // so it is confirmed before it takes effect rather than
-                  // explained afterwards.
-                  if (v == 'off' &&
-                      !await confirmScoringPause(context, ref, l10n)) {
-                    return;
-                  }
-                  ref.read(speciesFilterModeProvider.notifier).set(v);
-                },
+              _BlockerHighlight(
+                active: filterBlocks,
+                // Only when the threshold above has not already taken the
+                // page there: one scroll, to the first of them.
+                reveal: revealBlocker && !thresholdBlocks && filterBlocks,
+                children: [
+                  _ChoiceTile<String>(
+                    title: l10n.settingsSpeciesFilter,
+                    helpBody: l10n.settingsHelpSpeciesFilter,
+                    value: ref.watch(speciesFilterModeProvider),
+                    options: {
+                      'off': l10n.settingsFilterOff,
+                      'geoExclude': l10n.settingsFilterGeoExclude,
+                      'geoAdaptive': l10n.settingsFilterGeoAdaptive,
+                      'geoMerge': l10n.settingsFilterGeoMerge,
+                    },
+                    onChanged: (v) async {
+                      // Turning the filter off pauses scoring entirely
+                      // (PKT-20), so it is confirmed before it takes effect
+                      // rather than explained afterwards.
+                      if (v == 'off' &&
+                          !await confirmScoringPause(context, ref, l10n)) {
+                        return;
+                      }
+                      ref.read(speciesFilterModeProvider.notifier).set(v);
+                    },
+                  ),
+                ],
               ),
               // Adaptive mode derives its own bar from the local score
               // distribution, so the manual threshold does not apply there.
               if (ref.watch(speciesFilterModeProvider) != 'off' &&
                   ref.watch(speciesFilterModeProvider) != 'geoAdaptive')
-                _SliderTile(
-                  title: l10n.settingsGeoThreshold,
-                  helpBody: l10n.settingsHelpGeoThreshold,
-                  value: ref.watch(geoThresholdProvider),
-                  min: 0.0,
-                  max: 0.5,
-                  divisions: 50,
-                  format: (v) => v.toStringAsFixed(2),
-                  onChanged:
-                      (v) => ref.read(geoThresholdProvider.notifier).set(v),
-                ),
+                const _GeoThresholdTile(),
               const Divider(),
             ],
 
@@ -677,21 +737,32 @@ class SettingsScreen extends ConsumerWidget {
             // The door to everything the plain screen does not carry. One tap,
             // not a hidden gesture: nothing here is secret, it is only out of
             // the way (SET-01).
+            //
+            // Highlighted when the switch stopping the stars is behind it, and
+            // then it opens straight onto that switch.
             if (view == SettingsView.plain)
-              ListTile(
-                leading: const Icon(AppIcons.tune),
-                title: Text(l10n.settingsAdvanced),
-                subtitle: Text(l10n.settingsAdvancedDescription),
-                trailing: const Icon(AppIcons.chevronRight),
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute<void>(
-                      builder:
-                          (_) =>
-                              const SettingsScreen(view: SettingsView.advanced),
-                    ),
-                  );
-                },
+              _BlockerHighlight(
+                active: advancedBlocks,
+                reveal: revealBlocker && !locationBlocks && advancedBlocks,
+                children: [
+                  ListTile(
+                    leading: const Icon(AppIcons.tune),
+                    title: Text(l10n.settingsAdvanced),
+                    subtitle: Text(l10n.settingsAdvancedDescription),
+                    trailing: const Icon(AppIcons.chevronRight),
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute<void>(
+                          builder:
+                              (_) => SettingsScreen(
+                                view: SettingsView.advanced,
+                                revealBlocker: advancedBlocks,
+                              ),
+                        ),
+                      );
+                    },
+                  ),
+                ],
               ),
 
             // --- About ---
@@ -1088,6 +1159,367 @@ class _ConfidenceThresholdTileState
           ),
         ),
       ],
+    );
+  }
+}
+
+/// The geo-filter threshold, with the level line drawn on its track.
+///
+/// The slider decides what the app *shows*; what a bird is *worth* is decided
+/// by the rarity scale, which has its own fixed limit at
+/// [kAbundanceInclusionThreshold]. Both sit at 0.03 out of the box, so filter
+/// and stars agree exactly — and the two only part company when this slider
+/// moves, which is the one thing the control never used to say.
+///
+///   * **Above the line** nothing is lost. Fewer species get through, and
+///     everything that does still scores.
+///   * **Below it** species come through that have no level here, so they are
+///     shown and earn nothing (D20). Worth knowing before it happens, and the
+///     line on the track is where it happens.
+///
+/// Deliberately not a warning and not a pause: scoring goes on for every
+/// other species, and saying otherwise would be false.
+class _GeoThresholdTile extends ConsumerWidget {
+  const _GeoThresholdTile();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final value = ref.watch(geoThresholdProvider);
+    final floor = kAbundanceInclusionThreshold;
+    final label = floor.toStringAsFixed(2);
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ListTile(
+          title: _TitleWithHelp(
+            title: l10n.settingsGeoThreshold,
+            helpBody: l10n.settingsHelpGeoThreshold,
+          ),
+          subtitle: Semantics(
+            label: l10n.settingsGeoThreshold,
+            value: value.toStringAsFixed(2),
+            child: Slider(
+              value: value,
+              min: 0.0,
+              max: 0.5,
+              divisions: 50,
+              label: value.toStringAsFixed(2),
+              secondaryTrackValue: floor,
+              onChanged: (v) => ref.read(geoThresholdProvider.notifier).set(v),
+            ),
+          ),
+          trailing: Text(
+            value.toStringAsFixed(2),
+            style: theme.textTheme.bodySmall,
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.fromLTRB(16, 0, 16, 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(
+                AppIcons.infoOutline,
+                size: 18,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  value < floor
+                      ? l10n.settingsGeoThresholdBelowFloor(label)
+                      : l10n.settingsGeoThresholdFloorHint(label),
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// What is stopping the stars — the banner and the highlight
+// ---------------------------------------------------------------------------
+//
+// A field report: a session that earned almost nothing, a live screen that
+// said nothing, and an adult who could not find out why. The live screen now
+// names the reason; this is the other half — the page it sends you to points
+// at the switch.
+//
+// Both halves read `scoringBlockersProvider`, so a reason cannot be named in
+// one place and missing from the other.
+
+/// A settings page built all at once, rather than lazily like a `ListView`.
+///
+/// So the setting that is stopping the stars can be scrolled to wherever it
+/// is: a lazy list has not built a tile far down the page yet, and there is
+/// nothing to scroll to. The page is a few dozen tiles, and building them all
+/// is cheap.
+class _EagerList extends StatelessWidget {
+  const _EagerList({required this.children});
+
+  final List<Widget> children;
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox.expand(
+      child: SingleChildScrollView(
+        // What a `ListView` does by itself: keep the last tile clear of the
+        // system's gesture bar.
+        padding: EdgeInsets.only(bottom: MediaQuery.paddingOf(context).bottom),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: children,
+        ),
+      ),
+    );
+  }
+}
+
+/// How long the page takes to scroll to a highlight.
+///
+/// None at all when animations are off (SET-02): the page simply is there.
+Duration _revealDuration(BuildContext context, WidgetRef ref) {
+  final level = effectiveAnimationLevel(
+    AnimationLevel.fromStorage(ref.read(animationLevelSettingProvider)),
+    systemReducesMotion: MediaQuery.of(context).disableAnimations,
+  );
+  return level == AnimationLevel.off
+      ? Duration.zero
+      : const Duration(milliseconds: 400);
+}
+
+/// Scrolls [target] into view, a quarter of the way down, so the section
+/// heading above it is still on screen to say where the page has gone.
+Future<void> _scrollTo(BuildContext target, Duration duration) {
+  return Scrollable.ensureVisible(
+    target,
+    alignment: 0.25,
+    duration: duration,
+    curve: Curves.easeOutCubic,
+  );
+}
+
+/// Why there are no stars, at the top of the page.
+///
+/// Lists every reason, including one whose setting is on the other page — no
+/// location, seen from the advanced page — because the reason is true
+/// wherever it is read. "Show" appears only when there is something on this
+/// page to show.
+class _ScoringBlockersBanner extends ConsumerWidget {
+  const _ScoringBlockersBanner({required this.blockers, required this.canShow});
+
+  final List<ScoringBlocker> blockers;
+
+  /// Whether a highlighted setting is on this page.
+  final bool canShow;
+
+  /// Scrolls to the first highlighted setting on the page.
+  ///
+  /// Found by walking the page rather than through a key: the screen is a
+  /// stateless widget, and a key made in `build` would be a new key — and a
+  /// rebuilt tile, losing whatever was typed into it — every time a setting
+  /// changed.
+  void _showFirst(BuildContext context, WidgetRef ref) {
+    BuildContext? target;
+    void visit(Element element) {
+      if (target != null) return;
+      final widget = element.widget;
+      if (widget is _BlockerHighlight && widget.active) {
+        target = element;
+        return;
+      }
+      element.visitChildElements(visit);
+    }
+
+    Scrollable.of(context).context.visitChildElements(visit);
+    final found = target;
+    if (found != null) _scrollTo(found, _revealDuration(context, ref));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
+      child: Card(
+        elevation: 0,
+        color: theme.colorScheme.surfaceContainerHighest,
+        // Amber, the theme's colour for "look here" — not red. The plain page
+        // is one a child uses too, and nobody has done anything wrong.
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+          side: BorderSide(color: theme.colorScheme.tertiary, width: 2),
+        ),
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(16, 16, 16, canShow ? 4 : 16),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Icon(AppIcons.infoOutline, color: theme.colorScheme.tertiary),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.settingsBlockersTitle,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    for (final blocker in blockers)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 4),
+                        child: Text(
+                          blockerReason(l10n, blocker),
+                          style: theme.textTheme.bodyMedium,
+                        ),
+                      ),
+                    if (canShow)
+                      Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: TextButton(
+                          onPressed: () => _showFirst(context, ref),
+                          child: Text(l10n.settingsBlockerShow),
+                        ),
+                      ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// Marks settings that are stopping the stars right now.
+///
+/// A frame and a line of text rather than a colour alone, so the mark means
+/// the same to someone who cannot tell amber from grey — and to a screen
+/// reader, which reads the line before the setting.
+///
+/// **The same widgets whether highlighted or not**, only styled differently.
+/// A highlight that added or removed a layer would rebuild the tiles inside
+/// it, and the highlight goes away at exactly the moment someone is using
+/// them: halfway through typing coordinates, the location resolves.
+class _BlockerHighlight extends ConsumerStatefulWidget {
+  const _BlockerHighlight({
+    required this.active,
+    required this.children,
+    this.reveal = false,
+  });
+
+  /// Whether the settings inside are stopping the stars right now.
+  final bool active;
+
+  /// Scroll here once [active]. True for at most one highlight on a page,
+  /// the first.
+  final bool reveal;
+
+  final List<Widget> children;
+
+  @override
+  ConsumerState<_BlockerHighlight> createState() => _BlockerHighlightState();
+}
+
+class _BlockerHighlightState extends ConsumerState<_BlockerHighlight> {
+  /// Once per page. A highlight that came back later — the adult switched the
+  /// filter off again — must not yank the page away from where they are.
+  bool _revealed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _maybeReveal();
+  }
+
+  @override
+  void didUpdateWidget(_BlockerHighlight oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // The location can arrive, or fail, a moment after the page opens.
+    _maybeReveal();
+  }
+
+  void _maybeReveal() {
+    if (_revealed || !widget.active || !widget.reveal) return;
+    _revealed = true;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (!mounted) return;
+      _scrollTo(context, _revealDuration(context, ref));
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final active = widget.active;
+
+    return Padding(
+      padding: active ? const EdgeInsets.fromLTRB(8, 8, 8, 4) : EdgeInsets.zero,
+      child: DecoratedBox(
+        decoration: BoxDecoration(
+          color:
+              active
+                  ? theme.colorScheme.tertiary.withValues(alpha: 0.08)
+                  : null,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(
+            color: active ? theme.colorScheme.tertiary : Colors.transparent,
+            width: 2,
+          ),
+        ),
+        // Ink from the tiles is drawn on the nearest Material; without this
+        // one it would be painted underneath the tint.
+        child: Material(
+          type: MaterialType.transparency,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Always in the same place, empty when inactive, so the tiles
+              // below never change position in the tree.
+              active
+                  ? Padding(
+                    padding: const EdgeInsets.fromLTRB(14, 10, 14, 0),
+                    child: Row(
+                      children: [
+                        Icon(
+                          AppIcons.arrowDownward,
+                          size: 18,
+                          color: theme.colorScheme.tertiary,
+                        ),
+                        const SizedBox(width: 6),
+                        Expanded(
+                          child: Text(
+                            l10n.settingsBlockerHighlight,
+                            style: theme.textTheme.labelLarge?.copyWith(
+                              fontWeight: FontWeight.w700,
+                              color: theme.colorScheme.onSurface,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  )
+                  : const SizedBox.shrink(),
+              ...widget.children,
+            ],
+          ),
+        ),
+      ),
     );
   }
 }
