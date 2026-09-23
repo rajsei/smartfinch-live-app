@@ -1088,7 +1088,7 @@ The location section's description still read *“GPS und der Artenfilter nach O
 
 #### Open
 
-⚠️ **Detections recorded while the bug was live stay unscored.** They are marked *ohne Standort* in the journal now, which is what was stored — but it is not what happened, and the stars are missing. They are repairable: every session row keeps the 0.1° cell it started in, so each such detection could be re-scored against its session's cell and week. That rewrites history, though — stars, first finds and possibly a streak — and is a decision rather than a fix.
+**Detections recorded while the bug was live stay unscored — decided, not overlooked.** They are marked *ohne Standort* in the journal now, which is what was stored, though it is not what happened. They would have been repairable: every session row keeps the 0.1° cell it started in, so each such detection could have been re-scored against its session's cell and week. Rewriting a collection's history — stars, first finds, possibly a streak — to repair a handful of mornings was judged not worth it. The journal keeps the recordings and now names the reason, which is what the child sees.
 
 ### Recording: a switch, and a default that saved nothing you could listen to
 
@@ -1102,7 +1102,7 @@ Found while answering a question about the shipped defaults, and worse than the 
 
 **So `full` is gone from the settings and the default is `detections`.** With two answers left — a clip per bird, or nothing — the three-way mode became a switch, *“Aufnahmen speichern”*, and the mode labels went with it. `RecordingModeSettingNotifier` sanitises like `ColorMapSettingNotifier` does: a stored `full` from an older build is rewritten to `detections` on the first read and written back, because a mode with no control on the screen is a mode nobody can get out of. `RecordingMode.full` stays in the recording service — it is the pipeline, and the parser still has to read old session files — but nothing in the app can select it any more.
 
-⚠️ **The `full.*` files already on a device are left alone.** They are the user's audio, deleting them is not a migration, and there is no screen that shows what they cost yet.
+**The `full.*` files already on a device are left alone, and stay that way.** They are the user's audio, and deleting them is not a migration. A screen that shows what they cost and offers to remove them was considered and declined: the pile stops growing with this change, and the audio of past mornings is not the app's to throw away. `SET-12` continues to rank clips only.
 
 ### The geo-filter slider says where a level begins
 
