@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Tilbakestill introduksjon",
   "settingsClearData": "Slett all data",
   "settingsClearDataConfirmTitle": "Slett all data?",
-  "settingsClearDataConfirmMessage": "Dette sletter for alltid alle opptak, innstillingene dine og lagrede kart- og stedsdata. Deretter lukkes appen. Dette kan ikke angres.",
+  "settingsClearDataConfirmMessage": "Dette sletter for alltid alt: samlingen din, stjernene dine, merkene dine, nivået ditt, dagboken med alle opptak, innstillingene dine og lagrede kart- og stedsdata. Deretter lukkes appen. Dette kan ikke angres.",
   "settingsClearDataTypeConfirm": "Skriv DELETE for å bekrefte",
   "settingsResetOnboardingConfirmTitle": "Tilbakestille introduksjon?",
   "settingsResetOnboardingConfirmMessage": "Introduksjonsgjennomgangen vises igjen ved neste oppstart.",

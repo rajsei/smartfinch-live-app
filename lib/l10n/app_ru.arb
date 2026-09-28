@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Сбросить регистрацию",
   "settingsClearData": "Очистить все данные",
   "settingsClearDataConfirmTitle": "Очистить все данные?",
-  "settingsClearDataConfirmMessage": "Это навсегда удалит все записи, твои настройки и сохранённые данные карт и мест. Затем приложение закроется. Отменить это нельзя.",
+  "settingsClearDataConfirmMessage": "Это навсегда удалит всё: твою коллекцию, твои звёзды, твои значки, твой уровень, дневник со всеми записями, твои настройки и сохранённые данные карт и мест. Затем приложение закроется. Отменить это нельзя.",
   "settingsClearDataTypeConfirm": "Введи DELETE для подтверждения",
   "settingsResetOnboardingConfirmTitle": "Сбросить регистрацию?",
   "settingsResetOnboardingConfirmMessage": "Обучающее знакомство снова появится при следующем запуске.",

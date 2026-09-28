@@ -16,6 +16,7 @@ import '../announcements/widgets/announcements_settings_section.dart';
 import '../audio/widgets/audio_source_tile.dart';
 import '../explore/explore_providers.dart';
 import '../rules/rules_screen.dart';
+import '../scoring/scoring_providers.dart';
 import '../scoring/scoring_rules.dart';
 import '../spectrogram/color_maps.dart';
 import 'animation_level.dart';
@@ -753,7 +754,7 @@ class SettingsScreen extends ConsumerWidget {
                   l10n.settingsClearData,
                   style: TextStyle(color: theme.colorScheme.error),
                 ),
-                onTap: () => _showClearDataDialog(context, l10n),
+                onTap: () => _showClearDataDialog(context, ref, l10n),
               ),
             ],
 
@@ -842,7 +843,11 @@ class SettingsScreen extends ConsumerWidget {
     );
   }
 
-  void _showClearDataDialog(BuildContext context, AppLocalizations l10n) {
+  void _showClearDataDialog(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+  ) {
     showDialog<void>(
       context: context,
       builder: (context) {
@@ -885,7 +890,34 @@ class SettingsScreen extends ConsumerWidget {
                             final messenger = ScaffoldMessenger.of(context);
                             setState(() => isClearing = true);
                             try {
-                              await const AppDataClearService().clearAllData();
+                              // The database is the one store with a process
+                              // behind it, so the service is handed the close
+                              // rather than finding the database itself. The
+                              // instance belongs to `appDatabaseProvider`, and
+                              // this is the layer that owns that provider.
+                              await AppDataClearService(
+                                databaseCloser:
+                                    () => ref.read(appDatabaseProvider).close(),
+                              ).clearAllData();
+
+                              // `SystemNavigator.pop()` below closes the app on
+                              // Android and does nothing at all on iOS, where
+                              // the app therefore keeps running over a database
+                              // file that no longer exists. Rebuilding the
+                              // provider hands every dependant — the
+                              // repositories, the stars, the level, the journal
+                              // — a fresh `AppDatabase`, which drift creates
+                              // and seeds from scratch on the next read.
+                              //
+                              // The live score board is invalidated with it: it
+                              // is the one cache of today's scoring that holds
+                              // its numbers in memory rather than reading them
+                              // back from the database, so it would otherwise
+                              // keep showing stars that no longer exist.
+                              ref
+                                ..invalidate(appDatabaseProvider)
+                                ..invalidate(liveScoreBoardProvider);
+
                               navigator.pop();
                               messenger.showSnackBar(
                                 SnackBar(

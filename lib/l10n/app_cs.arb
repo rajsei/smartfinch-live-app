@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Obnovit úvod",
   "settingsClearData": "Smazat všechna data",
   "settingsClearDataConfirmTitle": "Smazat všechna data?",
-  "settingsClearDataConfirmMessage": "Tímto se natrvalo smažou všechny nahrávky, tvoje nastavení a uložená data map a míst. Aplikace se pak zavře. Tuto akci nelze vrátit.",
+  "settingsClearDataConfirmMessage": "Tímto se natrvalo smaže všechno: tvoje sbírka, tvoje hvězdy, tvoje odznaky, tvůj level, deník se všemi nahrávkami, tvoje nastavení a uložená data map a míst. Aplikace se pak zavře. Tuto akci nelze vrátit.",
   "settingsClearDataTypeConfirm": "Napiš DELETE pro potvrzení",
   "settingsResetOnboardingConfirmTitle": "Obnovit úvod?",
   "settingsResetOnboardingConfirmMessage": "Úvod se znovu zobrazí při příštím spuštění.",

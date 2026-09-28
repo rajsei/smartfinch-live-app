@@ -1018,11 +1018,30 @@ The hygiene test now also holds the two rules that span all languages: **every l
 
 Writing a sentence that has to be true meant checking what each setting really does, and three answers were not what the old texts said:
 
-1. **“Clear all data” does not clear the database.** It deletes the recordings, the settings and the caches. The collection, the stars, the badges, the level and the journal entries survive — and the journal entries then point at recordings that no longer exist. The old confirmation claimed detections were deleted; they are not. The German text now says what the button actually does; the button itself is a bug to fix, and for a children's app with a right-to-erasure promise it is the most important of the three.
+1. **“Clear all data” does not clear the database.** It deletes the recordings, the settings and the caches. The collection, the stars, the badges, the level and the journal entries survive — and the journal entries then point at recordings that no longer exist. The old confirmation claimed detections were deleted; they are not. The German text now says what the button actually does; the button itself is a bug to fix, and for a children's app with a right-to-erasure promise it is the most important of the three. Fixed since — the next section.
 2. **The weather lookup does not happen.** It lived in the session list's background backfill and in the two dead widgets above; nothing reads either. Onboarding and settings ask consent for something the app does not do. The rewritten texts describe the permission without promising when it is used; `AUS-11` has to wire it.
 3. **When it does happen, it would send precise coordinates.** `WeatherService` caches on 0.1° cells but sends the request with four decimals — about eleven metres. `NFA-08` asks for the 0.1° cell and never precise coordinates. Dormant today; it has to change before `AUS-11` switches the lookup on.
 
 The privacy summary in onboarding was also incomplete: it named map tiles and place names, but not the weather lookup the app asks consent for on the very same screen. It now names all three.
+
+### “Clear all data” now clears the database
+
+The first of the three findings above, closed.
+
+**What was wrong.** `AppDataClearService` knew about the `sessions`, `recordings` and `species_lists` folders, the three temporary caches, the map tile cache and `SharedPreferences` — and about nothing else. `smartfinch.sqlite` was never named in it and survived the wipe intact: the collection (`LifeSpecies`), the stars (`ScoreEvents`), the badges, the level (`UserProfiles.highestLevelReached`), the avatar's name and every `detections` row. The recordings those rows point at *were* deleted. So a child who asked the app to forget everything was left with the worse of the two possible half-wipes: a life list they could not remove and a journal of every walk they had ever taken, now pointing at audio that no longer existed.
+
+**What the button deletes now.** The database file and the side files sqlite3 can leave beside it — `-journal` in the rollback-journal mode the app actually runs in, `-wal` and `-shm` should write-ahead logging ever be switched on. Those matter: sqlite3 commits *through* a side file and folds it back afterwards, so a kill during a session can leave one holding the last rows written, and the next open replays it. Deleting `smartfinch.sqlite` alone would have been a wipe that handed some of the data back.
+
+Two details make it a wipe rather than a race:
+
+- **The database is closed first, and the close is awaited.** It is the one store with a process behind it: `NativeDatabase.createInBackground` holds the file open on a background isolate. Deleting it underneath that isolate fails outright on Windows and, on POSIX, unlinks the file while the isolate carries on writing into a copy nothing can reach — complete-looking and not complete. `AppDataClearService` therefore takes a `DatabaseCloser` rather than reaching for the database itself, since the one instance belongs to `appDatabaseProvider` and the caller that owns that provider is the caller that has to rebuild it. The parameter is **required**: any default would have to mean “close nothing”, and a caller who forgot to pass one would get the silent half-wipe instead of a failure. The close is wrapped in the existing attempt-every-store pattern, so a failure there is reported rather than aborting the rest.
+- **The providers are rebuilt afterwards.** `SystemNavigator.pop()` closes the app on Android, and the next launch opens a fresh database by itself. **On iOS it does nothing at all**, so the app keeps running over a file that is gone. Settings therefore invalidates `appDatabaseProvider`, which cascades through everything that watches it — the scoring, collection, journal and points repositories, the star totals, the level, the backup service — and `liveScoreBoardProvider` with it, that being the one cache holding today's scoring in memory rather than reading it back. The next read of any of them builds a new `AppDatabase`, and drift creates that one from scratch — schema, constraints and the default profile row.
+
+**No crash path.** Nothing in the app holds a drift stream, so there is no open subscription to fail when the connection goes; every screen reads through a `FutureProvider` that the invalidation rebuilds. A live session running while an adult clears data is the one concurrent case, and it was already safe: `LiveScoringCoordinator`'s drain loop catches per-detection failures and logs them, which is exactly what a closed database looks like from in there.
+
+**Why it had to be this, not less.** `NFA-07` is a privacy promise under GDPR Art. 8, and a delete button that leaves the child's entire history behind is not a smaller version of erasure, it is the absence of it. The confirmation text was rewritten in all twelve languages to name what actually goes — collection, stars, badges, level and the journal — instead of “recordings and settings”.
+
+One limit stays, shared with “Reset all settings” and pre-existing: on iOS the settings providers still hold the values they read at launch, because `SharedPreferences.clear()` empties the store without notifying anyone. The data is gone either way; the defaults appear on the next start.
 
 ### What to watch during the two-week test
 

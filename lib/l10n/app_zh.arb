@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "重置引导流程",
   "settingsClearData": "清除所有数据",
   "settingsClearDataConfirmTitle": "清除所有数据？",
-  "settingsClearDataConfirmMessage": "这会永久删除所有录音、你的设置以及已保存的地图和地点数据。之后应用会关闭。此操作无法撤销。",
+  "settingsClearDataConfirmMessage": "这会永久删除所有内容：你的收藏、星星、徽章、等级、日记和其中的全部录音、你的设置以及已保存的地图和地点数据。之后应用会关闭。此操作无法撤销。",
   "settingsClearDataTypeConfirm": "输入 DELETE 以确认",
   "settingsResetOnboardingConfirmTitle": "重置引导流程？",
   "settingsResetOnboardingConfirmMessage": "下次启动时将重新显示引导流程。",

@@ -106,6 +106,28 @@ class AppDatabase extends _$AppDatabase {
   }
 }
 
+/// The database file's name inside the application documents directory.
+///
+/// Public because the file is not only opened here: "Clear all data" has to
+/// delete it (`NFA-07`), and a second copy of the name over in the clear
+/// service would be a name that silently stops matching the day this one
+/// changes — leaving a child's entire collection behind after a wipe.
+const String kAppDatabaseFileName = 'smartfinch.sqlite';
+
+/// The database file and every side file SQLite can leave beside it.
+///
+/// Deleting `smartfinch.sqlite` on its own is not a wipe. SQLite writes
+/// through a side file and only folds it back into the database afterwards,
+/// so a crash or a kill can leave one behind holding rows that the next open
+/// replays. The app runs in sqlite3's default rollback-journal mode, which
+/// makes `-journal` the file that occurs today; `-wal` and `-shm` are listed
+/// so that turning write-ahead logging on later cannot quietly reintroduce
+/// the leak.
+List<File> appDatabaseFiles(Directory documentsDirectory) => [
+  for (final suffix in const ['', '-journal', '-wal', '-shm'])
+    File(p.join(documentsDirectory.path, '$kAppDatabaseFileName$suffix')),
+];
+
 /// Opens the database file in the app documents directory.
 ///
 /// Runs on a background isolate (`LazyDatabase` + drift's default executor) so
@@ -114,7 +136,7 @@ class AppDatabase extends _$AppDatabase {
 QueryExecutor _openConnection() {
   return LazyDatabase(() async {
     final dir = await getApplicationDocumentsDirectory();
-    final file = File(p.join(dir.path, 'smartfinch.sqlite'));
+    final file = File(p.join(dir.path, kAppDatabaseFileName));
 
     // Android needs a writable temp directory for sorting and vacuuming; the
     // default is not writable in an app sandbox.

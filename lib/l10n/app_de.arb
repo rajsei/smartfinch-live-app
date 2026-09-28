@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Onboarding zurücksetzen",
   "settingsClearData": "Alle Daten löschen",
   "settingsClearDataConfirmTitle": "Alle Daten löschen?",
-  "settingsClearDataConfirmMessage": "Das löscht dauerhaft alle Aufnahmen, deine Einstellungen und gespeicherte Karten- und Ortsdaten. Die App wird danach geschlossen. Das kann nicht rückgängig gemacht werden.",
+  "settingsClearDataConfirmMessage": "Das löscht dauerhaft alles: deine Sammlung, deine Sterne, deine Auszeichnungen, dein Level, das Tagebuch mit allen Aufnahmen, deine Einstellungen und gespeicherte Karten- und Ortsdaten. Die App wird danach geschlossen. Das kann nicht rückgängig gemacht werden.",
   "settingsClearDataTypeConfirm": "Tippe DELETE ein, um zu bestätigen",
   "settingsResetOnboardingConfirmTitle": "Onboarding zurücksetzen?",
   "settingsResetOnboardingConfirmMessage": "Die Einführung wird beim nächsten Start erneut angezeigt.",
