@@ -1,11 +1,32 @@
 # Settings
 
-BirdNET Live reuses one Settings screen across multiple workflows. The :material-tune: button opens the sections that are relevant to the screen you came from.
+The app has one Settings screen, split in two: a plain first page, and **Advanced settings** one tap behind it. Every :material-tune: button opens the plain page.
 
-## How Settings Scope Works
+## How Settings Are Split
 
-- Opening Settings from Home shows the full screen.
-- Opening Settings from Live, Survey, Point Count, or File Analysis filters the screen to the relevant sections.
+Settings come in two screens. The first one carries what a child or a parent
+actually touches — appearance and language, announcements, location, privacy,
+backup and the danger zone. Everything else lives one tap further on, behind
+**Advanced settings**: audio, detection, spectrogram, recordings, the species
+filter and export. Nothing is hidden; it is only out of the way.
+
+## When there are no stars
+
+Three settings can stop the app awarding stars, and when one of them does, the
+app says so rather than leaving you to guess:
+
+- **The species filter is off** — scoring is paused entirely.
+- **The confidence threshold is below 35 %** — likewise. 35 is a fixed floor,
+  not a setting.
+- **There is no location** — without a position there is no rarity level, so
+  nothing can be valued.
+
+While any of these applies, the live screen replaces the day's star total with
+a notice naming each reason, and offers a button that opens the settings screen
+the fix is on — scrolled to the setting responsible, which is framed and
+labelled *"this is why there are no stars right now"*. The same reasons appear
+in a banner at the top of both settings screens. Detections and recordings
+carry on throughout, and the journal marks what did not count and why.
 
 ## General
 
@@ -97,6 +118,8 @@ Controls the length of the analysis window. Available steps are **1**, **3**, **
 ### Confidence threshold
 
 Sets how conservative detections should be. The default is **35%**, which keeps the live list focused on stronger matches while still leaving room for distant or partially masked calls. Lower it if you are surveying rare or quiet species and plan to review more candidates later; raise it when background noise or common false positives are crowding the session.
+
+**35 % is also the scoring floor.** Below it the app keeps listening and keeps its recordings, but awards nothing at all — the slider marks the point on its track and asks before it crosses.
 
 ### Sensitivity
 
@@ -193,15 +216,22 @@ A disclosure that exposes a handful of audio-routing toggles plus the trigger-mo
 
 ## Recording
 
-### Mode
+### Save recordings
 
-- **Full** — save the whole recording
-- **Detections only** — save clips around detections
-- **Off** — no audio recording
+On by default: a short clip is saved for every detection, and those clips are
+what the journal plays back. Switch it off and the app only listens — nothing
+is written to the device, and the journal has nothing to play.
+
+There used to be a third choice, **Full**, which recorded a whole session into
+one file. It is gone. It saved no per-detection clips, so the journal had
+nothing to play back; the file it did write could not be reached from anywhere
+in the app; and the retention rules, which rank clips, never cleaned it up. A
+stored *Full* becomes clips-per-detection the next time the app starts. Files
+written by earlier versions are left where they are.
 
 ### Clip context
 
-When **Detections only** is active, the app shows a single **Clip context** slider (0–5 s) that sets how much audio is preserved on **both sides** of each detection. Each clip is `analysis window + 2 × clip context` long, so with a 3 s analysis window and the default 1 s context the saved clip is 5 s. Setting the context to 2 s yields a 7 s clip (2 s pre-roll + 3 s analyzed audio + 2 s post-roll). Larger values give you more room for visual inspection or external review tools at the cost of disk space; 0 saves only the analyzed window itself.
+When recordings are on, the app shows a single **Clip context** slider (0–5 s) that sets how much audio is preserved on **both sides** of each detection. Each clip is `analysis window + 2 × clip context` long, so with a 3 s analysis window and the default 1 s context the saved clip is 5 s. Setting the context to 2 s yields a 7 s clip (2 s pre-roll + 3 s analyzed audio + 2 s post-roll). Larger values give you more room for visual inspection or external review tools at the cost of disk space; 0 saves only the analyzed window itself.
 
 ### Format
 
@@ -214,10 +244,6 @@ This setting applies to audio recorded by BirdNET Live. **File Analysis** keeps 
 When enabled, Live mode begins recording as soon as the screen opens and the model finishes loading — no need to tap the microphone button. Useful for kiosk-style deployments, hands-free use (e.g. mounting the device in the field), or any workflow where the user already knows that opening Live always means "start now". Disabled by default so an accidental tap on the Live tile from the home screen does not silently begin a session. The auto-start fires only once per screen visit, so stopping a session and tapping the mic again still works as a manual restart.
 
 This setting governs opening Live mode from inside the app. The [Quick Listen widget](live-mode.md) starts listening when tapped, whatever this is set to, and leaves the setting untouched. If a Point Count, Survey, File Analysis, or ARU Mode Session is already running or starting, it preserves that Session and asks you to stop it first instead.
-
-### Save sessions automatically (Live and Point Count)
-
-When enabled (the default), a completed Live or Point Count session is added to your library automatically the moment it finishes. When disabled, a finished session opens in review marked as **unsaved**: the save icon is highlighted and you must tap it to keep the session. Leaving review without saving discards the session and its recordings. This suits quick listening sessions where you only want to keep the occasional noteworthy result instead of accumulating every short recording. Survey and ARU deployments always save automatically — a long unattended run is too costly to lose by forgetting to tap Save — so this toggle does not apply there.
 
 ## Playback
 
@@ -245,6 +271,9 @@ Survey, Point Count and ARU setup wizards open on manual entry with your saved
 coordinates, survey GPS tracking does not run, and offline map preparation
 centres on those coordinates too.
 
+Whichever way the position comes in, the app needs one: without it there is no
+rarity level for a bird and nothing scores. See *When there are no stars*.
+
 ### Manual coordinates
 
 The coordinates used when **Use GPS** is off. Both Latitude and Longitude are editable text fields, so you can **type** an exact value or **paste** one copied from another app — far more precise than dragging a slider on a touch screen. Enter decimal degrees (e.g. `52.5200` and `13.4050`). You can also paste a combined `latitude, longitude` string (comma-, semicolon-, or space-separated) into *either* field and both fields fill at once, which matches what most maps and websites put on the clipboard. Out-of-range or non-numeric input is flagged inline and not saved; valid values persist as you type. The intuition: the most common reason to set a manual location is to ID a sound recorded somewhere other than where you are now, and that location usually comes as text from elsewhere — typing and pasting make that a single accurate step. If you would rather point at a spot than type numbers, **Pick on map** opens the same full-screen map picker used in the setup screens, seeded with the current coordinates, and fills both fields with the location you tap.
@@ -259,7 +288,9 @@ Offline map downloads are currently hidden while BirdNET Live uses the public Op
 
 ### Species filter
 
-- **Off** — no geographic filtering
+- **Off** — no geographic filtering. This also **pauses scoring**: without the
+  filter the app cannot tell an implausible detection from a plausible one, so
+  it awards nothing while it is off, and says so before the change takes effect
 - **Location filter** — exclude species that fall below the geographic threshold
 - **Adaptive location filter** — ask for more confidence the less common a species is here
 - **Location weighting** — use the geo-model as an additional weighting signal
@@ -267,6 +298,17 @@ Offline map downloads are currently hidden while BirdNET Live uses the public Op
 ### Geo-filter threshold
 
 Appears when **Location filter** or **Location weighting** is active. The adaptive filter works out its own bar from the local species mix, so it has no slider.
+
+The slider decides what the app **shows**. What a bird is **worth** is decided
+separately, by the rarity scale, which counts a species as present here from
+**0.03** upwards — the slider's default, so out of the box the two agree
+exactly. The 0.03 mark is drawn on the track, and the line underneath says
+which side of it the setting is on:
+
+- **At or above 0.03** nothing is lost. Fewer species get through, and
+  everything that does still scores.
+- **Below 0.03** species come through that have no rarity level here. They are
+  shown, and they earn nothing — the detection card says so.
 
 ### How the adaptive filter decides
 

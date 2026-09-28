@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Unreleased
 
+### Fixed
+
+- Birds heard at the start of a session are counted again. The app builds the rarity scale for your area when the session opens, and a detection arriving before it is ready now waits for it. Previously the first birds after an app start were recorded as having no location: no stars, no explanation, and the journal filed them as heard while scoring was off.
+
+### Added
+
+- When there are no stars, the app says why. The live screen names each reason — species filter off, confidence threshold below 35 %, no location — and offers a button that opens the settings screen the fix is on, scrolled to the setting responsible and framed with the line "this is why there are no stars right now". The same reasons appear at the top of both settings screens.
+- Detection cards say why a bird earned nothing instead of leaving the card blank: "no stars — not expected here this week", or "no stars — no location".
+- The journal gives a reason per species for everything outside scoring: scoring was off, no location, or not expected here.
+- The geo-filter threshold slider marks 0.03, the point from which a species has a rarity level, and says what changes below it.
+
+### Changed
+
+- Recording is one switch now, **Save recordings**, and it is on by default. The old **Full** mode is gone: it recorded a whole session into a single file that nothing in the app could play or delete, and it saved no per-detection clips, so the journal had nothing to play back. A stored *Full* becomes clips-per-detection automatically; audio files already on the device are left untouched.
+- The location settings no longer describe the species filter, which lives in Advanced settings, and say instead what the app does with a position — and that there are no stars without one.
+
 ## [1.1.2] - 2026-08-11
 
 ### Added
