@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Restablecer introducción",
   "settingsClearData": "Eliminar todos los datos",
   "settingsClearDataConfirmTitle": "¿Eliminar todos los datos?",
-  "settingsClearDataConfirmMessage": "Esto borra para siempre todas las grabaciones, tus ajustes y los datos guardados de mapas y lugares. Después, la app se cierra. No se puede deshacer.",
+  "settingsClearDataConfirmMessage": "Esto borra para siempre todo: tu colección, tus estrellas, tus insignias, tu nivel, el diario con todas las grabaciones, tus ajustes y los datos guardados de mapas y lugares. Después, la app se cierra. No se puede deshacer.",
   "settingsClearDataTypeConfirm": "Escribe DELETE para confirmar",
   "settingsResetOnboardingConfirmTitle": "¿Restablecer introducción?",
   "settingsResetOnboardingConfirmMessage": "La introducción se mostrará de nuevo en el próximo inicio.",

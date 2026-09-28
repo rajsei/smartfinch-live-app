@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Zresetuj wprowadzenie",
   "settingsClearData": "Wyczyść wszystkie dane",
   "settingsClearDataConfirmTitle": "Wyczyścić wszystkie dane?",
-  "settingsClearDataConfirmMessage": "To trwale usuwa wszystkie nagrania, twoje ustawienia oraz zapisane dane map i miejsc. Potem aplikacja się zamknie. Tego nie da się cofnąć.",
+  "settingsClearDataConfirmMessage": "To trwale usuwa wszystko: twoją kolekcję, twoje gwiazdki, twoje odznaki, twój poziom, dziennik ze wszystkimi nagraniami, twoje ustawienia oraz zapisane dane map i miejsc. Potem aplikacja się zamknie. Tego nie da się cofnąć.",
   "settingsClearDataTypeConfirm": "Wpisz DELETE, aby potwierdzić",
   "settingsResetOnboardingConfirmTitle": "Zresetować wprowadzenie?",
   "settingsResetOnboardingConfirmMessage": "Samouczek wprowadzający pojawi się ponownie przy następnym uruchomieniu.",

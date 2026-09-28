@@ -188,7 +188,7 @@
   "@settingsClearDataConfirmTitle": {
     "description": "Clear data confirmation dialog title"
   },
-  "settingsClearDataConfirmMessage": "This permanently deletes all recordings, your settings and saved map and place data. The app then closes. This cannot be undone.",
+  "settingsClearDataConfirmMessage": "This permanently deletes everything: your collection, your stars, your badges, your level, the journal with all its recordings, your settings and saved map and place data. The app then closes. This cannot be undone.",
   "@settingsClearDataConfirmMessage": {
     "description": "Clear data confirmation message"
   },

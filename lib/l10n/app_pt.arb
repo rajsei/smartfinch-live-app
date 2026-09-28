@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Redefinir introdução",
   "settingsClearData": "Excluir todos os dados",
   "settingsClearDataConfirmTitle": "Excluir todos os dados?",
-  "settingsClearDataConfirmMessage": "Isto apaga para sempre todas as gravações, as tuas definições e os dados de mapas e locais guardados. Depois, a app fecha-se. Não é possível desfazer.",
+  "settingsClearDataConfirmMessage": "Isto apaga para sempre tudo: a tua coleção, as tuas estrelas, os teus emblemas, o teu nível, o diário com todas as gravações, as tuas definições e os dados de mapas e locais guardados. Depois, a app fecha-se. Não é possível desfazer.",
   "settingsClearDataTypeConfirm": "Escreve DELETE para confirmar",
   "settingsResetOnboardingConfirmTitle": "Redefinir introdução?",
   "settingsResetOnboardingConfirmMessage": "A introdução será exibida novamente na próxima inicialização.",

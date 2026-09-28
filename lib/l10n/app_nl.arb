@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Onboarding opnieuw instellen",
   "settingsClearData": "Wis alle gegevens",
   "settingsClearDataConfirmTitle": "Alle gegevens wissen?",
-  "settingsClearDataConfirmMessage": "Dit verwijdert voorgoed alle opnames, je instellingen en opgeslagen kaart- en plaatsgegevens. Daarna sluit de app. Dit kan niet ongedaan worden gemaakt.",
+  "settingsClearDataConfirmMessage": "Dit verwijdert voorgoed alles: je verzameling, je sterren, je badges, je level, het dagboek met alle opnames, je instellingen en opgeslagen kaart- en plaatsgegevens. Daarna sluit de app. Dit kan niet ongedaan worden gemaakt.",
   "settingsClearDataTypeConfirm": "Typ DELETE om te bevestigen",
   "settingsResetOnboardingConfirmTitle": "Onboarding opnieuw instellen?",
   "settingsResetOnboardingConfirmMessage": "De introductie verschijnt weer bij de volgende keer opstarten.",

@@ -47,7 +47,7 @@
   "settingsResetOnboarding": "Réinitialiser l'introduction",
   "settingsClearData": "Supprimer toutes les données",
   "settingsClearDataConfirmTitle": "Supprimer toutes les données ?",
-  "settingsClearDataConfirmMessage": "Cela supprime définitivement tous les enregistrements, tes paramètres et les données de carte et de lieux enregistrées. L'app se ferme ensuite. Impossible d'annuler.",
+  "settingsClearDataConfirmMessage": "Cela supprime définitivement tout : ta collection, tes étoiles, tes badges, ton niveau, le journal avec tous les enregistrements, tes paramètres et les données de carte et de lieux enregistrées. L'app se ferme ensuite. Impossible d'annuler.",
   "settingsClearDataTypeConfirm": "Tape DELETE pour confirmer",
   "settingsResetOnboardingConfirmTitle": "Réinitialiser l'introduction ?",
   "settingsResetOnboardingConfirmMessage": "L'introduction sera à nouveau affichée au prochain lancement.",
