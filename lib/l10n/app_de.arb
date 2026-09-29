@@ -675,8 +675,6 @@
   "levelFlockLeader": "Schwarmführer",
   "levelLegend": "Legende",
   "levelWithTitle": "Level {number} · {title}",
-  "levelStarsToNext": "Noch {stars} ⭐ bis {title}",
-  "levelTopOfTheLadder": "Ganz oben. Darüber kommt nichts mehr.",
   "avatarStageEgg": "Ein Ei",
   "avatarStageChick": "Ein Küken",
   "avatarStageFledgling": "Ein flügger Jungvogel",

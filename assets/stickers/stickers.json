@@ -1,0 +1,53 @@
+{
+  "_readme": [
+    "AVA-07 — the stickers a child picks, one per level from level 1 on.",
+    "Hand-drawn, own rights: no attribution field. Not generated, and",
+    "deliberately outside the gitignored species bundle directories.",
+    "",
+    "One entry per sticker. `id` is the scientific name in lower case with",
+    "underscores, and the image is images/<id>.png (or .webp): transparent",
+    "background, 512 x 512 px, one bird per file, white sticker edge drawn in.",
+    "",
+    "`scientificName` links the sticker to the taxonomy, which supplies the",
+    "bird's common name in every locale. `names` is optional and wins over",
+    "the taxonomy: use it for a child-friendly name ('Kiwi' rather than",
+    "'Nordstreifenkiwi') or for a bird BirdNET does not know at all (the",
+    "shoebill). A locale missing from `names` falls back to the taxonomy,",
+    "then to `names.en`.",
+    "",
+    "The fact lives in facts_<locale>.json under the same id. German and",
+    "English ship; every other locale falls back to English, and a new",
+    "language is added by dropping in another facts_<locale>.json.",
+    "",
+    "The order below is the order of the album.",
+    "",
+    "Never reuse or rename an id once shipped: a child's saved picks refer",
+    "to it. Removing an entry hides the sticker but keeps the pick."
+  ],
+  "stickers": [
+    { "id": "cyanocitta_cristata", "scientificName": "Cyanocitta cristata" },
+    { "id": "buceros_bicornis", "scientificName": "Buceros bicornis" },
+    { "id": "garrulus_glandarius", "scientificName": "Garrulus glandarius" },
+    { "id": "alcedo_atthis", "scientificName": "Alcedo atthis" },
+    { "id": "coracias_caudatus", "scientificName": "Coracias caudatus" },
+    { "id": "aptenodytes_forsteri", "scientificName": "Aptenodytes forsteri" },
+    {
+      "id": "apteryx_mantelli",
+      "scientificName": "Apteryx mantelli",
+      "names": { "de": "Kiwi", "en": "Kiwi" }
+    },
+    { "id": "archilochus_colubris", "scientificName": "Archilochus colubris" },
+    { "id": "fratercula_arctica", "scientificName": "Fratercula arctica" },
+    {
+      "id": "pavo_cristatus",
+      "scientificName": "Pavo cristatus",
+      "names": { "de": "Blauer Pfau", "en": "Peacock" }
+    },
+    { "id": "cardinalis_cardinalis", "scientificName": "Cardinalis cardinalis" },
+    {
+      "id": "balaeniceps_rex",
+      "scientificName": "Balaeniceps rex",
+      "names": { "de": "Schuhschnabel", "en": "Shoebill" }
+    }
+  ]
+}

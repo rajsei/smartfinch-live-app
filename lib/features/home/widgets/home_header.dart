@@ -120,11 +120,7 @@ class HomeHeader extends ConsumerWidget {
   }
 
   /// What an unopened database means, rather than a spinner.
-  static const LevelProgress _startOfLadder = LevelProgress(
-    level: Level(number: 1, key: 'egg', fromStars: 0),
-    stars: 0,
-    next: Level(number: 2, key: 'chick', fromStars: 500),
-  );
+  static final LevelProgress _startOfLadder = LevelProgress.start();
 }
 
 /// The bird in a circle, with its level on a chip (`AVA-01`, `HOME-07`).
@@ -512,15 +508,11 @@ class _LevelLine extends StatelessWidget {
             // than what is left. It gives way rather than overflowing.
             Flexible(
               child: Text(
-                // At the top of the ladder there is nothing left to reach, and
-                // "0 to level 16" would read as a bug rather than as having
-                // finished it.
-                progress.next == null
-                    ? l10n.levelTopOfTheLadder
-                    : l10n.levelToNextShort(
-                      progress.starsToNext,
-                      progress.next!.number,
-                    ),
+                // The ladder has no top, so there is always a next level.
+                l10n.levelToNextShort(
+                  progress.starsToNext,
+                  progress.next.number,
+                ),
                 textAlign: TextAlign.right,
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,

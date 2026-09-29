@@ -32,7 +32,7 @@ final levelProgressProvider = FutureProvider<LevelProgress>((ref) async {
 
   return progressFor(
     stars: stars,
-    highestLevelReached: profile?.highestLevelReached ?? 1,
+    highestLevelReached: profile?.highestLevelReached ?? 0,
   );
 });
 

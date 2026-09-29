@@ -675,8 +675,6 @@
   "levelFlockLeader": "Zwermleider",
   "levelLegend": "Legende",
   "levelWithTitle": "Level {number} · {title}",
-  "levelStarsToNext": "Nog {stars} ⭐ tot {title}",
-  "levelTopOfTheLadder": "Helemaal bovenaan. Daarboven is niets meer.",
   "avatarStageEgg": "Een ei",
   "avatarStageChick": "Een kuiken",
   "avatarStageFledgling": "Een vliegvlugge jonge vogel",

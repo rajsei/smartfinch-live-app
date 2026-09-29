@@ -675,8 +675,6 @@
   "levelFlockLeader": "Chef de vol",
   "levelLegend": "Légende",
   "levelWithTitle": "Niveau {number} · {title}",
-  "levelStarsToNext": "Encore {stars} ⭐ jusqu'à {title}",
-  "levelTopOfTheLadder": "Tout en haut. Il n'y a rien au-dessus.",
   "avatarStageEgg": "Un œuf",
   "avatarStageChick": "Un poussin",
   "avatarStageFledgling": "Un jeune volant",

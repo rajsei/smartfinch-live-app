@@ -675,8 +675,6 @@
   "levelFlockLeader": "领群者",
   "levelLegend": "传奇",
   "levelWithTitle": "等级 {number} · {title}",
-  "levelStarsToNext": "还差 {stars} ⭐ 到 {title}",
-  "levelTopOfTheLadder": "最顶端了，上面再没有了。",
   "avatarStageEgg": "一颗蛋",
   "avatarStageChick": "一只雏鸟",
   "avatarStageFledgling": "一只刚会飞的幼鸟",

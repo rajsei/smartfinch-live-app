@@ -218,7 +218,7 @@ void main() {
         await (reopened.select(reopened.userProfiles)
           ..where((row) => row.id.equals(kDefaultProfileId))).getSingle();
     expect(profile.totalStars, 0);
-    expect(profile.highestLevelReached, 1);
+    expect(profile.highestLevelReached, 0);
   });
 
   test('attempts remaining stores before reporting clear failures', () async {

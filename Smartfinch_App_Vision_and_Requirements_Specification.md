@@ -552,33 +552,51 @@ This is exactly how adult birders think ("year list", "first arrival"), it expla
 
 ### 3.5 Levels and ranks
 
-Levels condense the overall total into a number with a name. The curve grows by roughly a factor of 1.4 per step — fast at first for early wins, slower later for long-term motivation.
+Levels condense the overall total into a number with a name. **Every level from 1 on unlocks a sticker (`AVA-07`)**, and more stickers will keep arriving — so the ladder has no top.
 
-| Level | Title | From stars | Approx. with regular play |
-|:---:|---|---:|---|
-| 1 | Egg (`Ei`) | 0 | start |
-| 2 | Chick (`Küken`) | 500 | first day |
-| 3 | Nestling (`Nestling`) | 1,500 | first day |
-| 4 | Fledgling (`Flügge`) | 4,000 | week 1 |
-| 5 | Young bird (`Jungvogel`) | 8,000 | week 2 |
-| 6 | Scout (`Späher`) | 15,000 | month 1 |
-| 7 | Listener (`Lauscher`) | 25,000 | month 2 |
-| 8 | Singer (`Sänger`) | 40,000 | month 3 |
-| 9 | Territory holder (`Reviervogel`) | 60,000 | month 4 |
-| 10 | Far flier (`Weitflieger`) | 90,000 | month 6 |
-| 11 | Migrant (`Zugvogel`) | 130,000 | month 9 |
-| 12 | Returner (`Rückkehrer`) | 185,000 | 1 year |
-| 13 | Old bird (`Altvogel`) | 260,000 | 1.5 years |
-| 14 | Flock leader (`Schwarmführer`) | 360,000 | 2 years |
-| 15 | Legend (`Legende`) | 500,000 | 3 years |
+> **Open-ended ladder — decided (2026-09-29).** The fifteen-row table this section used to carry is replaced by a formula. A child starts at **level 0 (Egg)**. Level *n* begins at **250 · n² stars, but no single level costs more than 5,000** — quadratic up to level 10 (25,000 stars), then +5,000 per level. The first evening brings two or three levels, and every level after 10 costs the same, about 1.5 weeks of regular play, so the ladder never turns into a wall. Code: `lib/features/avatar/level_ladder.dart`.
 
-*(Estimated at roughly 3,500 stars per week with regular but not daily use.)*
+| Level | From stars | Approx. with regular play |
+|:---:|---:|---|
+| 0 | 0 | start |
+| 1 | 250 | first minutes |
+| 2 | 1,000 | first day |
+| 3 | 2,250 | first day |
+| 5 | 6,250 | day 6 |
+| 10 | 25,000 | week 6 |
+| 15 | 50,000 | month 3 |
+| 20 | 75,000 | month 5 |
+| 30 | 125,000 | month 8 |
+
+*(Estimated with 4,100 stars on the first day — all first finds ×3, see 2.8 — and roughly 3,500 stars per week after that. A child playing only occasionally takes about three times as long, an eager one about a third of the time.)*
+
+**The titles keep the old pace.** The fifteen titles tell one story from egg to legend and are anchored to the star counts they were given here before: a level carries the highest title whose threshold its own starting stars have passed. Egg is level 0 alone — from level 1 on, the bird has hatched. Levels come faster than before; the story does not.
+
+| Title | Threshold | Levels |
+|---|---:|---|
+| Egg (`Ei`) | 0 | 0 |
+| Chick (`Küken`) | 500 | 1–2 |
+| Nestling (`Nestling`) | 1,500 | 3 |
+| Fledgling (`Flügge`) | 4,000 | 4–5 |
+| Young bird (`Jungvogel`) | 8,000 | 6–7 |
+| Scout (`Späher`) | 15,000 | 8–9 |
+| Listener (`Lauscher`) | 25,000 | 10–12 |
+| Singer (`Sänger`) | 40,000 | 13–16 |
+| Territory holder (`Reviervogel`) | 60,000 | 17–22 |
+| Far flier (`Weitflieger`) | 90,000 | 23–30 |
+| Migrant (`Zugvogel`) | 130,000 | 31–41 (≈ month 9) |
+| Returner (`Rückkehrer`) | 185,000 | 42–56 (≈ 1 year) |
+| Old bird (`Altvogel`) | 260,000 | 57–76 |
+| Flock leader (`Schwarmführer`) | 360,000 | 77–104 |
+| Legend (`Legende`) | 500,000 | 105 and up (≈ 3 years) |
+
+> **Changing the curve later.** Making it *faster* is always harmless — children simply rise sooner. Making it *slower* never costs a level (the ratchet below), but a child who has just passed a level then waits longer for the next one. Err on the slow side.
 
 > **Renamed — decided.** Levels 8, 9 and 11 previously read *Kenner*, *Spurenleser* and *Vogelkundler*, which are also achievement titles (3.3). Two systems that 3.1 defines as separate cannot share names. Levels 10, 12, 13 and 14 were renamed in the same pass for a second reason: they were **human** titles (*Feldforscher*, *Artenkenner*, *Meisterlauscher*) sitting on top of a bird's life stages. **The levels now tell one story from egg to legend** — which is what `AVA-02` needs anyway, since the level *is* the avatar's stage of life. Expertise titles belong to the achievements; the levels belong to the bird.
 
 > **Levels ratchet — decided.** The highest level ever reached is stored and never falls below it. A recomputation after a rule change (`AUS-12`, `DAT-03`) may raise a level, never lower one. Without this, the first rebalancing would take a level — and with it an avatar stage — away from a child who did nothing wrong, which principle 1 forbids. It costs one column, and it is unbuildable retroactively once children have levels.
 
-Levels are **P1**, not P0 — the prototype only needs the raw star total. Once the avatar arrives (AVA-*), levels should unlock avatar parts.
+Levels are **P1**, not P0 — the prototype only needs the raw star total. Each level unlocks a sticker (`AVA-07`); later levels may unlock avatar parts too (`AVA-03`).
 ---
 
 ## 4. Requirements Catalogue
@@ -730,11 +748,12 @@ Levels are **P1**, not P0 — the prototype only needs the raw star total. Once 
 | ID | Requirement | Prio | Acceptance criterion / note |
 |---|---|:---:|---|
 | AVA-01 | An avatar figure, visible on the home screen and the points overview | **P1** | Recommendation: **your own bird as a companion**, not a human avatar — it fits the theme and is easier to illustrate |
-| AVA-02 | The avatar develops with the level (egg → chick → fledgling → adult) | **P1** | Couples the level curve to something visible |
+| AVA-02 | The avatar develops with the level (egg → chick → fledgling → adult) | **P1** | Couples the level curve to something visible. The stage follows the title (3.5): egg at level 0, chick for *Küken*/*Nestling* (1–3), fledgling for *Flügge*/*Jungvogel* (4–7), adult from *Späher* on (8+) |
 | AVA-03 | Unlockable parts: hats, binoculars, backgrounds, feather colours | **P2** | A reward for achievements, **never purchasable** |
 | AVA-04 | A nest or room that fills up with achievements | **P2** | A trophy case as a place rather than a list |
 | AVA-05 | A name can be chosen for the avatar | **P1** | Avoids free-text moderation issues: pick from a preset list, or keep it purely local |
 | AVA-06 | The avatar comments on events ("Oh! I don't know that one yet!") | **P2** | Use sparingly, or it becomes annoying by week two |
+| AVA-07 | **Stickers**: every level from 1 on lets the child pick one bird sticker, from all stickers not yet picked, and place it freely on the home-screen background — behind the star header, the avatar and the tile panel — by dragging, scaling and rotating | **P1** | Hand-drawn birds from around the world, each with a short fact revealed after picking and kept in a sticker album. Each sticker can be picked once; an open pick waits quietly until new stickers ship. The pick count follows the ratcheted level, so no sticker is ever lost. **A sticker is not a find**: it never touches the life list, the collection or any score (`PKT-04`). Portrait and landscape keep their own arrangement; landscape starts as a converted copy |
 
 ### I · Settings (`SET`)
 

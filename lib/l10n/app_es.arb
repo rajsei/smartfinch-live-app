@@ -675,8 +675,6 @@
   "levelFlockLeader": "Guía de la bandada",
   "levelLegend": "Leyenda",
   "levelWithTitle": "Nivel {number} · {title}",
-  "levelStarsToNext": "{stars} ⭐ para {title}",
-  "levelTopOfTheLadder": "La cima. No hay nada por encima.",
   "avatarStageEgg": "Un huevo",
   "avatarStageChick": "Un polluelo",
   "avatarStageFledgling": "Un volantón",

@@ -675,8 +675,6 @@
   "levelFlockLeader": "Przewodnik stada",
   "levelLegend": "Legenda",
   "levelWithTitle": "Poziom {number} · {title}",
-  "levelStarsToNext": "Jeszcze {stars} ⭐ do poziomu {title}",
-  "levelTopOfTheLadder": "Sam szczyt. Wyżej już nie ma nic.",
   "avatarStageEgg": "Jajo",
   "avatarStageChick": "Pisklę",
   "avatarStageFledgling": "Podlot",

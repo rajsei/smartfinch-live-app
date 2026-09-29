@@ -133,6 +133,10 @@ flutter:
     # Hand-written child-register profiles (SAM-11) — authored, not
     # generated, and deliberately outside the gitignored bundle dir.
     - assets/species_profiles/
+    # Hand-drawn level stickers and their facts (AVA-07) — authored, not
+    # generated, so they sit outside the gitignored bundle dirs too.
+    - assets/stickers/
+    - assets/stickers/images/
     - assets/announcements/
 
 # The launcher icon is the one place the two brands cannot both win: it is

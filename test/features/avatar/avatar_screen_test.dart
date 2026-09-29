@@ -88,13 +88,13 @@ void main() {
         (db.select(db.userProfiles)
           ..where((p) => p.id.equals(kDefaultProfileId))).getSingle();
 
-    test('a fresh profile starts on the first rung', () async {
-      expect((await profile()).highestLevelReached, 1);
+    test('a fresh profile starts on level 0, the egg', () async {
+      expect((await profile()).highestLevelReached, 0);
     });
 
     test('crossing a threshold raises it', () async {
       // The rarest tier is 1,000 base and ×3 on a first find, so a couple of
-      // rare birds is enough to pass level 2 (500) and level 3 (1,500).
+      // rare birds is enough to pass level 2 (1,000) and level 3 (2,250).
       await hear('Species sp39');
       await hear('Species sp38');
 
@@ -126,7 +126,7 @@ void main() {
     Future<void> pump(
       WidgetTester tester, {
       int stars = 0,
-      int floor = 1,
+      int floor = 0,
       String? name,
     }) async {
       SharedPreferences.setMockInitialValues({});
@@ -164,23 +164,23 @@ void main() {
     });
 
     testWidgets('and how far to the next one (STAT-07)', (tester) async {
-      // Level 4 runs 4,000 → 8,000.
+      // Level 4 runs 4,000 → 6,250. The next level by number, not by title:
+      // titles span several levels, and "to Fledgling" read by a fledgling
+      // would be nonsense.
       await pump(tester, stars: 6000);
 
-      expect(find.textContaining('to Young bird'), findsOneWidget);
+      expect(find.text('250 to level 5'), findsOneWidget);
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('the top of the ladder has nothing left to reach', (
+    testWidgets('the ladder has no top: a legend still has a next level', (
       tester,
     ) async {
+      // Level 105 is the first legend, at 500,000; level 106 is 5,000 on.
       await pump(tester, stars: 500000);
 
-      expect(
-        find.text('The very top. Nothing above this one.'),
-        findsOneWidget,
-      );
-      expect(find.textContaining('to '), findsNothing);
+      expect(find.text('Level 105 · Legend'), findsOneWidget);
+      expect(find.text('5,000 to level 106'), findsOneWidget);
     });
 
     // One pump per test: a second pumpWidget reuses the ProviderScope element,
@@ -252,9 +252,9 @@ void main() {
     ) async {
       // The point of AUS-12 is that the child never finds out the level was
       // defended. No warning, no asterisk, no "recalculated".
-      await pump(tester, stars: 100, floor: 7);
+      await pump(tester, stars: 100, floor: 10);
 
-      expect(find.text('Level 7 · Listener'), findsOneWidget);
+      expect(find.text('Level 10 · Listener'), findsOneWidget);
       expect(find.textContaining('recalc'), findsNothing);
       expect(find.textContaining('lost'), findsNothing);
     });

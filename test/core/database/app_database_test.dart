@@ -339,9 +339,9 @@ void main() {
   });
 
   group('UserProfile', () {
-    test('levels start at 1 and the ratchet column exists', () async {
+    test('levels start at 0 and the ratchet column exists', () async {
       final profile = await db.select(db.userProfiles).getSingle();
-      expect(profile.highestLevelReached, 1);
+      expect(profile.highestLevelReached, 0);
       expect(profile.totalStars, 0);
     });
 

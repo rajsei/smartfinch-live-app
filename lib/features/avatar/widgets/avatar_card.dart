@@ -58,13 +58,8 @@ class AvatarCard extends ConsumerWidget {
 
     // Before the database has opened, the egg — not a spinner. A child
     // arriving at their home screen should see their bird immediately, and
-    // level 1 is what an empty database means anyway.
-    final shown =
-        progress ??
-        const LevelProgress(
-          level: Level(number: 1, key: 'egg', fromStars: 0),
-          stars: 0,
-        );
+    // level 0 is what an empty database means anyway.
+    final shown = progress ?? LevelProgress.start();
     final ink = foreground ?? theme.colorScheme.onSurface;
 
     return InkWell(
@@ -173,15 +168,9 @@ class LevelProgressBar extends StatelessWidget {
         ),
         const SizedBox(height: 4),
         Text(
-          // At the top of the ladder there is nothing left to go, and saying
-          // "0 stars to the next level" would read as a bug rather than as an
-          // achievement.
-          progress.next == null
-              ? l10n.levelTopOfTheLadder
-              : l10n.levelStarsToNext(
-                progress.starsToNext,
-                levelTitle(l10n, progress.next!.key),
-              ),
+          // The number, not the title: titles span several levels now, and
+          // "300 stars to Chick" read by a chick would be nonsense.
+          l10n.levelToNextShort(progress.starsToNext, progress.next.number),
           style: theme.textTheme.bodySmall?.copyWith(
             color: ink.withValues(alpha: 0.85),
           ),

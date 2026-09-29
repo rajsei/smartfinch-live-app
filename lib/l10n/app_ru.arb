@@ -675,8 +675,6 @@
   "levelFlockLeader": "Вожак стаи",
   "levelLegend": "Легенда",
   "levelWithTitle": "Уровень {number} · {title}",
-  "levelStarsToNext": "Ещё {stars} ⭐ до уровня «{title}»",
-  "levelTopOfTheLadder": "Самая вершина. Выше ничего нет.",
   "avatarStageEgg": "Яйцо",
   "avatarStageChick": "Птенец",
   "avatarStageFledgling": "Слёток",

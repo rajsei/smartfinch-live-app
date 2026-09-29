@@ -675,8 +675,6 @@
   "levelFlockLeader": "Guida dello stormo",
   "levelLegend": "Leggenda",
   "levelWithTitle": "Livello {number} · {title}",
-  "levelStarsToNext": "Ancora {stars} ⭐ per {title}",
-  "levelTopOfTheLadder": "In cima a tutto. Sopra non c'è niente.",
   "avatarStageEgg": "Un uovo",
   "avatarStageChick": "Un pulcino",
   "avatarStageFledgling": "Un involato",

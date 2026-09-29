@@ -20,6 +20,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- Levels start at 0, the egg, and no longer end at 15. Level *n* begins at 250 · n² stars, and no level costs more than 5,000, so the first evening brings two or three levels and every level after 10 takes the same time. The fifteen titles now span several levels each and keep their old pace — a legend is still about three years away. The progress line names the next level by number ("250 to level 5"), because the next level often shares the current title.
+- Renaming the bird no longer risks other avatar data: the name is merged into the stored avatar state instead of replacing it.
 - Recording is one switch now, **Save recordings**, and it is on by default. The old **Full** mode is gone: it recorded a whole session into a single file that nothing in the app could play or delete, and it saved no per-detection clips, so the journal had nothing to play back. A stored *Full* becomes clips-per-detection automatically; audio files already on the device are left untouched.
 - The location settings no longer describe the species filter, which lives in Advanced settings, and say instead what the app does with a position — and that there are no stars without one.
 

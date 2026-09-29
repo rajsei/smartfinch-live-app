@@ -2964,23 +2964,6 @@
       }
     }
   },
-  "levelStarsToNext": "{stars} ⭐ to {title}",
-  "@levelStarsToNext": {
-    "description": "STAT-07: how far to the next rung",
-    "placeholders": {
-      "stars": {
-        "type": "int",
-        "format": "decimalPattern"
-      },
-      "title": {
-        "type": "String"
-      }
-    }
-  },
-  "levelTopOfTheLadder": "The very top. Nothing above this one.",
-  "@levelTopOfTheLadder": {
-    "description": "STAT-07: shown at level 15, where there is nothing left to reach"
-  },
   "avatarStageEgg": "An egg",
   "@avatarStageEgg": {
     "description": "AVA-02 stage, accessibility label"

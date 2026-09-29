@@ -675,8 +675,6 @@
   "levelFlockLeader": "Vůdce hejna",
   "levelLegend": "Legenda",
   "levelWithTitle": "Level {number} · {title}",
-  "levelStarsToNext": "Ještě {stars} ⭐ do úrovně {title}",
-  "levelTopOfTheLadder": "Úplně nahoře. Výš už to nejde.",
   "avatarStageEgg": "Vejce",
   "avatarStageChick": "Kuřátko",
   "avatarStageFledgling": "Vylétlé mládě",

@@ -330,7 +330,7 @@ class UserProfiles extends Table with SyncableRow {
   /// lower that total. Without this column the child would drop a level and
   /// lose the avatar stage tied to it (AVA-02) — the app taking something away
   /// for something the child did not do, which principle 1 forbids.
-  IntColumn get highestLevelReached => integer().withDefault(const Constant(1))();
+  IntColumn get highestLevelReached => integer().withDefault(const Constant(0))();
 
   /// Home region chosen during onboarding (SET-09, D18). Without a cell there
   /// is no rarity level and therefore no stars, so this is set before the

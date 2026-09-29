@@ -675,8 +675,6 @@
   "levelFlockLeader": "Flokkleder",
   "levelLegend": "Legende",
   "levelWithTitle": "Nivå {number} · {title}",
-  "levelStarsToNext": "{stars} ⭐ igjen til {title}",
-  "levelTopOfTheLadder": "Helt på toppen. Det finnes ikke noe over.",
   "avatarStageEgg": "Et egg",
   "avatarStageChick": "En kylling",
   "avatarStageFledgling": "En flygeferdig unge",

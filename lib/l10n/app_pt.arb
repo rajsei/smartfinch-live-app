@@ -675,8 +675,6 @@
   "levelFlockLeader": "Líder do bando",
   "levelLegend": "Lenda",
   "levelWithTitle": "Nível {number} · {title}",
-  "levelStarsToNext": "Faltam {stars} ⭐ para {title}",
-  "levelTopOfTheLadder": "No topo. Não há nada acima disto.",
   "avatarStageEgg": "Um ovo",
   "avatarStageChick": "Um pintainho",
   "avatarStageFledgling": "Um juvenil voador",
