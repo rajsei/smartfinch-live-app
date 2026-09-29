@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "每识别出一只鸟，就保存一段短录音。",
   "settingsHelpSaveRecordings": "启用时，应用会为每条检测保存一段短录音：模型评估的那几秒，加上设定的前后余量。这些片段会出现在日记里，可以随时回听。不启用时，应用只是聆听，不在设备上保存任何东西——日记里也就没有东西可以回听。",
   "settingsGeoThresholdFloorHint": "从 {floor} 起，一个物种在这里有等级，可以带来星星。",
-  "settingsGeoThresholdBelowFloor": "低于 {floor} 时，应用也会显示在这里没有等级的物种。它们不会带来星星。"
+  "settingsGeoThresholdBelowFloor": "低于 {floor} 时，应用也会显示在这里没有等级的物种。它们不会带来星星。",
+  "stickerAlbumTitle": "贴纸册",
+  "stickerAlbumPickButton": "{count, plural, =1{挑选一张贴纸} other{挑选 {count} 张贴纸}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{你可以挑选一张贴纸！点一只你喜欢的鸟吧。} other{你可以挑选 {count} 张贴纸！点一只你喜欢的鸟吧。}}",
+  "stickerAlbumMine": "你的贴纸",
+  "stickerAlbumToPick": "挑一张吧",
+  "stickerAlbumStillToCollect": "还没收集到",
+  "stickerAlbumNextLevel": "到等级 {number} 时，你可以挑选一张。",
+  "stickerAlbumAllCollected": "你已经收集了所有贴纸！",
+  "stickerPickQuestion": "要这张贴纸吗？",
+  "stickerPickConfirm": "就要它",
+  "stickerPickCancel": "返回",
+  "stickerFactHeading": "你知道吗？",
+  "stickerFactDone": "太棒了！",
+  "stickerPickedA11y": "{name}，你的贴纸",
+  "stickerPickableA11y": "{name}，点一下来挑选",
+  "stickerLockedA11y": "{name}，还没收集到"
 }

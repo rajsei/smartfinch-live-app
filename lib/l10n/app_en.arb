@@ -3185,5 +3185,99 @@
         "type": "String"
       }
     }
+  },
+  "stickerAlbumTitle": "Sticker album",
+  "@stickerAlbumTitle": {
+    "description": "AVA-07: title of the sticker album, and the home-header button that opens it"
+  },
+  "stickerAlbumPickButton": "{count, plural, =1{Pick a sticker} other{Pick {count} stickers}}",
+  "@stickerAlbumPickButton": {
+    "description": "AVA-07: the home-header button while one or more sticker picks are open",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stickerAlbumPickBanner": "{count, plural, =1{You may pick a sticker! Tap a bird you like.} other{You may pick {count} stickers! Tap a bird you like.}}",
+  "@stickerAlbumPickBanner": {
+    "description": "AVA-07: banner at the top of the album while picks are open",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "stickerAlbumMine": "Your stickers",
+  "@stickerAlbumMine": {
+    "description": "AVA-07: album section with the stickers the child has picked"
+  },
+  "stickerAlbumToPick": "Pick one",
+  "@stickerAlbumToPick": {
+    "description": "AVA-07: album section with the stickers to choose from, while a pick is open"
+  },
+  "stickerAlbumStillToCollect": "Still to collect",
+  "@stickerAlbumStillToCollect": {
+    "description": "AVA-07: album section with the stickers not yet picked, while no pick is open"
+  },
+  "stickerAlbumNextLevel": "At level {number} you may pick one.",
+  "@stickerAlbumNextLevel": {
+    "description": "AVA-07: when the next pick comes. Also shown when a faded sticker is tapped",
+    "placeholders": {
+      "number": {
+        "type": "int"
+      }
+    }
+  },
+  "stickerAlbumAllCollected": "You have collected every sticker!",
+  "@stickerAlbumAllCollected": {
+    "description": "AVA-07: every sticker is picked. Never mention that picks are waiting"
+  },
+  "stickerPickQuestion": "Take this sticker?",
+  "@stickerPickQuestion": {
+    "description": "AVA-07: confirmation before a pick, which is permanent"
+  },
+  "stickerPickConfirm": "Take it",
+  "@stickerPickConfirm": {
+    "description": "AVA-07: confirm button for a pick"
+  },
+  "stickerPickCancel": "Back",
+  "@stickerPickCancel": {
+    "description": "AVA-07: go back without picking"
+  },
+  "stickerFactHeading": "Did you know?",
+  "@stickerFactHeading": {
+    "description": "AVA-07: heading above the sticker's fact, revealed after picking"
+  },
+  "stickerFactDone": "Great!",
+  "@stickerFactDone": {
+    "description": "AVA-07: closes the fact"
+  },
+  "stickerPickedA11y": "{name}, your sticker",
+  "@stickerPickedA11y": {
+    "description": "AVA-07: screen reader label of a picked sticker",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stickerPickableA11y": "{name}, tap to pick",
+  "@stickerPickableA11y": {
+    "description": "AVA-07: screen reader label of a sticker that can be picked now",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "stickerLockedA11y": "{name}, not collected yet",
+  "@stickerLockedA11y": {
+    "description": "AVA-07: screen reader label of a sticker not collected yet",
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
   }
 }

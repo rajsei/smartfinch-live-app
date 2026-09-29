@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Ke každému rozpoznanému ptákovi se uloží krátký klip.",
   "settingsHelpSaveRecordings": "Když je aktivní, uloží aplikace ke každé detekci krátký klip: sekundy, které model vyhodnotil, plus nastavené okolí před a po. Klipy najdeš v deníku a můžeš si je pustit. Když aktivní není, aplikace jen poslouchá a na zařízení nic neukládá — v deníku pak není co pustit.",
   "settingsGeoThresholdFloorHint": "Od {floor} má druh na tomto místě stupeň a přináší hvězdy.",
-  "settingsGeoThresholdBelowFloor": "Pod {floor} ukazuje aplikace i druhy, které tu stupeň nemají. Ty nepřinesou žádné hvězdy."
+  "settingsGeoThresholdBelowFloor": "Pod {floor} ukazuje aplikace i druhy, které tu stupeň nemají. Ty nepřinesou žádné hvězdy.",
+  "stickerAlbumTitle": "Album samolepek",
+  "stickerAlbumPickButton": "{count, plural, =1{Vyber si samolepku} few{Vyber si {count} samolepky} other{Vyber si {count} samolepek}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Můžeš si vybrat samolepku! Klepni na ptáka, který se ti líbí.} few{Můžeš si vybrat {count} samolepky! Klepni na ptáka, který se ti líbí.} other{Můžeš si vybrat {count} samolepek! Klepni na ptáka, který se ti líbí.}}",
+  "stickerAlbumMine": "Tvoje samolepky",
+  "stickerAlbumToPick": "Vyber si jednu",
+  "stickerAlbumStillToCollect": "Ještě nasbírat",
+  "stickerAlbumNextLevel": "V levelu {number} si můžeš jednu vybrat.",
+  "stickerAlbumAllCollected": "Máš všechny samolepky!",
+  "stickerPickQuestion": "Vzít si tuhle samolepku?",
+  "stickerPickConfirm": "Vzít",
+  "stickerPickCancel": "Zpět",
+  "stickerFactHeading": "Víš, že…?",
+  "stickerFactDone": "Super!",
+  "stickerPickedA11y": "{name}, tvoje samolepka",
+  "stickerPickableA11y": "{name}, klepni a vyber",
+  "stickerLockedA11y": "{name}, ještě ji nemáš"
 }

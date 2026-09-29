@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Для каждой распознанной птицы сохраняется короткий фрагмент.",
   "settingsHelpSaveRecordings": "Когда активно, приложение сохраняет к каждому обнаружению короткий фрагмент: секунды, которые оценила модель, плюс заданный запас до и после. Фрагменты лежат в дневнике, их можно послушать. Когда не активно, приложение только слушает и ничего не сохраняет на устройстве — тогда в дневнике нечего слушать.",
   "settingsGeoThresholdFloorHint": "Начиная с {floor} у вида здесь есть уровень, и он приносит звёзды.",
-  "settingsGeoThresholdBelowFloor": "Ниже {floor} приложение показывает и виды, у которых здесь нет уровня. Они не приносят звёзд."
+  "settingsGeoThresholdBelowFloor": "Ниже {floor} приложение показывает и виды, у которых здесь нет уровня. Они не приносят звёзд.",
+  "stickerAlbumTitle": "Альбом наклеек",
+  "stickerAlbumPickButton": "{count, plural, one{Выбери {count} наклейку} few{Выбери {count} наклейки} many{Выбери {count} наклеек} other{Выбери {count} наклейки}}",
+  "stickerAlbumPickBanner": "{count, plural, one{Можешь выбрать {count} наклейку! Нажми на птицу, которая тебе нравится.} few{Можешь выбрать {count} наклейки! Нажми на птицу, которая тебе нравится.} many{Можешь выбрать {count} наклеек! Нажми на птицу, которая тебе нравится.} other{Можешь выбрать {count} наклейки! Нажми на птицу, которая тебе нравится.}}",
+  "stickerAlbumMine": "Твои наклейки",
+  "stickerAlbumToPick": "Выбери одну",
+  "stickerAlbumStillToCollect": "Ещё не собраны",
+  "stickerAlbumNextLevel": "На уровне {number} ты сможешь выбрать одну.",
+  "stickerAlbumAllCollected": "У тебя все наклейки!",
+  "stickerPickQuestion": "Взять эту наклейку?",
+  "stickerPickConfirm": "Взять",
+  "stickerPickCancel": "Назад",
+  "stickerFactHeading": "Знаешь ли ты?",
+  "stickerFactDone": "Здорово!",
+  "stickerPickedA11y": "{name}, твоя наклейка",
+  "stickerPickableA11y": "{name}, нажми, чтобы выбрать",
+  "stickerLockedA11y": "{name}, ещё не собрана"
 }

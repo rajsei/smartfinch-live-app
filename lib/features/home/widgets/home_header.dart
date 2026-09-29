@@ -9,6 +9,7 @@
 //   • a rule, then the two smaller figures side by side: 30 days, and today
 //   • seven bars for the seven days behind them (`HOME-05`)
 //   • the level line and its bar across the full width
+//   • the sticker album button under it (`AVA-07`)
 //
 // ### What is not here any more, and why
 //
@@ -39,6 +40,10 @@ import '../../points/points_models.dart';
 import '../../points/points_providers.dart';
 import '../../scoring/live_score_board.dart';
 import '../../scoring/scoring_providers.dart';
+import '../../stickers/widgets/sticker_album_button.dart';
+
+/// Space between the level bar and the sticker album button.
+double stickerButtonGap({bool large = false}) => large ? 16 : 10;
 
 /// The coloured block at the top of the home screen.
 class HomeHeader extends ConsumerWidget {
@@ -47,7 +52,12 @@ class HomeHeader extends ConsumerWidget {
     this.compact = false,
     this.large = false,
     this.dense = false,
+    this.showAlbumButton = true,
   });
+
+  /// The sticker album button under the level bar (`AVA-07`). Off on a short
+  /// portrait phone, where it sits behind the tile panel instead.
+  final bool showAlbumButton;
 
   /// Tightens the bird and the big number for the landscape column, which is
   /// narrower than the full width portrait gives them.
@@ -114,6 +124,13 @@ class HomeHeader extends ConsumerWidget {
           ],
           SizedBox(height: large ? 28 : 18),
           _LevelLine(progress: progress, ink: ink, large: large),
+          // The way into the sticker album (`AVA-07`), under the level that
+          // earns the stickers. On a short portrait phone it sits behind the
+          // tile panel instead (`KID-04`); see `HomeScreen`.
+          if (showAlbumButton) ...[
+            SizedBox(height: stickerButtonGap(large: large)),
+            StickerAlbumButton(ink: ink, large: large),
+          ],
         ],
       ),
     );

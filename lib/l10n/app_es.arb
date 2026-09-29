@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Se guarda un clip corto de cada ave que la app oye.",
   "settingsHelpSaveRecordings": "Si está activo, la app guarda un clip corto de cada detección: los segundos que evaluó el modelo, más el contexto ajustado antes y después. Los clips están en el diario para volver a escucharlos. Si no está activo, la app solo escucha y no guarda nada en el dispositivo; entonces en el diario no hay nada que escuchar.",
   "settingsGeoThresholdFloorHint": "A partir de {floor}, una especie tiene un nivel aquí y da estrellas.",
-  "settingsGeoThresholdBelowFloor": "Por debajo de {floor}, la app también muestra especies que aquí no tienen nivel. Esas no dan estrellas."
+  "settingsGeoThresholdBelowFloor": "Por debajo de {floor}, la app también muestra especies que aquí no tienen nivel. Esas no dan estrellas.",
+  "stickerAlbumTitle": "Álbum de pegatinas",
+  "stickerAlbumPickButton": "{count, plural, =1{Elige una pegatina} other{Elige {count} pegatinas}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{¡Puedes elegir una pegatina! Toca un pájaro que te guste.} other{¡Puedes elegir {count} pegatinas! Toca un pájaro que te guste.}}",
+  "stickerAlbumMine": "Tus pegatinas",
+  "stickerAlbumToPick": "Elige una",
+  "stickerAlbumStillToCollect": "Por coleccionar",
+  "stickerAlbumNextLevel": "En el nivel {number} podrás elegir una.",
+  "stickerAlbumAllCollected": "¡Tienes todas las pegatinas!",
+  "stickerPickQuestion": "¿Te quedas con esta pegatina?",
+  "stickerPickConfirm": "Elegir",
+  "stickerPickCancel": "Volver",
+  "stickerFactHeading": "¿Sabías que…?",
+  "stickerFactDone": "¡Genial!",
+  "stickerPickedA11y": "{name}, tu pegatina",
+  "stickerPickableA11y": "{name}, toca para elegir",
+  "stickerLockedA11y": "{name}, aún no la tienes"
 }

@@ -11,6 +11,7 @@ import '../../core/theme/app_theme.dart';
 import '../about/about_screen.dart';
 import '../explore/explore_providers.dart';
 import '../scoring/scoring_providers.dart';
+import '../stickers/widgets/sticker_album_button.dart';
 import '../live/live_providers.dart';
 import '../../shared/providers/settings_providers.dart';
 import 'help_screen.dart';
@@ -211,8 +212,29 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   /// A tablet gets more, and the header's contents grow to use it — otherwise
   /// the extra height on a 1,280-pixel screen turns into a band of empty
   /// colour above a block of empty surface.
-  static double headerHeight({required bool isTablet, bool dense = false}) =>
-      isTablet ? 300 : (dense ? 184 : 200);
+  ///
+  /// Plus the sticker album button under the level bar (`AVA-07`) when the
+  /// screen is tall enough to carry it there — see [albumButtonInHeaderFrom].
+  static double headerHeight({
+    required bool isTablet,
+    bool dense = false,
+    bool withAlbumButton = true,
+  }) =>
+      (isTablet ? 300 : (dense ? 184 : 200)) +
+      (withAlbumButton
+          ? stickerButtonGap(large: isTablet) +
+              StickerAlbumButton.heightFor(large: isTablet)
+          : 0);
+
+  /// From this height on, the sticker album button sits in the header,
+  /// always visible (`AVA-07`).
+  ///
+  /// Below it, a 48-dp button row would push the last row of destinations
+  /// below the fold, and `KID-04` wins: the button moves behind the panel —
+  /// under the level bar still, visible when the panel is pulled down — and an
+  /// open pick is announced in the panel instead (`StickerPickCard`). Measured
+  /// against the tiles as they are: a 360 × 720 phone needs 784 to fit both.
+  static const double albumButtonInHeaderFrom = 784;
 
   /// How much of the panel stays on screen when it is down.
   ///
@@ -249,6 +271,9 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
           final height = constraints.maxHeight;
 
           final dense = height < _PortraitHomeLayout.denseBelow;
+          final albumInHeader =
+              widget.isTablet ||
+              height >= _PortraitHomeLayout.albumButtonInHeaderFrom;
 
           // Where the header stops, and so the highest the panel may reach.
           // Clamped, so a very short screen still leaves the panel room to be
@@ -257,6 +282,7 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                   _PortraitHomeLayout.headerHeight(
                     isTablet: widget.isTablet,
                     dense: dense,
+                    withAlbumButton: albumInHeader,
                   ))
               .clamp(0.0, height * 0.55);
 
@@ -271,9 +297,25 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                 // above can hand the header less than its content wants, and
                 // scrolling is the graceful answer to that.
                 child: SingleChildScrollView(
-                  child: HomeHeader(large: widget.isTablet, dense: dense),
+                  child: HomeHeader(
+                    large: widget.isTablet,
+                    dense: dense,
+                    showAlbumButton: albumInHeader,
+                  ),
                 ),
               ),
+
+              // On a short phone the album button waits behind the panel,
+              // still under the level bar, and shows when it is pulled down.
+              if (!albumInHeader)
+                Positioned(
+                  top: headerBottom + stickerButtonGap(),
+                  left: 0,
+                  right: 0,
+                  child: StickerAlbumButton(
+                    ink: theme.colorScheme.onPrimaryContainer,
+                  ),
+                ),
 
               // Laid out rather than positioned, because the number that
               // decides where the panel starts is its own content height —
@@ -301,6 +343,7 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                     theme: theme,
                     isTablet: widget.isTablet,
                     dense: dense,
+                    stickerCard: !albumInHeader,
                     isDown: _down,
                     onToggle: () => setState(() => _down = !_down),
                   ),
@@ -369,12 +412,17 @@ class _TilePanel extends StatelessWidget {
     required this.dense,
     required this.isDown,
     required this.onToggle,
+    this.stickerCard = false,
   });
 
   final AppLocalizations l10n;
   final ThemeData theme;
   final bool isTablet;
   final bool dense;
+
+  /// Announce an open sticker pick above the Live tile, because the album
+  /// button is behind the panel on this screen.
+  final bool stickerCard;
   final bool isDown;
   final VoidCallback onToggle;
 
@@ -441,7 +489,11 @@ class _TilePanel extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  HomeTiles(isTablet: isTablet, dense: dense),
+                  HomeTiles(
+                    isTablet: isTablet,
+                    dense: dense,
+                    stickerCard: stickerCard,
+                  ),
                   SizedBox(height: isTablet ? 20 : 14),
                   _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
                   SizedBox(height: isTablet ? 28 : 20),

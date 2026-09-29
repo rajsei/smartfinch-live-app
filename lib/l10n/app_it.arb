@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Per ogni uccello riconosciuto viene salvata una breve clip.",
   "settingsHelpSaveRecordings": "Se attivo, l'app salva una breve clip per ogni rilevamento: i secondi valutati dal modello, più il contesto impostato prima e dopo. Le clip sono nel diario e puoi riascoltarle. Se non è attivo, l'app si limita ad ascoltare e non salva nulla sul dispositivo: nel diario non c'è niente da riascoltare.",
   "settingsGeoThresholdFloorHint": "Da {floor} in su, una specie ha un livello qui e dà stelle.",
-  "settingsGeoThresholdBelowFloor": "Sotto {floor} l'app mostra anche specie che qui non hanno un livello. Quelle non danno stelle."
+  "settingsGeoThresholdBelowFloor": "Sotto {floor} l'app mostra anche specie che qui non hanno un livello. Quelle non danno stelle.",
+  "stickerAlbumTitle": "Album di adesivi",
+  "stickerAlbumPickButton": "{count, plural, =1{Scegli un adesivo} other{Scegli {count} adesivi}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Puoi scegliere un adesivo! Tocca un uccello che ti piace.} other{Puoi scegliere {count} adesivi! Tocca un uccello che ti piace.}}",
+  "stickerAlbumMine": "I tuoi adesivi",
+  "stickerAlbumToPick": "Scegline uno",
+  "stickerAlbumStillToCollect": "Da collezionare",
+  "stickerAlbumNextLevel": "Al livello {number} potrai sceglierne uno.",
+  "stickerAlbumAllCollected": "Hai tutti gli adesivi!",
+  "stickerPickQuestion": "Prendi questo adesivo?",
+  "stickerPickConfirm": "Prendilo",
+  "stickerPickCancel": "Indietro",
+  "stickerFactHeading": "Lo sapevi?",
+  "stickerFactDone": "Fantastico!",
+  "stickerPickedA11y": "{name}, il tuo adesivo",
+  "stickerPickableA11y": "{name}, tocca per sceglierlo",
+  "stickerLockedA11y": "{name}, non ancora collezionato"
 }

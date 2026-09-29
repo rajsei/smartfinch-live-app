@@ -25,6 +25,7 @@ abstract final class AppIcons {
   // Keep style-explicit names when outlined and rounded variants are both used.
   static const IconData audioFileOutlined = Symbols.audio_file;
   static const IconData audioFileRounded = Symbols.audio_file_rounded;
+  static const IconData autoAwesomeRounded = Symbols.auto_awesome_rounded;
   static const IconData barChart = Symbols.bar_chart;
   static const IconData batteryAlert = Symbols.battery_alert;
   static const IconData batteryChargingFull = Symbols.battery_charging_full;
@@ -132,6 +133,7 @@ abstract final class AppIcons {
   static const IconData personPinCircleRounded =
       Symbols.person_pin_circle_rounded;
   static const IconData personRounded = Symbols.person_rounded;
+  static const IconData photoAlbumRounded = Symbols.photo_album_rounded;
   static const IconData playArrow = Symbols.play_arrow;
   static const IconData playArrowRounded = Symbols.play_arrow_rounded;
   static const IconData playCircleOutline = Symbols.play_circle;

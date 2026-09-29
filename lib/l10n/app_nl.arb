@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Van elke herkende vogel wordt een kort fragment bewaard.",
   "settingsHelpSaveRecordings": "Wanneer actief, bewaart de app van elke detectie een kort fragment: de seconden die het model beoordeeld heeft, plus de ingestelde marge ervoor en erna. De fragmenten staan in je dagboek om terug te luisteren. Wanneer niet actief, luistert de app alleen en bewaart niets op het apparaat — dan valt er in het dagboek niets terug te luisteren.",
   "settingsGeoThresholdFloorHint": "Vanaf {floor} heeft een soort hier een niveau en levert sterren op.",
-  "settingsGeoThresholdBelowFloor": "Onder {floor} laat de app ook soorten zien die hier geen niveau hebben. Die leveren geen sterren op."
+  "settingsGeoThresholdBelowFloor": "Onder {floor} laat de app ook soorten zien die hier geen niveau hebben. Die leveren geen sterren op.",
+  "stickerAlbumTitle": "Stickeralbum",
+  "stickerAlbumPickButton": "{count, plural, =1{Kies een sticker} other{Kies {count} stickers}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Je mag een sticker kiezen! Tik op een vogel die je leuk vindt.} other{Je mag {count} stickers kiezen! Tik op een vogel die je leuk vindt.}}",
+  "stickerAlbumMine": "Jouw stickers",
+  "stickerAlbumToPick": "Kies er een",
+  "stickerAlbumStillToCollect": "Nog te verzamelen",
+  "stickerAlbumNextLevel": "Bij level {number} mag je er een kiezen.",
+  "stickerAlbumAllCollected": "Je hebt alle stickers!",
+  "stickerPickQuestion": "Deze sticker nemen?",
+  "stickerPickConfirm": "Nemen",
+  "stickerPickCancel": "Terug",
+  "stickerFactHeading": "Wist je dat?",
+  "stickerFactDone": "Super!",
+  "stickerPickedA11y": "{name}, jouw sticker",
+  "stickerPickableA11y": "{name}, tik om te kiezen",
+  "stickerLockedA11y": "{name}, nog niet verzameld"
 }

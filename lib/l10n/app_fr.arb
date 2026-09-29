@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Un court extrait est enregistré pour chaque oiseau entendu.",
   "settingsHelpSaveRecordings": "Si actif, l'app enregistre un court extrait pour chaque détection : les secondes évaluées par le modèle, plus le contexte réglé avant et après. Les extraits sont dans ton journal, prêts à être réécoutés. Si ce n'est pas actif, l'app se contente d'écouter et n'enregistre rien sur l'appareil — il n'y a alors rien à réécouter dans le journal.",
   "settingsGeoThresholdFloorHint": "À partir de {floor}, une espèce a un niveau ici et rapporte des étoiles.",
-  "settingsGeoThresholdBelowFloor": "En dessous de {floor}, l'app montre aussi des espèces qui n'ont pas de niveau ici. Celles-là ne rapportent pas d'étoiles."
+  "settingsGeoThresholdBelowFloor": "En dessous de {floor}, l'app montre aussi des espèces qui n'ont pas de niveau ici. Celles-là ne rapportent pas d'étoiles.",
+  "stickerAlbumTitle": "Album d'autocollants",
+  "stickerAlbumPickButton": "{count, plural, =1{Choisir un autocollant} other{Choisir {count} autocollants}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Tu peux choisir un autocollant ! Touche un oiseau qui te plaît.} other{Tu peux choisir {count} autocollants ! Touche un oiseau qui te plaît.}}",
+  "stickerAlbumMine": "Tes autocollants",
+  "stickerAlbumToPick": "Choisis-en un",
+  "stickerAlbumStillToCollect": "À collectionner",
+  "stickerAlbumNextLevel": "Au niveau {number}, tu pourras en choisir un.",
+  "stickerAlbumAllCollected": "Tu as tous les autocollants !",
+  "stickerPickQuestion": "Prendre cet autocollant ?",
+  "stickerPickConfirm": "Le prendre",
+  "stickerPickCancel": "Retour",
+  "stickerFactHeading": "Le savais-tu ?",
+  "stickerFactDone": "Génial !",
+  "stickerPickedA11y": "{name}, ton autocollant",
+  "stickerPickableA11y": "{name}, touche pour choisir",
+  "stickerLockedA11y": "{name}, pas encore collectionné"
 }

@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "For hver fugl som blir gjenkjent, lagres et kort klipp.",
   "settingsHelpSaveRecordings": "Når dette er aktivt, lagrer appen et kort klipp for hver deteksjon: sekundene modellen vurderte, pluss den innstilte marginen før og etter. Klippene ligger i dagboka og kan spilles av. Når det ikke er aktivt, lytter appen bare og lagrer ingenting på enheten — da er det ingenting å spille av i dagboka.",
   "settingsGeoThresholdFloorHint": "Fra {floor} og oppover har en art et nivå her og gir stjerner.",
-  "settingsGeoThresholdBelowFloor": "Under {floor} viser appen også arter som ikke har et nivå her. De gir ingen stjerner."
+  "settingsGeoThresholdBelowFloor": "Under {floor} viser appen også arter som ikke har et nivå her. De gir ingen stjerner.",
+  "stickerAlbumTitle": "Klistremerkealbum",
+  "stickerAlbumPickButton": "{count, plural, =1{Velg et klistremerke} other{Velg {count} klistremerker}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Du kan velge et klistremerke! Trykk på en fugl du liker.} other{Du kan velge {count} klistremerker! Trykk på en fugl du liker.}}",
+  "stickerAlbumMine": "Dine klistremerker",
+  "stickerAlbumToPick": "Velg ett",
+  "stickerAlbumStillToCollect": "Ikke samlet ennå",
+  "stickerAlbumNextLevel": "På nivå {number} kan du velge ett.",
+  "stickerAlbumAllCollected": "Du har samlet alle klistremerkene!",
+  "stickerPickQuestion": "Ta dette klistremerket?",
+  "stickerPickConfirm": "Ta det",
+  "stickerPickCancel": "Tilbake",
+  "stickerFactHeading": "Visste du?",
+  "stickerFactDone": "Kjempebra!",
+  "stickerPickedA11y": "{name}, ditt klistremerke",
+  "stickerPickableA11y": "{name}, trykk for å velge",
+  "stickerLockedA11y": "{name}, ikke samlet ennå"
 }

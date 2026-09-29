@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Zu jedem erkannten Vogel wird ein kurzer Clip gespeichert.",
   "settingsHelpSaveRecordings": "Wenn aktiv, speichert die App zu jeder Erkennung einen kurzen Clip: die Sekunden, die das Modell bewertet hat, plus das eingestellte Umfeld davor und danach. Die Clips stehen im Tagebuch zum Nachhören. Wenn nicht aktiv, hört die App nur zu und speichert nichts auf dem Gerät — dann gibt es im Tagebuch nichts zum Anhören.",
   "settingsGeoThresholdFloorHint": "Ab {floor} hat eine Art hier eine Stufe und bringt Sterne.",
-  "settingsGeoThresholdBelowFloor": "Unter {floor} zeigt die App auch Arten, die hier keine Stufe haben. Die bringen keine Sterne."
+  "settingsGeoThresholdBelowFloor": "Unter {floor} zeigt die App auch Arten, die hier keine Stufe haben. Die bringen keine Sterne.",
+  "stickerAlbumTitle": "Sticker-Album",
+  "stickerAlbumPickButton": "{count, plural, =1{Sticker aussuchen} other{{count} Sticker aussuchen}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Du darfst dir einen Sticker aussuchen! Tippe auf einen Vogel, der dir gefällt.} other{Du darfst dir {count} Sticker aussuchen! Tippe auf einen Vogel, der dir gefällt.}}",
+  "stickerAlbumMine": "Deine Sticker",
+  "stickerAlbumToPick": "Such dir einen aus",
+  "stickerAlbumStillToCollect": "Noch zu sammeln",
+  "stickerAlbumNextLevel": "Bei Level {number} darfst du dir einen aussuchen.",
+  "stickerAlbumAllCollected": "Du hast alle Sticker gesammelt!",
+  "stickerPickQuestion": "Diesen Sticker nehmen?",
+  "stickerPickConfirm": "Nehmen",
+  "stickerPickCancel": "Zurück",
+  "stickerFactHeading": "Wusstest du?",
+  "stickerFactDone": "Toll!",
+  "stickerPickedA11y": "{name}, dein Sticker",
+  "stickerPickableA11y": "{name}, tippen zum Aussuchen",
+  "stickerLockedA11y": "{name}, noch nicht gesammelt"
 }

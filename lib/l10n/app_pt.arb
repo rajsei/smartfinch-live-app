@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "É guardado um clipe curto de cada ave que a app ouve.",
   "settingsHelpSaveRecordings": "Se ativo, a app guarda um clipe curto de cada deteção: os segundos avaliados pelo modelo, mais o contexto definido antes e depois. Os clipes ficam no diário para voltares a ouvir. Se não estiver ativo, a app apenas escuta e não guarda nada no dispositivo — nesse caso não há nada para ouvir no diário.",
   "settingsGeoThresholdFloorHint": "A partir de {floor}, uma espécie tem um nível aqui e dá estrelas.",
-  "settingsGeoThresholdBelowFloor": "Abaixo de {floor}, a app mostra também espécies que aqui não têm nível. Essas não dão estrelas."
+  "settingsGeoThresholdBelowFloor": "Abaixo de {floor}, a app mostra também espécies que aqui não têm nível. Essas não dão estrelas.",
+  "stickerAlbumTitle": "Álbum de autocolantes",
+  "stickerAlbumPickButton": "{count, plural, =1{Escolher um autocolante} other{Escolher {count} autocolantes}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Podes escolher um autocolante! Toca numa ave de que gostes.} other{Podes escolher {count} autocolantes! Toca numa ave de que gostes.}}",
+  "stickerAlbumMine": "Os teus autocolantes",
+  "stickerAlbumToPick": "Escolhe um",
+  "stickerAlbumStillToCollect": "Ainda por colecionar",
+  "stickerAlbumNextLevel": "No nível {number} podes escolher um.",
+  "stickerAlbumAllCollected": "Tens todos os autocolantes!",
+  "stickerPickQuestion": "Ficar com este autocolante?",
+  "stickerPickConfirm": "Ficar com ele",
+  "stickerPickCancel": "Voltar",
+  "stickerFactHeading": "Sabias que…?",
+  "stickerFactDone": "Boa!",
+  "stickerPickedA11y": "{name}, o teu autocolante",
+  "stickerPickableA11y": "{name}, toca para escolher",
+  "stickerLockedA11y": "{name}, ainda não o tens"
 }

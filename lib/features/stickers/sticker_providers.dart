@@ -16,7 +16,9 @@ import 'package:meta/meta.dart';
 
 import '../avatar/avatar_providers.dart';
 import '../avatar/avatar_state.dart';
+import '../explore/explore_providers.dart';
 import '../scoring/scoring_providers.dart';
+import '../../shared/providers/settings_providers.dart';
 import 'sticker_board.dart';
 import 'sticker_catalog.dart';
 
@@ -50,6 +52,10 @@ class StickerPicks {
   /// False when every sticker is taken, even with levels open: the pick then
   /// waits quietly for new stickers, and nothing says anything is missing.
   bool get canPick => openLevels > 0 && available > 0;
+
+  /// How many stickers can be picked right now: the open picks, as far as
+  /// there are stickers to fill them.
+  int get pickableNow => openLevels < available ? openLevels : available;
 }
 
 /// Open picks against the ratcheted level (`AUS-12`).
@@ -75,7 +81,10 @@ Future<void> saveStickerBoard(WidgetRef ref, StickerBoard board) async {
   ref.invalidate(stickerBoardProvider);
 }
 
-/// Picks sticker [id] with the lowest open level.
+/// Picks sticker [id] with the lowest open level, and puts it on the board.
+///
+/// On the board straight away, so the child sees it on the home screen the
+/// moment they go back — arranging it is optional, having it is not.
 ///
 /// Returns false, and changes nothing, when no pick is open or [id] is taken
 /// — a double tap on "pick" must not throw.
@@ -86,6 +95,25 @@ Future<bool> pickSticker(WidgetRef ref, String id) async {
   if (board.openLevels(progress.level.number).isEmpty) return false;
   if (board.pickedIds.contains(id)) return false;
 
-  await saveStickerBoard(ref, board.pick(id, level: progress.level.number));
+  await saveStickerBoard(
+    ref,
+    board.pick(id, level: progress.level.number).place(id),
+  );
   return true;
+}
+
+/// The name to show for [sticker], in the species-name language.
+///
+/// The list's own name first, then the taxonomy, then English. Reads the
+/// taxonomy only if it has already loaded — a sticker is never worth waiting
+/// for, and every sticker the app ships carries a usable fallback.
+String stickerName(WidgetRef ref, StickerCatalog catalog, Sticker sticker) {
+  final taxonomy = ref.watch(taxonomyServiceProvider).value;
+  return catalog.nameFor(
+    sticker,
+    ref.watch(effectiveSpeciesLocaleProvider),
+    taxonomyName:
+        (scientificName, locale) =>
+            taxonomy?.lookup(scientificName)?.commonNameForLocale(locale),
+  );
 }

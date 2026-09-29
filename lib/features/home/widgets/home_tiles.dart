@@ -32,6 +32,7 @@ import '../../journal/journal_screen.dart';
 import '../../live/live_screen.dart';
 import '../../points/points_screen.dart';
 import '../../settings/settings_screen.dart';
+import '../../stickers/widgets/sticker_pick_card.dart';
 import 'still_possible_card.dart';
 
 /// One secondary destination.
@@ -92,9 +93,15 @@ class HomeTiles extends ConsumerWidget {
     this.isTablet = false,
     this.compact = false,
     this.dense = false,
+    this.stickerCard = false,
   });
 
   final bool isTablet;
+
+  /// While a sticker pick is open, "Pick a sticker" takes the suggestion slot
+  /// above the Live tile (`AVA-07`) — for a screen whose album button is
+  /// behind the panel.
+  final bool stickerCard;
 
   /// Landscape: shorter primary tile, tiles in one row.
   final bool compact;
@@ -120,7 +127,9 @@ class HomeTiles extends ConsumerWidget {
             // it suggests is done by the button directly underneath it. It
             // takes no room on a day with nothing left to suggest — the gap
             // below it belongs to the card, so an absent card leaves none.
-            StillPossibleCard(dense: dense),
+            stickerCard
+                ? StickerPickCard(fallback: StillPossibleCard(dense: dense))
+                : StillPossibleCard(dense: dense),
             _LiveTile(
               isTablet: isTablet,
               compact: compact,

@@ -719,5 +719,21 @@
   "settingsSaveRecordingsDescription": "Do każdego rozpoznanego ptaka zapisywany jest krótki fragment.",
   "settingsHelpSaveRecordings": "Gdy aktywne, aplikacja zapisuje do każdego wykrycia krótki fragment: sekundy ocenione przez model plus ustawiony margines przed i po. Fragmenty są w dzienniku i można ich posłuchać. Gdy nieaktywne, aplikacja tylko słucha i nic nie zapisuje na urządzeniu — w dzienniku nie ma wtedy czego słuchać.",
   "settingsGeoThresholdFloorHint": "Od {floor} gatunek ma tu poziom i daje gwiazdki.",
-  "settingsGeoThresholdBelowFloor": "Poniżej {floor} aplikacja pokazuje też gatunki, które nie mają tu poziomu. One nie dają gwiazdek."
+  "settingsGeoThresholdBelowFloor": "Poniżej {floor} aplikacja pokazuje też gatunki, które nie mają tu poziomu. One nie dają gwiazdek.",
+  "stickerAlbumTitle": "Album naklejek",
+  "stickerAlbumPickButton": "{count, plural, =1{Wybierz naklejkę} few{Wybierz {count} naklejki} many{Wybierz {count} naklejek} other{Wybierz {count} naklejki}}",
+  "stickerAlbumPickBanner": "{count, plural, =1{Możesz wybrać naklejkę! Dotknij ptaka, który ci się podoba.} few{Możesz wybrać {count} naklejki! Dotknij ptaka, który ci się podoba.} many{Możesz wybrać {count} naklejek! Dotknij ptaka, który ci się podoba.} other{Możesz wybrać {count} naklejki! Dotknij ptaka, który ci się podoba.}}",
+  "stickerAlbumMine": "Twoje naklejki",
+  "stickerAlbumToPick": "Wybierz jedną",
+  "stickerAlbumStillToCollect": "Do zebrania",
+  "stickerAlbumNextLevel": "Na poziomie {number} wybierzesz jedną.",
+  "stickerAlbumAllCollected": "Masz wszystkie naklejki!",
+  "stickerPickQuestion": "Wziąć tę naklejkę?",
+  "stickerPickConfirm": "Biorę",
+  "stickerPickCancel": "Wróć",
+  "stickerFactHeading": "Czy wiesz, że…?",
+  "stickerFactDone": "Super!",
+  "stickerPickedA11y": "{name}, twoja naklejka",
+  "stickerPickableA11y": "{name}, dotknij, aby wybrać",
+  "stickerLockedA11y": "{name}, jeszcze niezebrana"
 }

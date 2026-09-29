@@ -13,6 +13,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Added
 
+- Stickers: every level from 1 on lets you pick one hand-drawn bird from around the world for your sticker album. The album opens from the button under the level bar and shows your stickers and the ones still to collect. A sticker is picked with a tap and a "Take it", and then reveals a fact about the bird ("Did you know?"), which you can read again at any time. Children who already have levels get one pick for each level they have reached. On phones too short for the button under the level bar, it waits behind the tile panel and an open pick shows as "Pick a sticker" above the Live tile. Stickers never count as a find and never change your stars.
 - When there are no stars, the app says why. The live screen names each reason — species filter off, confidence threshold below 35 %, no location — and offers a button that opens the settings screen the fix is on, scrolled to the setting responsible and framed with the line "this is why there are no stars right now". The same reasons appear at the top of both settings screens.
 - Detection cards say why a bird earned nothing instead of leaving the card blank: "no stars — not expected here this week", or "no stars — no location".
 - The journal gives a reason per species for everything outside scoring: scoring was off, no location, or not expected here.
