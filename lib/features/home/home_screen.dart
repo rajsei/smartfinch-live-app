@@ -11,7 +11,9 @@ import '../../core/theme/app_theme.dart';
 import '../about/about_screen.dart';
 import '../explore/explore_providers.dart';
 import '../scoring/scoring_providers.dart';
+import '../stickers/sticker_board.dart';
 import '../stickers/widgets/sticker_album_button.dart';
+import '../stickers/widgets/sticker_board_layer.dart';
 import '../live/live_providers.dart';
 import '../../shared/providers/settings_providers.dart';
 import 'help_screen.dart';
@@ -288,6 +290,14 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
 
           return Stack(
             children: [
+              // The child's stickers (`AVA-07`). Behind everything while the
+              // panel is up; above the header, and arrangeable, while it is
+              // down — the space the panel frees is where stickers are stuck.
+              if (!_down)
+                const Positioned.fill(
+                  child: StickerBoardLayer(layout: StickerLayout.portrait),
+                ),
+
               Positioned(
                 top: topInset,
                 left: 0,
@@ -304,6 +314,15 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                   ),
                 ),
               ),
+
+              if (_down)
+                const Positioned.fill(
+                  child: StickerBoardLayer(
+                    layout: StickerLayout.portrait,
+                    editable: true,
+                    bottomInset: _PortraitHomeLayout.handleHeight,
+                  ),
+                ),
 
               // On a short phone the album button waits behind the panel,
               // still under the level bar, and shows when it is pulled down.
@@ -551,56 +570,70 @@ class _LandscapeHomeLayout extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return ColoredBox(
       color: theme.colorScheme.primaryContainer,
-      child: SafeArea(
-        right: false,
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Expanded(
-              flex: 2,
-              child: Center(
-                // Scrollable for the same reason it is in portrait: a short
-                // landscape phone can have less height than the header wants,
-                // and scrolling is the graceful answer to that.
-                child: SingleChildScrollView(
-                  child: HomeHeader(compact: !isTablet),
-                ),
-              ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Material(
-                color: theme.colorScheme.surface,
-                // The rounded edge faces the header, as the top edge does in
-                // portrait: one shape, rotated with the layout.
-                borderRadius: const BorderRadius.horizontal(
-                  left: Radius.circular(28),
-                ),
-                clipBehavior: Clip.antiAlias,
-                child: SafeArea(
-                  left: false,
-                  child: SingleChildScrollView(
-                    padding: EdgeInsets.symmetric(vertical: isTablet ? 20 : 14),
-                    child: Column(
-                      children: [
-                        // Sideways the scarce dimension is height, so the
-                        // suggestion above the tiles takes its short form on a
-                        // phone and its full one on a tablet.
-                        HomeTiles(
-                          isTablet: isTablet,
-                          compact: true,
-                          dense: !isTablet,
-                        ),
-                        SizedBox(height: isTablet ? 20 : 14),
-                        _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
-                      ],
+      child: Stack(
+        children: [
+          // Shown, not yet arrangeable, sideways (`AVA-07`).
+          const Positioned.fill(
+            child: StickerBoardLayer(layout: StickerLayout.landscape),
+          ),
+          SafeArea(
+            right: false,
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Center(
+                    // Scrollable for the same reason it is in portrait: a short
+                    // landscape phone can have less height than the header wants,
+                    // and scrolling is the graceful answer to that.
+                    child: SingleChildScrollView(
+                      child: HomeHeader(compact: !isTablet),
                     ),
                   ),
                 ),
-              ),
+                Expanded(
+                  flex: 3,
+                  child: Material(
+                    color: theme.colorScheme.surface,
+                    // The rounded edge faces the header, as the top edge does in
+                    // portrait: one shape, rotated with the layout.
+                    borderRadius: const BorderRadius.horizontal(
+                      left: Radius.circular(28),
+                    ),
+                    clipBehavior: Clip.antiAlias,
+                    child: SafeArea(
+                      left: false,
+                      child: SingleChildScrollView(
+                        padding: EdgeInsets.symmetric(
+                          vertical: isTablet ? 20 : 14,
+                        ),
+                        child: Column(
+                          children: [
+                            // Sideways the scarce dimension is height, so the
+                            // suggestion above the tiles takes its short form on a
+                            // phone and its full one on a tablet.
+                            HomeTiles(
+                              isTablet: isTablet,
+                              compact: true,
+                              dense: !isTablet,
+                            ),
+                            SizedBox(height: isTablet ? 20 : 14),
+                            _Footer(
+                              l10n: l10n,
+                              theme: theme,
+                              isTablet: isTablet,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }

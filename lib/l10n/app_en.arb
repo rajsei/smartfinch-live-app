@@ -3279,5 +3279,17 @@
         "type": "String"
       }
     }
+  },
+  "stickerBoardHint": "Drag a sticker with one finger. Use two fingers to turn it and make it bigger or smaller.",
+  "@stickerBoardHint": {
+    "description": "AVA-07: how to arrange stickers, shown while the home panel is down"
+  },
+  "stickerBoardAdd": "Tap a sticker to stick it on. Drag with one finger, turn and resize with two.",
+  "@stickerBoardAdd": {
+    "description": "AVA-07: above the strip of picked stickers not on the board, while the home panel is down"
+  },
+  "stickerBoardRemove": "Back to the album",
+  "@stickerBoardRemove": {
+    "description": "AVA-07: button on a touched sticker; takes it off the board, it stays in the album"
   }
 }

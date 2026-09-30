@@ -735,5 +735,8 @@
   "stickerFactDone": "Kjempebra!",
   "stickerPickedA11y": "{name}, ditt klistremerke",
   "stickerPickableA11y": "{name}, trykk for å velge",
-  "stickerLockedA11y": "{name}, ikke samlet ennå"
+  "stickerLockedA11y": "{name}, ikke samlet ennå",
+  "stickerBoardHint": "Flytt et klistremerke med én finger. Med to fingre snur du det og gjør det større eller mindre.",
+  "stickerBoardAdd": "Trykk på et klistremerke for å klistre det på. Én finger flytter, to fingre snur og endrer størrelsen.",
+  "stickerBoardRemove": "Tilbake til albumet"
 }

@@ -735,5 +735,8 @@
   "stickerFactDone": "Boa!",
   "stickerPickedA11y": "{name}, o teu autocolante",
   "stickerPickableA11y": "{name}, toca para escolher",
-  "stickerLockedA11y": "{name}, ainda não o tens"
+  "stickerLockedA11y": "{name}, ainda não o tens",
+  "stickerBoardHint": "Arrasta um autocolante com um dedo. Com dois dedos rodas e mudas o tamanho.",
+  "stickerBoardAdd": "Toca num autocolante para o colar. Com um dedo arrastas, com dois rodas e mudas o tamanho.",
+  "stickerBoardRemove": "Voltar ao álbum"
 }

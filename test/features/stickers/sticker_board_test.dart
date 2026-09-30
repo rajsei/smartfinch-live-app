@@ -87,12 +87,17 @@ void main() {
       expect(board.portrait.map((p) => p.id), ['a']);
     });
 
-    test('a new sticker lands in the middle, on top', () {
+    test('a new sticker lands on top, where the panel does not cover it', () {
       final board = picked.place('a').place('b');
       expect(board.portrait.last.id, 'b');
-      expect(board.portrait.last.x, 0.5);
-      expect(board.portrait.last.y, 0.5);
+      expect(board.portrait.last.y, lessThan(0.4));
       expect(board.portrait.last.scale, kDefaultStickerScale);
+    });
+
+    test('and the first few do not stack on each other', () {
+      final board = picked.place('a').place('b').place('c');
+      final spots = {for (final p in board.portrait) (p.x, p.y)};
+      expect(spots, hasLength(3));
     });
 
     test('the sticker a child touches comes to the front', () {
@@ -166,7 +171,10 @@ void main() {
 
       expect(board.landscape, isNotNull);
       expect(board.placementsFor(StickerLayout.landscape).first.x, 0.1);
-      expect(board.placementsFor(StickerLayout.portrait).first.x, 0.5);
+      expect(
+        board.placementsFor(StickerLayout.portrait).first.x,
+        placed.portrait.first.x,
+      );
     });
 
     test('after that, moving in portrait leaves landscape alone', () {

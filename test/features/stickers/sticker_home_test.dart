@@ -27,6 +27,7 @@ import 'package:smartfinch/features/scoring/scoring_providers.dart';
 import 'package:smartfinch/features/stickers/sticker_catalog.dart';
 import 'package:smartfinch/features/stickers/sticker_providers.dart';
 import 'package:smartfinch/features/stickers/widgets/sticker_album_button.dart';
+import 'package:smartfinch/features/stickers/widgets/sticker_board_layer.dart';
 import 'package:smartfinch/features/stickers/widgets/sticker_pick_card.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
@@ -113,6 +114,33 @@ void main() {
       expect(find.text('Pick a sticker').hitTestable(), findsOneWidget);
       expect(find.byType(StickerPickCard), findsNothing);
       expectEveryDestinationOnScreen(tester, 844);
+    });
+  });
+
+  group('the stickers on the board', () {
+    bool editable(WidgetTester tester) =>
+        tester
+            .widget<StickerBoardLayer>(find.byType(StickerBoardLayer))
+            .editable;
+
+    testWidgets('are background while the panel is up', (tester) async {
+      await pumpAt(tester, const Size(390, 844));
+
+      expect(find.byType(StickerBoardLayer), findsOneWidget);
+      expect(editable(tester), isFalse);
+    });
+
+    testWidgets('and can be arranged while it is down', (tester) async {
+      await pumpAt(tester, const Size(390, 844));
+
+      await tester.tap(find.bySemanticsLabel(RegExp('Drag to move')));
+      await tester.pumpAndSettle();
+      expect(editable(tester), isTrue);
+
+      // Pulling it back up is "done".
+      await tester.tap(find.bySemanticsLabel(RegExp('Drag to move')));
+      await tester.pumpAndSettle();
+      expect(editable(tester), isFalse);
     });
   });
 

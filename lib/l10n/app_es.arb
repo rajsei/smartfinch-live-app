@@ -735,5 +735,8 @@
   "stickerFactDone": "¡Genial!",
   "stickerPickedA11y": "{name}, tu pegatina",
   "stickerPickableA11y": "{name}, toca para elegir",
-  "stickerLockedA11y": "{name}, aún no la tienes"
+  "stickerLockedA11y": "{name}, aún no la tienes",
+  "stickerBoardHint": "Mueve una pegatina con un dedo. Con dos dedos la giras y la haces más grande o más pequeña.",
+  "stickerBoardAdd": "Toca una pegatina para pegarla. Muévela con un dedo; con dos, gírala y cambia su tamaño.",
+  "stickerBoardRemove": "Volver al álbum"
 }

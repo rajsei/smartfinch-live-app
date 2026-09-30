@@ -735,5 +735,8 @@
   "stickerFactDone": "Toll!",
   "stickerPickedA11y": "{name}, dein Sticker",
   "stickerPickableA11y": "{name}, tippen zum Aussuchen",
-  "stickerLockedA11y": "{name}, noch nicht gesammelt"
+  "stickerLockedA11y": "{name}, noch nicht gesammelt",
+  "stickerBoardHint": "Schieb einen Sticker mit einem Finger. Mit zwei Fingern drehst du ihn und machst ihn größer oder kleiner.",
+  "stickerBoardAdd": "Tippe auf einen Sticker, um ihn aufzukleben. Mit einem Finger schieben, mit zwei drehen und größer machen.",
+  "stickerBoardRemove": "Zurück ins Album"
 }

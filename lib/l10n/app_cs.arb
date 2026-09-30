@@ -735,5 +735,8 @@
   "stickerFactDone": "Super!",
   "stickerPickedA11y": "{name}, tvoje samolepka",
   "stickerPickableA11y": "{name}, klepni a vyber",
-  "stickerLockedA11y": "{name}, ještě ji nemáš"
+  "stickerLockedA11y": "{name}, ještě ji nemáš",
+  "stickerBoardHint": "Samolepku posuneš jedním prstem. Dvěma prsty ji otočíš a zvětšíš nebo zmenšíš.",
+  "stickerBoardAdd": "Klepni na samolepku a nalep ji. Jedním prstem posouvej, dvěma otáčej a měň velikost.",
+  "stickerBoardRemove": "Zpět do alba"
 }

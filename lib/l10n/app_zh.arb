@@ -735,5 +735,8 @@
   "stickerFactDone": "太棒了！",
   "stickerPickedA11y": "{name}，你的贴纸",
   "stickerPickableA11y": "{name}，点一下来挑选",
-  "stickerLockedA11y": "{name}，还没收集到"
+  "stickerLockedA11y": "{name}，还没收集到",
+  "stickerBoardHint": "用一根手指拖动贴纸。用两根手指可以旋转它，并把它放大或缩小。",
+  "stickerBoardAdd": "点一张贴纸就能把它贴上。一根手指拖动，两根手指旋转和缩放。",
+  "stickerBoardRemove": "放回贴纸册"
 }

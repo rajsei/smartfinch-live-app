@@ -735,5 +735,8 @@
   "stickerFactDone": "Super!",
   "stickerPickedA11y": "{name}, twoja naklejka",
   "stickerPickableA11y": "{name}, dotknij, aby wybrać",
-  "stickerLockedA11y": "{name}, jeszcze niezebrana"
+  "stickerLockedA11y": "{name}, jeszcze niezebrana",
+  "stickerBoardHint": "Przesuwaj naklejkę jednym palcem. Dwoma palcami ją obrócisz i powiększysz lub pomniejszysz.",
+  "stickerBoardAdd": "Dotknij naklejki, aby ją przykleić. Jednym palcem przesuwasz, dwoma obracasz i zmieniasz rozmiar.",
+  "stickerBoardRemove": "Z powrotem do albumu"
 }

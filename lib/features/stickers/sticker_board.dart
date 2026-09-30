@@ -261,11 +261,15 @@ class StickerBoard {
 
   /// Puts picked sticker [id] on the board, on top, in both arrangements.
   ///
+  /// It lands in the upper part of the board, which the tile panel does not
+  /// cover — a sticker picked in the album must be *seen* on the home screen —
+  /// spread so the first few do not stack on each other.
+  ///
   /// Already on the board, or never picked: unchanged.
   StickerBoard place(String id) {
     if (!pickedIds.contains(id) || placedIds.contains(id)) return this;
 
-    final added = StickerPlacement(id: id);
+    final added = _spotFor(id, portrait.length);
     return _copy(
       portrait: [...portrait, added],
       landscape: landscape == null ? null : [...landscape!, added],
@@ -340,6 +344,16 @@ class StickerBoard {
 }
 
 const Object _keep = Object();
+
+/// Where the [n]-th sticker on the board lands.
+StickerPlacement _spotFor(String id, int n) {
+  const xs = [0.22, 0.5, 0.78];
+  return StickerPlacement(
+    id: id,
+    x: xs[n % xs.length],
+    y: 0.14 + 0.1 * ((n ~/ xs.length) % 3),
+  );
+}
 
 /// [landscape] reduced to, and completed with, the stickers in [portrait].
 ///

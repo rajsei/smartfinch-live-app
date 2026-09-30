@@ -735,5 +735,8 @@
   "stickerFactDone": "Super!",
   "stickerPickedA11y": "{name}, jouw sticker",
   "stickerPickableA11y": "{name}, tik om te kiezen",
-  "stickerLockedA11y": "{name}, nog niet verzameld"
+  "stickerLockedA11y": "{name}, nog niet verzameld",
+  "stickerBoardHint": "Schuif een sticker met één vinger. Met twee vingers draai je hem en maak je hem groter of kleiner.",
+  "stickerBoardAdd": "Tik op een sticker om hem op te plakken. Met één vinger schuiven, met twee draaien en groter of kleiner maken.",
+  "stickerBoardRemove": "Terug naar het album"
 }

@@ -735,5 +735,8 @@
   "stickerFactDone": "Здорово!",
   "stickerPickedA11y": "{name}, твоя наклейка",
   "stickerPickableA11y": "{name}, нажми, чтобы выбрать",
-  "stickerLockedA11y": "{name}, ещё не собрана"
+  "stickerLockedA11y": "{name}, ещё не собрана",
+  "stickerBoardHint": "Двигай наклейку одним пальцем. Двумя пальцами её можно повернуть и сделать больше или меньше.",
+  "stickerBoardAdd": "Нажми на наклейку, чтобы приклеить её. Одним пальцем двигай, двумя — поворачивай и меняй размер.",
+  "stickerBoardRemove": "Обратно в альбом"
 }

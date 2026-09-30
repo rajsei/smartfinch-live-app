@@ -735,5 +735,8 @@
   "stickerFactDone": "Génial !",
   "stickerPickedA11y": "{name}, ton autocollant",
   "stickerPickableA11y": "{name}, touche pour choisir",
-  "stickerLockedA11y": "{name}, pas encore collectionné"
+  "stickerLockedA11y": "{name}, pas encore collectionné",
+  "stickerBoardHint": "Déplace un autocollant avec un doigt. Avec deux doigts, tu le tournes et tu l'agrandis ou le rétrécis.",
+  "stickerBoardAdd": "Touche un autocollant pour le coller. Un doigt pour le déplacer, deux pour le tourner et changer sa taille.",
+  "stickerBoardRemove": "Retour à l'album"
 }
