@@ -18,7 +18,12 @@
 // lands on the header underneath.
 //
 //   • one finger drags, two fingers turn and resize (one gesture, not modes)
-//   • the sticker touched comes to the front and shows "back to the album"
+//   • the sticker touched comes to the front and shows "back to the album";
+//     a touch anywhere else lets go of it again
+//   • a sticker stays on the board, however big or turned: one pushed
+//     against the top stops there instead of sliding under the header, where
+//     it would cover the level bar and could no longer be touched. The sides
+//     in portrait are the screen's own edges; there it may hang out by half
 //   • a strip above the handle holds the picked stickers not on the board;
 //     a tap sticks one on
 //
@@ -80,10 +85,24 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
 
   bool get _gesturing => _gestureStart != null;
 
+  /// Fingers currently down on a sticker. A second finger landing beside the
+  /// sticker another finger is holding is not "a tap somewhere else".
+  int _pointersOnStickers = 0;
+
   @override
   void didUpdateWidget(StickerBoardLayer old) {
     super.didUpdateWidget(old);
-    if (!widget.editable) _selected = null;
+    if (!widget.editable) {
+      _selected = null;
+      _pointersOnStickers = 0;
+    }
+  }
+
+  /// A touch anywhere but on a sticker — empty board, the strip, the header,
+  /// the handle — lets go of the one that was selected.
+  void _deselect() {
+    if (_selected == null || _gesturing || _pointersOnStickers > 0) return;
+    setState(() => _selected = null);
   }
 
   @override
@@ -149,11 +168,17 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
 
   Widget _placed(
     Sticker sticker,
-    StickerPlacement placement,
+    StickerPlacement stored,
     Size size,
     double side,
   ) {
+    // Kept on the board here as well as while dragging: a placement stored
+    // before the board had its current size may still hang over its edge.
+    final placement = _keptOn(stored, size);
     final extent = placement.scale * side;
+    // Hanging out on the right, "back to the album" moves to the left corner:
+    // the part of the sticker still on screen.
+    final hangsOutRight = placement.x * size.width + extent / 2 > size.width;
     final image = Image.asset(
       sticker.imageAsset,
       width: extent,
@@ -174,61 +199,78 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
     // touch that starts a gesture; if selecting changed the widgets around the
     // GestureDetector, Flutter would throw the detector away mid-gesture and
     // a two-finger pinch would never arrive. So the border is always there
-    // (transparent when not selected) and the button is a later child.
+    // (transparent when not selected) and the button is a later child. The
+    // TapRegion and Listener are always there too, for the same reason; all
+    // stickers share one region, so touching another sticker is not
+    // "outside" — it selects that one instead.
     final Widget child =
         !widget.editable
             ? rotated
-            : GestureDetector(
-              behavior: HitTestBehavior.opaque,
-              onTapDown: (_) => _select(placement.id),
-              // A tap only brings it to the front; that order is worth keeping.
-              onTap: () {
-                final draft = _draft;
-                if (draft != null) _commit(draft);
-              },
-              onScaleStart: (_) {
-                _select(placement.id);
-                setState(() => _gestureStart = _currentPlacement(placement.id));
-              },
-              onScaleUpdate:
-                  (details) => _update(placement.id, details, size, side),
-              onScaleEnd: (_) {
-                final draft = _draft;
-                setState(() => _gestureStart = null);
-                if (draft != null) _commit(draft);
-              },
-              child: Stack(
-                fit: StackFit.expand,
-                children: [
-                  DecoratedBox(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      border: Border.all(
-                        color:
-                            selected
-                                ? Theme.of(context).colorScheme.primary
-                                : Colors.transparent,
-                        width: 2,
+            : TapRegion(
+              groupId: this,
+              onTapOutside: (_) => _deselect(),
+              child: Listener(
+                onPointerDown: (_) => _pointersOnStickers++,
+                onPointerUp: (_) => _releasePointer(),
+                onPointerCancel: (_) => _releasePointer(),
+                child: GestureDetector(
+                  behavior: HitTestBehavior.opaque,
+                  onTapDown: (_) => _select(placement.id),
+                  // A tap only brings it to the front; that order is worth
+                  // keeping.
+                  onTap: () {
+                    final draft = _draft;
+                    if (draft != null) _commit(draft);
+                  },
+                  onScaleStart: (_) {
+                    _select(placement.id);
+                    setState(
+                      () => _gestureStart = _currentPlacement(placement.id),
+                    );
+                  },
+                  onScaleUpdate:
+                      (details) => _update(placement.id, details, size, side),
+                  onScaleEnd: (_) {
+                    final draft = _draft;
+                    setState(() => _gestureStart = null);
+                    if (draft != null) _commit(draft);
+                  },
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      DecoratedBox(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(
+                            color:
+                                selected
+                                    ? Theme.of(context).colorScheme.primary
+                                    : Colors.transparent,
+                            width: 2,
+                          ),
+                        ),
+                        child: rotated,
                       ),
-                    ),
-                    child: rotated,
+                      // Inside the sticker's box, not hanging off its
+                      // corner: a touch outside a widget's bounds never
+                      // reaches it.
+                      if (selected)
+                        Positioned(
+                          top: 0,
+                          left: hangsOutRight ? 0 : null,
+                          right: hangsOutRight ? null : 0,
+                          child: _BackToAlbumButton(
+                            onPressed: () {
+                              final board = _draft;
+                              if (board == null) return;
+                              setState(() => _selected = null);
+                              _commit(board.remove(placement.id));
+                            },
+                          ),
+                        ),
+                    ],
                   ),
-                  // Inside the sticker's box, not hanging off its corner: a
-                  // touch outside a widget's bounds never reaches it.
-                  if (selected)
-                    Positioned(
-                      top: 0,
-                      right: 0,
-                      child: _BackToAlbumButton(
-                        onPressed: () {
-                          final board = _draft;
-                          if (board == null) return;
-                          setState(() => _selected = null);
-                          _commit(board.remove(placement.id));
-                        },
-                      ),
-                    ),
-                ],
+                ),
               ),
             );
 
@@ -271,6 +313,9 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
 
     // Translation accumulates frame by frame; scale and rotation are relative
     // to where the gesture began, which is how the recogniser reports them.
+    // Kept on the board every frame, not only when drawn: a finger that
+    // pushes past the edge and comes back moves the sticker at once, rather
+    // than first working off an overshoot nobody can see.
     final moved = current.copyWith(
       x: current.x + details.focalPointDelta.dx / size.width,
       y: current.y + details.focalPointDelta.dy / size.height,
@@ -279,7 +324,21 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
           details.pointerCount > 1 ? start.rotation + details.rotation : null,
     );
 
-    setState(() => _draft = board.move(widget.layout, moved));
+    setState(() => _draft = board.move(widget.layout, _keptOn(moved, size)));
+  }
+
+  /// [placement] kept on this board. In portrait the board's sides are the
+  /// screen's, so a sticker may hang out there by half; sideways the header
+  /// is on the left, and nothing may reach under it.
+  StickerPlacement _keptOn(StickerPlacement placement, Size size) =>
+      placement.keptOn(
+        width: size.width,
+        height: size.height,
+        openSides: widget.layout == StickerLayout.portrait,
+      );
+
+  void _releasePointer() {
+    if (_pointersOnStickers > 0) _pointersOnStickers--;
   }
 
   Future<void> _commit(StickerBoard board) async {

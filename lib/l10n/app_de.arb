@@ -682,6 +682,7 @@
   "avatarNameTitle": "Wie heißt dein Vogel?",
   "avatarNameClear": "Vorerst kein Name",
   "homePanelHandleA11y": "Ziehen, um die Knöpfe nach unten oder wieder nach oben zu schieben",
+  "homePanelHandleLandscapeA11y": "Ziehen, um die Knöpfe nach rechts oder wieder nach links zu schieben",
   "homeFigureTotal": "Gesamt",
   "homeFigureLast30Days": "30 Tage",
   "homeFigureToday": "Heute",

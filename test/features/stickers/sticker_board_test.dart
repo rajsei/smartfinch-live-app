@@ -129,6 +129,84 @@ void main() {
       expect(tiny.portrait.single.scale, kMinStickerScale);
     });
 
+    group('kept whole on a board of a given size', () {
+      // 400 × 800: the shorter side is 400, so scale 0.3 is 120 wide.
+      StickerPlacement on400x800(StickerPlacement p) =>
+          p.keptOn(width: 400, height: 800);
+
+      test('a sticker at the edge is moved in by half its size', () {
+        final p = on400x800(
+          const StickerPlacement(id: 'a', x: 0, y: 0, scale: 0.3),
+        );
+        expect(p.x, closeTo(60 / 400, 1e-9));
+        expect(p.y, closeTo(60 / 800, 1e-9));
+
+        final q = on400x800(
+          const StickerPlacement(id: 'a', x: 1, y: 1, scale: 0.3),
+        );
+        expect(q.x, closeTo(1 - 60 / 400, 1e-9));
+        expect(q.y, closeTo(1 - 60 / 800, 1e-9));
+      });
+
+      test('one already inside is left where it is', () {
+        const p = StickerPlacement(id: 'a', x: 0.4, y: 0.6, scale: 0.3);
+        expect(on400x800(p), p);
+      });
+
+      test('turned, its corners count', () {
+        final p = on400x800(
+          const StickerPlacement(
+            id: 'a',
+            x: 0.5,
+            y: 0,
+            scale: 0.3,
+            rotation: math.pi / 4,
+          ),
+        );
+        expect(p.y, closeTo(60 * math.sqrt2 / 800, 1e-9));
+      });
+
+      test(
+        'too big to fit turned, it sits in the middle of that direction',
+        () {
+          final p = on400x800(
+            const StickerPlacement(
+              id: 'a',
+              x: 0.1,
+              y: 0.1,
+              scale: kMaxStickerScale,
+              rotation: math.pi / 4,
+            ),
+          );
+          expect(p.x, 0.5);
+          expect(p.y, greaterThan(0.1));
+        },
+      );
+
+      test('with open sides it may hang out sideways by half, no more', () {
+        StickerPlacement open(StickerPlacement p) =>
+            p.keptOn(width: 400, height: 800, openSides: true);
+
+        final left = open(
+          const StickerPlacement(id: 'a', x: 0, y: 0, scale: 0.3),
+        );
+        expect(left.x, 0.0);
+        // Top and bottom stay closed.
+        expect(left.y, closeTo(60 / 800, 1e-9));
+
+        expect(open(const StickerPlacement(id: 'a', x: 1, scale: 0.3)).x, 1.0);
+        const inside = StickerPlacement(id: 'a', x: 0.3, y: 0.5, scale: 0.3);
+        expect(open(inside), inside);
+      });
+
+      test('only the position changes', () {
+        const p = StickerPlacement(id: 'a', x: 0, scale: 0.5, rotation: 0.3);
+        final kept = on400x800(p);
+        expect(kept.scale, p.scale);
+        expect(kept.rotation, p.rotation);
+      });
+    });
+
     test('rotation is folded into one turn', () {
       final board = picked
           .place('a')

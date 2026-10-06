@@ -682,6 +682,7 @@
   "avatarNameTitle": "Como se chama a tua ave?",
   "avatarNameClear": "Sem nome por agora",
   "homePanelHandleA11y": "Arrasta para descer os botões ou voltar a subi-los",
+  "homePanelHandleLandscapeA11y": "Arrasta para mover os botões para a direita ou voltar para a esquerda",
   "homeFigureTotal": "Total",
   "homeFigureLast30Days": "30 dias",
   "homeFigureToday": "Hoje",

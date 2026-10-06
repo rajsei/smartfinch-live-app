@@ -682,6 +682,7 @@
   "avatarNameTitle": "Hoe heet jouw vogel?",
   "avatarNameClear": "Voorlopig geen naam",
   "homePanelHandleA11y": "Sleep om de knoppen omlaag of weer omhoog te schuiven",
+  "homePanelHandleLandscapeA11y": "Sleep om de knoppen naar rechts of weer naar links te schuiven",
   "homeFigureTotal": "Totaal",
   "homeFigureLast30Days": "30 dagen",
   "homeFigureToday": "Vandaag",

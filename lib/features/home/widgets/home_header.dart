@@ -90,6 +90,10 @@ class HomeHeader extends ConsumerWidget {
               ? const EdgeInsets.fromLTRB(32, 24, 32, 28)
               : const EdgeInsets.fromLTRB(20, 12, 20, 20),
       child: Column(
+        // As tall as its content, so a host that centres it — the landscape
+        // column — can. Under the fixed-height box portrait gives it, this
+        // changes nothing.
+        mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(

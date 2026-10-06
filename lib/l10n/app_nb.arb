@@ -682,6 +682,7 @@
   "avatarNameTitle": "Hva heter fuglen din?",
   "avatarNameClear": "Ikke noe navn ennå",
   "homePanelHandleA11y": "Dra for å flytte knappene ned eller opp igjen",
+  "homePanelHandleLandscapeA11y": "Dra for å flytte knappene til høyre eller tilbake til venstre",
   "homeFigureTotal": "Totalt",
   "homeFigureLast30Days": "30 dager",
   "homeFigureToday": "I dag",

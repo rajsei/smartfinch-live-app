@@ -147,6 +147,97 @@ void main() {
       expect(grown.scale, greaterThan(0.3));
     });
 
+    testWidgets(
+      'a drag stops at the edge, with the whole sticker on the board',
+      (tester) async {
+        await pump(tester, editable: true);
+
+        // Far past the top: it would hang over the header above the board.
+        await tester.drag(sticker, const Offset(0, -700));
+        await settle(tester);
+
+        expect(tester.getRect(sticker).top, moreOrLessEquals(0, epsilon: 0.5));
+        final moved = (await tester.runAsync(stored))!.portrait.single;
+        expect(moved.y, closeTo(60 / 800, 1e-9));
+
+        // And its top edge still answers a finger.
+        await tester.tapAt(
+          tester.getRect(sticker).topLeft + const Offset(4, 4),
+        );
+        await settle(tester);
+        expect(find.byTooltip('Back to the album'), findsOneWidget);
+      },
+    );
+
+    testWidgets('sideways it may hang out by half, and still be taken back', (
+      tester,
+    ) async {
+      await pump(tester, editable: true);
+
+      await tester.drag(sticker, const Offset(700, 0));
+      await settle(tester);
+
+      final moved = (await tester.runAsync(stored))!.portrait.single;
+      expect(moved.x, 1.0);
+      expect(tester.getCenter(sticker).dx, moreOrLessEquals(400, epsilon: 0.5));
+
+      // "Back to the album" is on the half that still shows.
+      await tester.tapAt(tester.getRect(sticker).center - const Offset(20, 0));
+      await settle(tester);
+      final button = find.byTooltip('Back to the album');
+      expect(button, findsOneWidget);
+      expect(tester.getRect(button).right, lessThanOrEqualTo(400));
+
+      await tester.tap(button);
+      await settle(tester);
+      expect((await tester.runAsync(stored))!.placedIds, isEmpty);
+    });
+
+    testWidgets('growing it against the edge pushes it back onto the board', (
+      tester,
+    ) async {
+      await pump(tester, editable: true);
+      await tester.drag(sticker, const Offset(0, -700));
+      await settle(tester);
+
+      final top = tester.getRect(sticker).center;
+      final a = await tester.startGesture(top + const Offset(-20, 0));
+      final b = await tester.startGesture(top + const Offset(20, 0));
+      await tester.pump();
+      for (var i = 0; i < 10; i++) {
+        await a.moveBy(const Offset(-6, 0));
+        await b.moveBy(const Offset(6, 0));
+        await tester.pump();
+      }
+      await a.up();
+      await b.up();
+      await settle(tester);
+
+      final grown = (await tester.runAsync(stored))!.portrait.single;
+      expect(grown.scale, greaterThan(0.3));
+      final rect = tester.getRect(
+        find.byWidgetPredicate(
+          (w) => w is Image && w.width != null && w.width! > 120,
+        ),
+      );
+      expect(rect.top, greaterThanOrEqualTo(-0.5));
+    });
+
+    testWidgets('a touch anywhere else lets go of it', (tester) async {
+      await pump(tester, editable: true);
+
+      await tester.tap(sticker);
+      await settle(tester);
+      expect(find.byTooltip('Back to the album'), findsOneWidget);
+
+      await tester.tapAt(const Offset(200, 120));
+      await settle(tester);
+      expect(find.byTooltip('Back to the album'), findsNothing);
+
+      // Nothing was taken off the board by letting go.
+      expect((await tester.runAsync(stored))!.placedIds, {kingfisher});
+    });
+
     testWidgets('a touched sticker can go back to the album', (tester) async {
       await pump(tester, editable: true);
 

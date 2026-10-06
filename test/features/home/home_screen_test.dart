@@ -571,9 +571,35 @@ void main() {
       await pumpLandscape(tester);
 
       expect(tester.takeException(), isNull);
-      for (final label in ['Collection', 'Explore', 'Journal', 'Points']) {
-        expect(find.text(label), findsOneWidget);
+      // ⚠️ Hit-testable, not merely present. A tile can be laid out and still
+      // be clipped off the screen by its parent — which is exactly how the
+      // sideways panel once vanished while this test still passed.
+      for (final label in [
+        'Live',
+        'Collection',
+        'Explore',
+        'Journal',
+        'Points',
+      ]) {
+        expect(find.text(label).hitTestable(), findsOneWidget, reason: label);
       }
+    });
+
+    testWidgets('the panel pushes aside and comes back (AVA-07)', (
+      tester,
+    ) async {
+      await pumpLandscape(tester);
+      final handle = find.byKey(const ValueKey('landscape_panel_handle'));
+
+      await tester.tap(handle);
+      await tester.pumpAndSettle();
+      // Pushed: only the handle is left on screen, and it still answers.
+      expect(find.text('Collection').hitTestable(), findsNothing);
+      expect(handle.hitTestable(), findsOneWidget);
+
+      await tester.tap(handle);
+      await tester.pumpAndSettle();
+      expect(find.text('Collection').hitTestable(), findsOneWidget);
     });
   });
 

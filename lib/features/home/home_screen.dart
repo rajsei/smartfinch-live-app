@@ -217,12 +217,20 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   ///
   /// Plus the sticker album button under the level bar (`AVA-07`) when the
   /// screen is tall enough to carry it there — see [albumButtonInHeaderFrom].
+  ///
+  /// ⚠️ The +23 is not decoration. The header used to sit in a
+  /// `SingleChildScrollView`, which absorbed a 23-pixel shortfall between this
+  /// budget and what the header's own content actually needs — invisibly,
+  /// since nothing here ever suggested it could scroll. The header is fixed
+  /// now, on purpose: it is the one block on this screen a child must always
+  /// see in full. Recalibrate this number (against `HomeHeader`'s own layout,
+  /// not against a guess) if its content ever changes shape again.
   static double headerHeight({
     required bool isTablet,
     bool dense = false,
     bool withAlbumButton = true,
   }) =>
-      (isTablet ? 300 : (dense ? 184 : 200)) +
+      (isTablet ? 323 : (dense ? 184 : 223)) +
       (withAlbumButton
           ? stickerButtonGap(large: isTablet) +
               StickerAlbumButton.heightFor(large: isTablet)
@@ -290,12 +298,19 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
 
           return Stack(
             children: [
-              // The child's stickers (`AVA-07`). Behind everything while the
-              // panel is up; above the header, and arrangeable, while it is
-              // down — the space the panel frees is where stickers are stuck.
+              // The child's stickers (`AVA-07`), confined to below the
+              // header (`headerBottom`) in both states. The star/level/avatar
+              // block is a fixed reference a child can always read in full —
+              // never a surface a sticker can drift under or behind.
               if (!_down)
-                const Positioned.fill(
-                  child: StickerBoardLayer(layout: StickerLayout.portrait),
+                Positioned(
+                  top: headerBottom,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: const StickerBoardLayer(
+                    layout: StickerLayout.portrait,
+                  ),
                 ),
 
               Positioned(
@@ -303,10 +318,12 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                 left: 0,
                 right: 0,
                 height: (headerBottom - topInset).clamp(0.0, height),
-                // Scrollable rather than clipped: on a short screen the clamp
-                // above can hand the header less than its content wants, and
-                // scrolling is the graceful answer to that.
-                child: SingleChildScrollView(
+                // Fixed, not scrollable: this block is the one thing on the
+                // screen a child must always see in full. Clipped rather than
+                // left to overflow, for the rare case — a large system text
+                // scale — where its content still asks for more than the
+                // budget above gives it.
+                child: ClipRect(
                   child: HomeHeader(
                     large: widget.isTablet,
                     dense: dense,
@@ -316,8 +333,12 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
               ),
 
               if (_down)
-                const Positioned.fill(
-                  child: StickerBoardLayer(
+                Positioned(
+                  top: headerBottom,
+                  left: 0,
+                  right: 0,
+                  bottom: 0,
+                  child: const StickerBoardLayer(
                     layout: StickerLayout.portrait,
                     editable: true,
                     bottomInset: _PortraitHomeLayout.handleHeight,
@@ -541,21 +562,24 @@ class _TilePanel extends StatelessWidget {
 // one a child already knows and the two orientations cannot drift into showing
 // different things.
 //
-// ### Why 2 : 3
+// ### Why 2 : 5
 //
 // The header's width need is close to fixed: a 52-pixel bird, a gap, and a
 // six-figure number beside it. The tiles are the half that *uses* extra width —
 // Live is a wide primary tile and the rest sit in one row beneath it. So the
 // header takes the smaller share and the navigation takes the rest.
 //
-// ### No handle here
+// ### The panel pushes right — the mirror of pulling down (`AVA-07`)
 //
-// The panel does not slide sideways. In portrait pulling it down frees the
-// screen for something — today the header, later the diorama of unlocked birds
-// — and there is no such thing to free here: the header is already beside it,
-// not behind it. A gesture that only half-matched the other orientation would
-// be worse than none.
-class _LandscapeHomeLayout extends ConsumerWidget {
+// Portrait frees room for stickers by pulling the panel *down*; sideways the
+// room to free is *beside* the panel, not above it, so the panel slides
+// *right* instead — the same handle, the same two positions, the same "a tap
+// or a drag" rule, turned ninety degrees. Docked (the resting position), it
+// covers the whole width the header does not need, exactly as it always did
+// before stickers existed. Pushed, only [handleWidth] stays on screen and the
+// strip it uncovers — always to the right of the header, never under it —
+// is where stickers can be arranged.
+class _LandscapeHomeLayout extends ConsumerStatefulWidget {
   const _LandscapeHomeLayout({
     required this.l10n,
     required this.theme,
@@ -566,74 +590,192 @@ class _LandscapeHomeLayout extends ConsumerWidget {
   final ThemeData theme;
   final bool isTablet;
 
+  /// What stays on screen when the panel is pushed right — the mirror of
+  /// [_PortraitHomeLayout.handleHeight].
+  static const double handleWidth = 64;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_LandscapeHomeLayout> createState() =>
+      _LandscapeHomeLayoutState();
+}
+
+class _LandscapeHomeLayoutState extends ConsumerState<_LandscapeHomeLayout> {
+  bool _pushed = false;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = widget.theme;
+
     return ColoredBox(
       color: theme.colorScheme.primaryContainer,
-      child: Stack(
-        children: [
-          // Shown, not yet arrangeable, sideways (`AVA-07`).
-          const Positioned.fill(
-            child: StickerBoardLayer(layout: StickerLayout.landscape),
-          ),
-          SafeArea(
-            right: false,
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Expanded(
-                  flex: 2,
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          final width = constraints.maxWidth;
+          // The header's own share never changes; only the panel moves.
+          final headerWidth = width * 2 / 5;
+          final panelWidth = width - headerWidth;
+
+          return Stack(
+            children: [
+              // The child's stickers (`AVA-07`), confined to the strip the
+              // panel occupies — never under the header — and hidden behind
+              // the panel until it is pushed aside.
+              if (!_pushed)
+                Positioned(
+                  left: headerWidth,
+                  right: 0,
+                  top: 0,
+                  bottom: 0,
+                  child: const StickerBoardLayer(
+                    layout: StickerLayout.landscape,
+                  ),
+                ),
+
+              // ⚠️ Positioned, like every other child here. A Stack sizes
+              // itself to its non-positioned children, and a header left
+              // unpositioned made the whole Stack 2/5 of the screen wide —
+              // which clipped the panel, positioned beyond that edge, clean
+              // off the screen and out of reach of every tap.
+              Positioned(
+                left: 0,
+                top: 0,
+                bottom: 0,
+                width: headerWidth,
+                child: SafeArea(
+                  right: false,
                   child: Center(
-                    // Scrollable for the same reason it is in portrait: a short
-                    // landscape phone can have less height than the header wants,
-                    // and scrolling is the graceful answer to that.
-                    child: SingleChildScrollView(
-                      child: HomeHeader(compact: !isTablet),
+                    child: ClipRect(
+                      child: HomeHeader(compact: !widget.isTablet),
                     ),
                   ),
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Material(
-                    color: theme.colorScheme.surface,
-                    // The rounded edge faces the header, as the top edge does in
-                    // portrait: one shape, rotated with the layout.
-                    borderRadius: const BorderRadius.horizontal(
-                      left: Radius.circular(28),
-                    ),
-                    clipBehavior: Clip.antiAlias,
-                    child: SafeArea(
-                      left: false,
-                      child: SingleChildScrollView(
-                        padding: EdgeInsets.symmetric(
-                          vertical: isTablet ? 20 : 14,
+              ),
+
+              if (_pushed)
+                Positioned(
+                  left: headerWidth,
+                  right: _LandscapeHomeLayout.handleWidth,
+                  top: 0,
+                  bottom: 0,
+                  child: const StickerBoardLayer(
+                    layout: StickerLayout.landscape,
+                    editable: true,
+                  ),
+                ),
+
+              AnimatedPositioned(
+                duration: const Duration(milliseconds: 220),
+                curve: Curves.easeOutCubic,
+                left:
+                    _pushed
+                        ? width - _LandscapeHomeLayout.handleWidth
+                        : headerWidth,
+                top: 0,
+                bottom: 0,
+                width: panelWidth,
+                child: _TilePanelLandscape(
+                  l10n: widget.l10n,
+                  theme: theme,
+                  isTablet: widget.isTablet,
+                  isPushed: _pushed,
+                  onToggle: () => setState(() => _pushed = !_pushed),
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+  }
+}
+
+/// The right-hand panel: a handle on its leading edge, the tiles, the footer.
+///
+/// [_TilePanel]'s mirror image. The handle moves from the top edge to the
+/// left one, and answers to a horizontal drag instead of a vertical one;
+/// everything else — visible and tappable, two positions, every destination
+/// reachable at rest (`KID-04`) — is the same rule, turned.
+class _TilePanelLandscape extends StatelessWidget {
+  const _TilePanelLandscape({
+    required this.l10n,
+    required this.theme,
+    required this.isTablet,
+    required this.isPushed,
+    required this.onToggle,
+  });
+
+  final AppLocalizations l10n;
+  final ThemeData theme;
+  final bool isTablet;
+  final bool isPushed;
+  final VoidCallback onToggle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: theme.colorScheme.surface,
+      // The rounded edge faces the header, as the top edge does in portrait:
+      // one shape, rotated with the layout. Which side it faces does not
+      // change with the push — the panel's own leading edge is always here.
+      borderRadius: const BorderRadius.horizontal(left: Radius.circular(28)),
+      clipBehavior: Clip.antiAlias,
+      child: SafeArea(
+        left: false,
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Visible, tappable and draggable — the same KID-04 reasoning as
+            // the horizontal handle in portrait, turned vertical.
+            Semantics(
+              button: true,
+              label: l10n.homePanelHandleLandscapeA11y,
+              child: GestureDetector(
+                key: const ValueKey('landscape_panel_handle'),
+                behavior: HitTestBehavior.opaque,
+                onTap: onToggle,
+                onHorizontalDragEnd: (details) {
+                  final velocity = details.primaryVelocity ?? 0;
+                  if (velocity > 100 && !isPushed) onToggle();
+                  if (velocity < -100 && isPushed) onToggle();
+                },
+                child: SizedBox(
+                  width: 48,
+                  child: Center(
+                    child: Container(
+                      width: 6,
+                      height: 52,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.onSurfaceVariant.withValues(
+                          alpha: 0.4,
                         ),
-                        child: Column(
-                          children: [
-                            // Sideways the scarce dimension is height, so the
-                            // suggestion above the tiles takes its short form on a
-                            // phone and its full one on a tablet.
-                            HomeTiles(
-                              isTablet: isTablet,
-                              compact: true,
-                              dense: !isTablet,
-                            ),
-                            SizedBox(height: isTablet ? 20 : 14),
-                            _Footer(
-                              l10n: l10n,
-                              theme: theme,
-                              isTablet: isTablet,
-                            ),
-                          ],
-                        ),
+                        borderRadius: BorderRadius.circular(3),
                       ),
                     ),
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ],
+            Expanded(
+              child: SingleChildScrollView(
+                padding: EdgeInsets.symmetric(vertical: isTablet ? 20 : 14),
+                child: Column(
+                  children: [
+                    // Sideways the scarce dimension is height, so the
+                    // suggestion above the tiles takes its short form on a
+                    // phone and its full one on a tablet.
+                    HomeTiles(
+                      isTablet: isTablet,
+                      compact: true,
+                      dense: !isTablet,
+                    ),
+                    SizedBox(height: isTablet ? 20 : 14),
+                    _Footer(l10n: l10n, theme: theme, isTablet: isTablet),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }

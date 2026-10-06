@@ -2992,6 +2992,10 @@
   "@homePanelHandleA11y": {
     "description": "HOME redesign: accessibility label of the drag handle on the tile panel"
   },
+  "homePanelHandleLandscapeA11y": "Drag to move the buttons right or back left",
+  "@homePanelHandleLandscapeA11y": {
+    "description": "HOME redesign: accessibility label of the drag handle on the landscape tile panel"
+  },
   "homeFigureTotal": "Total",
   "@homeFigureTotal": {
     "description": "HOME-01: label beside the big star total on the home header"

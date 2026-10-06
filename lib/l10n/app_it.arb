@@ -682,6 +682,7 @@
   "avatarNameTitle": "Come si chiama il tuo uccello?",
   "avatarNameClear": "Per ora senza nome",
   "homePanelHandleA11y": "Trascina per abbassare i pulsanti o rialzarli",
+  "homePanelHandleLandscapeA11y": "Trascina per spostare i pulsanti a destra o riportarli a sinistra",
   "homeFigureTotal": "Totale",
   "homeFigureLast30Days": "30 giorni",
   "homeFigureToday": "Oggi",

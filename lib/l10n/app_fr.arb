@@ -682,6 +682,7 @@
   "avatarNameTitle": "Comment s'appelle ton oiseau ?",
   "avatarNameClear": "Pas de nom pour l'instant",
   "homePanelHandleA11y": "Fais glisser pour descendre les boutons ou les remonter",
+  "homePanelHandleLandscapeA11y": "Fais glisser pour déplacer les boutons à droite ou les ramener à gauche",
   "homeFigureTotal": "Total",
   "homeFigureLast30Days": "30 jours",
   "homeFigureToday": "Aujourd'hui",

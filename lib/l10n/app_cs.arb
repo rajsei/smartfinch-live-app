@@ -682,6 +682,7 @@
   "avatarNameTitle": "Jak se tvůj pták jmenuje?",
   "avatarNameClear": "Zatím bez jména",
   "homePanelHandleA11y": "Táhni, ať se tlačítka posunou dolů nebo zpátky nahoru",
+  "homePanelHandleLandscapeA11y": "Táhni, ať se tlačítka posunou doprava nebo zpátky doleva",
   "homeFigureTotal": "Celkem",
   "homeFigureLast30Days": "30 dní",
   "homeFigureToday": "Dnes",

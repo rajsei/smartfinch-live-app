@@ -115,6 +115,47 @@ class StickerPlacement {
     rotation: _normalizeAngle(rotation),
   );
 
+  /// Moved just far enough that the whole sticker, turned as it is, lies on a
+  /// board of [width] × [height].
+  ///
+  /// [clamped] only keeps the *centre* on the board; which fraction keeps the
+  /// edges on it depends on the board's shape, so it is asked here, where the
+  /// size is known. A sticker hanging over the edge would be drawn over what
+  /// is beside the board — the level bar — and its outer part could not be
+  /// touched, because a touch outside a widget's box never reaches it.
+  ///
+  /// A sticker too big for one direction, turned, sits in the middle of it.
+  ///
+  /// [openSides]: the board's left and right edges are the screen's own, with
+  /// nothing beside them a sticker could cover. There a sticker may hang out
+  /// by up to half — its centre stays on the board, so the half that shows is
+  /// always one a finger can take hold of again.
+  StickerPlacement keptOn({
+    required double width,
+    required double height,
+    bool openSides = false,
+  }) {
+    if (width <= 0 || height <= 0) return this;
+
+    // Half the sticker's footprint once turned — its axis-aligned bounding box.
+    final extent = scale * math.min(width, height);
+    final half =
+        extent / 2 * (math.cos(rotation).abs() + math.sin(rotation).abs());
+
+    double fit(double centre, double halfFraction) =>
+        halfFraction >= 0.5
+            ? 0.5
+            : centre.clamp(halfFraction, 1 - halfFraction);
+
+    return StickerPlacement(
+      id: id,
+      x: openSides ? x.clamp(0.0, 1.0) : fit(x, half / width),
+      y: fit(y, half / height),
+      scale: scale,
+      rotation: rotation,
+    );
+  }
+
   Map<String, Object?> toJson() => {
     'id': id,
     'x': x,

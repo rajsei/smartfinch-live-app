@@ -682,6 +682,7 @@
   "avatarNameTitle": "Jak nazywa się twój ptak?",
   "avatarNameClear": "Na razie bez imienia",
   "homePanelHandleA11y": "Przeciągnij, żeby zsunąć przyciski w dół albo z powrotem w górę",
+  "homePanelHandleLandscapeA11y": "Przeciągnij, żeby przesunąć przyciski w prawo albo z powrotem w lewo",
   "homeFigureTotal": "Łącznie",
   "homeFigureLast30Days": "30 dni",
   "homeFigureToday": "Dziś",
