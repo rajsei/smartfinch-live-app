@@ -131,16 +131,23 @@ class StickerPlacement {
     flipped: flipped,
   );
 
-  /// Moved just far enough that the whole sticker, turned as it is, lies on a
-  /// board of [width] × [height].
+  /// Moved just far enough that the visible bird, turned and mirrored as it
+  /// is, lies on a board of [width] × [height].
   ///
   /// [clamped] only keeps the *centre* on the board; which fraction keeps the
   /// edges on it depends on the board's shape, so it is asked here, where the
-  /// size is known. A sticker hanging over the edge would be drawn over what
-  /// is beside the board — the level bar — and its outer part could not be
+  /// size is known. A bird hanging over the edge would be drawn over what is
+  /// beside the board — the level bar — and its outer part could not be
   /// touched, because a touch outside a widget's box never reaches it.
   ///
-  /// A sticker too big for one direction, turned, sits in the middle of it.
+  /// [content] is where in the square image the bird actually is (see
+  /// [StickerBounds]). Its corners are turned with the sticker and the edges
+  /// kept on the board — not the image's corners, which are transparent: a
+  /// turned square is up to 1.4 times as wide as itself, and measuring that
+  /// stopped a tilted bird far short of the edge. The whole square is the
+  /// default, for a sticker whose bird has not been measured.
+  ///
+  /// A bird too big for one direction, turned, sits in the middle of it.
   ///
   /// [openSides]: the board's left and right edges are the screen's own, with
   /// nothing beside them a sticker could cover. There a sticker may hang out
@@ -150,23 +157,47 @@ class StickerPlacement {
     required double width,
     required double height,
     bool openSides = false,
+    StickerBounds content = StickerBounds.whole,
   }) {
     if (width <= 0 || height <= 0) return this;
 
-    // Half the sticker's footprint once turned — its axis-aligned bounding box.
     final extent = scale * math.min(width, height);
-    final half =
-        extent / 2 * (math.cos(rotation).abs() + math.sin(rotation).abs());
+    final bird = flipped ? content.mirrored() : content;
 
-    double fit(double centre, double halfFraction) =>
-        halfFraction >= 0.5
-            ? 0.5
-            : centre.clamp(halfFraction, 1 - halfFraction);
+    // The bird's corners, relative to the sticker's centre, turned the way
+    // `Transform.rotate` turns them (clockwise, y pointing down).
+    final cos = math.cos(rotation);
+    final sin = math.sin(rotation);
+    var minX = double.infinity, maxX = double.negativeInfinity;
+    var minY = double.infinity, maxY = double.negativeInfinity;
+    for (final (u, v) in [
+      (bird.left, bird.top),
+      (bird.right, bird.top),
+      (bird.left, bird.bottom),
+      (bird.right, bird.bottom),
+    ]) {
+      final dx = (u - 0.5) * extent;
+      final dy = (v - 0.5) * extent;
+      final rx = dx * cos - dy * sin;
+      final ry = dx * sin + dy * cos;
+      minX = math.min(minX, rx);
+      maxX = math.max(maxX, rx);
+      minY = math.min(minY, ry);
+      maxY = math.max(maxY, ry);
+    }
+
+    // The range of centres that keeps [low, high] (offsets from the centre)
+    // inside a board side of [size]; its middle when the bird is too big.
+    double fit(double centre, double low, double high, double size) {
+      final from = -low / size;
+      final to = 1 - high / size;
+      return from > to ? (from + to) / 2 : centre.clamp(from, to);
+    }
 
     return StickerPlacement(
       id: id,
-      x: openSides ? x.clamp(0.0, 1.0) : fit(x, half / width),
-      y: fit(y, half / height),
+      x: openSides ? x.clamp(0.0, 1.0) : fit(x, minX, maxX, width),
+      y: fit(y, minY, maxY, height),
       scale: scale,
       rotation: rotation,
       flipped: flipped,
@@ -194,6 +225,38 @@ class StickerPlacement {
 
   @override
   int get hashCode => Object.hash(id, x, y, scale, rotation, flipped);
+}
+
+/// Where in a sticker's square image the bird is: fractions 0…1 of its width
+/// and height, measured from the opaque pixels when the catalogue loads.
+@immutable
+class StickerBounds {
+  const StickerBounds(this.left, this.top, this.right, this.bottom);
+
+  /// The whole square — what an unmeasured sticker is taken to fill.
+  static const StickerBounds whole = StickerBounds(0, 0, 1, 1);
+
+  final double left;
+  final double top;
+  final double right;
+  final double bottom;
+
+  /// The same bird mirrored left to right.
+  StickerBounds mirrored() => StickerBounds(1 - right, top, 1 - left, bottom);
+
+  @override
+  bool operator ==(Object other) =>
+      other is StickerBounds &&
+      other.left == left &&
+      other.top == top &&
+      other.right == right &&
+      other.bottom == bottom;
+
+  @override
+  int get hashCode => Object.hash(left, top, right, bottom);
+
+  @override
+  String toString() => 'StickerBounds($left, $top, $right, $bottom)';
 }
 
 /// A new sticker's size on the board.

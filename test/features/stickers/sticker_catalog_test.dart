@@ -15,9 +15,12 @@
 
 import 'dart:convert';
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 
+import 'package:smartfinch/features/stickers/sticker_board.dart';
 import 'package:smartfinch/features/stickers/sticker_catalog.dart';
 
 void main() {
@@ -196,6 +199,66 @@ void main() {
 
     test('and none for a sticker without a fact', () {
       expect(catalog.factFor('unknown', 'de'), isNull);
+    });
+  });
+
+  group('where the bird is in its square', () {
+    Uint8List image(int w, int h, bool Function(int x, int y) opaque) {
+      final rgba = Uint8List(w * h * 4);
+      for (var y = 0; y < h; y++) {
+        for (var x = 0; x < w; x++) {
+          if (opaque(x, y)) rgba[(y * w + x) * 4 + 3] = 255;
+        }
+      }
+      return rgba;
+    }
+
+    test('is the box around the opaque pixels', () {
+      final rgba = image(
+        10,
+        10,
+        (x, y) => x >= 2 && x <= 6 && y >= 3 && y <= 8,
+      );
+      expect(
+        opaqueBounds(rgba, 10, 10),
+        const StickerBounds(0.2, 0.3, 0.7, 0.9),
+      );
+    });
+
+    test('a faint fringe is not the bird', () {
+      final rgba = image(4, 4, (x, y) => x == 1 && y == 1);
+      rgba[(3 * 4 + 3) * 4 + 3] = 5; // nearly transparent, bottom right
+      expect(
+        opaqueBounds(rgba, 4, 4),
+        const StickerBounds(0.25, 0.25, 0.5, 0.5),
+      );
+    });
+
+    test('an empty or broken image fills its square', () {
+      expect(
+        opaqueBounds(image(4, 4, (_, _) => false), 4, 4),
+        StickerBounds.whole,
+      );
+      expect(opaqueBounds(Uint8List(3), 4, 4), StickerBounds.whole);
+    });
+
+    testWidgets('the shipped stickers are measured when the catalogue loads', (
+      tester,
+    ) async {
+      final catalog =
+          (await tester.runAsync(() => loadStickerCatalog(rootBundle)))!;
+      final kingfisher = catalog.byId('alcedo_atthis')!;
+
+      // Measured with an image tool: opaque from (19, 36) to (493, 476) of
+      // 512 × 512. A pixel or two either way is the antialiased fringe.
+      const tolerance = 3 / 512;
+      expect(kingfisher.content.left, closeTo(19 / 512, tolerance));
+      expect(kingfisher.content.top, closeTo(36 / 512, tolerance));
+      expect(kingfisher.content.right, closeTo(493 / 512, tolerance));
+      expect(kingfisher.content.bottom, closeTo(476 / 512, tolerance));
+      for (final sticker in catalog.stickers) {
+        expect(sticker.content, isNot(StickerBounds.whole), reason: sticker.id);
+      }
     });
   });
 

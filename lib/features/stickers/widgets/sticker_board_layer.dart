@@ -37,6 +37,8 @@
 // one tap away in the strip. There is no delete.
 // =============================================================================
 
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
@@ -139,7 +141,7 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
           // Background: no touch, no semantics, nothing to trip over.
           return IgnorePointer(
             child: ExcludeSemantics(
-              child: Stack(clipBehavior: Clip.none, children: stickers),
+              child: ClipRect(child: Stack(children: stickers)),
             ),
           );
         }
@@ -151,30 +153,34 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                 sticker,
         ];
 
-        return Stack(
-          clipBehavior: Clip.none,
-          children: [
-            ...stickers,
-            // Fastened to the right edge and folding out of it, so it can be
-            // put away when it sits over a sticker a child wants to reach.
-            if (board.pickedIds.isNotEmpty)
-              Positioned(
-                right: 0,
-                bottom: 8,
-                child: _Tray(
-                  stickers: unplaced,
-                  open: StickerBoardLayer._trayOpen,
-                  openWidth: size.width - 12,
-                  onToggle:
-                      () => setState(
-                        () =>
-                            StickerBoardLayer._trayOpen =
-                                !StickerBoardLayer._trayOpen,
-                      ),
-                  onPlace: (sticker) => _commit(board.place(sticker.id)),
+        // Clipped at the board's edge. The bird is kept inside it
+        // (`keptOn`), so all this cuts is the image's transparent margin and
+        // the selection frame — neither of which may lie over the header.
+        return ClipRect(
+          child: Stack(
+            children: [
+              ...stickers,
+              // Fastened to the right edge and folding out of it, so it can be
+              // put away when it sits over a sticker a child wants to reach.
+              if (board.pickedIds.isNotEmpty)
+                Positioned(
+                  right: 0,
+                  bottom: 8,
+                  child: _Tray(
+                    stickers: unplaced,
+                    open: StickerBoardLayer._trayOpen,
+                    openWidth: size.width - 12,
+                    onToggle:
+                        () => setState(
+                          () =>
+                              StickerBoardLayer._trayOpen =
+                                  !StickerBoardLayer._trayOpen,
+                        ),
+                    onPlace: (sticker) => _commit(board.place(sticker.id)),
+                  ),
                 ),
-              ),
-          ],
+            ],
+          ),
         );
       },
     );
@@ -189,11 +195,21 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
     // Kept on the board here as well as while dragging: a placement stored
     // before the board had its current size may still hang over its edge.
     final l10n = AppLocalizations.of(context)!;
-    final placement = _keptOn(stored, size);
+    final placement = _keptOn(stored, sticker, size);
     final extent = placement.scale * side;
     // Hanging out on the right, the buttons move to the left corners: the
     // part of the sticker still on screen.
     final hangsOutRight = placement.x * size.width + extent / 2 > size.width;
+    // The bird is kept on the board, its transparent margin is not: a sticker
+    // pushed to the top or bottom edge can have its box reach past it. The
+    // buttons stay on the board, where a finger can reach them.
+    final boxTop = placement.y * size.height - extent / 2;
+    final buttonsRoom = math.max(0.0, extent - 2 * _StickerActionButton.size);
+    final topButtonInset = (-boxTop).clamp(0.0, buttonsRoom);
+    final bottomButtonInset = (boxTop + extent - size.height).clamp(
+      0.0,
+      buttonsRoom,
+    );
     final image = Image.asset(
       sticker.imageAsset,
       width: extent,
@@ -247,7 +263,7 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                     );
                   },
                   onScaleUpdate:
-                      (details) => _update(placement.id, details, size, side),
+                      (details) => _update(sticker, details, size, side),
                   onScaleEnd: (_) {
                     final draft = _draft;
                     setState(() => _gestureStart = null);
@@ -274,7 +290,7 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                       // reaches it.
                       if (selected) ...[
                         Positioned(
-                          top: 0,
+                          top: topButtonInset,
                           left: hangsOutRight ? 0 : null,
                           right: hangsOutRight ? null : 0,
                           child: _StickerActionButton(
@@ -290,7 +306,7 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                         ),
                         // Mirror: the bird looks the other way.
                         Positioned(
-                          bottom: 0,
+                          bottom: bottomButtonInset,
                           left: hangsOutRight ? 0 : null,
                           right: hangsOutRight ? null : 0,
                           child: _StickerActionButton(
@@ -299,8 +315,20 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                             onPressed: () {
                               final board = _draft;
                               if (board == null) return;
+                              // Mirrored, the bird may sit differently in its
+                              // square — kept on the board as it is now.
+                              final mirrored = board.mirror(
+                                widget.layout,
+                                placement.id,
+                              );
+                              final turned = mirrored
+                                  .placementsFor(widget.layout)
+                                  .firstWhere((p) => p.id == placement.id);
                               _commit(
-                                board.mirror(widget.layout, placement.id),
+                                mirrored.move(
+                                  widget.layout,
+                                  _keptOn(turned, sticker, size),
+                                ),
                               );
                             },
                           ),
@@ -343,10 +371,15 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
     });
   }
 
-  void _update(String id, ScaleUpdateDetails details, Size size, double side) {
+  void _update(
+    Sticker sticker,
+    ScaleUpdateDetails details,
+    Size size,
+    double side,
+  ) {
     final start = _gestureStart;
     final board = _draft;
-    final current = _currentPlacement(id);
+    final current = _currentPlacement(sticker.id);
     if (start == null || board == null || current == null) return;
 
     // Translation accumulates frame by frame; scale and rotation are relative
@@ -362,18 +395,24 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
           details.pointerCount > 1 ? start.rotation + details.rotation : null,
     );
 
-    setState(() => _draft = board.move(widget.layout, _keptOn(moved, size)));
+    setState(
+      () => _draft = board.move(widget.layout, _keptOn(moved, sticker, size)),
+    );
   }
 
   /// [placement] kept on this board. In portrait the board's sides are the
   /// screen's, so a sticker may hang out there by half; sideways the header
   /// is on the left, and nothing may reach under it.
-  StickerPlacement _keptOn(StickerPlacement placement, Size size) =>
-      placement.keptOn(
-        width: size.width,
-        height: size.height,
-        openSides: widget.layout == StickerLayout.portrait,
-      );
+  StickerPlacement _keptOn(
+    StickerPlacement placement,
+    Sticker sticker,
+    Size size,
+  ) => placement.keptOn(
+    width: size.width,
+    height: size.height,
+    openSides: widget.layout == StickerLayout.portrait,
+    content: sticker.content,
+  );
 
   void _releasePointer() {
     if (_pointersOnStickers > 0) _pointersOnStickers--;
@@ -397,6 +436,9 @@ class _StickerActionButton extends StatelessWidget {
   final IconData icon;
   final String label;
   final VoidCallback onPressed;
+
+  /// Outer size: a 20-dp icon in 8 dp of padding.
+  static const double size = 36;
 
   @override
   Widget build(BuildContext context) {

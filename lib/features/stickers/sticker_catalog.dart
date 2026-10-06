@@ -25,9 +25,12 @@
 // =============================================================================
 
 import 'dart:convert';
+import 'dart:ui' as ui;
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
+
+import 'sticker_board.dart';
 
 /// Where the stickers live.
 const String kStickerAssetDir = 'assets/stickers';
@@ -40,6 +43,7 @@ class Sticker {
     required this.scientificName,
     required this.imageAsset,
     this.names = const {},
+    this.content = StickerBounds.whole,
   });
 
   /// Stable identifier: the scientific name in lower case with underscores.
@@ -55,6 +59,19 @@ class Sticker {
 
   /// Names that win over the taxonomy, by locale.
   final Map<String, String> names;
+
+  /// Where in the image the bird is — what the board keeps on the board
+  /// (`StickerPlacement.keptOn`). Measured from the opaque pixels when the
+  /// catalogue loads; the whole square until then, or if it cannot be.
+  final StickerBounds content;
+
+  Sticker withContent(StickerBounds content) => Sticker(
+    id: id,
+    scientificName: scientificName,
+    imageAsset: imageAsset,
+    names: names,
+    content: content,
+  );
 }
 
 /// All stickers, in album order, with their facts.
@@ -173,14 +190,109 @@ Future<StickerCatalog> loadStickerCatalog(AssetBundle bundle) async {
       facts[match.group(1)!] = await bundle.loadString(asset);
     }
 
-    return StickerCatalog.parse(
+    final catalog = StickerCatalog.parse(
       manifestJson: await bundle.loadString('$kStickerAssetDir/stickers.json'),
       factsJsonByLocale: facts,
       imageAssets: images,
     );
+
+    // Where each bird sits in its square — measured, not authored, so a new
+    // sticker needs no extra numbers. A dozen 512-pixel images, once.
+    return StickerCatalog(
+      stickers: [
+        for (final sticker in catalog.stickers)
+          sticker.withContent(await _measure(bundle, sticker.imageAsset)),
+      ],
+      facts: catalog.facts,
+    );
   } catch (error) {
     debugPrint('[Stickers] could not load the catalogue: $error');
     return StickerCatalog.empty;
+  }
+}
+
+/// Where the opaque pixels of an RGBA image are, as fractions of its size.
+///
+/// Pixels with an alpha of [threshold] or less count as empty — the faint
+/// fringe of an antialiased edge is not the bird. An image with nothing in it
+/// is taken to fill its square.
+///
+/// Scans inward from each side and stops at the first opaque pixel, so the
+/// usual sticker costs a fraction of its pixels.
+StickerBounds opaqueBounds(
+  Uint8List rgba,
+  int width,
+  int height, {
+  int threshold = 8,
+}) {
+  if (width <= 0 || height <= 0 || rgba.length < width * height * 4) {
+    return StickerBounds.whole;
+  }
+  bool opaque(int x, int y) => rgba[(y * width + x) * 4 + 3] > threshold;
+  bool rowHas(int y) {
+    for (var x = 0; x < width; x++) {
+      if (opaque(x, y)) return true;
+    }
+    return false;
+  }
+
+  var top = 0;
+  while (top < height && !rowHas(top)) {
+    top++;
+  }
+  if (top == height) return StickerBounds.whole;
+  var bottom = height - 1;
+  while (bottom > top && !rowHas(bottom)) {
+    bottom--;
+  }
+
+  bool columnHas(int x) {
+    for (var y = top; y <= bottom; y++) {
+      if (opaque(x, y)) return true;
+    }
+    return false;
+  }
+
+  var left = 0;
+  while (left < width && !columnHas(left)) {
+    left++;
+  }
+  var right = width - 1;
+  while (right > left && !columnHas(right)) {
+    right--;
+  }
+
+  return StickerBounds(
+    left / width,
+    top / height,
+    (right + 1) / width,
+    (bottom + 1) / height,
+  );
+}
+
+/// The opaque area of the image at [asset], or the whole square if it cannot
+/// be read — measuring is a refinement, never a reason to lose a sticker.
+Future<StickerBounds> _measure(AssetBundle bundle, String asset) async {
+  try {
+    final data = await bundle.load(asset);
+    final codec = await ui.instantiateImageCodec(data.buffer.asUint8List());
+    final frame = await codec.getNextFrame();
+    final image = frame.image;
+    final pixels = await image.toByteData(format: ui.ImageByteFormat.rawRgba);
+    final bounds =
+        pixels == null
+            ? StickerBounds.whole
+            : opaqueBounds(
+              pixels.buffer.asUint8List(),
+              image.width,
+              image.height,
+            );
+    image.dispose();
+    codec.dispose();
+    return bounds;
+  } catch (error) {
+    debugPrint('[Stickers] could not measure $asset: $error');
+    return StickerBounds.whole;
   }
 }
 

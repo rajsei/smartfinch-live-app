@@ -226,6 +226,71 @@ void main() {
     });
   });
 
+  group('kept on the board by the bird, not by its square', () {
+    // A 400 × 800 board; a sticker 0.3 of 400 = 120 wide.
+    const width = 400.0, height = 800.0;
+    // A kiwi-like bird: the full width, but only the middle of the height.
+    const flat = StickerBounds(0, 0.25, 1, 0.75);
+
+    double topOf(StickerPlacement p, StickerBounds b) {
+      final kept = p.keptOn(width: width, height: height, content: b);
+      return kept.y;
+    }
+
+    test('the whole square is the old rule', () {
+      const p = StickerPlacement(id: 'a', y: 0);
+      // Half of 120 from the top.
+      expect(topOf(p, StickerBounds.whole) * height, closeTo(60, 1e-6));
+    });
+
+    test('an upright flat bird goes as high as its top edge allows', () {
+      const p = StickerPlacement(id: 'a', y: 0);
+      // Its top is a quarter of the way down the square: 30 of 120 is empty.
+      expect(topOf(p, flat) * height, closeTo(30, 1e-6));
+    });
+
+    test('⚠️ turned 45°, it is not stopped by the corner of its square', () {
+      const p = StickerPlacement(id: 'a', y: 0, rotation: math.pi / 4);
+      final bySquare = topOf(p, StickerBounds.whole) * height;
+      final byBird = topOf(p, flat) * height;
+      // The turned square reaches 60·√2 ≈ 85 above its centre; the turned
+      // flat bird only (60 + 30)·√½ ≈ 64.
+      expect(bySquare, closeTo(60 * math.sqrt2, 1e-6));
+      expect(byBird, closeTo(90 * math.sqrt1_2, 1e-6));
+      expect(byBird, lessThan(bySquare));
+    });
+
+    test('a bird off to one side may go further to the other', () {
+      // The bird fills only the left half of its square.
+      const leftHalf = StickerBounds(0, 0, 0.5, 1);
+      const p = StickerPlacement(id: 'a', x: 1);
+      final kept = p.keptOn(width: width, height: height, content: leftHalf);
+      // Its right edge is the square's centre: the centre may reach the edge.
+      expect(kept.x * width, closeTo(width, 1e-6));
+    });
+
+    test('mirrored, the bird changes sides', () {
+      const leftHalf = StickerBounds(0, 0, 0.5, 1);
+      const p = StickerPlacement(id: 'a', x: 1, flipped: true);
+      final kept = p.keptOn(width: width, height: height, content: leftHalf);
+      // Now it fills the right half: its right edge is 60 past the centre.
+      expect(kept.x * width, closeTo(width - 60, 1e-6));
+    });
+
+    test('a bird too big for the board sits in its middle', () {
+      // A full square at the largest size, turned 45°: 0.9 · √2 of the
+      // board's shorter side, which no position can fit.
+      const p = StickerPlacement(
+        id: 'a',
+        y: 0,
+        scale: kMaxStickerScale,
+        rotation: math.pi / 4,
+      );
+      final kept = p.keptOn(width: 800, height: 400);
+      expect(kept.y, closeTo(0.5, 1e-6));
+    });
+  });
+
   group('mirroring', () {
     final placed = StickerBoard.empty
         .pick('a', level: 2)

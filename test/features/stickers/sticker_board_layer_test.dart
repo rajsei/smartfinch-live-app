@@ -54,15 +54,22 @@ void main() {
 
   /// The kingfisher in the middle of a 400 × 800 board, 120 wide; the kiwi
   /// picked but in the album.
-  Future<void> pump(WidgetTester tester, {required bool editable}) async {
+  Future<void> pump(
+    WidgetTester tester, {
+    required bool editable,
+    StickerPlacement placement = const StickerPlacement(
+      id: kingfisher,
+      x: 0.5,
+      y: 0.5,
+      scale: 0.3,
+    ),
+    StickerCatalog? withCatalog,
+  }) async {
     final board = StickerBoard.empty
         .pick(kingfisher, level: 2)
         .pick(kiwi, level: 2)
         .place(kingfisher)
-        .move(
-          StickerLayout.portrait,
-          const StickerPlacement(id: kingfisher, x: 0.5, y: 0.5, scale: 0.3),
-        );
+        .move(StickerLayout.portrait, placement);
     await tester.runAsync(
       () => writeAvatarField(db, kStickerStateKey, board.toJson()),
     );
@@ -75,7 +82,9 @@ void main() {
       ProviderScope(
         overrides: [
           appDatabaseProvider.overrideWithValue(db),
-          stickerCatalogProvider.overrideWith((ref) async => catalog),
+          stickerCatalogProvider.overrideWith(
+            (ref) async => withCatalog ?? catalog,
+          ),
         ],
         child: MaterialApp(
           locale: const Locale('en'),
@@ -277,6 +286,39 @@ void main() {
       // Still on the board, still selected: mirroring is not putting away.
       expect(board.placedIds, {kingfisher});
       expect(find.byTooltip('Mirror'), findsOneWidget);
+    });
+
+    testWidgets('pushed to the top, its buttons stay on the board', (
+      tester,
+    ) async {
+      // A bird that leaves the top fifth of its square empty may go up until
+      // the bird itself touches the edge — its box then reaches past it.
+      final measured = StickerCatalog(
+        stickers: [
+          for (final s in catalog.stickers)
+            s.id == kingfisher
+                ? s.withContent(const StickerBounds(0, 0.2, 1, 1))
+                : s,
+        ],
+      );
+      await pump(
+        tester,
+        editable: true,
+        withCatalog: measured,
+        placement: const StickerPlacement(id: kingfisher, y: 0, scale: 0.3),
+      );
+
+      final box = tester.getRect(sticker);
+      expect(box.top, closeTo(-0.2 * 120, 0.5));
+
+      await tester.tapAt(box.center);
+      await settle(tester);
+
+      final putAway = tester.getRect(find.byTooltip('Back to the album'));
+      expect(putAway.top, greaterThanOrEqualTo(0));
+      await tester.tap(find.byTooltip('Back to the album'));
+      await settle(tester);
+      expect((await tester.runAsync(stored))!.placedIds, isEmpty);
     });
 
     testWidgets('the strip folds away to the right, and back out', (
