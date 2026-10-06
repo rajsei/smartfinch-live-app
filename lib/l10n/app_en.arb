@@ -3299,5 +3299,13 @@
   "stickerBoardMirror": "Mirror",
   "@stickerBoardMirror": {
     "description": "AVA-07: button on a touched sticker; mirrors it left to right so the bird looks the other way"
+  },
+  "stickerTrayShow": "Show stickers",
+  "@stickerTrayShow": {
+    "description": "AVA-07: tab that folds the sticker strip out of the right edge, while arranging stickers"
+  },
+  "stickerTrayHide": "Put away",
+  "@stickerTrayHide": {
+    "description": "AVA-07: tab that folds the sticker strip away to the right edge, so stickers behind it can be reached"
   }
 }

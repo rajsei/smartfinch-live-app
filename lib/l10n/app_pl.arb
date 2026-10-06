@@ -740,5 +740,7 @@
   "stickerBoardHint": "Przesuwaj naklejkę jednym palcem. Dwoma palcami ją obrócisz i powiększysz lub pomniejszysz.",
   "stickerBoardAdd": "Dotknij naklejki, aby ją przykleić. Jednym palcem przesuwasz, dwoma obracasz i zmieniasz rozmiar.",
   "stickerBoardRemove": "Z powrotem do albumu",
-  "stickerBoardMirror": "Odbij lustrzanie"
+  "stickerBoardMirror": "Odbij lustrzanie",
+  "stickerTrayShow": "Pokaż naklejki",
+  "stickerTrayHide": "Schowaj"
 }

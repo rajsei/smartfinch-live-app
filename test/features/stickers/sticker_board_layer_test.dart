@@ -43,7 +43,10 @@ void main() {
   const kiwi = 'apteryx_mantelli';
 
   late AppDatabase db;
-  setUp(() => db = AppDatabase.forTesting(NativeDatabase.memory()));
+  setUp(() {
+    db = AppDatabase.forTesting(NativeDatabase.memory());
+    StickerBoardLayer.resetTray();
+  });
   tearDown(() async => db.close());
 
   Future<StickerBoard> stored() async =>
@@ -274,6 +277,38 @@ void main() {
       // Still on the board, still selected: mirroring is not putting away.
       expect(board.placedIds, {kingfisher});
       expect(find.byTooltip('Mirror'), findsOneWidget);
+    });
+
+    testWidgets('the strip folds away to the right, and back out', (
+      tester,
+    ) async {
+      await pump(tester, editable: true);
+      final strip = find.byWidgetPredicate((w) => w is Image && w.width == 56);
+      expect(strip, findsOneWidget);
+
+      await tester.tap(find.byTooltip('Put away'));
+      await settle(tester);
+      // Folded: the stickers it held are out of the way, and the tab says
+      // how many wait in it.
+      expect(strip, findsNothing);
+      expect(find.text('1'), findsOneWidget);
+      expect(find.byTooltip('Show stickers'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Show stickers'));
+      await settle(tester);
+      expect(strip, findsOneWidget);
+    });
+
+    testWidgets('folded away, it stays folded the next time', (tester) async {
+      await pump(tester, editable: true);
+      await tester.tap(find.byTooltip('Put away'));
+      await settle(tester);
+
+      // The layer is rebuilt every time the panel moves.
+      await pump(tester, editable: false);
+      await pump(tester, editable: true);
+
+      expect(find.byTooltip('Show stickers'), findsOneWidget);
     });
 
     testWidgets('and one tap in the strip sticks it on again', (tester) async {

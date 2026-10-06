@@ -252,6 +252,9 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   /// edge reads as the top of a panel rather than as a stray grab bar.
   static const double handleHeight = 64;
 
+  /// Space between the header's last line and the top of the sticker board.
+  static const double boardGap = 4;
+
   /// Below this the screen cannot carry everything at full size.
   ///
   /// The header and the panel are both sized from the same fixed budget, so on
@@ -296,22 +299,32 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                   ))
               .clamp(0.0, height * 0.55);
 
+          // The sticker board (`AVA-07`): from just under the header's last
+          // line — its bottom margin is margin, not content — down to the top
+          // of the handle the lowered panel leaves on screen. The same box in
+          // both states, because positions are fractions of it: a box that
+          // changed size with the panel would move every sticker.
+          final boardTop =
+              headerBottom -
+              HomeHeader.bottomPadding(large: widget.isTablet) +
+              _PortraitHomeLayout.boardGap;
+          Widget board({required bool editable}) => Positioned(
+            top: boardTop,
+            left: 0,
+            right: 0,
+            bottom: _PortraitHomeLayout.handleHeight,
+            child: StickerBoardLayer(
+              layout: StickerLayout.portrait,
+              editable: editable,
+            ),
+          );
+
           return Stack(
             children: [
-              // The child's stickers (`AVA-07`), confined to below the
-              // header (`headerBottom`) in both states. The star/level/avatar
-              // block is a fixed reference a child can always read in full —
-              // never a surface a sticker can drift under or behind.
-              if (!_down)
-                Positioned(
-                  top: headerBottom,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: const StickerBoardLayer(
-                    layout: StickerLayout.portrait,
-                  ),
-                ),
+              // Never under the header: the star/level/avatar block is a
+              // fixed reference a child can always read in full. Behind the
+              // panel while it is up; arrangeable while it is down.
+              if (!_down) board(editable: false),
 
               Positioned(
                 top: topInset,
@@ -332,18 +345,7 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
                 ),
               ),
 
-              if (_down)
-                Positioned(
-                  top: headerBottom,
-                  left: 0,
-                  right: 0,
-                  bottom: 0,
-                  child: const StickerBoardLayer(
-                    layout: StickerLayout.portrait,
-                    editable: true,
-                    bottomInset: _PortraitHomeLayout.handleHeight,
-                  ),
-                ),
+              if (_down) board(editable: true),
 
               // On a short phone the album button waits behind the panel,
               // still under the level bar, and shows when it is pulled down.
@@ -620,10 +622,12 @@ class _LandscapeHomeLayoutState extends ConsumerState<_LandscapeHomeLayout> {
               // The child's stickers (`AVA-07`), confined to the strip the
               // panel occupies — never under the header — and hidden behind
               // the panel until it is pushed aside.
+              // Up to the handle the pushed panel leaves on screen, in both
+              // states — one box, so no sticker moves when the panel does.
               if (!_pushed)
                 Positioned(
                   left: headerWidth,
-                  right: 0,
+                  right: _LandscapeHomeLayout.handleWidth,
                   top: 0,
                   bottom: 0,
                   child: const StickerBoardLayer(

@@ -740,5 +740,7 @@
   "stickerBoardHint": "Arrasta um autocolante com um dedo. Com dois dedos rodas e mudas o tamanho.",
   "stickerBoardAdd": "Toca num autocolante para o colar. Com um dedo arrastas, com dois rodas e mudas o tamanho.",
   "stickerBoardRemove": "Voltar ao álbum",
-  "stickerBoardMirror": "Espelhar"
+  "stickerBoardMirror": "Espelhar",
+  "stickerTrayShow": "Mostrar autocolantes",
+  "stickerTrayHide": "Recolher"
 }

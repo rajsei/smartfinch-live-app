@@ -740,5 +740,7 @@
   "stickerBoardHint": "Déplace un autocollant avec un doigt. Avec deux doigts, tu le tournes et tu l'agrandis ou le rétrécis.",
   "stickerBoardAdd": "Touche un autocollant pour le coller. Un doigt pour le déplacer, deux pour le tourner et changer sa taille.",
   "stickerBoardRemove": "Retour à l'album",
-  "stickerBoardMirror": "Retourner"
+  "stickerBoardMirror": "Retourner",
+  "stickerTrayShow": "Montrer les autocollants",
+  "stickerTrayHide": "Ranger"
 }

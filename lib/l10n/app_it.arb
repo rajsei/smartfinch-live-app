@@ -740,5 +740,7 @@
   "stickerBoardHint": "Sposta un adesivo con un dito. Con due dita lo giri e lo fai più grande o più piccolo.",
   "stickerBoardAdd": "Tocca un adesivo per attaccarlo. Con un dito lo sposti, con due lo giri e cambi la sua grandezza.",
   "stickerBoardRemove": "Torna nell'album",
-  "stickerBoardMirror": "Specchia"
+  "stickerBoardMirror": "Specchia",
+  "stickerTrayShow": "Mostra adesivi",
+  "stickerTrayHide": "Chiudi"
 }

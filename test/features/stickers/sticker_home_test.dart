@@ -143,23 +143,31 @@ void main() {
       expect(editable(tester), isFalse);
     });
 
-    testWidgets('never reach above the header, in either state', (
+    testWidgets('start just under the header and end at the handle', (
       tester,
     ) async {
       await pumpAt(tester, const Size(390, 844));
 
-      final headerBottom = tester.getRect(find.byType(HomeHeader)).bottom;
-      expect(
-        tester.getRect(find.byType(StickerBoardLayer)).top,
-        moreOrLessEquals(headerBottom, epsilon: 1),
-      );
+      // The header's last line is the album button. The board starts a few
+      // pixels under it — not under the header's empty bottom margin.
+      final lastLine = tester.getRect(find.byType(StickerAlbumButton)).bottom;
+      final board = tester.getRect(find.byType(StickerBoardLayer));
+      expect(board.top, greaterThanOrEqualTo(lastLine));
+      expect(board.top, lessThanOrEqualTo(lastLine + 8));
+      // And stops where the lowered panel's handle begins.
+      expect(board.bottom, 844 - 64);
+    });
+
+    testWidgets('is the same box with the panel up and down', (tester) async {
+      // Positions are fractions of the board: a board that changed size
+      // with the panel would move every sticker.
+      await pumpAt(tester, const Size(390, 844));
+      final up = tester.getRect(find.byType(StickerBoardLayer));
 
       await tester.tap(find.bySemanticsLabel(RegExp('Drag to move')));
       await tester.pumpAndSettle();
-      expect(
-        tester.getRect(find.byType(StickerBoardLayer)).top,
-        moreOrLessEquals(headerBottom, epsilon: 1),
-      );
+
+      expect(tester.getRect(find.byType(StickerBoardLayer)), up);
     });
   });
 
@@ -238,6 +246,19 @@ void main() {
         moreOrLessEquals(headerRight, epsilon: 1),
       );
       expect(editable(tester), isTrue);
+    });
+
+    testWidgets('is the same box docked and pushed, up to the handle', (
+      tester,
+    ) async {
+      await pumpLandscape(tester);
+      final docked = tester.getRect(find.byType(StickerBoardLayer));
+      expect(docked.right, 844 - 64);
+
+      pressHandle(tester);
+      await tester.pumpAndSettle();
+
+      expect(tester.getRect(find.byType(StickerBoardLayer)), docked);
     });
 
     testWidgets('pushing the panel right reveals them, and back hides them', (

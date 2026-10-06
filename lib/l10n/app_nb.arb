@@ -740,5 +740,7 @@
   "stickerBoardHint": "Flytt et klistremerke med én finger. Med to fingre snur du det og gjør det større eller mindre.",
   "stickerBoardAdd": "Trykk på et klistremerke for å klistre det på. Én finger flytter, to fingre snur og endrer størrelsen.",
   "stickerBoardRemove": "Tilbake til albumet",
-  "stickerBoardMirror": "Speilvend"
+  "stickerBoardMirror": "Speilvend",
+  "stickerTrayShow": "Vis klistremerker",
+  "stickerTrayHide": "Skjul"
 }

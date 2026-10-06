@@ -44,6 +44,7 @@ abstract final class AppIcons {
   static const IconData checkCircleOutline = Symbols.check_circle;
   static const IconData checkCircleRounded = Symbols.check_circle_rounded;
   static const IconData checkRounded = Symbols.check_rounded;
+  static const IconData chevronLeft = Symbols.chevron_left;
   static const IconData chevronRight = Symbols.chevron_right;
   static const IconData clear = Symbols.clear;
   static const IconData clearRounded = Symbols.clear_rounded;

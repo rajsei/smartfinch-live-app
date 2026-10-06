@@ -52,7 +52,6 @@ class StickerBoardLayer extends ConsumerStatefulWidget {
     super.key,
     required this.layout,
     this.editable = false,
-    this.bottomInset = 0,
   });
 
   final StickerLayout layout;
@@ -60,9 +59,15 @@ class StickerBoardLayer extends ConsumerStatefulWidget {
   /// Arranging, rather than showing.
   final bool editable;
 
-  /// Room left free at the bottom while editing — the peeking panel handle —
-  /// above which the strip of unplaced stickers sits.
-  final double bottomInset;
+  /// Whether the strip is folded out. Static so it outlives the layer, which
+  /// is rebuilt every time the panel moves: a child who folded the strip away
+  /// should not find it open again the next time, for as long as the app
+  /// runs. Not stored — a fresh start shows it, with its hint.
+  static bool _trayOpen = true;
+
+  /// Folds the strip out again, as a fresh start would.
+  @visibleForTesting
+  static void resetTray() => _trayOpen = true;
 
   @override
   ConsumerState<StickerBoardLayer> createState() => _StickerBoardLayerState();
@@ -150,13 +155,22 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
           clipBehavior: Clip.none,
           children: [
             ...stickers,
+            // Fastened to the right edge and folding out of it, so it can be
+            // put away when it sits over a sticker a child wants to reach.
             if (board.pickedIds.isNotEmpty)
               Positioned(
-                left: 12,
-                right: 12,
-                bottom: widget.bottomInset + 8,
+                right: 0,
+                bottom: 8,
                 child: _Tray(
                   stickers: unplaced,
+                  open: StickerBoardLayer._trayOpen,
+                  openWidth: size.width - 12,
+                  onToggle:
+                      () => setState(
+                        () =>
+                            StickerBoardLayer._trayOpen =
+                                !StickerBoardLayer._trayOpen,
+                      ),
                   onPlace: (sticker) => _commit(board.place(sticker.id)),
                 ),
               ),
@@ -415,23 +429,64 @@ class _StickerActionButton extends StatelessWidget {
 }
 
 /// The how-to line, and the picked stickers that are not on the board.
+///
+/// Folds out of the right edge. Folded away it is one tab with a count of the
+/// stickers waiting in it, so nothing it holds is out of sight for long.
 class _Tray extends StatelessWidget {
-  const _Tray({required this.stickers, required this.onPlace});
+  const _Tray({
+    required this.stickers,
+    required this.open,
+    required this.openWidth,
+    required this.onToggle,
+    required this.onPlace,
+  });
 
   final List<Sticker> stickers;
+  final bool open;
+
+  /// Width when folded out, tab included.
+  final double openWidth;
+
+  final VoidCallback onToggle;
   final ValueChanged<Sticker> onPlace;
+
+  static const double _tabWidth = 48;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    return Material(
-      color: theme.colorScheme.surface.withValues(alpha: 0.92),
-      borderRadius: BorderRadius.circular(16),
-      elevation: 1,
+    final tab = Semantics(
+      button: true,
+      label: open ? l10n.stickerTrayHide : l10n.stickerTrayShow,
+      excludeSemantics: true,
+      child: Tooltip(
+        message: open ? l10n.stickerTrayHide : l10n.stickerTrayShow,
+        child: InkWell(
+          onTap: onToggle,
+          child: SizedBox(
+            width: _tabWidth,
+            height: 56,
+            child: Center(
+              child: Badge(
+                isLabelVisible: !open && stickers.isNotEmpty,
+                label: Text('${stickers.length}'),
+                child: Icon(
+                  open ? AppIcons.chevronRight : AppIcons.chevronLeft,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    final content = SizedBox(
+      width: (openWidth - _tabWidth).clamp(0.0, double.infinity),
       child: Padding(
-        padding: const EdgeInsets.fromLTRB(12, 10, 12, 10),
+        padding: const EdgeInsets.fromLTRB(0, 10, 12, 10),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -471,6 +526,23 @@ class _Tray extends StatelessWidget {
               ),
             ],
           ],
+        ),
+      ),
+    );
+
+    return Material(
+      color: theme.colorScheme.surface.withValues(alpha: 0.94),
+      // Rounded only where it is free; the right side is the screen's edge.
+      borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+      clipBehavior: Clip.antiAlias,
+      elevation: 1,
+      child: AnimatedSize(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeOutCubic,
+        alignment: Alignment.centerRight,
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [tab, if (open) content],
         ),
       ),
     );

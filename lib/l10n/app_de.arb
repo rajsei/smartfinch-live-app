@@ -740,5 +740,7 @@
   "stickerBoardHint": "Schieb einen Sticker mit einem Finger. Mit zwei Fingern drehst du ihn und machst ihn größer oder kleiner.",
   "stickerBoardAdd": "Tippe auf einen Sticker, um ihn aufzukleben. Mit einem Finger schieben, mit zwei drehen und größer machen.",
   "stickerBoardRemove": "Zurück ins Album",
-  "stickerBoardMirror": "Spiegeln"
+  "stickerBoardMirror": "Spiegeln",
+  "stickerTrayShow": "Sticker zeigen",
+  "stickerTrayHide": "Einklappen"
 }

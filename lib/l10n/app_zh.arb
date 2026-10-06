@@ -740,5 +740,7 @@
   "stickerBoardHint": "用一根手指拖动贴纸。用两根手指可以旋转它，并把它放大或缩小。",
   "stickerBoardAdd": "点一张贴纸就能把它贴上。一根手指拖动，两根手指旋转和缩放。",
   "stickerBoardRemove": "放回贴纸册",
-  "stickerBoardMirror": "镜像翻转"
+  "stickerBoardMirror": "镜像翻转",
+  "stickerTrayShow": "显示贴纸",
+  "stickerTrayHide": "收起"
 }

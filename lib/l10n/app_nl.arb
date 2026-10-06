@@ -740,5 +740,7 @@
   "stickerBoardHint": "Schuif een sticker met één vinger. Met twee vingers draai je hem en maak je hem groter of kleiner.",
   "stickerBoardAdd": "Tik op een sticker om hem op te plakken. Met één vinger schuiven, met twee draaien en groter of kleiner maken.",
   "stickerBoardRemove": "Terug naar het album",
-  "stickerBoardMirror": "Spiegelen"
+  "stickerBoardMirror": "Spiegelen",
+  "stickerTrayShow": "Stickers tonen",
+  "stickerTrayHide": "Inklappen"
 }

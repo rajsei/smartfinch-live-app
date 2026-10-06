@@ -59,6 +59,10 @@ class HomeHeader extends ConsumerWidget {
   /// portrait phone, where it sits behind the tile panel instead.
   final bool showAlbumButton;
 
+  /// Empty space below the header's last line. The sticker board may start
+  /// inside it (`AVA-07`) — it is margin, not content.
+  static double bottomPadding({bool large = false}) => large ? 28 : 20;
+
   /// Tightens the bird and the big number for the landscape column, which is
   /// narrower than the full width portrait gives them.
   final bool compact;
@@ -87,8 +91,8 @@ class HomeHeader extends ConsumerWidget {
     return Padding(
       padding:
           large
-              ? const EdgeInsets.fromLTRB(32, 24, 32, 28)
-              : const EdgeInsets.fromLTRB(20, 12, 20, 20),
+              ? EdgeInsets.fromLTRB(32, 24, 32, bottomPadding(large: true))
+              : EdgeInsets.fromLTRB(20, 12, 20, bottomPadding()),
       child: Column(
         // As tall as its content, so a host that centres it — the landscape
         // column — can. Under the fixed-height box portrait gives it, this

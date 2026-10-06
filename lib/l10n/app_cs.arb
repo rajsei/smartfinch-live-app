@@ -740,5 +740,7 @@
   "stickerBoardHint": "Samolepku posuneš jedním prstem. Dvěma prsty ji otočíš a zvětšíš nebo zmenšíš.",
   "stickerBoardAdd": "Klepni na samolepku a nalep ji. Jedním prstem posouvej, dvěma otáčej a měň velikost.",
   "stickerBoardRemove": "Zpět do alba",
-  "stickerBoardMirror": "Zrcadlit"
+  "stickerBoardMirror": "Zrcadlit",
+  "stickerTrayShow": "Ukázat samolepky",
+  "stickerTrayHide": "Schovat"
 }

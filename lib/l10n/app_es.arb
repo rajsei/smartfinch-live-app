@@ -740,5 +740,7 @@
   "stickerBoardHint": "Mueve una pegatina con un dedo. Con dos dedos la giras y la haces más grande o más pequeña.",
   "stickerBoardAdd": "Toca una pegatina para pegarla. Muévela con un dedo; con dos, gírala y cambia su tamaño.",
   "stickerBoardRemove": "Volver al álbum",
-  "stickerBoardMirror": "Reflejar"
+  "stickerBoardMirror": "Reflejar",
+  "stickerTrayShow": "Mostrar pegatinas",
+  "stickerTrayHide": "Guardar"
 }
