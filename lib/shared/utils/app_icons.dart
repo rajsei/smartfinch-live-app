@@ -84,6 +84,7 @@ abstract final class AppIcons {
   static const IconData grain = Symbols.grain;
   static const IconData graphicEq = Symbols.graphic_eq;
   static const IconData graphicEqRounded = Symbols.graphic_eq_rounded;
+  static const IconData flipRounded = Symbols.flip_rounded;
   static const IconData gridViewRounded = Symbols.grid_view_rounded;
   static const IconData hearing = Symbols.hearing;
   static const IconData helpOutline = Symbols.help;

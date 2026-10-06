@@ -261,6 +261,21 @@ void main() {
       expect(board.pickedIds, {kingfisher, kiwi});
     });
 
+    testWidgets('a touched sticker can be mirrored', (tester) async {
+      await pump(tester, editable: true);
+
+      await tester.tap(sticker);
+      await settle(tester);
+      await tester.tap(find.byTooltip('Mirror'));
+      await settle(tester);
+
+      final board = (await tester.runAsync(stored))!;
+      expect(board.portrait.single.flipped, isTrue);
+      // Still on the board, still selected: mirroring is not putting away.
+      expect(board.placedIds, {kingfisher});
+      expect(find.byTooltip('Mirror'), findsOneWidget);
+    });
+
     testWidgets('and one tap in the strip sticks it on again', (tester) async {
       await pump(tester, editable: true);
 

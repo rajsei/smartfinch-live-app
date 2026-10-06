@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Deine Sticker",
   "stickerAlbumToPick": "Such dir einen aus",
   "stickerAlbumStillToCollect": "Noch zu sammeln",
-  "stickerAlbumNextLevel": "Bei Level {number} darfst du dir einen aussuchen.",
+  "stickerAlbumNextLevel": "Bei Level {number} darfst du dir einen neuen Sticker aussuchen.",
   "stickerAlbumAllCollected": "Du hast alle Sticker gesammelt!",
   "stickerPickQuestion": "Diesen Sticker nehmen?",
   "stickerPickConfirm": "Nehmen",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, noch nicht gesammelt",
   "stickerBoardHint": "Schieb einen Sticker mit einem Finger. Mit zwei Fingern drehst du ihn und machst ihn größer oder kleiner.",
   "stickerBoardAdd": "Tippe auf einen Sticker, um ihn aufzukleben. Mit einem Finger schieben, mit zwei drehen und größer machen.",
-  "stickerBoardRemove": "Zurück ins Album"
+  "stickerBoardRemove": "Zurück ins Album",
+  "stickerBoardMirror": "Spiegeln"
 }

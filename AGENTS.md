@@ -44,7 +44,7 @@ These are Smartfinch-specific and have no equivalent in BirdNET Live. Breaking o
 `Detection` is raw data and is always written. The scoring layer — `ScoreEvent`, `DaySpecies`, `YearSpecies`, the life list — is derived and is written **only when scoring is active** (`PKT-20`). When scoring is paused, write the detection, flag it, and write nothing else (`DAT-11`).
 
 **2. Never write the life list casually.**
-Adding a species to the life list burns its first-find ×3 multiplier forever (`PKT-04`). A test-mode detection, a manually added species (`LIVE-16`), an import — none of them may touch it. The child's real first find, weeks later, must still count. This is the single easiest way to break the game silently.
+Adding a species to the life list burns its first-find ×3 multiplier forever (`PKT-04`). A test-mode detection, a manually added species (`LIVE-16`), an import, a sticker pick (`AVA-07`) — none of them may touch it. The child's real first find, weeks later, must still count. This is the single easiest way to break the game silently.
 
 **3. Frozen fields are frozen.**
 Every `ScoreEvent` stores its base value, rarity level, `geoWeek`, grid cell and the confidence threshold that applied (`PKT-15`). `recomputeAllScores()` re-derives multipliers and bonuses and **never** touches those. A recomputation that rewrites base values rewrites a child's history.
@@ -56,7 +56,7 @@ Every `ScoreEvent` stores its base value, rarity level, `geoWeek`, grid cell and
 Explore and Live must read the same `(gridCell, geoWeek)` scale (`DAT-10`), or the app contradicts itself about what a bird is worth. Grid cell is **0.1°** everywhere — rarity scale, place bonus, weather cache (D23).
 
 **6. Levels ratchet.**
-Store the highest level ever reached; a recomputation may raise it, never lower it. Otherwise the first rebalancing takes a level away from a child who did nothing.
+Store the highest level ever reached; a recomputation may raise it, never lower it. Otherwise the first rebalancing takes a level away from a child who did nothing. Sticker picks (`AVA-07`) are counted against that stored level, never against today's stars, for the same reason. The ladder is a formula with no top (`level_ladder.dart`, §3.5) — levels start at 0 and every level from 1 on is one sticker pick.
 
 **7. Nothing is ever taken away, and every number can be explained.**
 Principles 1 and 6 of the specification. No punishment, no deducted points, no commentary on a broken streak. If a value changed, the app must be able to say why — which is why frozen fields and one shared scale are not optional.
@@ -98,6 +98,7 @@ Smartfinch keeps merging from `birdnet-team/birdnet-live-app` (D2). That only st
   - `dev/mockups/`: slide copy belongs in `mockups.copy.md` (then run `node sync-copy.js`), not inline in `mockups.config.js`
   - the locale list in `dev/build_release.dart`
   - the locale lists in `test/features/announcements/templates_*_test.dart`
+  - `assets/stickers/facts_<loc>.json` (sticker facts, `AVA-07`; discovered automatically, a missing file falls back to English). Like the species profiles these ship German and English first — a missing fact file is not a translation bug
 
 > **Note on species profiles:** UI strings stay at 12 locales. The child-register species texts (`SAM-11`) ship German first, English second; the other ten keep the adult descriptions until someone funds the rewrite. Do not treat a missing child-register text as a translation bug.
 
@@ -131,6 +132,13 @@ Smartfinch keeps merging from `birdnet-team/birdnet-live-app` (D2). That only st
 - The bundle script clears `assets/species_images/`; `dummy.webp` is preserved explicitly. Add any other hand-crafted file to `PRESERVED_OUTPUT_FILES`.
 - To refresh with a new taxonomy version: download the taxonomy JSON, point `DEFAULT_TAXONOMY_JSON` at it, run the bundle script from the repo root with the venv active.
 - `assets/species_images/` and `assets/species_data/` are generated and gitignored.
+
+### Stickers (`AVA-07`)
+
+- `assets/stickers/` is **hand-made, not generated**, and lives outside the bundle directories on purpose: `images/<id>.png|webp` (512 × 512, transparent, white sticker edge drawn in), `stickers.json` (album order; `_readme` inside explains the format) and `facts_<loc>.json`. No pipeline may write or clear it.
+- A sticker's `id` is its scientific name in lower case with underscores. **Never rename or reuse an id once shipped** — children's saved picks refer to it. Removing an entry hides the sticker and keeps the pick.
+- Adding a sticker is an image, one line in `stickers.json` and a fact in `facts_de.json` and `facts_en.json`. `test/features/stickers/sticker_catalog_test.dart` checks the shipped files against each other — run it.
+- The child's stickers live in `UserProfiles.avatarState` under the key `stickers`, next to the bird's name. That column has several owners: write it **only** through `writeAvatarField` (`lib/features/avatar/avatar_state.dart`), which merges. Writing the whole blob erases every other owner's data.
 
 ## Data and Models
 

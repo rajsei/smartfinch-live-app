@@ -174,10 +174,11 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
   ) {
     // Kept on the board here as well as while dragging: a placement stored
     // before the board had its current size may still hang over its edge.
+    final l10n = AppLocalizations.of(context)!;
     final placement = _keptOn(stored, size);
     final extent = placement.scale * side;
-    // Hanging out on the right, "back to the album" moves to the left corner:
-    // the part of the sticker still on screen.
+    // Hanging out on the right, the buttons move to the left corners: the
+    // part of the sticker still on screen.
     final hangsOutRight = placement.x * size.width + extent / 2 > size.width;
     final image = Image.asset(
       sticker.imageAsset,
@@ -193,7 +194,10 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
     );
 
     final selected = widget.editable && _selected == placement.id;
-    final rotated = Transform.rotate(angle: placement.rotation, child: image);
+    final rotated = Transform.rotate(
+      angle: placement.rotation,
+      child: Transform.flip(flipX: placement.flipped, child: image),
+    );
 
     // ⚠️ One shape for every state. Selecting a sticker happens *during* the
     // touch that starts a gesture; if selecting changed the widgets around the
@@ -254,12 +258,14 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                       // Inside the sticker's box, not hanging off its
                       // corner: a touch outside a widget's bounds never
                       // reaches it.
-                      if (selected)
+                      if (selected) ...[
                         Positioned(
                           top: 0,
                           left: hangsOutRight ? 0 : null,
                           right: hangsOutRight ? null : 0,
-                          child: _BackToAlbumButton(
+                          child: _StickerActionButton(
+                            icon: AppIcons.photoAlbumRounded,
+                            label: l10n.stickerBoardRemove,
                             onPressed: () {
                               final board = _draft;
                               if (board == null) return;
@@ -268,6 +274,24 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
                             },
                           ),
                         ),
+                        // Mirror: the bird looks the other way.
+                        Positioned(
+                          bottom: 0,
+                          left: hangsOutRight ? 0 : null,
+                          right: hangsOutRight ? null : 0,
+                          child: _StickerActionButton(
+                            icon: AppIcons.flipRounded,
+                            label: l10n.stickerBoardMirror,
+                            onPressed: () {
+                              final board = _draft;
+                              if (board == null) return;
+                              _commit(
+                                board.mirror(widget.layout, placement.id),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -347,19 +371,25 @@ class _StickerBoardLayerState extends ConsumerState<StickerBoardLayer> {
   }
 }
 
-/// "Back to the album" on the sticker last touched.
-class _BackToAlbumButton extends StatelessWidget {
-  const _BackToAlbumButton({required this.onPressed});
+/// A round button on the sticker last touched: "back to the album" in the
+/// top corner, "mirror" in the bottom one.
+class _StickerActionButton extends StatelessWidget {
+  const _StickerActionButton({
+    required this.icon,
+    required this.label,
+    required this.onPressed,
+  });
 
+  final IconData icon;
+  final String label;
   final VoidCallback onPressed;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final l10n = AppLocalizations.of(context)!;
 
     return Tooltip(
-      message: l10n.stickerBoardRemove,
+      message: label,
       child: Material(
         color: theme.colorScheme.surface,
         shape: CircleBorder(
@@ -372,10 +402,10 @@ class _BackToAlbumButton extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.all(8),
             child: Icon(
-              AppIcons.photoAlbumRounded,
+              icon,
               size: 20,
               color: theme.colorScheme.primary,
-              semanticLabel: l10n.stickerBoardRemove,
+              semanticLabel: label,
             ),
           ),
         ),

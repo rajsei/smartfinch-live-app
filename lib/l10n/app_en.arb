@@ -3224,7 +3224,7 @@
   "@stickerAlbumStillToCollect": {
     "description": "AVA-07: album section with the stickers not yet picked, while no pick is open"
   },
-  "stickerAlbumNextLevel": "At level {number} you may pick one.",
+  "stickerAlbumNextLevel": "At level {number} you may pick a new sticker.",
   "@stickerAlbumNextLevel": {
     "description": "AVA-07: when the next pick comes. Also shown when a faded sticker is tapped",
     "placeholders": {
@@ -3295,5 +3295,9 @@
   "stickerBoardRemove": "Back to the album",
   "@stickerBoardRemove": {
     "description": "AVA-07: button on a touched sticker; takes it off the board, it stays in the album"
+  },
+  "stickerBoardMirror": "Mirror",
+  "@stickerBoardMirror": {
+    "description": "AVA-07: button on a touched sticker; mirrors it left to right so the bird looks the other way"
   }
 }

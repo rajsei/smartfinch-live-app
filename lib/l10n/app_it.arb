@@ -727,7 +727,7 @@
   "stickerAlbumMine": "I tuoi adesivi",
   "stickerAlbumToPick": "Scegline uno",
   "stickerAlbumStillToCollect": "Da collezionare",
-  "stickerAlbumNextLevel": "Al livello {number} potrai sceglierne uno.",
+  "stickerAlbumNextLevel": "Al livello {number} potrai scegliere un nuovo adesivo.",
   "stickerAlbumAllCollected": "Hai tutti gli adesivi!",
   "stickerPickQuestion": "Prendi questo adesivo?",
   "stickerPickConfirm": "Prendilo",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, non ancora collezionato",
   "stickerBoardHint": "Sposta un adesivo con un dito. Con due dita lo giri e lo fai più grande o più piccolo.",
   "stickerBoardAdd": "Tocca un adesivo per attaccarlo. Con un dito lo sposti, con due lo giri e cambi la sua grandezza.",
-  "stickerBoardRemove": "Torna nell'album"
+  "stickerBoardRemove": "Torna nell'album",
+  "stickerBoardMirror": "Specchia"
 }

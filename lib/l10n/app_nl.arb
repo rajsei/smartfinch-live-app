@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Jouw stickers",
   "stickerAlbumToPick": "Kies er een",
   "stickerAlbumStillToCollect": "Nog te verzamelen",
-  "stickerAlbumNextLevel": "Bij level {number} mag je er een kiezen.",
+  "stickerAlbumNextLevel": "Bij level {number} mag je een nieuwe sticker kiezen.",
   "stickerAlbumAllCollected": "Je hebt alle stickers!",
   "stickerPickQuestion": "Deze sticker nemen?",
   "stickerPickConfirm": "Nemen",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, nog niet verzameld",
   "stickerBoardHint": "Schuif een sticker met één vinger. Met twee vingers draai je hem en maak je hem groter of kleiner.",
   "stickerBoardAdd": "Tik op een sticker om hem op te plakken. Met één vinger schuiven, met twee draaien en groter of kleiner maken.",
-  "stickerBoardRemove": "Terug naar het album"
+  "stickerBoardRemove": "Terug naar het album",
+  "stickerBoardMirror": "Spiegelen"
 }

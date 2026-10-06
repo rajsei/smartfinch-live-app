@@ -226,6 +226,61 @@ void main() {
     });
   });
 
+  group('mirroring', () {
+    final placed = StickerBoard.empty
+        .pick('a', level: 2)
+        .place('a')
+        .move(
+          StickerLayout.portrait,
+          const StickerPlacement(id: 'a', rotation: 0.4),
+        );
+
+    test('the bird looks the other way, and leans the other way', () {
+      final a = placed.mirror(StickerLayout.portrait, 'a').portrait.single;
+      expect(a.flipped, isTrue);
+      expect(a.rotation, closeTo(-0.4, 1e-9));
+    });
+
+    test('twice is where it started', () {
+      final twice = placed
+          .mirror(StickerLayout.portrait, 'a')
+          .mirror(StickerLayout.portrait, 'a');
+      final a = twice.portrait.single;
+      expect(a.flipped, isFalse);
+      expect(a.rotation, closeTo(placed.portrait.single.rotation, 1e-9));
+    });
+
+    test('in landscape it leaves portrait alone', () {
+      final board = placed.mirror(StickerLayout.landscape, 'a');
+      expect(
+        board.placementsFor(StickerLayout.landscape).single.flipped,
+        isTrue,
+      );
+      expect(board.portrait.single.flipped, isFalse);
+    });
+
+    test('a sticker not on the board: unchanged', () {
+      expect(placed.mirror(StickerLayout.portrait, 'x'), same(placed));
+    });
+
+    test('is stored, and only when set', () {
+      final mirrored = placed.mirror(StickerLayout.portrait, 'a');
+      expect(placed.portrait.single.toJson().containsKey('f'), isFalse);
+
+      final restored = StickerBoard.fromJson(
+        jsonDecode(jsonEncode(mirrored.toJson())),
+      );
+      expect(restored.portrait.single.flipped, isTrue);
+    });
+
+    test('anything but true reads as not mirrored', () {
+      for (final raw in [null, 'yes', 1, false]) {
+        final p = StickerPlacement.fromJson({'id': 'a', 'f': raw});
+        expect(p!.flipped, isFalse, reason: '$raw');
+      }
+    });
+  });
+
   group('two arrangements', () {
     final placed = StickerBoard.empty
         .pick('a', level: 2)

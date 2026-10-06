@@ -158,6 +158,17 @@ class _AlbumBody extends ConsumerWidget {
           ),
         ],
         if (rest.isNotEmpty) ...[
+          // When the next pick comes, said *before* the stickers it is for,
+          // so a child reads it before scrolling past the faded ones.
+          if (!canPick && !hasOpenLevels)
+            SliverPadding(
+              padding: const EdgeInsets.fromLTRB(16, 20, 16, 0),
+              sliver: SliverToBoxAdapter(
+                child: _NextLevelHint(
+                  text: l10n.stickerAlbumNextLevel(level + 1),
+                ),
+              ),
+            ),
           heading(
             canPick ? l10n.stickerAlbumToPick : l10n.stickerAlbumStillToCollect,
           ),
@@ -178,11 +189,41 @@ class _AlbumBody extends ConsumerWidget {
         ],
         if (rest.isEmpty && mine.isNotEmpty)
           note(l10n.stickerAlbumAllCollected)
-        else if (!canPick && !hasOpenLevels)
-          note(l10n.stickerAlbumNextLevel(level + 1))
         else
           const SliverToBoxAdapter(child: SizedBox(height: 32)),
       ],
+    );
+  }
+}
+
+/// "At level 5 you may pick a new sticker." — above the stickers still to
+/// collect. Quiet: it says when, not that anything is missing.
+class _NextLevelHint extends StatelessWidget {
+  const _NextLevelHint({required this.text});
+
+  final String text;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+      decoration: BoxDecoration(
+        color: theme.colorScheme.surfaceContainerHighest,
+        borderRadius: BorderRadius.circular(14),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            AppIcons.autoAwesomeRounded,
+            size: 24,
+            color: theme.colorScheme.primary,
+          ),
+          const SizedBox(width: 12),
+          Expanded(child: Text(text, style: theme.textTheme.bodyLarge)),
+        ],
+      ),
     );
   }
 }

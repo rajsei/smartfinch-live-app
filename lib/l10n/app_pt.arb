@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Os teus autocolantes",
   "stickerAlbumToPick": "Escolhe um",
   "stickerAlbumStillToCollect": "Ainda por colecionar",
-  "stickerAlbumNextLevel": "No nível {number} podes escolher um.",
+  "stickerAlbumNextLevel": "No nível {number} podes escolher um autocolante novo.",
   "stickerAlbumAllCollected": "Tens todos os autocolantes!",
   "stickerPickQuestion": "Ficar com este autocolante?",
   "stickerPickConfirm": "Ficar com ele",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, ainda não o tens",
   "stickerBoardHint": "Arrasta um autocolante com um dedo. Com dois dedos rodas e mudas o tamanho.",
   "stickerBoardAdd": "Toca num autocolante para o colar. Com um dedo arrastas, com dois rodas e mudas o tamanho.",
-  "stickerBoardRemove": "Voltar ao álbum"
+  "stickerBoardRemove": "Voltar ao álbum",
+  "stickerBoardMirror": "Espelhar"
 }

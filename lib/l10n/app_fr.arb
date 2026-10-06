@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Tes autocollants",
   "stickerAlbumToPick": "Choisis-en un",
   "stickerAlbumStillToCollect": "À collectionner",
-  "stickerAlbumNextLevel": "Au niveau {number}, tu pourras en choisir un.",
+  "stickerAlbumNextLevel": "Au niveau {number}, tu pourras choisir un nouvel autocollant.",
   "stickerAlbumAllCollected": "Tu as tous les autocollants !",
   "stickerPickQuestion": "Prendre cet autocollant ?",
   "stickerPickConfirm": "Le prendre",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, pas encore collectionné",
   "stickerBoardHint": "Déplace un autocollant avec un doigt. Avec deux doigts, tu le tournes et tu l'agrandis ou le rétrécis.",
   "stickerBoardAdd": "Touche un autocollant pour le coller. Un doigt pour le déplacer, deux pour le tourner et changer sa taille.",
-  "stickerBoardRemove": "Retour à l'album"
+  "stickerBoardRemove": "Retour à l'album",
+  "stickerBoardMirror": "Retourner"
 }

@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Twoje naklejki",
   "stickerAlbumToPick": "Wybierz jedną",
   "stickerAlbumStillToCollect": "Do zebrania",
-  "stickerAlbumNextLevel": "Na poziomie {number} wybierzesz jedną.",
+  "stickerAlbumNextLevel": "Na poziomie {number} wybierzesz nową naklejkę.",
   "stickerAlbumAllCollected": "Masz wszystkie naklejki!",
   "stickerPickQuestion": "Wziąć tę naklejkę?",
   "stickerPickConfirm": "Biorę",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, jeszcze niezebrana",
   "stickerBoardHint": "Przesuwaj naklejkę jednym palcem. Dwoma palcami ją obrócisz i powiększysz lub pomniejszysz.",
   "stickerBoardAdd": "Dotknij naklejki, aby ją przykleić. Jednym palcem przesuwasz, dwoma obracasz i zmieniasz rozmiar.",
-  "stickerBoardRemove": "Z powrotem do albumu"
+  "stickerBoardRemove": "Z powrotem do albumu",
+  "stickerBoardMirror": "Odbij lustrzanie"
 }

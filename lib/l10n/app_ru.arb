@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Твои наклейки",
   "stickerAlbumToPick": "Выбери одну",
   "stickerAlbumStillToCollect": "Ещё не собраны",
-  "stickerAlbumNextLevel": "На уровне {number} ты сможешь выбрать одну.",
+  "stickerAlbumNextLevel": "На уровне {number} ты сможешь выбрать новую наклейку.",
   "stickerAlbumAllCollected": "У тебя все наклейки!",
   "stickerPickQuestion": "Взять эту наклейку?",
   "stickerPickConfirm": "Взять",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, ещё не собрана",
   "stickerBoardHint": "Двигай наклейку одним пальцем. Двумя пальцами её можно повернуть и сделать больше или меньше.",
   "stickerBoardAdd": "Нажми на наклейку, чтобы приклеить её. Одним пальцем двигай, двумя — поворачивай и меняй размер.",
-  "stickerBoardRemove": "Обратно в альбом"
+  "stickerBoardRemove": "Обратно в альбом",
+  "stickerBoardMirror": "Отразить"
 }

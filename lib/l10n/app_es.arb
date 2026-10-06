@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Tus pegatinas",
   "stickerAlbumToPick": "Elige una",
   "stickerAlbumStillToCollect": "Por coleccionar",
-  "stickerAlbumNextLevel": "En el nivel {number} podrás elegir una.",
+  "stickerAlbumNextLevel": "En el nivel {number} podrás elegir una pegatina nueva.",
   "stickerAlbumAllCollected": "¡Tienes todas las pegatinas!",
   "stickerPickQuestion": "¿Te quedas con esta pegatina?",
   "stickerPickConfirm": "Elegir",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, aún no la tienes",
   "stickerBoardHint": "Mueve una pegatina con un dedo. Con dos dedos la giras y la haces más grande o más pequeña.",
   "stickerBoardAdd": "Toca una pegatina para pegarla. Muévela con un dedo; con dos, gírala y cambia su tamaño.",
-  "stickerBoardRemove": "Volver al álbum"
+  "stickerBoardRemove": "Volver al álbum",
+  "stickerBoardMirror": "Reflejar"
 }

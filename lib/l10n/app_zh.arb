@@ -727,7 +727,7 @@
   "stickerAlbumMine": "你的贴纸",
   "stickerAlbumToPick": "挑一张吧",
   "stickerAlbumStillToCollect": "还没收集到",
-  "stickerAlbumNextLevel": "到等级 {number} 时，你可以挑选一张。",
+  "stickerAlbumNextLevel": "到等级 {number} 时，你可以挑选一张新贴纸。",
   "stickerAlbumAllCollected": "你已经收集了所有贴纸！",
   "stickerPickQuestion": "要这张贴纸吗？",
   "stickerPickConfirm": "就要它",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}，还没收集到",
   "stickerBoardHint": "用一根手指拖动贴纸。用两根手指可以旋转它，并把它放大或缩小。",
   "stickerBoardAdd": "点一张贴纸就能把它贴上。一根手指拖动，两根手指旋转和缩放。",
-  "stickerBoardRemove": "放回贴纸册"
+  "stickerBoardRemove": "放回贴纸册",
+  "stickerBoardMirror": "镜像翻转"
 }

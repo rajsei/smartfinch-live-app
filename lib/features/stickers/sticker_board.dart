@@ -57,6 +57,7 @@ class StickerPlacement {
     this.y = 0.5,
     this.scale = kDefaultStickerScale,
     this.rotation = 0,
+    this.flipped = false,
   });
 
   /// Reads one placement, or null if it is unusable.
@@ -74,6 +75,7 @@ class StickerPlacement {
       y: number(json['y'], 0.5),
       scale: number(json['s'], kDefaultStickerScale),
       rotation: number(json['r'], 0),
+      flipped: json['f'] == true,
     ).clamped();
   }
 
@@ -91,11 +93,15 @@ class StickerPlacement {
   /// Radians, clockwise.
   final double rotation;
 
+  /// Mirrored left to right — the bird looks the other way.
+  final bool flipped;
+
   StickerPlacement copyWith({
     double? x,
     double? y,
     double? scale,
     double? rotation,
+    bool? flipped,
   }) =>
       StickerPlacement(
         id: id,
@@ -103,7 +109,16 @@ class StickerPlacement {
         y: y ?? this.y,
         scale: scale ?? this.scale,
         rotation: rotation ?? this.rotation,
+        flipped: flipped ?? this.flipped,
       ).clamped();
+
+  /// The mirror image, as it would look in a mirror held beside it.
+  ///
+  /// The angle turns the other way too: a sticker tilted to the right shows,
+  /// mirrored, tilted to the left — otherwise "mirror" would also turn it,
+  /// which is not what a child pressing it expects.
+  StickerPlacement mirrored() =>
+      copyWith(flipped: !flipped, rotation: -rotation);
 
   /// Kept on the board, at a size a child can still grab, with the angle
   /// folded into one turn.
@@ -113,6 +128,7 @@ class StickerPlacement {
     y: y.clamp(0.0, 1.0),
     scale: scale.clamp(kMinStickerScale, kMaxStickerScale),
     rotation: _normalizeAngle(rotation),
+    flipped: flipped,
   );
 
   /// Moved just far enough that the whole sticker, turned as it is, lies on a
@@ -153,6 +169,7 @@ class StickerPlacement {
       y: fit(y, half / height),
       scale: scale,
       rotation: rotation,
+      flipped: flipped,
     );
   }
 
@@ -162,6 +179,7 @@ class StickerPlacement {
     'y': y,
     's': scale,
     'r': rotation,
+    if (flipped) 'f': true,
   };
 
   @override
@@ -171,17 +189,20 @@ class StickerPlacement {
       other.x == x &&
       other.y == y &&
       other.scale == scale &&
-      other.rotation == rotation;
+      other.rotation == rotation &&
+      other.flipped == flipped;
 
   @override
-  int get hashCode => Object.hash(id, x, y, scale, rotation);
+  int get hashCode => Object.hash(id, x, y, scale, rotation, flipped);
 }
 
 /// A new sticker's size on the board.
 const double kDefaultStickerScale = 0.3;
 
-/// Smallest size — below this a sticker is hard to grab again.
-const double kMinStickerScale = 0.12;
+/// Smallest size — below this a sticker is hard to grab again, and the two
+/// buttons a touched sticker carries ("back to the album" above, "mirror"
+/// below, 36 dp each) would cover each other.
+const double kMinStickerScale = 0.22;
 
 /// Largest size.
 const double kMaxStickerScale = 0.9;
@@ -349,6 +370,17 @@ class StickerBoard {
         landscape: replaced(landscape ?? portrait),
       ),
     };
+  }
+
+  /// Mirrors [id] in [layout] (see [StickerPlacement.mirrored]).
+  ///
+  /// Like [move], the first change in landscape makes it an arrangement of
+  /// its own. A sticker not on the board: unchanged.
+  StickerBoard mirror(StickerLayout layout, String id) {
+    for (final p in placementsFor(layout)) {
+      if (p.id == id) return move(layout, p.mirrored());
+    }
+    return this;
   }
 
   /// Moves [id] to the top of [layout] — the sticker a child touches is the

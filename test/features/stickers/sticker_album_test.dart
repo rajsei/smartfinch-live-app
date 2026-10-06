@@ -154,7 +154,13 @@ void main() {
       expect(find.text('Your stickers'), findsOneWidget);
       // The only pick is used: the rest wait for the next level.
       expect(find.text('Still to collect'), findsOneWidget);
-      expect(find.text('At level 2 you may pick one.'), findsOneWidget);
+      final hint = find.text('At level 2 you may pick a new sticker.');
+      expect(hint, findsOneWidget);
+      // Above the stickers it is about, not below them.
+      expect(
+        tester.getRect(hint).bottom,
+        lessThan(tester.getRect(find.text('Still to collect')).top),
+      );
     });
 
     testWidgets('⚠️ picking a bird does not put it on the life list', (
@@ -195,7 +201,10 @@ void main() {
       await pump(tester, const StickerAlbumScreen());
 
       expect(find.textContaining('You may pick'), findsNothing);
-      expect(find.text('At level 1 you may pick one.'), findsOneWidget);
+      expect(
+        find.text('At level 1 you may pick a new sticker.'),
+        findsOneWidget,
+      );
 
       await tester.tap(find.text('Shoebill'));
       await tester.pumpAndSettle();
@@ -205,7 +214,7 @@ void main() {
       expect(
         find.descendant(
           of: find.byType(SnackBar),
-          matching: find.text('At level 1 you may pick one.'),
+          matching: find.text('At level 1 you may pick a new sticker.'),
         ),
         findsOneWidget,
       );

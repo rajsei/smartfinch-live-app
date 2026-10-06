@@ -727,7 +727,7 @@
   "stickerAlbumMine": "Dine klistremerker",
   "stickerAlbumToPick": "Velg ett",
   "stickerAlbumStillToCollect": "Ikke samlet ennå",
-  "stickerAlbumNextLevel": "På nivå {number} kan du velge ett.",
+  "stickerAlbumNextLevel": "På nivå {number} kan du velge et nytt klistremerke.",
   "stickerAlbumAllCollected": "Du har samlet alle klistremerkene!",
   "stickerPickQuestion": "Ta dette klistremerket?",
   "stickerPickConfirm": "Ta det",
@@ -739,5 +739,6 @@
   "stickerLockedA11y": "{name}, ikke samlet ennå",
   "stickerBoardHint": "Flytt et klistremerke med én finger. Med to fingre snur du det og gjør det større eller mindre.",
   "stickerBoardAdd": "Trykk på et klistremerke for å klistre det på. Én finger flytter, to fingre snur og endrer størrelsen.",
-  "stickerBoardRemove": "Tilbake til albumet"
+  "stickerBoardRemove": "Tilbake til albumet",
+  "stickerBoardMirror": "Speilvend"
 }
