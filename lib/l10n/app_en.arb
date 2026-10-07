@@ -116,10 +116,6 @@
   "@settingsRecording": {
     "description": "Recording settings category"
   },
-  "settingsExport": "Backup",
-  "@settingsExport": {
-    "description": "Export settings category"
-  },
   "settingsGeneral": "General",
   "@settingsGeneral": {
     "description": "General settings category"
@@ -160,7 +156,7 @@
   "@settingsDynamicColor": {
     "description": "Dynamic color toggle label"
   },
-  "settingsDynamicColorDescription": "Use your Android device's color palette when available.",
+  "settingsDynamicColorDescription": "Use the colors you picked on your phone.",
   "@settingsDynamicColorDescription": {
     "description": "Dynamic color toggle description"
   },
@@ -168,7 +164,7 @@
   "@settingsHighContrastTheme": {
     "description": "High contrast theme toggle label"
   },
-  "settingsHelpDynamicColor": "Uses your Android device's color palette when available. This has no effect on iPhone or iPad.",
+  "settingsHelpDynamicColor": "Takes on the colors of your phone's wallpaper and theme. Works on Android 12 and newer.",
   "@settingsHelpDynamicColor": {
     "description": "Help text for the Dynamic Color setting"
   },
@@ -176,7 +172,7 @@
   "@settingsHelpHighContrastTheme": {
     "description": "Help text for the High Contrast Theme setting"
   },
-  "settingsResetOnboarding": "Reset Onboarding",
+  "settingsResetOnboarding": "Show the introduction again",
   "@settingsResetOnboarding": {
     "description": "Reset onboarding setting"
   },
@@ -196,7 +192,7 @@
   "@settingsClearDataTypeConfirm": {
     "description": "Instruction to type DELETE to confirm data deletion"
   },
-  "settingsResetOnboardingConfirmTitle": "Reset Onboarding?",
+  "settingsResetOnboardingConfirmTitle": "Show the introduction again?",
   "@settingsResetOnboardingConfirmTitle": {
     "description": "Reset onboarding confirmation dialog title"
   },
@@ -297,7 +293,7 @@
   "@aboutCredits": {
     "description": "Section title for the team that built BirdNET"
   },
-  "aboutCreditsDescription": "Smartfinch is developed by the Cornell K. Lisa Yang Center for Conservation Bioacoustics at the Cornell Lab of Ornithology and Chemnitz University of Technology with support from the Museum für Naturkunde Berlin.",
+  "aboutCreditsDescription": "Smartfinch is a doctoral project at Chemnitz University of Technology and builds on BirdNET Live. BirdNET Live is developed by the Cornell K. Lisa Yang Center for Conservation Bioacoustics at the Cornell Lab of Ornithology and Chemnitz University of Technology with support from the Museum für Naturkunde Berlin.",
   "@aboutCreditsDescription": {
     "description": "Credits description"
   },
@@ -305,7 +301,7 @@
   "@aboutFunding": {
     "description": "Section title for the funding card on the About screen"
   },
-  "aboutFundingDescription": "The development of Smartfinch is supported by the Deutsche Bundesstiftung Umwelt through the project RangerSound (project 39263/01).",
+  "aboutFundingDescription": "The development of BirdNET Live is supported by the Deutsche Bundesstiftung Umwelt through the project RangerSound (project 39263/01).",
   "@aboutFundingDescription": {
     "description": "Funding statement on the About screen. Keep 'Deutsche Bundesstiftung Umwelt' and the project number as-is in every locale."
   },
@@ -767,7 +763,7 @@
   "@settingsDangerZone": {
     "description": "Section header for destructive settings"
   },
-  "settingsGeneralDescription": "Appearance, language, and display preferences. Toggle scientific names for detailed species identification.",
+  "settingsGeneralDescription": "How the app looks, which language it speaks, and what it shows while you listen.",
   "@settingsGeneralDescription": {
     "description": "Subtitle for General settings section"
   },
@@ -790,10 +786,6 @@
   "settingsLocationDescription": "The app finds the location by GPS, or you set it yourself. That tells the app which birds are around in your area right now, and how many stars each one is worth here. Without a location there are no stars.",
   "@settingsLocationDescription": {
     "description": "Subtitle for Location settings section"
-  },
-  "settingsExportDescription": "What the backup file contains",
-  "@settingsExportDescription": {
-    "description": "Subtitle for Export settings section"
   },
   "settingsDangerZoneDescription": "Irreversible actions — reset or delete app data",
   "@settingsDangerZoneDescription": {
@@ -876,19 +868,19 @@
   "@settingsHelpShowAllDetectedSpecies": {
     "description": "Help text for the Live Mode and Point Count species-list display setting"
   },
-  "settingsHelpDetectedSpeciesSortNewest": "Currently vocalizing species appear first, sorted by their current confidence, then retained species follow by their most recent detection time.",
+  "settingsHelpDetectedSpeciesSortNewest": "Birds singing right now come first, the surest at the top. After them come the ones that have gone quiet, the most recently heard first.",
   "@settingsHelpDetectedSpeciesSortNewest": {
     "description": "Help text for newest-first all-species sorting"
   },
-  "settingsHelpDetectedSpeciesSortConfidence": "Species are sorted by the highest confidence each species reached during the session, from highest to lowest. Retained inactive species stay in the list without confidence visuals.",
+  "settingsHelpDetectedSpeciesSortConfidence": "The birds the app was surest about come first. Birds that have gone quiet stay in the list.",
   "@settingsHelpDetectedSpeciesSortConfidence": {
     "description": "Help text for confidence all-species sorting"
   },
-  "settingsHelpDetectedSpeciesSortAlphabetical": "Species are sorted alphabetically by common name. Confidence visuals still appear only while the species is currently vocalizing.",
+  "settingsHelpDetectedSpeciesSortAlphabetical": "The birds are sorted by name, from A to Z.",
   "@settingsHelpDetectedSpeciesSortAlphabetical": {
     "description": "Help text for alphabetical all-species sorting"
   },
-  "settingsHelpDetectedSpeciesSortOccurrences": "Species with more detections appear first. The count chip after the common name shows the number used for this sorting.",
+  "settingsHelpDetectedSpeciesSortOccurrences": "The birds heard most often come first. The number next to the name says how often.",
   "@settingsHelpDetectedSpeciesSortOccurrences": {
     "description": "Help text for occurrence-count all-species sorting"
   },
@@ -932,10 +924,6 @@
   "@settingsHelpGeoThreshold": {
     "description": "Help text for geo threshold setting"
   },
-  "settingsHelpIncludeAudioFiles": "When enabled, the backup file also contains the saved recordings; when restoring, they are put back on the new device. This makes the file much larger – a year of recordings can take up several hundred megabytes.",
-  "@settingsHelpIncludeAudioFiles": {
-    "description": "Help text for include audio files setting"
-  },
 
   "mapPickerTitle": "Pick on Map",
   "@mapPickerTitle": {
@@ -954,11 +942,11 @@
   "@settingsPickOnMap": {
     "description": "Button to pick the manual location on a map in settings"
   },
-  "surveyClipContext": "Clip Context",
+  "surveyClipContext": "Sound before and after",
   "@surveyClipContext": {
     "description": "Label for clip context duration settings"
   },
-  "surveyClipContextDescription": "Seconds of audio before and after each detection",
+  "surveyClipContextDescription": "How many seconds before and after the bird go into the recording.",
   "@surveyClipContextDescription": {
     "description": "Subtitle explaining clip context setting"
   },
@@ -999,6 +987,14 @@
   "@helpRulesBody": {
     "description": "SET-11: one line under \"How do I earn stars?\" on the help screen, which opens the rules page"
   },
+  "helpStickersTitle": "Your bird and the stickers",
+  "@helpStickersTitle": {
+    "description": "AVA-07: help section title — the bird avatar, its level and the stickers"
+  },
+  "helpStickersBody": "Your bird sits at the top of the home screen. Tap it to give it a name. Your stars make it go up a level, and for every new level you may pick a sticker in the sticker album under the level. Your stickers then stick on the home screen. Pull the panel with the buttons down (holding the phone sideways: to the right), and you can move them, turn them with two fingers and make them bigger or smaller. Push the panel back when you are done.",
+  "@helpStickersBody": {
+    "description": "AVA-07: help section — naming the bird, levels from stars, one sticker pick per level, and pulling the tile panel down to arrange stickers"
+  },
   "helpExploreTitle": "Explore",
   "@helpExploreTitle": {
     "description": "Section title for Explore help"
@@ -1011,13 +1007,14 @@
   "@helpTipsTitle": {
     "description": "Section title for general tips"
   },
-  "helpTipMic": "The big button in Live mode changes: the microphone starts, play carries on after a pause, and stop ends.",
-  "@helpTipMic": {
-    "description": "Tip about microphone placement"
-  },
-  "helpTipThreshold": "In the advanced settings you set how sure the app must be before it shows a bird. Lower shows more birds, but also more mistakes.",
+  "helpTipThreshold": "In the advanced settings you set how sure the app must be before it shows a bird. Higher means fewer mistakes, but also fewer birds. Below {floor} % there are no stars.",
   "@helpTipThreshold": {
-    "description": "Tip about confidence threshold"
+    "description": "Help tip about the confidence threshold in the advanced settings; floor is the scoring floor (PKT-20) below which there are no stars",
+    "placeholders": {
+      "floor": {
+        "type": "int"
+      }
+    }
   },
   "helpTipGeoFilter": "The app needs your location to know which birds live in your area. You can use GPS or pick your location on the map. Without a location there are no stars.",
   "helpControlsTitle": "Buttons you’ll see often",
@@ -1032,7 +1029,7 @@
   "@helpToolsTitle": {
     "description": "Section title introducing the Explore and Sessions tools on the help screen"
   },
-  "helpControlSettings": "Opens the settings: how the app looks and sounds, which area it picks the birds for, and what it may do online. At the very bottom you’ll find the advanced settings.",
+  "helpControlSettings": "Opens the settings: how the app looks and sounds, which area it picks the birds for, and what it may do online. Further down you’ll find the advanced settings.",
   "@helpControlSettings": {
     "description": "Description of the settings button on the help screen"
   },
@@ -1116,10 +1113,6 @@
   "@settingsSpectrogramQualityHigh": {
     "description": "Spectrogram quality option: high"
   },
-  "settingsIncludeAudioFiles": "Include the recordings",
-  "@settingsIncludeAudioFiles": {
-    "description": "Setting to include audio files in export"
-  },
   "settingsOfflineMapDownload": "Download offline maps",
   "@settingsOfflineMapDownload": {
     "description": "Settings tile that lets the user pre-cache OSM tiles for an area"
@@ -1156,7 +1149,7 @@
   "@settingsPrivacyDescription": {
     "description": "Settings section subtitle"
   },
-  "settingsPrivacyAllowMap": "Allow map tiles",
+  "settingsPrivacyAllowMap": "Allow maps",
   "@settingsPrivacyAllowMap": {
     "description": "Privacy toggle for OpenStreetMap tile downloads"
   },
@@ -1196,7 +1189,7 @@
   "@settingsAnnouncements": {"description": "Settings section header for spoken detection announcements"},
   "settingsAnnouncementsDescription": "The app announces birds through headphones or the speaker while you listen.",
   "@settingsAnnouncementsDescription": {"description": "Settings section subtitle"},
-  "settingsAnnouncementsEnabled": "Speak detections aloud",
+  "settingsAnnouncementsEnabled": "Announce bird names",
   "@settingsAnnouncementsEnabled": {"description": "Master toggle for the announcements feature"},
   "settingsAnnouncementsEnabledSubtitle": "Off by default. Headphones recommended.",
   "@settingsAnnouncementsEnabledSubtitle": {"description": "Subtitle under the announcements master toggle"},
@@ -1335,11 +1328,11 @@
     "description": "Recording format setting label"
   },
 
-  "settingsLiveAutoStart": "Auto-start recording",
+  "settingsLiveAutoStart": "Start listening automatically",
   "@settingsLiveAutoStart": {
     "description": "Switch label for auto-starting Live recording when the screen opens"
   },
-  "settingsLiveAutoStartDescription": "Begin recording as soon as Live mode opens and the model is ready.",
+  "settingsLiveAutoStartDescription": "As soon as you open listening and the app is ready, it starts on its own.",
   "@settingsLiveAutoStartDescription": {
     "description": "Subtitle for the auto-start switch"
   },
@@ -1389,11 +1382,11 @@
   "@settingsInferenceRate": {
     "description": "Inference rate (inferences per second) setting label"
   },
-  "settingsShowAllDetectedSpecies": "Show all detected species",
+  "settingsShowAllDetectedSpecies": "Show every bird heard",
   "@settingsShowAllDetectedSpecies": {
     "description": "Switch label for keeping all detected species visible in Live Mode and Point Count"
   },
-  "settingsShowAllDetectedSpeciesDescription": "Keep species visible after they stop vocalizing.",
+  "settingsShowAllDetectedSpeciesDescription": "Birds stay in the list even when they have stopped singing.",
   "@settingsShowAllDetectedSpeciesDescription": {
     "description": "Subtitle for the show-all detected species switch"
   },
@@ -1405,15 +1398,15 @@
   "@settingsDetectedSpeciesSortNewest": {
     "description": "Sort option for most recent detections first"
   },
-  "settingsDetectedSpeciesSortConfidence": "Confidence",
+  "settingsDetectedSpeciesSortConfidence": "Surest first",
   "@settingsDetectedSpeciesSortConfidence": {
     "description": "Sort option for confidence score order"
   },
-  "settingsDetectedSpeciesSortAlphabetical": "Alphabetically",
+  "settingsDetectedSpeciesSortAlphabetical": "A to Z",
   "@settingsDetectedSpeciesSortAlphabetical": {
     "description": "Sort option for common-name alphabetical order"
   },
-  "settingsDetectedSpeciesSortOccurrences": "Occurrences",
+  "settingsDetectedSpeciesSortOccurrences": "Heard most often first",
   "@settingsDetectedSpeciesSortOccurrences": {
     "description": "Sort option for detection-count order"
   },

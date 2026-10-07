@@ -26,6 +26,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- **About** says whose app this is: a doctoral project at Chemnitz University of Technology that builds on BirdNET Live. The credits and funding lines had been renamed along with the app and claimed BirdNET Live's development team and funding for it; the funding line names BirdNET Live again.
+- Settings speak a child's language: "Announce bird names", "Show every bird heard", "Start listening automatically", "Sound before and after", "Show the introduction again", "Allow maps", and list sorting by "Surest first", "A to Z" and "Heard most often first". The German texts say "Schlaumeise" throughout and address the reader as "du" everywhere. Dynamic colors are offered on Android only, where they work.
+- **Help** explains your bird, its level, the stickers and how to pull the button panel down to arrange them. The tip about the confidence threshold says that below 35 % there are no stars, and the tip repeating what the big button does is gone.
 - **About** links to this app's own source code on GitHub instead of BirdNET Live's, and to the app's website, schlaumeise.org — shown as "Schlaumeise-Webseite" in German and "Smartfinch website" elsewhere. The BirdNET website and donation links stay.
 - **How do I earn stars?** moved from Settings to Help, right under Live. Help section headings now wrap instead of running off the edge on narrow screens or with large text.
 - The danger zone — resetting the introduction, resetting all settings and clearing all data — moved from the first settings page to the end of Advanced settings. Backup stays on the first page.
@@ -37,6 +40,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Removed
 
+- The "Backup" section in Advanced settings. Its only switch, whether a backup includes the recordings, was the same setting as the switch on the backup screen; it is there now and nowhere else.
 - The "Still possible today" card above the Live button. The Live button is the first thing in the tile panel again; which daily badges are still open is shown under Points, as before.
 
 ## [1.1.2] - 2026-08-11

@@ -180,6 +180,26 @@ void main() {
     }
   });
 
+  test('each language names the app by its own name', () {
+    // Schlaumeise in German, Smartfinch everywhere else. The rebrand once left
+    // "Smartfinch" in German texts and "Schlaumeise" in the credits of every
+    // language, and both read as a different app to the child holding it.
+    final wrong = <String>[];
+    for (final locale in _locales) {
+      final strings = _arb(locale);
+      final other = locale == 'de' ? 'Smartfinch' : 'Schlaumeise';
+      for (final entry in strings.entries) {
+        if (entry.key.startsWith('@')) continue;
+        final value = entry.value;
+        if (value is String && value.contains(other)) {
+          wrong.add('$locale/${entry.key}');
+        }
+      }
+    }
+
+    expect(wrong, isEmpty);
+  });
+
   test('the reserved list does not outlive its reasons', () {
     // Once AUS-11 reads the weather strings, they stop being reservations and
     // the entry should go — otherwise the list becomes a second orphanage.

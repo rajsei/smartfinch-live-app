@@ -35,6 +35,7 @@ import '../../shared/utils/session_type_visuals.dart';
 import '../../shared/widgets/content_width_constraint.dart';
 import '../live/live_session.dart';
 import '../rules/rules_screen.dart';
+import '../scoring/scoring_rules.dart';
 
 /// What each part of the app is for.
 class HelpScreen extends StatelessWidget {
@@ -104,6 +105,16 @@ class HelpScreen extends StatelessWidget {
                     ),
                   ),
             ),
+            // What the stars turn into, and the one gesture on the home
+            // screen nothing else explains: pulling the panel down to arrange
+            // the stickers (AVA-07, KID-04).
+            _HelpSection(
+              icon: AppIcons.photoAlbumRounded,
+              color: theme.colorScheme.tertiary,
+              containerColor: theme.colorScheme.tertiaryContainer,
+              title: l10n.helpStickersTitle,
+              body: l10n.helpStickersBody,
+            ),
             const SizedBox(height: 20),
 
             // ── 3. Discover & revisit (Explore + where the finds go) ──
@@ -137,7 +148,7 @@ class HelpScreen extends StatelessWidget {
             // every screen. They follow the modes because users typically
             // discover them only after they've started using the app.
             _SectionHeader(
-              icon: AppIcons.gridViewRounded,
+              icon: AppIcons.touchApp,
               title: l10n.helpControlsTitle,
             ),
             const SizedBox(height: 12),
@@ -171,8 +182,15 @@ class HelpScreen extends StatelessWidget {
             // that was the per-screen settings filter, and since SET-01 split
             // settings into a plain and an advanced page, every settings
             // button opens the same plain one.
-            _TipRow(text: l10n.helpTipMic),
-            _TipRow(text: l10n.helpTipThreshold),
+            // No tip about the big button: the Live section above already
+            // says what it does. The threshold tip names the floor, because
+            // "lower shows more birds" alone sends a child somewhere the stars
+            // stop (PKT-20).
+            _TipRow(
+              text: l10n.helpTipThreshold(
+                ScoringRules.current.scoringThresholdFloor,
+              ),
+            ),
             _TipRow(text: l10n.helpTipGeoFilter),
             const SizedBox(height: 24),
           ],

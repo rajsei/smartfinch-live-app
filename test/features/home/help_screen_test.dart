@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:smartfinch/features/home/help_screen.dart';
 import 'package:smartfinch/features/rules/rules_screen.dart';
+import 'package:smartfinch/features/scoring/scoring_rules.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
 
@@ -63,5 +64,30 @@ void main() {
     expect(find.byType(RulesScreen), findsOneWidget);
     // What the page says is rules_screen_test.dart's business; here it is
     // enough that the door leads to it.
+  });
+
+  testWidgets('explains the bird, the stickers and the panel gesture', (
+    tester,
+  ) async {
+    // Pulling the panel down is the one gesture on the home screen nothing
+    // else explains (AVA-07, KID-04).
+    await pump(tester, size: const Size(400, 2000));
+
+    await tester.tap(find.text('Your bird and the stickers'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.textContaining('Pull the panel with the buttons down'),
+      findsOne,
+    );
+  });
+
+  testWidgets('the threshold tip says where the stars stop', (tester) async {
+    // "Lower shows more birds" alone would send a child below the floor,
+    // where there are no stars (PKT-20). The number comes from the rules.
+    await pump(tester, size: const Size(400, 2400));
+
+    final floor = ScoringRules.current.scoringThresholdFloor;
+    expect(find.textContaining('Below $floor % there are no stars'), findsOne);
   });
 }

@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -90,7 +91,7 @@ enum SettingsView {
   plain,
 
   /// Everything else, one tap away — audio, inference, spectrogram, recording,
-  /// playback, the species filter, export, storage and the danger zone.
+  /// playback, the species filter, storage and the danger zone.
   advanced,
 }
 
@@ -134,7 +135,6 @@ class SettingsScreen extends ConsumerWidget {
     'spectrogram': SettingsView.advanced,
     'recording': SettingsView.advanced,
     'speciesFilter': SettingsView.advanced,
-    'export': SettingsView.advanced,
     // Behind Advanced since 2026-10-07: deleting recordings and resetting or
     // wiping the app are things a parent goes looking for, not things a child
     // should scroll past on the first page. Backup stays on the plain screen —
@@ -262,16 +262,19 @@ class SettingsScreen extends ConsumerWidget {
               // No "How do I earn stars?" here any more: the rules page
               // (SET-11) moved to the help screen on 2026-10-07. It is
               // something a child reads, not something they set.
-              SwitchListTile(
-                title: _TitleWithHelp(
-                  title: l10n.settingsDynamicColor,
-                  helpBody: l10n.settingsHelpDynamicColor,
+              // Android only: the colours come from the wallpaper there, and
+              // on an iPhone the switch would do nothing at all.
+              if (defaultTargetPlatform == TargetPlatform.android)
+                SwitchListTile(
+                  title: _TitleWithHelp(
+                    title: l10n.settingsDynamicColor,
+                    helpBody: l10n.settingsHelpDynamicColor,
+                  ),
+                  subtitle: Text(l10n.settingsDynamicColorDescription),
+                  value: ref.watch(dynamicColorProvider),
+                  onChanged:
+                      (v) => ref.read(dynamicColorProvider.notifier).set(v),
                 ),
-                subtitle: Text(l10n.settingsDynamicColorDescription),
-                value: ref.watch(dynamicColorProvider),
-                onChanged:
-                    (v) => ref.read(dynamicColorProvider.notifier).set(v),
-              ),
               SwitchListTile(
                 title: _TitleWithHelp(
                   title: l10n.settingsHighContrastTheme,
@@ -671,32 +674,10 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
             ],
 
-            // --- Export ---
-            if (_showSection('export')) ...[
-              _SectionHeader(
-                title: l10n.settingsExport,
-                subtitle: l10n.settingsExportDescription,
-              ),
-              // Everything else this section used to carry — the Raven /
-              // CSV / JSON / GPX picker, "share as WAV", the app-metadata
-              // block and the HTML report — went with the research modes it
-              // configured. What it exported was a *session*, the level of
-              // navigation `LOG-01` removed, in formats meant for people who
-              // open selection tables. The one switch left is the one anybody
-              // can answer for themselves: whether the audio goes with it.
-              CheckboxListTile(
-                dense: true,
-                title: _TitleWithHelp(
-                  title: l10n.settingsIncludeAudioFiles,
-                  helpBody: l10n.settingsHelpIncludeAudioFiles,
-                ),
-                value: ref.watch(includeAudioProvider),
-                onChanged:
-                    (v) =>
-                        ref.read(includeAudioProvider.notifier).set(v ?? false),
-              ),
-              const Divider(),
-            ],
+            // No export section any more. Its one remaining switch —
+            // whether the recordings go into the backup file — was the same
+            // setting as the switch on the backup screen, in two places. It
+            // lives only there now, next to the button it changes.
 
             // --- Privacy ---
             if (_showSection('privacy')) ...[
@@ -786,6 +767,7 @@ class SettingsScreen extends ConsumerWidget {
             // --- About ---
             if (_showSection('about'))
               ListTile(
+                leading: const Icon(AppIcons.infoOutline),
                 title: Text(l10n.about),
                 trailing: const Icon(AppIcons.chevronRight),
                 onTap: () {

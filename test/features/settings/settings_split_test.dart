@@ -21,6 +21,7 @@
 // away.
 // =============================================================================
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
@@ -140,6 +141,32 @@ void main() {
 
       expect(storage, greaterThan(filter));
       expect(danger, greaterThan(storage));
+    });
+
+    testWidgets('dynamic colours only where they exist: on Android', (
+      tester,
+    ) async {
+      await pumpSettings(tester);
+      expect(find.text('Dynamic Color'), findsOneWidget);
+
+      debugDefaultTargetPlatformOverride = TargetPlatform.iOS;
+      addTearDown(() => debugDefaultTargetPlatformOverride = null);
+      await pumpSettings(tester);
+      expect(find.text('Dynamic Color'), findsNothing);
+      debugDefaultTargetPlatformOverride = null;
+    });
+
+    testWidgets('whether a backup carries the recordings is asked once', (
+      tester,
+    ) async {
+      // It used to be a switch here as well as on the backup screen — one
+      // setting in two places. It is on the backup screen only, next to the
+      // button it changes.
+      await pumpSettings(tester, view: SettingsView.advanced);
+      expect(find.text('Include the recordings'), findsNothing);
+
+      await pumpSettings(tester);
+      expect(find.text('Include the recordings'), findsNothing);
     });
 
     testWidgets('the rules are in the help now, not in the settings', (
@@ -616,7 +643,7 @@ void main() {
       tester,
     ) async {
       await pumpSettings(tester, view: SettingsView.advanced);
-      expect(find.text('Clip Context'), findsOneWidget);
+      expect(find.text('Sound before and after'), findsOneWidget);
       expect(find.text('Format'), findsOneWidget);
 
       await tester.tap(
@@ -629,7 +656,7 @@ void main() {
         RecordingModeSettingNotifier.off,
       );
       // Settings that describe a clip have nothing to describe.
-      expect(find.text('Clip Context'), findsNothing);
+      expect(find.text('Sound before and after'), findsNothing);
       expect(find.text('Format'), findsNothing);
     });
   });

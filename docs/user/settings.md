@@ -8,7 +8,7 @@ Settings come in two screens. The first one carries what a child or a parent
 actually touches — appearance and language, vibration, announcements,
 location, privacy and backup. Everything else lives one tap further on, behind
 **Advanced settings**: audio, detection, spectrogram, recordings, the species
-filter, export, storage and the danger zone. Nothing is hidden; it is only out
+filter, storage and the danger zone. Nothing is hidden; it is only out
 of the way — and deleting recordings or resetting the app are things you go
 looking for, not things a child should scroll past on the first page.
 
@@ -100,7 +100,7 @@ much. **Clear all data** deletes them along with everything else.
 
 Choose **Dark**, **Light**, or **System**.
 
-If **Dynamic Color** is enabled, BirdNET Live also tries to match your Android device's system palette. This has an effect only on supported Android devices; on iPhone and iPad the app keeps using the standard BirdNET Live theme, so turning the toggle on there changes nothing.
+**Dynamic Color** takes on the colors of the phone's wallpaper and theme. It works on Android 12 and newer, and the switch is shown on Android only — on iPhone and iPad there is nothing for it to follow.
 
 Enable **High Contrast Theme** to use a black-and-white light or dark UI palette with heavier text and bordered surfaces instead of tinted cards. It follows the **Dark**, **Light**, or **System** theme choice, overrides Dynamic Color while enabled, and preserves danger, warning, validation, mode, score, and spectrogram colors.
 
@@ -116,11 +116,11 @@ Controls the language used for species names. **System** uses the phone's prefer
 
 Shows scientific names below common names across the app.
 
-### Show all detected species
+### Show every bird heard
 
 Live Mode and Point Count only. Off by default, so these screens continue to show only species detected in the latest inference cycle: effectively the species that are currently vocalizing. Turn it on to keep every species detected during the running session visible in the list, even after it stops vocalizing or falls below the confidence threshold.
 
-When this is enabled, **Species list sorting** appears. **Newest first** shows currently vocalizing species first, sorted by their current confidence, then retained species by their most recent detection. **Confidence** sorts by each species' highest confidence reached during the session, **Alphabetically** sorts by the localized common name, and **Occurrences** sorts by detection count. In every sorting mode, the confidence percentage and bar appear only while that species is currently vocalizing (retained rows that stopped vocalizing are dimmed), and repeated detections show a count chip at the end of the common-name row.
+When this is enabled, **Species list sorting** appears. **Newest first** shows currently vocalizing species first, sorted by their current confidence, then retained species by their most recent detection. **Surest first** sorts by each species' highest confidence reached during the session, **A to Z** sorts by the localized common name, and **Heard most often first** sorts by detection count. In every sorting mode, the confidence percentage and bar appear only while that species is currently vocalizing (retained rows that stopped vocalizing are dimmed), and repeated detections show a count chip at the end of the common-name row.
 
 ### Observer name
 
@@ -252,7 +252,7 @@ Controls how smoothly the spectrogram image is scaled. **Medium** is the default
 
 This section controls whether BirdNET Live **reads detections aloud through your headphones or the phone speaker** while a session is recording. The whole feature is **off by default** because it changes the acoustic environment around the microphone — turning it on is a deliberate trade-off. There is no setup wizard: the verbosity × frequency pickers below *are* the entire setup, so you can tap a different preset at any time and immediately hear the difference. The intuition: in long surveys you can't keep glancing at the screen; a discreet voice in your ear means you can keep your eyes on the habitat and still know what was just heard.
 
-### Speak detections aloud (master toggle)
+### Announce bird names (master toggle)
 
 Off by default. When on, the app speaks each accepted detection using your device's built-in text-to-speech. **Headphones are strongly recommended** — using the phone speaker risks the announcement being picked up by the microphone and re-detected, so the app briefly mutes the recorder around each utterance to prevent that loop (see *Mute mic while speaking* below).
 
@@ -295,9 +295,9 @@ in the app; and the retention rules, which rank clips, never cleaned it up. A
 stored *Full* becomes clips-per-detection the next time the app starts. Files
 written by earlier versions are left where they are.
 
-### Clip context
+### Sound before and after
 
-When recordings are on, the app shows a single **Clip context** slider (0–5 s) that sets how much audio is preserved on **both sides** of each detection. Each clip is `analysis window + 2 × clip context` long, so with a 3 s analysis window and the default 1 s context the saved clip is 5 s. Setting the context to 2 s yields a 7 s clip (2 s pre-roll + 3 s analyzed audio + 2 s post-roll). Larger values give you more room for visual inspection or external review tools at the cost of disk space; 0 saves only the analyzed window itself.
+When recordings are on, the app shows a single **Sound before and after** slider (0–5 s) that sets how much audio is preserved on **both sides** of each detection. Each clip is `analysis window + 2 × clip context` long, so with a 3 s analysis window and the default 1 s context the saved clip is 5 s. Setting the context to 2 s yields a 7 s clip (2 s pre-roll + 3 s analyzed audio + 2 s post-roll). Larger values give you more room for visual inspection or external review tools at the cost of disk space; 0 saves only the analyzed window itself.
 
 ### Format
 
@@ -305,7 +305,7 @@ Choose **WAV** or **FLAC**. WAV is larger but widely compatible and quick to ins
 
 This setting applies to audio recorded by BirdNET Live. **File Analysis** keeps an app-managed copy of the imported file in its original format, so MP3, AAC, WAV, and FLAC uploads stay reviewable without an extra conversion step.
 
-### Auto-start recording (Live mode only)
+### Start listening automatically
 
 When enabled, Live mode begins recording as soon as the screen opens and the model finishes loading — no need to tap the microphone button. Useful for kiosk-style deployments, hands-free use (e.g. mounting the device in the field), or any workflow where the user already knows that opening Live always means "start now". Disabled by default so an accidental tap on the Live tile from the home screen does not silently begin a session. The auto-start fires only once per screen visit, so stopping a session and tapping the mic again still works as a manual restart.
 
@@ -391,44 +391,11 @@ It scales the bar with how common a species is at your location, using the same 
 
 Because the tiers are rank-based, this behaves the same in a species-rich tropical forest as in the Arctic. Detections that survive keep their original score — the location model only votes on whether to show them. The aim is to cut false positives from uncommon species without losing a genuinely clear recording of one.
 
-## Export & Sync
-
-### Formats
-
-Tick any combination of export formats — every save / share will bundle all the selected formats together inside a single ZIP. Pick a single format with no audio clips and no HTML report and you'll get a raw file (e.g. `session.csv`) instead of a ZIP, for backwards compatibility:
-
-- Raven Selection Table — for use in Cornell Raven Pro.
-- CSV — opens in any spreadsheet.
-- JSON — easiest for programmatic processing; carries the full per-session metadata.
-- GPX — track and waypoints for use in mapping tools (only meaningful when GPS was on).
-
-The intuition: many workflows need more than one format at the same time — a CSV for the spreadsheet, a Raven table for the desktop reviewer, and a JSON for the analysis script. Untangling that with a single-format toggle used to mean exporting the same session three times. Now you tick all three once and they ride together in the ZIP.
-
-### Include audio files
-
-Include saved audio alongside the exported tables or metadata when supported by the export workflow. Sharing one detection follows this setting too: a full-session recording is cut to that detection's exact start-to-end timestamps, while a detection-only session uses its retained clip.
-
-### Always share audio as WAV
-
-Shown only when **Include audio files** is on. When enabled, FLAC recordings are converted to WAV before sharing or exporting. WAV is universally compatible but significantly larger than FLAC, so leave this off unless the tool on the receiving end cannot read FLAC — some older desktop analysis software and a few upload forms still can't.
-
-### Include app metadata
-
-When on, the export ZIP carries a `*.metadata.json` side-file describing how the session was produced: BirdNET Live version, model identity, the weather snapshot captured at session start, and any audio integrity warnings detected during recording. The intuition: that provenance is what lets you (or a reviewer) reproduce or audit a session months later. Turn it off when you want a clean share of just the audio and your selected formats — for example, dropping a single WAV into iNaturalist or eBird without any app-specific files riding along.
-
-### Include HTML report
-
-When on, every export ZIP also contains a `<session>_report.html` file alongside the table, audio clips, and GPX. Open it in any web browser and you get a print-ready summary of the session: header card with date, location, observer, and totals; an interactive map of the GPS track and detection markers; a card per detection with the Cornell taxonomy thumbnail, names, score pill, your confirmation, any note you typed, and the original audio clip inline as a player; and the analysis settings used. The intuition: a CSV is great for analysis pipelines but useless for sharing with a non-technical collaborator or printing a quick field summary — the HTML report fills that gap with one tap. Species thumbnails and map tiles need a connection the first time the file is opened (they're fetched live from the BirdNET taxonomy API and OpenStreetMap), but everything else — text, layout, audio playback, links — works fully offline. Turn this off if you only need the raw data and want to keep the ZIP a few KB smaller.
-
-### Audio-only sharing
-
-Untick every format **and** the HTML report **and** the app metadata box, leaving only **Include audio files**, and Share will hand the platform sheet the raw recording (e.g. `BirdNET_Live_…flac`) instead of a ZIP. That is the low-friction path for sending a session straight into iNaturalist, eBird, or any other app that wants an unwrapped audio file. Sessions made of multiple detection clips still produce a ZIP; sharing one detection hands over that one raw clip.
-
 ## Privacy
 
 This section controls **which third-party services BirdNET Live may contact on your behalf**. Inference itself runs entirely on your device — these toggles only govern optional network features that enrich the experience. All three toggles are **off by default** on a fresh install; nothing reaches out until you say so. The intuition: each toggle is scoped to one concrete service and one concrete benefit, so you can opt into exactly what's useful to your workflow and nothing else.
 
-### Allow map tiles
+### Allow maps
 
 Required for any interactive map in the app (the location picker, the Survey live map, and the session map). When on, map widgets fetch raster tiles from the public **OpenStreetMap** servers; tile-coordinate requests reveal which area of the world you're viewing. Tiles are cached locally for up to six months, capped at 6000 tiles so repeated map views stay efficient without growing unbounded. Turning this on also enables **Allow place name lookup**, because most users who load maps expect sessions to show readable place names too. You can turn place-name lookup off again separately. When map tiles are off, every map screen falls back to a placeholder card so the rest of the app still works without network leakage.
 
@@ -448,9 +415,9 @@ The **About** row opens the in-app About screen.
 
 The last section of **Advanced settings**.
 
-### Reset Onboarding
+### Show the introduction again
 
-Shows the onboarding sequence again the next time the app launches.
+Shows the introduction again the next time the app launches.
 
 ### Reset All Settings
 

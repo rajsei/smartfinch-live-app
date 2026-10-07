@@ -429,7 +429,8 @@ final saveSessionAutomaticallyProvider =
 // Export Settings
 // ---------------------------------------------------------------------------
 
-/// Include audio files in export (default true).
+/// Whether a backup file carries the recordings (`SET-07`). Switched on the
+/// backup screen, next to the button it changes.
 final includeAudioProvider = StateNotifierProvider<BoolSettingNotifier, bool>((
   ref,
 ) {

@@ -77,6 +77,26 @@ void main() {
     expect(find.text('BirdNET Website'), findsOneWidget);
   });
 
+  testWidgets('says whose app this is, and that it builds on BirdNET Live', (
+    tester,
+  ) async {
+    // The rebrand once swapped the name into BirdNET Live's own credits and
+    // funding, which made both claim something about this app.
+    await pump(tester, locale: 'de');
+
+    expect(
+      find.textContaining(
+        'Schlaumeise ist ein Promotionsprojekt der Technischen Universität '
+        'Chemnitz und baut auf BirdNET Live auf.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining('Die Entwicklung von BirdNET Live wird'),
+      findsOneWidget,
+    );
+  });
+
   testWidgets('in German the website carries the German name', (tester) async {
     await pump(tester, locale: 'de');
 
