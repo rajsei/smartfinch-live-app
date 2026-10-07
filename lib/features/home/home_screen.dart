@@ -11,6 +11,7 @@ import '../../core/theme/app_theme.dart';
 import '../about/about_screen.dart';
 import '../explore/explore_providers.dart';
 import '../scoring/scoring_providers.dart';
+import '../settings/backup/backup_providers.dart';
 import '../stickers/sticker_board.dart';
 import '../stickers/widgets/sticker_album_button.dart';
 import '../stickers/widgets/sticker_board_layer.dart';
@@ -72,6 +73,9 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     _preload(ref.read(geoModelProvider.future), 'geo model');
     unawaited(_warmUpLocation());
     unawaited(_runClipRetention());
+    // DAT-09: a copy of the collection, if anything changed since the last
+    // one. Never throws, and does the heavy part on a background isolate.
+    unawaited(ref.read(autoBackupServiceProvider).runIfDue());
   }
 
   /// Trims the audio clips once per app start (`SET-12`).

@@ -18,9 +18,18 @@
 // **Restore replaces everything.** It is shown as such, with the contents of
 // the file read out first — "412 species, saved on 4 May" — because confirming
 // a filename is not consent.
+//
+// ### The automatic backups sit underneath, and say what they are not
+//
+// `DAT-09`'s three generations are listed last, each restorable through the
+// same confirmation. The section says in its first lines that they stay on
+// this phone: a parent who sees "automatic backups" and stops saving files
+// would find out on the day the phone is lost, which is the one day it
+// matters.
 // =============================================================================
 
 import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
@@ -38,12 +47,9 @@ import '../../../shared/utils/share_file_params.dart';
 import '../../journal/journal_providers.dart';
 import '../../points/points_providers.dart';
 import '../../scoring/scoring_providers.dart';
+import 'auto_backup_service.dart';
+import 'backup_providers.dart';
 import 'backup_service.dart';
-
-/// Reads and writes the whole collection as one file (`SET-07`).
-final backupServiceProvider = Provider<BackupService>((ref) {
-  return BackupService(ref.watch(appDatabaseProvider));
-});
 
 /// Makes every derived screen re-read the database after a restore.
 ///
@@ -139,6 +145,24 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
             const SizedBox(height: 24),
             const Center(child: CircularProgressIndicator()),
           ],
+
+          const SizedBox(height: 24),
+          const Divider(),
+          const SizedBox(height: 12),
+
+          // DAT-09. What they are not comes first, in the explanation, so the
+          // list below cannot be read as a reason to stop saving files.
+          Text(l10n.autoBackupTitle, style: theme.textTheme.titleMedium),
+          const SizedBox(height: 6),
+          Text(
+            l10n.autoBackupExplanation,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+              height: 1.4,
+            ),
+          ),
+          const SizedBox(height: 8),
+          _AutoBackupList(onRestore: _busy ? null : _restoreAutomatic),
         ],
       ),
     );
@@ -180,6 +204,25 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     final bytes = await file.readAsBytes();
     if (!mounted) return;
 
+    await _restoreBytes(bytes);
+  }
+
+  /// One of the automatic generations (`DAT-09`) — through exactly the same
+  /// read-confirm-replace as a file the parent picked.
+  Future<void> _restoreAutomatic(AutoBackupEntry entry) async {
+    final Uint8List bytes;
+    try {
+      bytes = await entry.backup.file.readAsBytes();
+    } catch (error) {
+      debugPrint('[BackupScreen] could not read ${entry.backup.file}: $error');
+      if (mounted) _say(AppLocalizations.of(context)!.backupCorrupt);
+      return;
+    }
+    if (!mounted) return;
+    await _restoreBytes(bytes);
+  }
+
+  Future<void> _restoreBytes(Uint8List bytes) async {
     setState(() => _busy = true);
     try {
       // Read first, replace second. What is in the file is what the parent is
@@ -194,6 +237,7 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
       if (!mounted) return;
 
       refreshAfterRestore(ref);
+      ref.invalidate(autoBackupEntriesProvider);
       _say(AppLocalizations.of(context)!.backupRestoreDone(summary.species));
     } on BackupException catch (error) {
       if (!mounted) return;
@@ -244,5 +288,56 @@ class _BackupScreenState extends ConsumerState<BackupScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+/// The automatic generations, newest first (`DAT-09`).
+///
+/// No spinner while they are read: three small files, and a list that pops in
+/// a moment late is better than a progress indicator for something nobody
+/// asked for. A listing that fails shows nothing rather than an error — the
+/// backups are a safety net, and a parent cannot do anything about a broken
+/// one from here.
+class _AutoBackupList extends ConsumerWidget {
+  const _AutoBackupList({required this.onRestore});
+
+  /// Null while the screen is busy with another save or restore.
+  final void Function(AutoBackupEntry entry)? onRestore;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
+    final entries = ref.watch(autoBackupEntriesProvider).value;
+    if (entries == null) return const SizedBox.shrink();
+
+    if (entries.isEmpty) {
+      return Text(
+        l10n.autoBackupNone,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      );
+    }
+
+    final locale = Localizations.localeOf(context).toString();
+    final when = DateFormat.yMMMMd(locale).add_Hm();
+
+    return Column(
+      children: [
+        for (final entry in entries)
+          ListTile(
+            contentPadding: EdgeInsets.zero,
+            leading: const Icon(AppIcons.schedule),
+            title: Text(when.format(entry.backup.createdAt)),
+            subtitle: Text(l10n.autoBackupSpecies(entry.summary.species)),
+            trailing: IconButton(
+              icon: const Icon(AppIcons.restartAlt),
+              tooltip: l10n.autoBackupRestoreTooltip,
+              onPressed: onRestore == null ? null : () => onRestore!(entry),
+            ),
+          ),
+      ],
+    );
   }
 }

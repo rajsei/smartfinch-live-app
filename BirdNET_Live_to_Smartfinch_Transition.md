@@ -704,7 +704,7 @@ The phase-3 list in this document was built from the requirements the transition
 | `SAM-08` | A sample call on the species page — blocked on licence-free recordings, not on code |
 | `SET-04` | Sounds and haptics separately switchable |
 | `SET-06` | Storage management: space used, delete audio |
-| `DAT-09` | Automatic rolling local backup, 3 generations — related to `SET-07` but not the same thing: that one survives a lost phone, this one survives a crash |
+| ~~`DAT-09`~~ | ~~Automatic rolling local backup, 3 generations — related to `SET-07` but not the same thing: that one survives a lost phone, this one survives a crash~~ — **done**, see below |
 | `AUS-11` | 🌧️ Bad weather hero, the tenth daily badge, behind the weather consent gate |
 | `KID-04` | Everything operable without reading — an audit, not a feature |
 | `KID-06` | No pressuring push notifications — currently true by absence, which is not the same as decided |
@@ -1137,6 +1137,33 @@ Two details make it a wipe rather than a race:
 **Why it had to be this, not less.** `NFA-07` is a privacy promise under GDPR Art. 8, and a delete button that leaves the child's entire history behind is not a smaller version of erasure, it is the absence of it. The confirmation text was rewritten in all twelve languages to name what actually goes — collection, stars, badges, level and the journal — instead of “recordings and settings”.
 
 One limit stays, shared with “Reset all settings” and pre-existing: on iOS the settings providers still hold the values they read at launch, because `SharedPreferences.clear()` empties the store without notifying anyone. The data is gone either way; the defaults appear on the next start.
+
+### `DAT-09` — three copies the parent never has to make
+
+**Done** ✅ — 13 new tests. `SET-07` defends a collection only if a parent remembers to save a file; this is the half that needs nobody. A copy of the database on the device, rolling, three generations. It survives what happens *on* the phone — a crash that leaves the database unreadable, a migration that goes wrong (`NFA-12`), a bug that writes nonsense — and not losing the phone, which the backup screen says next to both.
+
+**A generation is the `SET-07` file, minus the recordings.** So restoring one is the restore that already exists and is already tested: frozen fields written back unchanged, levels ratcheting through it, one transaction. A second format would have needed a second restore, and a code path that runs once in a child's life is not one to have two of.
+
+**One generation per day, three days deep.** Written after every session, three generations would mean three sessions — an afternoon — and damage noticed the next morning would by then have pushed every good copy out. So a day has one generation, later changes that day replace it, and the three kept are the last three days on which something changed. Triggers: the home screen's warm-up (next to the clip retention, which already ran once per app start) and the end of a listening session in live mode. Never during one.
+
+**The rules that keep good copies alive** are what most of the tests are about:
+
+| Rule | Why |
+|---|---|
+| An empty collection is never written | The failure this exists for. A migration that wiped the tables, or a corrupt file the app recreated empty, would otherwise roll all three good generations out one day at a time while nobody looked |
+| Nothing is written when the collection is in a state a generation already holds | Checked with a fingerprint — row count and newest `updatedAt` per table, one query instead of a full export. Every write in the app bumps `updatedAt` (`DAT-08`); that was verified call site by call site before relying on it. It also means restoring a generation does not immediately overwrite today's copy |
+| A day's copy is replaced only by a state with at least as many detections | Nothing in the app deletes a detection except a restore — or damage. A smaller state is written *beside* the day's copy, so a mistaken restore or a bug can still be undone from the copy before it |
+| Written under a temporary name, renamed into place, and only then is anything deleted | A crash mid-write leaves a stray `.tmp`, swept on the next run, and every generation intact |
+
+Two of these were checked the other way round as well — the rule taken out, the tests run, the right tests failing.
+
+**Off the UI thread, including for `SET-07`.** `BackupService.export` used to JSON-encode and zip on the main isolate; the archive encoder is pure Dart, and a year of detections is megabytes of text. That is a frozen screen behind a spinner when a parent taps *Save*, and it would have been a stutter at every app start. Encoding now runs in `Isolate.run`, through a **static** helper — the trap from the journal spectrogram fix the same day: a closure built inside an instance method carries the instance to the isolate, and this instance holds the database. Reading a generation's summary for the list runs the same way.
+
+**The screen.** The automatic backups are listed under the two `SET-07` buttons, newest first, with date, time and species count; each restores through the same read-confirm-replace as a picked file. Their explanation opens with what they do *not* do: a parent who reads "automatic backups" and stops saving files would find out on the day the phone is lost. The save note used to say "Smartfinch does not keep a copy" — no longer true — and now says what only the file can do: survive a lost phone.
+
+**Privacy.** The copies live in `<documents>/backups`; the directory name is a constant beside the database file name (`kAutoBackupDirectoryName`), and *Clear all data* deletes it. A wipe that left three copies of the database behind would be a wipe in name only.
+
+**What it does not cover.** A copy written in schema *n* is restored by the app's current `fromJson`. Nothing differs today — the schema is still version 1 — but the first migration that adds a non-nullable column must give `BackupService` a default for it, or an older backup, automatic or saved, will be refused. That is `SET-07`'s problem as much as this one's; it is written here so it is found before the migration rather than after.
 
 ### What to watch during the two-week test
 

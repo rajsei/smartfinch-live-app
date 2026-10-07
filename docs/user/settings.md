@@ -28,6 +28,33 @@ labelled *"this is why there are no stars right now"*. The same reasons appear
 in a banner at the top of both settings screens. Detections and recordings
 carry on throughout, and the journal marks what did not count and why.
 
+## Backup
+
+Smartfinch has no account and uploads nothing, so the collection lives only on
+the phone. **Backup**, on the first settings page, protects it in two ways:
+
+- **Save a backup** writes the whole collection — every species, day, star,
+  badge and level — into one file and hands it to the share sheet, so you can
+  put it in a cloud drive or send it to yourself. Recordings are left out
+  unless you switch them on, because a year of them can be several hundred
+  megabytes. This file is the only thing that survives a lost or reset phone.
+- **Automatic backups** need nothing from you. Smartfinch keeps a copy of the
+  collection on the phone itself, one per day, for the last three days on which
+  something was added. They are made when the app opens and when a listening
+  session ends, never while listening. They help when the app stops working
+  properly or an update goes wrong — not when the phone is lost.
+
+Restoring — from a file or from one of the automatic copies — **replaces**
+everything on the phone. The app first says what the backup holds and when it
+was saved, and asks before it changes anything. Stars are written back exactly
+as they were earned, never recalculated, and a restore never lowers a level
+already reached.
+
+The automatic copies are deliberately careful about what they replace: an empty
+collection is never copied, so a fault that wipes the data cannot push the good
+copies out, and a day's copy is only replaced by one that holds at least as
+much. **Clear all data** deletes them along with everything else.
+
 ## General
 
 ### Theme

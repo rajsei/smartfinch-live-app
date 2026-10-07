@@ -54,6 +54,11 @@ void main() {
       await writeFile('${documentsDir.path}/sessions/session.json');
       await writeFile('${documentsDir.path}/recordings/session/full.flac');
       await writeFile('${documentsDir.path}/species_lists/watchlist.txt');
+      // DAT-09's automatic backups are copies of the database: a wipe that
+      // left them would leave the collection three times over.
+      await writeFile(
+        '${documentsDir.path}/backups/auto-20260504-090000-1a2b3c4d.zip',
+      );
       await writeFile('${documentsDir.path}/models/audio.onnx');
       await writeFile('${temporaryDir.path}/birdnet_norm_cache/clip.wav');
       await writeFile('${temporaryDir.path}/birdnet_spec_wav/session.wav');
@@ -95,6 +100,7 @@ void main() {
         Directory('${documentsDir.path}/species_lists').existsSync(),
         isFalse,
       );
+      expect(Directory('${documentsDir.path}/backups').existsSync(), isFalse);
       expect(
         File('${documentsDir.path}/models/audio.onnx').existsSync(),
         isTrue,

@@ -27,6 +27,7 @@ import '../scoring/live_scoring_coordinator.dart';
 import '../scoring/scoring_providers.dart';
 import '../scoring/scoring_repository.dart';
 import '../settings/animation_level.dart';
+import '../settings/backup/backup_providers.dart';
 import '../settings/settings_screen.dart';
 import '../spectrogram/spectrogram_widget.dart';
 import 'live_controller.dart';
@@ -527,6 +528,11 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
         ..invalidate(journalDaysProvider)
         ..invalidate(journalBucketsProvider)
         ..invalidate(journalDayProvider);
+
+      // DAT-09: the session just written is what a crash tonight would take,
+      // so this is the moment to copy it. After the session, never during
+      // one, and off the UI thread; it never throws.
+      unawaited(ref.read(autoBackupServiceProvider).runIfDue());
     }
   }
 

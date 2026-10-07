@@ -3,10 +3,10 @@
 // =============================================================================
 //
 // Coordinates the destructive "Clear All Data" action from Settings. The app
-// stores user data across a few small local stores: the SQLite database,
-// recordings, the legacy session JSON, user species lists, temporary
-// review/share caches, SharedPreferences, and the dedicated OpenStreetMap tile
-// cache. This service keeps that storage knowledge out of UI code and gives
+// stores user data across a few small local stores: the SQLite database and
+// its automatic backups, recordings, the legacy session JSON, user species
+// lists, temporary review/share caches, SharedPreferences, and the dedicated
+// OpenStreetMap tile cache. This service keeps that storage knowledge out of UI code and gives
 // tests injectable directory/cache providers.
 //
 // ### The database is the store that has to be closed first
@@ -133,6 +133,8 @@ class AppDataClearService {
     'sessions',
     'recordings',
     'species_lists',
+    // The automatic backups (`DAT-09`): three copies of the database.
+    kAutoBackupDirectoryName,
   ];
 
   static const List<String> _temporaryDataDirectories = [

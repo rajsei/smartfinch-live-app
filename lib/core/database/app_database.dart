@@ -114,6 +114,15 @@ class AppDatabase extends _$AppDatabase {
 /// changes — leaving a child's entire collection behind after a wipe.
 const String kAppDatabaseFileName = 'smartfinch.sqlite';
 
+/// The directory, inside the application documents directory, that holds the
+/// automatic backups (`DAT-09`).
+///
+/// Public, and here, for the same reason as [kAppDatabaseFileName]: those
+/// files are copies of the collection, so "Clear all data" has to delete them
+/// too (`NFA-07`). A wipe that left three copies of the database behind would
+/// be a wipe in name only.
+const String kAutoBackupDirectoryName = 'backups';
+
 /// The database file and every side file SQLite can leave beside it.
 ///
 /// Deleting `smartfinch.sqlite` on its own is not a wipe. SQLite writes

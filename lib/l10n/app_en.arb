@@ -2831,9 +2831,9 @@
   "@backupSaveButton": {
     "description": "SET-07: writes the backup and opens the share sheet"
   },
-  "backupSaveNote": "You choose where it goes. Smartfinch does not keep a copy.",
+  "backupSaveNote": "You choose where it goes. This is the only way the collection survives a lost phone.",
   "@backupSaveNote": {
-    "description": "SET-07: says the app does not keep the file itself"
+    "description": "SET-07: where the saved file goes, and that only a file kept off the phone survives losing it (the automatic backups of DAT-09 stay on the phone)"
   },
   "backupRestoreButton": "Restore from a backup",
   "@backupRestoreButton": {
@@ -3037,6 +3037,31 @@
   "backupIncludeAudioNote": "They come back on the new device. The file gets much bigger — a year of recordings can be several hundred megabytes.",
   "@backupIncludeAudioNote": {
     "description": "SET-07: what including the recordings costs"
+  },
+  "autoBackupTitle": "Automatic backups",
+  "@autoBackupTitle": {
+    "description": "DAT-09: heading of the automatic backups section on the backup screen"
+  },
+  "autoBackupExplanation": "Smartfinch also backs up the collection on this phone by itself: one backup a day, for the last three days on which something was added. They help if the app stops working properly or an update goes wrong. They do not help if the phone is lost — for that, save a backup above.",
+  "@autoBackupExplanation": {
+    "description": "DAT-09: what the automatic backups are, what they protect against and what they do not; worded for a parent"
+  },
+  "autoBackupNone": "No automatic backup yet. The first one is made as soon as there is something in the collection.",
+  "@autoBackupNone": {
+    "description": "DAT-09: shown instead of the list while no automatic backup exists"
+  },
+  "autoBackupSpecies": "{count, plural, =1{1 species} other{{count} species}}",
+  "@autoBackupSpecies": {
+    "description": "DAT-09: how many species an automatic backup holds, under its date",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "autoBackupRestoreTooltip": "Restore this backup",
+  "@autoBackupRestoreTooltip": {
+    "description": "DAT-09: tooltip of the restore button beside one automatic backup"
   },
   "journalClipShare": "Share this recording",
   "@journalClipShare": {

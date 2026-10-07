@@ -38,9 +38,9 @@
 // =============================================================================
 
 import 'dart:convert';
-import 'dart:typed_data';
-
 import 'dart:io';
+import 'dart:isolate';
+import 'dart:typed_data';
 
 import 'package:archive/archive.dart';
 import 'package:path/path.dart' as p;
@@ -141,6 +141,11 @@ class BackupService {
   /// own data is worth keeping. It is off by default because a year of clips is
   /// hundreds of megabytes and a file too large to send protects nothing, but
   /// off by default is a different thing from not offered.
+  ///
+  /// The rows are read here; turning them into JSON and compressing them runs
+  /// on a background isolate. A year of detections is megabytes of text, and
+  /// the archive encoder is pure Dart — on the UI thread that is a frozen
+  /// screen, and the automatic backup (`DAT-09`) runs while the app starts.
   Future<Uint8List> export({DateTime? now, bool includeAudio = false}) async {
     final detections = await _db.select(_db.detections).get();
 
@@ -162,38 +167,59 @@ class BackupService {
       },
     };
 
-    final json = utf8.encode(jsonEncode(document));
-    final archive =
-        Archive()..addFile(ArchiveFile(kBackupEntryName, json.length, json));
-
+    // Archive name → file on disk. Read in the isolate, not here: with the
+    // recordings included this is hundreds of megabytes.
+    final clips = <String, String>{};
     if (includeAudio) {
       for (final detection in detections) {
         final path = detection.audioClipPath;
         if (path == null) continue;
 
-        final file = File(path);
         // A clip retention has already deleted is simply not there. Skipping
         // it is the whole story — the row keeps its path, the restore finds no
         // file for it and clears it, and nothing anywhere reports a failure
         // for a recording that was always allowed to go.
-        if (!file.existsSync()) continue;
+        if (!File(path).existsSync()) continue;
 
-        final bytes = file.readAsBytesSync();
-        archive.addFile(
-          // Named by the detection id, not by the original filename: the id is
-          // what the row carries, and the filenames were only ever unique
-          // inside one session's directory.
-          ArchiveFile(
-            '$kBackupClipDir/${detection.id}${p.extension(path)}',
-            bytes.length,
-            bytes,
-          ),
-        );
+        // Named by the detection id, not by the original filename: the id is
+        // what the row carries, and the filenames were only ever unique inside
+        // one session's directory.
+        clips['$kBackupClipDir/${detection.id}${p.extension(path)}'] = path;
       }
     }
 
-    final bytes = ZipEncoder().encode(archive);
-    return Uint8List.fromList(bytes);
+    return _encodeOffThread(document, clips);
+  }
+
+  /// [_encode], on a background isolate.
+  ///
+  /// ⚠️ Static on purpose, and so is everything it calls. A closure built
+  /// inside an instance method carries that method's context to the isolate,
+  /// and with it `this` once any closure there touches the instance — here
+  /// the database, which cannot cross. Only the document and the paths can
+  /// reach this one.
+  static Future<Uint8List> _encodeOffThread(
+    Map<String, dynamic> document,
+    Map<String, String> clips,
+  ) => Isolate.run(() => _encode(document, clips));
+
+  static Uint8List _encode(
+    Map<String, dynamic> document,
+    Map<String, String> clips,
+  ) {
+    final json = utf8.encode(jsonEncode(document));
+    final archive =
+        Archive()..addFile(ArchiveFile(kBackupEntryName, json.length, json));
+
+    for (final entry in clips.entries) {
+      final file = File(entry.value);
+      // Deleted between the check above and now: the same absence as before.
+      if (!file.existsSync()) continue;
+      final bytes = file.readAsBytesSync();
+      archive.addFile(ArchiveFile(entry.key, bytes.length, bytes));
+    }
+
+    return Uint8List.fromList(ZipEncoder().encode(archive));
   }
 
   /// What [bytes] contains, without changing anything.
@@ -201,7 +227,11 @@ class BackupService {
   /// Read before the confirmation, so a parent is told what they are about to
   /// replace their collection with — "412 species, 4 May 2026" — rather than
   /// being asked to confirm a filename.
-  Future<BackupSummary> inspect(Uint8List bytes) async {
+  Future<BackupSummary> inspect(Uint8List bytes) async => summaryOf(bytes);
+
+  /// [inspect], without an instance — so it can run on a background isolate,
+  /// as the list of automatic backups does (`DAT-09`).
+  static BackupSummary summaryOf(Uint8List bytes) {
     final document = _documentIn(bytes);
     final tables = document['tables'] as Map<String, dynamic>;
 
@@ -405,7 +435,7 @@ class BackupService {
   }
 
   /// Unwraps and validates the archive.
-  Map<String, dynamic> _documentIn(Uint8List bytes) {
+  static Map<String, dynamic> _documentIn(Uint8List bytes) {
     late final Archive archive;
     try {
       archive = ZipDecoder().decodeBytes(bytes);

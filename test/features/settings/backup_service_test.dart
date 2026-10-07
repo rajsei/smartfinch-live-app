@@ -40,6 +40,8 @@ import 'package:smartfinch/features/scoring/rarity_scale_provider.dart';
 import 'package:smartfinch/features/scoring/scoring_engine.dart';
 import 'package:smartfinch/features/scoring/scoring_repository.dart';
 import 'package:smartfinch/features/scoring/scoring_providers.dart';
+import 'package:smartfinch/features/settings/backup/auto_backup_service.dart';
+import 'package:smartfinch/features/settings/backup/backup_providers.dart';
 import 'package:smartfinch/features/settings/backup/backup_screen.dart';
 import 'package:smartfinch/features/settings/backup/backup_service.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
@@ -539,7 +541,7 @@ void main() {
     setUp(() => db = AppDatabase.forTesting(NativeDatabase.memory()));
     tearDown(() async => db.close());
 
-    Future<void> pump(WidgetTester tester) async {
+    Future<void> pump(WidgetTester tester, {Directory? autoBackups}) async {
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
 
@@ -552,6 +554,10 @@ void main() {
           overrides: [
             sharedPreferencesProvider.overrideWithValue(prefs),
             appDatabaseProvider.overrideWithValue(db),
+            if (autoBackups != null)
+              autoBackupDirectoryProvider.overrideWithValue(
+                () async => autoBackups,
+              ),
           ],
           child: MaterialApp(
             locale: const Locale('en'),
@@ -596,13 +602,86 @@ void main() {
       );
     });
 
-    testWidgets('says the app keeps no copy of the file', (tester) async {
+    testWidgets('says only the saved file survives a lost phone', (
+      tester,
+    ) async {
+      // It used to say the app keeps no copy. Since DAT-09 it does — on the
+      // same phone — so the note now says what only the file can do.
       await pump(tester);
 
       expect(
-        find.textContaining('Smartfinch does not keep a copy'),
+        find.textContaining('the only way the collection survives a lost'),
         findsOneWidget,
       );
+    });
+
+    testWidgets('the automatic backups say they stay on this phone', (
+      tester,
+    ) async {
+      // DAT-09. A parent who reads "automatic backups" and stops saving files
+      // finds out on the one day it matters.
+      await pump(tester);
+
+      expect(find.text('Automatic backups'), findsOneWidget);
+      expect(
+        find.textContaining('do not help if the phone is lost'),
+        findsOneWidget,
+      );
+    });
+
+    testWidgets('an automatic backup is listed and restores like a file', (
+      tester,
+    ) async {
+      final directory = Directory.systemTemp.createTempSync('auto_backup');
+      addTearDown(() => directory.deleteSync(recursive: true));
+
+      // A real generation, from a collection of one bird.
+      await tester.runAsync(() async {
+        final scoring = ScoringRepository(db);
+        final session = await scoring.startSession(startedAt: may4, cell: cell);
+        await scoring.recordDetection(
+          sessionId: session,
+          scientificName: 'Species sp0',
+          confidence: 0.9,
+          context: contextAt(may4),
+        );
+        await AutoBackupService(
+          db,
+          BackupService(db),
+          directory: () async => directory,
+          clock: () => may4,
+        ).runIfDue();
+      });
+
+      await pump(tester, autoBackups: directory);
+      // The list is read from disk on a background isolate: real time.
+      for (
+        var i = 0;
+        i < 50 && find.text('1 species').evaluate().isEmpty;
+        i++
+      ) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 50)),
+        );
+        await tester.pump();
+      }
+      expect(find.text('1 species'), findsOneWidget);
+
+      await tester.tap(find.byTooltip('Restore this backup'));
+      for (
+        var i = 0;
+        i < 50 && find.text('Replace everything?').evaluate().isEmpty;
+        i++
+      ) {
+        await tester.runAsync(
+          () => Future<void>.delayed(const Duration(milliseconds: 50)),
+        );
+        await tester.pump();
+      }
+
+      // The same read-confirm-replace as a picked file: what is in it, first.
+      expect(find.text('Replace everything?'), findsOneWidget);
+      expect(find.textContaining('holds 1 species'), findsOneWidget);
     });
   });
 }
