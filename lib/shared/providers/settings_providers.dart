@@ -431,11 +431,15 @@ final saveSessionAutomaticallyProvider =
 
 /// Whether a backup file carries the recordings (`SET-07`). Switched on the
 /// backup screen, next to the button it changes.
+///
+/// Off by default, as the backup screen says: a year of recordings is
+/// hundreds of megabytes, and a backup too large to send protects nothing.
+/// The collection itself is always in the file.
 final includeAudioProvider = StateNotifierProvider<BoolSettingNotifier, bool>((
   ref,
 ) {
   final prefs = ref.watch(sharedPreferencesProvider);
-  return BoolSettingNotifier(prefs, PrefKeys.includeAudio, true);
+  return BoolSettingNotifier(prefs, PrefKeys.includeAudio, false);
 });
 
 /// Convert FLAC recordings to WAV before sharing/exporting (default false).

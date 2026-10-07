@@ -91,8 +91,10 @@ void main() {
       expect(container.read(clipContextProvider), 1);
     });
 
-    test('includeAudio defaults to true', () {
-      expect(container.read(includeAudioProvider), true);
+    test('includeAudio defaults to false', () {
+      // A backup leaves the recordings out unless asked: a year of them is
+      // hundreds of megabytes, and the backup screen says they stay behind.
+      expect(container.read(includeAudioProvider), false);
     });
 
     test('spectrogramDuration defaults to 20', () {
