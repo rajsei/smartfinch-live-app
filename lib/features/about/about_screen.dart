@@ -197,12 +197,48 @@ class AboutScreen extends ConsumerWidget {
               ),
             ),
 
+            const SizedBox(height: 12),
+
+            // Where to find the app and BirdNET — named, not linked. A
+            // children's app sends nobody out of it with a tap; app stores ask
+            // for a parental gate in front of every such link, and a sentence
+            // a parent can read, select and copy needs none. The addresses
+            // come from AppConstants, so the twelve translations never carry
+            // a URL that could drift.
+            Card(
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      l10n.aboutFindMoreTitle,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        color: theme.colorScheme.primary,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    SelectableText(
+                      l10n.aboutFindMoreBody(
+                        l10n.appTitle,
+                        _address(AppConstants.githubUrl),
+                        _address(AppConstants.websiteUrl),
+                        _address(AppConstants.birdnetUrl),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+
             const SizedBox(height: 24),
 
-            // Links. No user guide: the one on the docs site is the BirdNET
-            // Live manual — surveys, ARU deployments, Raven exports — and a
-            // child following it would be looking for screens this app does
-            // not have. The policies stay, because they are not optional.
+            // The only links left. No user guide: the one on the docs site is
+            // the BirdNET Live manual — surveys, ARU deployments, Raven
+            // exports — and a child following it would be looking for screens
+            // this app does not have. The policies stay, because they are not
+            // optional: the stores require them to be reachable in the app.
             ListTile(
               leading: const Icon(AppIcons.privacyTip),
               title: Text(l10n.aboutPrivacyPolicy),
@@ -223,44 +259,6 @@ class AboutScreen extends ConsumerWidget {
                     '${AppConstants.docsUrl}${AppConstants.policyDocsLocalePrefix(Localizations.localeOf(context).languageCode)}/acceptable-use/',
                   ),
             ),
-            // The app's own website first: for a family it is the useful one.
-            // The logo follows the language, as the name in the label does —
-            // Schlaumeise in German, Smartfinch everywhere else.
-            ListTile(
-              leading: const AppLogo(size: 24),
-              title: Text(l10n.aboutAppWebsite(l10n.appTitle)),
-              trailing: const Icon(AppIcons.openInNew),
-              onTap: () => openExternalUrl(context, AppConstants.websiteUrl),
-            ),
-            ListTile(
-              leading: const Icon(AppIcons.code),
-              title: Text(l10n.aboutGitHub),
-              trailing: const Icon(AppIcons.openInNew),
-              onTap: () => openExternalUrl(context, AppConstants.githubUrl),
-            ),
-            ListTile(
-              leading: ColorFiltered(
-                colorFilter: ColorFilter.mode(
-                  theme.colorScheme.onSurfaceVariant,
-                  BlendMode.srcIn,
-                ),
-                child: Image.asset(
-                  'assets/images/icon-birdnet.png',
-                  width: 24,
-                  height: 24,
-                ),
-              ),
-              title: Text(l10n.aboutWebsite),
-              trailing: const Icon(AppIcons.openInNew),
-              onTap: () => openExternalUrl(context, AppConstants.birdnetUrl),
-            ),
-            ListTile(
-              leading: const Icon(AppIcons.volunteerActivism),
-              title: Text(l10n.aboutDonate),
-              trailing: const Icon(AppIcons.openInNew),
-              onTap:
-                  () => openExternalUrl(context, AppConstants.birdnetDonateUrl),
-            ),
 
             const SizedBox(height: 32),
           ],
@@ -269,3 +267,7 @@ class AboutScreen extends ConsumerWidget {
     );
   }
 }
+
+/// "github.com/…" rather than "https://github.com/…": read aloud or copied
+/// into a browser, the scheme is noise.
+String _address(String url) => url.replaceFirst(RegExp(r'^https?://'), '');

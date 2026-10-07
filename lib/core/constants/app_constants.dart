@@ -83,9 +83,6 @@ abstract final class AppConstants {
   /// BirdNET website URL.
   static const String birdnetUrl = 'https://birdnet.cornell.edu';
 
-  /// BirdNET donation page URL.
-  static const String birdnetDonateUrl = 'https://birdnet.cornell.edu/donate/';
-
   /// Path to the model configuration JSON asset.
   ///
   /// The config file describes the ONNX model, its label format, tensor

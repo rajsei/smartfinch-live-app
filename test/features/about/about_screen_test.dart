@@ -2,9 +2,10 @@
 // AboutScreen — the links
 // =============================================================================
 //
-// The source link points at this app, not at the BirdNET Live repository it is
-// forked from; the BirdNET website stays, because the model is theirs; and the
-// app's own website carries the app's name in the language the child reads —
+// Where the app and BirdNET can be found is *named*, not linked: a children's
+// app sends nobody out of it with a tap. The source address is this app's, not
+// the BirdNET Live repository it is forked from; the BirdNET website stays,
+// because the model is theirs; and the name is the one the child reads —
 // Schlaumeise in German, Smartfinch everywhere else.
 // =============================================================================
 
@@ -19,6 +20,7 @@ import 'package:smartfinch/features/about/about_screen.dart';
 import 'package:smartfinch/features/explore/explore_providers.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
+import 'package:smartfinch/shared/utils/app_icons.dart';
 
 void main() {
   Future<void> pump(WidgetTester tester, {String locale = 'en'}) async {
@@ -69,12 +71,33 @@ void main() {
     expect(AppConstants.birdnetUrl, 'https://birdnet.cornell.edu');
   });
 
-  testWidgets('lists the app website, the source and BirdNET', (tester) async {
+  testWidgets('names the source, the website and BirdNET as text', (
+    tester,
+  ) async {
     await pump(tester);
 
-    expect(find.text('Smartfinch website'), findsOneWidget);
-    expect(find.text('This app on GitHub'), findsOneWidget);
-    expect(find.text('BirdNET Website'), findsOneWidget);
+    final text = find.byType(SelectableText);
+    expect(text, findsOneWidget);
+    final body = tester.widget<SelectableText>(text).data!;
+    expect(body, contains('github.com/rajsei/smartfinch-live-app'));
+    expect(body, contains('schlaumeise.org'));
+    expect(body, contains('birdnet.cornell.edu'));
+    // Addresses to read and copy, not to follow.
+    expect(body, isNot(contains('https://')));
+  });
+
+  testWidgets('and sends nobody out of the app except to the policies', (
+    tester,
+  ) async {
+    // App stores ask for a parental gate in front of every link out of a
+    // children's app. The two policies must stay reachable; nothing else
+    // opens a browser.
+    await pump(tester);
+
+    final outbound = find.byIcon(AppIcons.openInNew);
+    expect(outbound, findsNWidgets(2));
+    expect(find.text('Privacy Policy'), findsOneWidget);
+    expect(find.text('Donate to BirdNET'), findsNothing);
   });
 
   testWidgets('says whose app this is, and that it builds on BirdNET Live', (
@@ -97,10 +120,11 @@ void main() {
     );
   });
 
-  testWidgets('in German the website carries the German name', (tester) async {
+  testWidgets('in German the text carries the German name', (tester) async {
     await pump(tester, locale: 'de');
 
-    expect(find.text('Schlaumeise-Webseite'), findsOneWidget);
-    expect(find.text('BirdNET-Webseite'), findsOneWidget);
+    final body =
+        tester.widget<SelectableText>(find.byType(SelectableText)).data!;
+    expect(body, startsWith('Der Quellcode von Schlaumeise'));
   });
 }

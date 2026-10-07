@@ -305,22 +305,27 @@
   "@aboutFundingDescription": {
     "description": "Funding statement on the About screen. Keep 'Deutsche Bundesstiftung Umwelt' and the project number as-is in every locale."
   },
-  "aboutWebsite": "BirdNET Website",
-  "@aboutWebsite": {
-    "description": "BirdNET website link label"
+  "aboutFindMoreTitle": "Find out more",
+  "@aboutFindMoreTitle": {
+    "description": "About: heading of the card that names where the app and BirdNET can be found online — as text, not links"
   },
-  "aboutAppWebsite": "{app} website",
-  "@aboutAppWebsite": {
-    "description": "Link label in About for the app's own website (schlaumeise.org). app is l10n.appTitle — Schlaumeise in German, Smartfinch elsewhere",
+  "aboutFindMoreBody": "The source code of {app} is open: you can find it on GitHub at {github}. There is more about the app at {website}, and more about BirdNET at {birdnet}.",
+  "@aboutFindMoreBody": {
+    "description": "About: where to find the source code, the app's website and BirdNET's website. Addresses are text, not links: a children's app sends nobody out of it with a tap. app is l10n.appTitle; the addresses come from AppConstants without https://",
     "placeholders": {
       "app": {
         "type": "String"
+      },
+      "github": {
+        "type": "String"
+      },
+      "website": {
+        "type": "String"
+      },
+      "birdnet": {
+        "type": "String"
       }
     }
-  },
-  "aboutGitHub": "This app on GitHub",
-  "@aboutGitHub": {
-    "description": "GitHub link label"
   },
   "aboutPrivacyPolicy": "Privacy Policy",
   "@aboutPrivacyPolicy": {
@@ -329,10 +334,6 @@
   "aboutTermsOfUse": "Acceptable Use Policy",
   "@aboutTermsOfUse": {
     "description": "Acceptable use policy link label"
-  },
-  "aboutDonate": "Donate to BirdNET",
-  "@aboutDonate": {
-    "description": "Donate link label on the About screen"
   },
   "errorPermissionRequired": "Permission required",
   "@errorPermissionRequired": {
