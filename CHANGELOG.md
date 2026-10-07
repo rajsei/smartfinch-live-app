@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The start screen on Android 12 and newer shows the app's own bird on the launcher icon's background. It still showed BirdNET Live's blue jay on BirdNET's dark blue.
+- On iPhone and iPad the app is called Schlaumeise in German. It said Smartfinch in every language, because the German name never made it into the app.
 - "Include the recordings" on the backup screen starts switched off, as the screen has always said. It was on, so every backup carried all recordings and could grow to hundreds of megabytes. A choice already made is kept.
 - Recordings in the journal show their spectrogram again. The picture was computed in the background, but the hand-over to the background task failed on every clip, so the player only ever showed a placeholder icon. Playback itself was never affected.
 - Birds heard at the start of a session are counted again. The app builds the rarity scale for your area when the session opens, and a detection arriving before it is ready now waits for it. Previously the first birds after an app start were recorded as having no location: no stars, no explanation, and the journal filed them as heard while scoring was off.
@@ -27,6 +29,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 
+- On Android the app icon and the start screen follow the phone's language, as the name under the icon already did: Schlaumeise in German, Smartfinch in every other language. An iPhone allows only one icon, and it is now Schlaumeise's.
 - **About** says whose app this is: a doctoral project at Chemnitz University of Technology that builds on BirdNET Live. The credits and funding lines had been renamed along with the app and claimed BirdNET Live's development team and funding for it; the funding line names BirdNET Live again.
 - Settings speak a child's language: "Announce bird names", "Show every bird heard", "Start listening automatically", "Sound before and after", "Show the introduction again", "Allow maps", and list sorting by "Surest first", "A to Z" and "Heard most often first". The German texts say "Schlaumeise" throughout and address the reader as "du" everywhere. Dynamic colors are offered on Android only, where they work.
 - **Help** explains your bird, its level, the stickers and how to pull the button panel down to arrange them. The tip about the confidence threshold says that below 35 % there are no stars, and the tip repeating what the big button does is gone.

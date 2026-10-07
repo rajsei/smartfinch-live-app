@@ -15,7 +15,7 @@
 
 Rarer birds are worth more — and what counts as rare depends on where you are and what week it is, so the same blackbird is worth 50 stars all year and a redwing is worth a thousand in November. That is the whole point: it makes going outside in February interesting.
 
-> **The app has two names.** In German it is **Schlaumeise**; in every other language it is **Smartfinch**. They are not translations of one another — *Schlaumeise* is a tit and a pun that only works in German — so each has its own logo and the launcher shows whichever the device's language calls for.
+> **The app has two names.** In German it is **Schlaumeise**; in every other language it is **Smartfinch**. They are not translations of one another — *Schlaumeise* is a tit and a pun that only works in German — so each has its own logo. On Android the icon, the name under it and the start screen follow the phone's language; an iPhone allows one icon, which is Schlaumeise's, while the name under it still follows the language.
 
 Built with Flutter for Android, iOS and Windows. Identification runs on-device with the BirdNET+ model; nothing is uploaded, and the app works with no internet at all.
 

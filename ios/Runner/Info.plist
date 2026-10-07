@@ -4,6 +4,26 @@
 <dict>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
+	<!-- The app's languages, as in lib/l10n. iOS picks the app's language from
+	     this list, and with it the name under the icon: Schlaumeise from
+	     de.lproj/InfoPlist.strings, Smartfinch below for every other one.
+	     Without the list a French phone with German as its second language
+	     would be offered the only localisation the bundle has, German. -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>de</string>
+		<string>cs</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>it</string>
+		<string>pt</string>
+		<string>nl</string>
+		<string>nb</string>
+		<string>pl</string>
+		<string>ru</string>
+		<string>zh-Hans</string>
+	</array>
 	<key>CFBundleDisplayName</key>
 	<string>Smartfinch</string>
 	<key>CFBundleExecutable</key>

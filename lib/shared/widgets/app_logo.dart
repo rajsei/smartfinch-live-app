@@ -14,9 +14,10 @@
 //
 // SVG rather than PNG: these are drawn at 40 logical pixels in a settings row
 // and at 112 on the onboarding card, and a raster asset would have to ship at
-// the larger size to survive the larger use. The launcher icon is a separate
-// problem — the platform wants raster there, and that file is still the old
-// one.
+// the larger size to survive the larger use. The launcher icon is raster and
+// comes from `tools/build_launcher_icons.py`: on Android it follows the phone's
+// language with the same German/everywhere-else split (`LOCALE_BRANDS` there
+// must agree with [AppLogo.assetFor]); an iPhone has one icon, Schlaumeise's.
 // =============================================================================
 
 import 'package:flutter/material.dart';

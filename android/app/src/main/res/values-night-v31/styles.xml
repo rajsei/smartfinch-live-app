@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Android 12+ splash screen (dark mode): show the full bird-with-circle
-         logo instead of the default adaptive-icon foreground. -->
+    <!-- Android 12+ splash screen: the round brand mark on the launcher
+         icon's background, so the start screen looks like the icon that
+         was tapped. Both come from tools/build_launcher_icons.py and
+         flutter_launcher_icons; neither is edited by hand. -->
     <style name="LaunchTheme" parent="@android:style/Theme.Black.NoTitleBar">
-        <item name="android:windowSplashScreenBackground">#0D1F35</item>
+        <item name="android:windowSplashScreenBackground">@color/ic_launcher_background</item>
         <item name="android:windowSplashScreenAnimatedIcon">@drawable/ic_splash</item>
     </style>
     <style name="NormalTheme" parent="@android:style/Theme.Black.NoTitleBar">
