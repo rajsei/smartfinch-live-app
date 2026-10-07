@@ -14,6 +14,7 @@ import 'package:smartfinch/features/announcements/platform/tts_engine.dart';
 class _FakeTts implements TtsEngine {
   final List<String> spoken = <String>[];
   int prerollCueCount = 0;
+  int hapticCueCount = 0;
   bool throwOnSpeak = false;
   @override
   Future<void> configure({
@@ -29,8 +30,9 @@ class _FakeTts implements TtsEngine {
   }
 
   @override
-  Future<void> playPrerollCue() async {
+  Future<void> playPrerollCue({bool haptic = true}) async {
     prerollCueCount++;
+    if (haptic) hapticCueCount++;
   }
 
   @override
@@ -106,6 +108,7 @@ AnnouncementsControllerConfig _cfg(
   bool muteCaptureDuringSpeech = true,
   bool duckOtherAudio = true,
   bool prerollCue = true,
+  bool haptics = true,
 }) => AnnouncementsControllerConfig(
   enabled: enabled,
   verbosity: verbosity,
@@ -114,6 +117,7 @@ AnnouncementsControllerConfig _cfg(
   muteCaptureDuringSpeech: muteCaptureDuringSpeech,
   duckOtherAudio: duckOtherAudio,
   prerollCue: prerollCue,
+  haptics: haptics,
 );
 
 void main() {
@@ -365,6 +369,16 @@ void main() {
         ),
       );
       expect(tts.prerollCueCount, 0);
+    });
+
+    test('the cue keeps its tone but not its vibration when vibration is off '
+        '(SET-04)', () async {
+      await ctrl.announce(
+        [det('Robin', 0.9)],
+        _cfg(kFrequencyProfiles[AnnouncementFrequency.normal]!, haptics: false),
+      );
+      expect(tts.prerollCueCount, 1);
+      expect(tts.hapticCueCount, 0);
     });
   });
 }

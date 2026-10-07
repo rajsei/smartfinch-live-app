@@ -123,6 +123,9 @@ abstract final class PrefKeys {
   static const String confidenceThreshold = 'confidence_threshold';
   static const String inferenceRate = 'inference_rate';
   static const String animationLevel = 'animation_level';
+
+  /// Whether the app vibrates on its own buttons and cues (`SET-04`).
+  static const String hapticsEnabled = 'haptics_enabled';
   static const String speciesFilterMode = 'species_filter_mode';
   static const String sensitivity = 'sensitivity';
   static const String ignoreBirds = 'ignore_species_birds';

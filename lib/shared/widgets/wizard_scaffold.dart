@@ -24,9 +24,9 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 
+import '../utils/app_haptics.dart';
 import 'content_width_constraint.dart';
 
 /// Standard chrome for the app's setup wizards.
@@ -174,8 +174,8 @@ class _WizardFooter extends StatelessWidget {
   final String nextLabel;
   final IconData? nextIcon;
 
-  void _haptic() {
-    HapticFeedback.lightImpact();
+  void _haptic(BuildContext context) {
+    AppHaptics.lightImpact(context);
   }
 
   @override
@@ -190,7 +190,7 @@ class _WizardFooter extends StatelessWidget {
                 onBack == null
                     ? null
                     : () {
-                      _haptic();
+                      _haptic(context);
                       onBack!();
                     },
             child: Text(backLabel),
@@ -202,7 +202,7 @@ class _WizardFooter extends StatelessWidget {
                   onNext == null
                       ? null
                       : () {
-                        _haptic();
+                        _haptic(context);
                         onNext!();
                       },
               icon: Icon(nextIcon),
@@ -214,7 +214,7 @@ class _WizardFooter extends StatelessWidget {
                   onNext == null
                       ? null
                       : () {
-                        _haptic();
+                        _haptic(context);
                         onNext!();
                       },
               child: Text(nextLabel),

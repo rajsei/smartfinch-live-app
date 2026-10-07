@@ -9,6 +9,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../../core/services/app_data_clear_service.dart';
 import '../../shared/providers/app_providers.dart';
 import '../../shared/providers/settings_providers.dart';
+import '../../shared/utils/app_haptics.dart';
 import '../../shared/widgets/content_width_constraint.dart';
 import '../../shared/widgets/map_picker_screen.dart';
 import '../about/about_screen.dart';
@@ -21,6 +22,7 @@ import '../scoring/scoring_blockers.dart';
 import '../scoring/scoring_providers.dart';
 import '../scoring/scoring_rules.dart';
 import '../spectrogram/color_maps.dart';
+import '../storage/widgets/storage_settings_section.dart';
 import 'animation_level.dart';
 import 'backup/backup_screen.dart';
 import 'offline_map_download_tile.dart';
@@ -126,6 +128,7 @@ class SettingsScreen extends ConsumerWidget {
     'announcements': SettingsView.plain,
     'location': SettingsView.plain,
     'privacy': SettingsView.plain,
+    'storage': SettingsView.plain,
     'about': SettingsView.plain,
     'backup': SettingsView.plain,
     'danger': SettingsView.plain,
@@ -236,6 +239,21 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged:
                     (v) =>
                         ref.read(animationLevelSettingProvider.notifier).set(v),
+              ),
+
+              // SET-04, beside the animation level: both decide how much the
+              // app does *at* a child, and both are looked for here. The
+              // sound half is the announcements section further down — the
+              // only sounds the app plays by itself are announcements.
+              SwitchListTile(
+                title: _TitleWithHelp(
+                  title: l10n.settingsHaptics,
+                  helpBody: l10n.settingsHelpHaptics,
+                ),
+                subtitle: Text(l10n.settingsHapticsDescription),
+                value: ref.watch(hapticsEnabledProvider),
+                onChanged:
+                    (v) => ref.read(hapticsEnabledProvider.notifier).set(v),
               ),
 
               // The rules, in the child's own language (SET-11). On the plain
@@ -732,6 +750,14 @@ class SettingsScreen extends ConsumerWidget {
               ),
               const Divider(),
             ],
+
+            // --- Storage (SET-06) ---
+            if (_showSection('storage'))
+              StorageSettingsSection(
+                sectionHeader:
+                    ({required String title, required String subtitle}) =>
+                        _SectionHeader(title: title, subtitle: subtitle),
+              ),
 
             // --- Advanced settings ---
             //
@@ -1706,7 +1732,7 @@ class _ThemeTile extends ConsumerWidget {
         ],
         selected: {themeMode},
         onSelectionChanged: (selected) {
-          HapticFeedback.selectionClick();
+          AppHaptics.selectionClick(context);
           ref.read(themeModeProvider.notifier).setThemeMode(selected.first);
         },
         showSelectedIcon: false,

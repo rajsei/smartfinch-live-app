@@ -52,6 +52,8 @@ import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/services.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 
+import '../../../shared/utils/app_haptics.dart';
+
 /// A selectable platform voice. `name` is the engine-specific voice
 /// identifier (what `setVoice` expects); `locale` is the BCP-47 tag the
 /// voice speaks. Both come straight from `flutter_tts.getVoices`.
@@ -96,7 +98,10 @@ abstract class TtsEngine {
   /// Play a short pre-roll cue before an utterance to give the listener
   /// a moment to switch attention. Fire-and-forget on failure — the cue
   /// is decorative and must never block speech.
-  Future<void> playPrerollCue();
+  ///
+  /// [haptic] allows the vibration some platforms add to the tone; false
+  /// when the app's vibration switch is off (`SET-04`).
+  Future<void> playPrerollCue({bool haptic = true});
 
   /// Cancel any in-flight utterance immediately.
   Future<void> stop();
@@ -197,13 +202,13 @@ class FlutterTtsEngine implements TtsEngine {
   }
 
   @override
-  Future<void> playPrerollCue() async {
+  Future<void> playPrerollCue({bool haptic = true}) async {
     try {
       // `alert` is a genuine tone on iOS; on much of Android it is a
       // no-op, so we also fire a light haptic as a fallback pre-cue.
       await SystemSound.play(SystemSoundType.alert);
       if (!kIsWeb && Platform.isAndroid) {
-        await HapticFeedback.selectionClick();
+        await AppHaptics.selectionClickIf(haptic);
       }
       // Give the OS a brief moment to render the cue before speech starts
       // so it isn't talked over.

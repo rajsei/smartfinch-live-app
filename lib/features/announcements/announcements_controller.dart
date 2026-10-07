@@ -113,6 +113,10 @@ class AnnouncementsControllerConfig {
   /// so the listener has a beat to switch their attention.
   final bool prerollCue;
 
+  /// Whether the cue may vibrate where the platform adds a vibration to it —
+  /// the app's vibration switch (`SET-04`).
+  final bool haptics;
+
   /// Estimated TTS speech duration after which the ring-buffer mute
   /// window auto-expires. Used as a fallback when the engine doesn't
   /// report an exact end time. Kept as a separate config knob so we
@@ -127,6 +131,7 @@ class AnnouncementsControllerConfig {
     this.muteCaptureDuringSpeech = true,
     this.duckOtherAudio = true,
     this.prerollCue = true,
+    this.haptics = true,
     this.mutePadding = const Duration(milliseconds: 400),
   });
 }
@@ -312,7 +317,7 @@ class AnnouncementsController {
     _speaking = true;
     try {
       if (config.prerollCue) {
-        await _tts.playPrerollCue();
+        await _tts.playPrerollCue(haptic: config.haptics);
       }
       await _tts.speak(text);
     } finally {

@@ -99,14 +99,14 @@ void main() {
     ) async {
       await pumpSettings(tester);
 
-      // SET-01's list, as far as it exists today: appearance and language,
-      // announcements, location, privacy, storage. (Animation level SET-02 and
-      // the rules page SET-11 are phase 2 and not yet built.)
+      // SET-01's list: appearance and language, sounds and haptics,
+      // location, privacy, storage.
       for (final section in [
         'General',
         'Announcements',
         'Location',
         'Privacy',
+        'Storage',
         'Danger Zone',
       ]) {
         expect(find.text(section), findsOneWidget, reason: section);
@@ -186,6 +186,69 @@ void main() {
         SettingsScreen.sectionViews.values.toSet(),
         SettingsView.values.toSet(),
       );
+    });
+  });
+
+  // ===========================================================================
+  // SET-04 and SET-06 — on the plain screen, where a parent looks
+  // ===========================================================================
+  group('SET-04 · vibration', () {
+    testWidgets('a switch beside the animation level, on by default', (
+      tester,
+    ) async {
+      await pumpSettings(tester);
+
+      final tile = tester.widget<SwitchListTile>(
+        find.ancestor(
+          of: find.text('Vibration'),
+          matching: find.byType(SwitchListTile),
+        ),
+      );
+      expect(tile.value, isTrue);
+    });
+
+    testWidgets('switching it off is kept', (tester) async {
+      await pumpSettings(tester);
+
+      await tester.tap(find.text('Vibration'));
+      await tester.pump();
+
+      expect(prefs.getBool('haptics_enabled'), isFalse);
+    });
+
+    testWidgets('it says where the sounds are switched', (tester) async {
+      // The sound half of SET-04 is the announcements section; the help text
+      // is where a parent looking for "sound" on this switch finds that out.
+      await pumpSettings(tester);
+
+      final help = find.descendant(
+        of: find.ancestor(
+          of: find.text('Vibration'),
+          matching: find.byType(SwitchListTile),
+        ),
+        matching: find.byType(IconButton),
+      );
+      await tester.tap(help);
+      await tester.pumpAndSettle();
+
+      expect(
+        find.textContaining('the only sounds the app plays by itself'),
+        findsOneWidget,
+      );
+    });
+  });
+
+  group('SET-06 · storage', () {
+    testWidgets('shows the recordings, the collection and the way to delete', (
+      tester,
+    ) async {
+      await pumpSettings(tester);
+
+      expect(find.text('Recordings'), findsOneWidget);
+      expect(find.text('Collection'), findsOneWidget);
+      expect(find.text('Delete recordings'), findsOneWidget);
+      // The reassurance is on the button itself, before it is pressed.
+      expect(find.textContaining('collection and your stars stay'), findsOne);
     });
   });
 

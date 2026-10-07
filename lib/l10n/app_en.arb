@@ -2260,6 +2260,105 @@
   "@settingsAnimationLevelHelp": {
     "description": "SET-02: what each level changes, and what none of them change"
   },
+  "settingsHaptics": "Vibration",
+  "@settingsHaptics": {
+    "description": "SET-04: switch title for the app's own vibrations"
+  },
+  "settingsHapticsDescription": "A short buzz when you press important buttons.",
+  "@settingsHapticsDescription": {
+    "description": "SET-04: subtitle of the vibration switch"
+  },
+  "settingsHelpHaptics": "Turns off every vibration Smartfinch makes itself: on the listen button, when confirming, and before an announcement. Sounds are separate — the only sounds the app plays by itself are announcements, and they have their own switch further down. The phone's own key sounds and vibration follow the phone's settings.",
+  "@settingsHelpHaptics": {
+    "description": "SET-04: help text — what the vibration switch covers, that sounds are the announcements with their own switch, and that the phone's own feedback follows the phone"
+  },
+  "settingsStorage": "Storage",
+  "@settingsStorage": {
+    "description": "SET-06: heading of the storage section on the plain settings screen"
+  },
+  "settingsStorageDescription": "How much room Smartfinch takes up on this device.",
+  "@settingsStorageDescription": {
+    "description": "SET-06: subtitle of the storage section"
+  },
+  "storageRecordings": "Recordings",
+  "@storageRecordings": {
+    "description": "SET-06: row label for the space the recordings take"
+  },
+  "storageRecordingsCount": "{count, plural, =0{No recordings} =1{1 recording} other{{count} recordings}}",
+  "@storageRecordingsCount": {
+    "description": "SET-06: how many recordings are on the device",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageRecordingsKept": "{count, plural, =1{1 of them kept} other{{count} of them kept}}",
+  "@storageRecordingsKept": {
+    "description": "SET-06: how many of the recordings the child marked to keep, after the count",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageCollection": "Collection",
+  "@storageCollection": {
+    "description": "SET-06: row label for the space the collection (database and automatic backups) takes"
+  },
+  "storageCollectionDetail": "Species, days, stars and the automatic backups",
+  "@storageCollectionDetail": {
+    "description": "SET-06: what the collection row consists of"
+  },
+  "storageDeleteRecordings": "Delete recordings",
+  "@storageDeleteRecordings": {
+    "description": "SET-06: action that deletes the recordings"
+  },
+  "storageDeleteRecordingsSubtitle": "Frees up space. Your collection and your stars stay.",
+  "@storageDeleteRecordingsSubtitle": {
+    "description": "SET-06: subtitle of the delete action — what it frees and what stays"
+  },
+  "storageDeleteConfirmTitle": "Delete recordings?",
+  "@storageDeleteConfirmTitle": {
+    "description": "SET-06: confirmation dialog title"
+  },
+  "storageDeleteConfirmBody": "The recordings are deleted from this device and cannot be brought back. Your collection, your stars and your journal stay — you just can't listen to the birds again.",
+  "@storageDeleteConfirmBody": {
+    "description": "SET-06: confirmation dialog body — irreversible, and the collection stays"
+  },
+  "storageDeleteIncludeKept": "{count, plural, =1{Also delete the kept recording} other{Also delete the {count} kept recordings}}",
+  "@storageDeleteIncludeKept": {
+    "description": "SET-06: checkbox in the confirmation, off by default, to delete the recordings the child marked to keep as well",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageDeleteAction": "Delete",
+  "@storageDeleteAction": {
+    "description": "SET-06: confirm button of the delete dialog"
+  },
+  "storageDeleteDone": "{count, plural, =0{Space freed: {size}.} =1{1 recording deleted, {size} freed.} other{{count} recordings deleted, {size} freed.}}",
+  "@storageDeleteDone": {
+    "description": "SET-06: snackbar after deleting; size is a formatted amount such as 120 MB",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "storageDeleteWhileListening": "Stop listening first, then you can delete recordings.",
+  "@storageDeleteWhileListening": {
+    "description": "SET-06: shown when deleting is refused because a listening session is running"
+  },
+  "storageDeleteFailed": "Some recordings could not be deleted.",
+  "@storageDeleteFailed": {
+    "description": "SET-06: shown when some recordings could not be deleted"
+  },
   "rulesTitle": "How do I earn stars?",
   "@rulesTitle": {
     "description": "SET-11: title of the rules page"

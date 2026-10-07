@@ -10,7 +10,8 @@
 //   • Body is one or two short sentences explaining what will be lost.
 //   • Buttons left → right: Cancel (TextButton), Confirm (FilledButton.tonal
 //     colored with `colorScheme.error`).
-//   • Fires `HapticFeedback.mediumImpact()` on confirm before returning.
+//   • Fires a medium haptic on confirm before returning — through
+//     `AppHaptics`, so the vibration switch (`SET-04`) applies.
 //
 // Returns `true` when the user confirms, `false` when they cancel or
 // dismiss the dialog. Never returns `null` — safe to use in
@@ -18,7 +19,8 @@
 // =============================================================================
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+
+import '../utils/app_haptics.dart';
 
 /// Shows a Material 3 confirmation dialog for a destructive action.
 ///
@@ -49,7 +51,7 @@ Future<bool> confirmDestructive(
               foregroundColor: theme.colorScheme.onErrorContainer,
             ),
             onPressed: () {
-              HapticFeedback.mediumImpact();
+              AppHaptics.mediumImpact(dialogContext);
               Navigator.of(dialogContext).pop(true);
             },
             child: Text(confirmLabel),

@@ -702,8 +702,8 @@ The phase-3 list in this document was built from the requirements the transition
 | ~~`STAT-04`~~ | ~~A 7 / 30 / 365 range switch on the chart~~ — **done**, see below |
 | `SAM-04b` | Per-species silhouettes for undetected cells, replacing the shared placeholder |
 | `SAM-08` | A sample call on the species page — blocked on licence-free recordings, not on code |
-| `SET-04` | Sounds and haptics separately switchable |
-| `SET-06` | Storage management: space used, delete audio |
+| ~~`SET-04`~~ | ~~Sounds and haptics separately switchable~~ — **done**, see below |
+| ~~`SET-06`~~ | ~~Storage management: space used, delete audio~~ — **done**, see below |
 | ~~`DAT-09`~~ | ~~Automatic rolling local backup, 3 generations — related to `SET-07` but not the same thing: that one survives a lost phone, this one survives a crash~~ — **done**, see below |
 | `AUS-11` | 🌧️ Bad weather hero, the tenth daily badge, behind the weather consent gate |
 | `KID-04` | Everything operable without reading — an audit, not a feature |
@@ -1164,6 +1164,35 @@ Two of these were checked the other way round as well — the rule taken out, th
 **Privacy.** The copies live in `<documents>/backups`; the directory name is a constant beside the database file name (`kAutoBackupDirectoryName`), and *Clear all data* deletes it. A wipe that left three copies of the database behind would be a wipe in name only.
 
 **What it does not cover.** A copy written in schema *n* is restored by the app's current `fromJson`. Nothing differs today — the schema is still version 1 — but the first migration that adds a non-nullable column must give `BackupService` a default for it, or an older backup, automatic or saved, will be refused. That is `SET-07`'s problem as much as this one's; it is written here so it is found before the migration rather than after.
+
+### `SET-04` and `SET-06` — a vibration switch, and the space back
+
+**Both done** ✅ — 19 new tests. Two small settings items, taken together because they share a screen and a register: the plain settings page, worded for whoever is holding the phone.
+
+#### `SET-04` — the sound half already existed
+
+The requirement reads as two new switches. Reading the code first changed that. The only sounds Smartfinch plays by itself are the **announcements** — a species name read aloud, with an optional system tone before it — and both already had switches, the master one off by default. A "sounds" switch on top would have made four combinations of two states, and a child flipping *Sounds on* would hear nothing, because announcements were still off.
+
+The haptic half did not exist at all: four places called `HapticFeedback` directly — the listen button, the theme selector, the destructive-action confirmation, the wizard footer — plus a fifth hidden in the announcement cue, which on Android adds a vibration because the system tone is often silent there. All five now go through **`AppHaptics`** (`lib/shared/utils/app_haptics.dart`), which asks `hapticsEnabledProvider` first. The cue, which runs inside the speech engine and has no `BuildContext`, gets the setting through the announcement config. A test greps `lib/` for `HapticFeedback.` outside that one file, because a vibration added anywhere else would quietly ignore the switch.
+
+The switch sits in the General section beside the animation level — both decide how much the app does *at* a child — and its help text says where the sounds are switched. Recordings a child starts in the journal are always audible, and the phone's own touch clicks and long-press buzz follow the phone.
+
+#### `SET-06` — what "delete audio" has to include
+
+`StorageService` (`lib/features/storage/storage_service.dart`) measures and deletes; the section on the plain settings screen shows **Recordings** (size, count, how many kept), **Collection** (database, side files and the `DAT-09` backups) and **Delete recordings**.
+
+What the deletion covers was the design question, and the answer is *all of the audio*:
+
+| Included | Why |
+|---|---|
+| Every file under `recordings/`, not only those a detection points at | Whole-session files from the retired *Full* mode sit there with nothing referencing them — the journal cannot play them, retention never sees them, and until now nothing in the app could remove them |
+| The temporary playback, spectrogram and share copies | A deleted recording should not live on as its own boosted copy. The directory list is now one public constant on `AppDataClearService`, shared with *Clear all data* |
+
+And what it must not touch: **the collection**, asserted by comparing detections, star total and life list before and after; **kept recordings**, unless the parent ticks a box that starts unticked and only appears when there are any — a child was told those are safe, and the flag survives even when the file goes, as it does through a restore; and **anything while recording** — the recorder is writing into that directory, so the deletion is refused rather than raced. Files go first and rows second, the retention job's order; afterwards every row pointing at a missing file loses its path, so the journal stops offering a play button for nothing.
+
+Sizes are in powers of 1,000, because that is what Android and iOS show in their own storage screens, and a parent comparing the two should see the same number. Measuring and deleting walk the directories on a background isolate — static helpers again, for the reason the journal spectrogram fix taught the same week.
+
+*Not in it:* `SET-12`'s two thresholds (30 days, 100 per species) are still constants. The specification wants them adjustable; the storage section is where they would go.
 
 ### What to watch during the two-week test
 

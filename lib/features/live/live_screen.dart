@@ -3,7 +3,6 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
-import 'package:flutter/services.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/utils/app_icons.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../core/services/wakelock_service.dart';
 
 import '../../shared/providers/settings_providers.dart';
+import '../../shared/utils/app_haptics.dart';
 import '../../shared/widgets/app_help_bottom_sheet.dart';
 import '../../shared/widgets/confirm_destructive.dart';
 import '../audio/audio_capture_service.dart';
@@ -1294,7 +1294,7 @@ class _CaptureButton extends StatelessWidget {
                 isLoading
                     ? null
                     : () {
-                      HapticFeedback.lightImpact();
+                      AppHaptics.lightImpact(context);
                       onPressed();
                     },
             child:

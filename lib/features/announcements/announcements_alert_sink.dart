@@ -44,6 +44,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../audio/audio_providers.dart';
 import '../explore/explore_providers.dart';
 import '../../shared/providers/settings_providers.dart';
+import '../../shared/utils/app_haptics.dart';
 import 'announcements_controller.dart';
 import 'announcements_providers.dart';
 import 'domain/announcement_presets.dart';
@@ -335,6 +336,7 @@ class AnnouncementsAlertSink {
       ),
       duckOtherAudio: _ref.read(announcementsDuckOtherAudioProvider),
       prerollCue: _ref.read(announcementsPrerollCueProvider),
+      haptics: _ref.read(hapticsEnabledProvider),
     );
   }
 }

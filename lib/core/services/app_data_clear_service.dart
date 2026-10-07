@@ -112,7 +112,7 @@ class AppDataClearService {
       );
     }
 
-    for (final name in _temporaryDataDirectories) {
+    for (final name in temporaryAudioDirectories) {
       await attempt(
         () => _deleteDirectoryIfExists(p.join(temporaryDir.path, name)),
       );
@@ -137,7 +137,12 @@ class AppDataClearService {
     kAutoBackupDirectoryName,
   ];
 
-  static const List<String> _temporaryDataDirectories = [
+  /// Temporary directories holding copies of recordings — boosted for
+  /// playback, cut for a spectrogram, staged for sharing.
+  ///
+  /// Public because "Delete recordings" (`SET-06`) has to empty them too: a
+  /// deleted recording should not live on as its own playback copy.
+  static const List<String> temporaryAudioDirectories = [
     'birdnet_norm_cache',
     'birdnet_spec_wav',
     'shared_clips',

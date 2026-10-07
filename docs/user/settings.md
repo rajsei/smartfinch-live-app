@@ -28,6 +28,43 @@ labelled *"this is why there are no stars right now"*. The same reasons appear
 in a banner at the top of both settings screens. Detections and recordings
 carry on throughout, and the journal marks what did not count and why.
 
+## Vibration and sounds
+
+**Vibration**, on the first settings page next to the animation level, turns
+off every vibration Smartfinch makes itself: the short buzz on the listen
+button, when confirming something that cannot be undone, in the setup steps,
+and before an announcement. It is on by default.
+
+There is no separate switch for sounds, because the only sounds the app plays
+by itself are the **announcements** — a bird's name read aloud, with an
+optional short tone before it. They have their own section with their own
+switch, and they are off until you turn them on. Recordings you play in the
+journal are always audible: you started them.
+
+The phone's own key clicks and touch vibration are not the app's; they follow
+the phone's settings, as in every other app.
+
+## Storage
+
+**Storage**, on the first settings page, shows how much room the app takes:
+
+- **Recordings** — the bird recordings, including copies made for playback and
+  sharing and any older recordings nothing in the app can play any more, with
+  how many there are and how many of them were marked to keep.
+- **Collection** — every species, day, star and badge, plus the automatic
+  backups. Usually a few megabytes; shown so you can see how small it is next
+  to the audio.
+
+**Delete recordings** frees that space. The collection, the stars and the
+journal stay — the journal only stops offering to play the recordings. Recordings
+marked to keep in the journal stay too, unless you tick the box in the
+confirmation that deletes them as well. It does not run while the app is
+listening; stop listening first.
+
+Recordings are also cleaned up automatically once a species has many of them,
+starting with the oldest and weakest — see the journal's keep switch for the
+recordings you want to hold on to.
+
 ## Backup
 
 Smartfinch has no account and uploads nothing, so the collection lives only on
