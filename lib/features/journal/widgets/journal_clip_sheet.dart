@@ -143,18 +143,7 @@ class _JournalClipSheetState extends ConsumerState<JournalClipSheet> {
               ? await AudioDecoder.decodeFile(widget.clipPath)
               : await NativeAudioDecoder.decodeFile(widget.clipPath);
 
-      // Off the UI thread: a clip is short, but the FFT is still a few
-      // hundred milliseconds on a slow phone and this sheet animates in.
-      final rendered = await Isolate.run(
-        () => renderSpectrogram(
-          decoded,
-          targetSampleRate: AppConstants.sampleRate,
-          fftSize: 1024,
-          hop: 256,
-          maxDisplayBins: 256,
-          colorMapName: colorMap,
-        ),
-      );
+      final rendered = await _renderOffThread(decoded, colorMap);
       if (rendered == null) {
         if (mounted) setState(() => _drawing = false);
         return;
@@ -178,6 +167,29 @@ class _JournalClipSheetState extends ConsumerState<JournalClipSheet> {
       if (mounted) setState(() => _drawing = false);
     }
   }
+
+  /// The FFT, off the UI thread: a clip is short, but it is still a few
+  /// hundred milliseconds on a slow phone and this sheet animates in.
+  ///
+  /// ⚠️ Static on purpose. A closure built inside an instance method carries
+  /// that method's whole context to the isolate — including `this` once any
+  /// other closure there touches state, as `setState` does. `this` holds the
+  /// [AudioPlayer], which cannot cross an isolate boundary, so the send failed
+  /// on every clip and the sheet fell back to its "no picture" icon. Here the
+  /// closure can only reach the samples and a string.
+  static Future<SpectrogramPixels?> _renderOffThread(
+    DecodedAudio decoded,
+    String colorMap,
+  ) => Isolate.run(
+    () => renderSpectrogram(
+      decoded,
+      targetSampleRate: AppConstants.sampleRate,
+      fftSize: 1024,
+      hop: 256,
+      maxDisplayBins: 256,
+      colorMapName: colorMap,
+    ),
+  );
 
   static Future<ui.Image> _toImage(SpectrogramPixels rendered) {
     final completer = Completer<ui.Image>();

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Recordings in the journal show their spectrogram again. The picture was computed in the background, but the hand-over to the background task failed on every clip, so the player only ever showed a placeholder icon. Playback itself was never affected.
 - Birds heard at the start of a session are counted again. The app builds the rarity scale for your area when the session opens, and a detection arriving before it is ready now waits for it. Previously the first birds after an app start were recorded as having no location: no stars, no explanation, and the journal filed them as heard while scoring was off.
 
 ### Added

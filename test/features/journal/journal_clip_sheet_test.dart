@@ -16,15 +16,22 @@
 //   icon would look identical and lose the clip a month later.
 // =============================================================================
 
+import 'dart:io';
+import 'dart:math' as math;
+import 'dart:typed_data';
+
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:smartfinch/core/constants/app_constants.dart';
 import 'package:smartfinch/core/database/app_database.dart';
 import 'package:smartfinch/features/journal/journal_models.dart';
 import 'package:smartfinch/features/journal/widgets/journal_clip_sheet.dart';
+import 'package:smartfinch/features/recording/wav_writer.dart';
 import 'package:smartfinch/features/scoring/scoring_providers.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
@@ -165,5 +172,81 @@ void main() {
 
     expect(find.text('Kept'), findsOneWidget);
     expect(find.byIcon(AppIcons.bookmarkFilled), findsOneWidget);
+  });
+
+  testWidgets('a real recording draws its spectrogram', (tester) async {
+    // The regression: the FFT runs in a background isolate, and the closure
+    // handed to it was built inside the State, so it dragged the State — and
+    // its AudioPlayer — along. That send fails, the failure was caught as "no
+    // picture", and every clip in the journal showed the fallback icon. Every
+    // other test here uses a missing file, which fails before the isolate is
+    // ever reached, so none of them could see it.
+    final dir = Directory.systemTemp.createTempSync('journal_clip');
+    addTearDown(() => dir.deleteSync(recursive: true));
+    final clip = File('${dir.path}/merula.wav')..writeAsBytesSync(
+      WavWriter.toBytesFromPcm16(
+        samples: Int16List.fromList([
+          // Three seconds of a 3 kHz whistle, at the rate clips are saved in.
+          for (var i = 0; i < 3 * AppConstants.sampleRate; i++)
+            (8000 * math.sin(2 * math.pi * 3000 * i / AppConstants.sampleRate))
+                .round(),
+        ]),
+        sampleRate: AppConstants.sampleRate,
+      ),
+    );
+
+    // No audio plugin in a test. Playback is not what is under test, but the
+    // player's own start-up call has to get an answer once real time runs.
+    tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+      const MethodChannel('com.ryanheise.just_audio.methods'),
+      (_) async => <String, dynamic>{},
+    );
+    addTearDown(
+      () => tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+        const MethodChannel('com.ryanheise.just_audio.methods'),
+        null,
+      ),
+    );
+
+    SharedPreferences.setMockInitialValues({});
+    final prefs = await SharedPreferences.getInstance();
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          sharedPreferencesProvider.overrideWithValue(prefs),
+          appDatabaseProvider.overrideWithValue(db),
+        ],
+        child: MaterialApp(
+          locale: const Locale('en'),
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          home: Scaffold(
+            body: JournalClipSheet(
+              detection: JournalDetection(
+                id: 'detection-1',
+                heardAt: DateTime(2026, 5, 4, 7, 12),
+                confidence: 0.87,
+                clipPath: clip.path,
+                isFavourite: false,
+              ),
+              speciesName: 'Blackbird',
+              dayKey: '2026-05-04',
+              clipPath: clip.path,
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Real time, because a real isolate does the work.
+    for (var i = 0; i < 50 && find.byType(RawImage).evaluate().isEmpty; i++) {
+      await tester.runAsync(
+        () => Future<void>.delayed(const Duration(milliseconds: 100)),
+      );
+      await tester.pump();
+    }
+
+    expect(find.byType(RawImage), findsOneWidget);
+    expect(find.byIcon(AppIcons.graphicEq), findsNothing);
   });
 }
