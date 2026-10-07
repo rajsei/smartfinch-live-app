@@ -134,5 +134,20 @@ void main() {
       expect(columns[1].isEmpty, isTrue);
       expect(columns[1].dayKey, isNull);
     });
+
+    test('⚠️ every column takes a day, even one not dated at midnight', () {
+      // What the chart was once handed after the autumn change: "midnight"
+      // as 23:00 the day before. A week then ended exactly on that day, the
+      // next column took nothing, and the loop never finished — the app froze.
+      final days = [
+        DayStars(dayKey: '2025-10-26', date: DateTime(2025, 10, 26), stars: 1),
+        DayStars(dayKey: '2025-10-27', date: DateTime(2025, 10, 26, 23)),
+        DayStars(dayKey: '2025-10-28', date: DateTime(2025, 10, 27, 23)),
+      ];
+
+      final columns = columnsFor(days, ChartRange.year);
+
+      expect(columns.fold<int>(0, (sum, c) => sum + c.spansDays), 3);
+    });
   });
 }

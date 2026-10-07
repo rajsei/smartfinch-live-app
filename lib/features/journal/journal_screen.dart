@@ -25,6 +25,7 @@ import 'package:smartfinch/shared/utils/app_icons.dart';
 import '../../shared/widgets/content_width_constraint.dart';
 import '../../shared/providers/settings_providers.dart';
 import '../explore/explore_providers.dart';
+import '../scoring/scoring_repository.dart';
 import 'journal_day_screen.dart';
 import 'journal_models.dart';
 import 'journal_providers.dart';
@@ -625,14 +626,12 @@ class _JournalMessage extends StatelessWidget {
 /// two a child is actually looking for.
 String formatJournalDate(BuildContext context, DateTime date) {
   final l10n = AppLocalizations.of(context)!;
-  final now = DateTime.now();
-  final today = DateTime(now.year, now.month, now.day);
-  final difference = today.difference(
-    DateTime(date.year, date.month, date.day),
-  );
+  // By the calendar: the day after the spring change, yesterday's midnight is
+  // only 23 hours back and would otherwise read as "today".
+  final daysAgo = calendarDaysBetween(date, DateTime.now());
 
-  if (difference.inDays == 0) return l10n.journalToday;
-  if (difference.inDays == 1) return l10n.journalYesterday;
+  if (daysAgo == 0) return l10n.journalToday;
+  if (daysAgo == 1) return l10n.journalYesterday;
 
   return DateFormat.yMMMMEEEEd(
     Localizations.localeOf(context).toString(),

@@ -231,7 +231,10 @@ class PointsRepository {
     return [
       for (var back = days - 1; back >= 0; back--)
         () {
-          final date = today.subtract(Duration(days: back));
+          // By the calendar, not 24-hour steps: stepped back by hours from a
+          // summer-time today, every winter "midnight" is 23:00 the day before
+          // — one day twice in October, one missing in March (DAT-05).
+          final date = addCalendarDays(today, -back);
           final dayKey = dayKeyFor(date);
           return DayStars(
             dayKey: dayKey,
@@ -531,7 +534,7 @@ int longestStreakIn(Iterable<String> activeDayKeys) {
 
     // Compared as dates rather than as timestamps, so a daylight-saving
     // change inside a streak does not break it.
-    if (today.difference(previous).inDays == 1) {
+    if (calendarDaysBetween(previous, today) == 1) {
       current++;
       if (current > longest) longest = current;
     } else {

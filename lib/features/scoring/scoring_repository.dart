@@ -161,7 +161,7 @@ class ScoringRepository {
     // dayKey is `YYYY-MM-DD`, so lexicographic order is calendar order and a
     // string range is a correct week window.
     final weekStart = dayKeyFor(startOfIsoWeek(now));
-    final weekEnd = dayKeyFor(startOfIsoWeek(now).add(const Duration(days: 6)));
+    final weekEnd = dayKeyFor(addCalendarDays(startOfIsoWeek(now), 6));
 
     final thisWeek =
         await (_db.select(_db.daySpecies)..where(
@@ -224,9 +224,7 @@ class ScoringRepository {
     final today = dayKeyFor(now);
     // 30 days *including* today, so the window a child sees matches the one
     // the label promises.
-    final windowStart = dayKeyFor(
-      DateTime(now.year, now.month, now.day).subtract(const Duration(days: 29)),
-    );
+    final windowStart = dayKeyFor(addCalendarDays(now, -29));
 
     final events =
         await (_db.select(_db.scoreEvents)
@@ -654,7 +652,26 @@ String dayKeyFor(DateTime when) =>
 /// Built by subtracting days from the date rather than from the timestamp, so
 /// a week that contains a daylight-saving change still starts on Monday
 /// morning instead of drifting an hour into Sunday.
-DateTime startOfIsoWeek(DateTime when) {
-  final midnight = DateTime(when.year, when.month, when.day);
-  return midnight.subtract(Duration(days: midnight.weekday - 1));
-}
+DateTime startOfIsoWeek(DateTime when) =>
+    addCalendarDays(when, -(when.weekday - 1));
+
+/// Midnight [days] calendar days after [day]'s date; negative goes back.
+///
+/// ⚠️ Never `add(Duration(days: n))` on a local date. A `Duration` day is
+/// always 24 hours, but across a daylight-saving change midnight is 23 or 25
+/// hours away — so the result lands at 01:00 or at 23:00 the day before, and
+/// every day key read from it from then on is off by one (DAT-05).
+DateTime addCalendarDays(DateTime day, int days) =>
+    DateTime(day.year, day.month, day.day + days);
+
+/// Whole calendar days from [from]'s date to [to]'s, time of day ignored.
+///
+/// Counted on UTC dates, where every day is 24 hours long. Two local
+/// midnights are 23 hours apart across the spring change, and
+/// `Duration.inDays` reads that as zero.
+int calendarDaysBetween(DateTime from, DateTime to) =>
+    DateTime.utc(
+      to.year,
+      to.month,
+      to.day,
+    ).difference(DateTime.utc(from.year, from.month, from.day)).inDays;

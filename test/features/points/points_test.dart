@@ -24,6 +24,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:smartfinch/core/database/app_database.dart';
 import 'package:smartfinch/core/services/grid_cell.dart';
 import 'package:smartfinch/features/inference/geo_abundance.dart';
+import 'package:smartfinch/features/points/chart_range.dart';
 import 'package:smartfinch/features/points/points_models.dart';
 import 'package:smartfinch/features/points/points_providers.dart';
 import 'package:smartfinch/features/points/points_repository.dart';
@@ -96,6 +97,13 @@ void main() {
 
     test('it survives a year boundary', () {
       expect(longestStreakIn(['2025-12-31', '2026-01-01']), 2);
+    });
+
+    test('DAT-05 · it survives both clock changes', () {
+      // 29 March is 23 hours long and 26 October 25. Measured in hours, the
+      // spring one broke the run.
+      expect(longestStreakIn(['2026-03-28', '2026-03-29', '2026-03-30']), 3);
+      expect(longestStreakIn(['2025-10-25', '2025-10-26', '2025-10-27']), 3);
     });
 
     test('unsorted input is handled', () {
@@ -226,6 +234,50 @@ void main() {
           hasLength(365),
         );
       });
+
+      // ⚠️ DAT-05. The next two only bite where the clocks change, so whether
+      // they can fail depends on the time zone the tests run in — on a UTC
+      // runner they pass either way. 7 October is summer time, and a year
+      // back from it crosses the autumn change and the spring one.
+      final october7 = DateTime(2026, 10, 7, 12);
+
+      test('DAT-05 · the year view across both clock changes ends', () async {
+        // This one used to never return: picking "year" in summer time froze
+        // the app, because one column took no day and the next started on the
+        // same one again.
+        final chart =
+            (await points.overview(now: october7, chartDays: 365)).dailyStars;
+
+        final columns = columnsFor(chart, ChartRange.year);
+
+        // Wednesday to Wednesday: a five-day stub, 51 whole weeks, three days.
+        expect(columns, hasLength(53));
+        expect(columns.first.spansDays, 5);
+        expect(columns.last.spansDays, 3);
+        expect(
+          columns.sublist(1, columns.length - 1).map((c) => c.spansDays),
+          everyElement(7),
+          reason: 'the spring week is not eight days long',
+        );
+      });
+
+      test(
+        'DAT-05 · a year across both clock changes has every day once',
+        () async {
+          final chart =
+              (await points.overview(now: october7, chartDays: 365)).dailyStars;
+          final keys = chart.map((d) => d.dayKey).toList();
+
+          expect(
+            keys.toSet(),
+            hasLength(365),
+            reason: 'none twice, none missing',
+          );
+          expect(keys.first, '2025-10-08');
+          expect(keys.last, '2026-10-07');
+          expect(chart.map((d) => d.date.hour), everyElement(0));
+        },
+      );
 
       test('HOME-05 · the sparkline is the same shape, read cheaply', () async {
         // Its own query, so opening the home screen does not derive every

@@ -653,4 +653,42 @@ void main() {
       expect((await allDetections()).single.gridCell, '50.9,13.0');
     });
   });
+
+  // ⚠️ DAT-05. Only meaningful where the clocks change; on a UTC runner these
+  // pass either way. October 2025 to October 2026 holds both changes.
+  group('DAT-05 · the calendar helpers across daylight saving', () {
+    test('every day of the year has its Monday, at midnight', () {
+      for (
+        var day = DateTime(2025, 10, 1);
+        day.isBefore(DateTime(2026, 11));
+        day = addCalendarDays(day, 1)
+      ) {
+        final monday = startOfIsoWeek(day);
+
+        expect(monday.weekday, DateTime.monday, reason: dayKeyFor(day));
+        expect(monday.hour, 0, reason: dayKeyFor(day));
+        expect(calendarDaysBetween(monday, day), day.weekday - 1);
+      }
+    });
+
+    test('a day across a clock change is still one day', () {
+      expect(
+        dayKeyFor(addCalendarDays(DateTime(2026, 3, 29), 1)),
+        '2026-03-30',
+      );
+      expect(
+        dayKeyFor(addCalendarDays(DateTime(2025, 10, 27), -1)),
+        '2025-10-26',
+      );
+      expect(
+        calendarDaysBetween(DateTime(2026, 3, 29), DateTime(2026, 3, 30)),
+        1,
+      );
+      expect(
+        calendarDaysBetween(DateTime(2025, 10, 26, 23), DateTime(2025, 10, 27)),
+        1,
+        reason: 'one hour apart, but a different day',
+      );
+    });
+  });
 }

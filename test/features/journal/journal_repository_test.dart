@@ -484,6 +484,25 @@ void main() {
       );
     });
 
+    test('DAT-05 · a day and a week end at midnight across a clock change', () {
+      // 24-hour steps end the autumn day at 23:00, dropping its last hour,
+      // and the spring week at 01:00 Monday, taking the next week's first.
+      expect(
+        JournalRepository.endOfPeriod(
+          DateTime(2025, 10, 26),
+          JournalPeriod.day,
+        ),
+        DateTime(2025, 10, 27),
+      );
+      expect(
+        JournalRepository.endOfPeriod(
+          DateTime(2026, 3, 23),
+          JournalPeriod.week,
+        ),
+        DateTime(2026, 3, 30),
+      );
+    });
+
     test('February and March stay apart', () async {
       await hear('Turdus merula', at: DateTime(2026, 2, 28, 10));
       await hear('Sitta europaea', at: DateTime(2026, 3, 1, 10));

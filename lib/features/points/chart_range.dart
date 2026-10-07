@@ -92,19 +92,26 @@ List<ChartColumn> columnsFor(List<DayStars> days, ChartRange range) {
     // Aligned to ISO weeks rather than to a rolling seven from today, so the
     // columns line up with the weeks `PKT-05` and the journal already count.
     final start = startOfIsoWeek(days[index].date);
-    final end = start.add(const Duration(days: 7));
+    // Next Monday by the calendar. `start + 7 × 24 h` is an hour off in a week
+    // with a daylight-saving change, and that hour decides which week a
+    // midnight falls into.
+    final end = addCalendarDays(start, 7);
 
     var stars = 0;
     String? firstActive;
     var span = 0;
 
-    while (index < days.length && days[index].date.isBefore(end)) {
+    // ⚠️ Every column takes at least one day, whatever the dates say. A column
+    // that took none would leave `index` where it was, and the outer loop
+    // would add empty columns until the app froze — which is what the year
+    // view once did in summer time, with a day sitting exactly on `end`.
+    do {
       final day = days[index];
       stars += day.stars;
       if (!day.isEmpty) firstActive ??= day.dayKey;
       span++;
       index++;
-    }
+    } while (index < days.length && days[index].date.isBefore(end));
 
     columns.add(
       ChartColumn(

@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- Choosing **Year** for the chart on the Points screen no longer freezes the app. Under summer time the hour the clocks went back in October made the weekly grouping start the same week over and over, until Android reported that the app was not responding. Across the clock changes the chart also counted one October day twice and left out a day in March; every day is now in it once. The same slip broke a longest streak over the March change, let the journal's day and week end an hour early or late on those two days, and labelled yesterday's journal entry "Today" on the day after the spring change.
 - The start screen on Android 12 and newer shows the app's own bird on the launcher icon's background. It still showed BirdNET Live's blue jay on BirdNET's dark blue.
 - On iPhone and iPad the app is called Schlaumeise in German. It said Smartfinch in every language, because the German name never made it into the app.
 - "Include the recordings" on the backup screen starts switched off, as the screen has always said. It was on, so every backup carried all recordings and could grow to hundreds of megabytes. A choice already made is kept.

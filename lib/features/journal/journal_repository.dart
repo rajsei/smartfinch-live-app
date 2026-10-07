@@ -391,7 +391,7 @@ class JournalRepository {
 
   Future<List<Detection>> _detectionsOn(String dayKey) {
     final start = _dateOf(dayKey);
-    final end = start.add(const Duration(days: 1));
+    final end = addCalendarDays(start, 1);
 
     // A range on `detectedAt` rather than a stored day key: the raw table has
     // no dayKey column, deliberately — the day is a property of the scoring
@@ -436,8 +436,10 @@ class JournalRepository {
   /// The first day *after* [start]'s bucket. Exclusive.
   static DateTime endOfPeriod(DateTime start, JournalPeriod period) =>
       switch (period) {
-        JournalPeriod.day => start.add(const Duration(days: 1)),
-        JournalPeriod.week => start.add(const Duration(days: 7)),
+        // Calendar days, not 24-hour ones: the day the clocks change is 23 or
+        // 25 hours long (DAT-05).
+        JournalPeriod.day => addCalendarDays(start, 1),
+        JournalPeriod.week => addCalendarDays(start, 7),
         // Month arithmetic through `DateTime`, not through day counts: months
         // are 28 to 31 days long and February is where a fixed offset breaks.
         JournalPeriod.month => DateTime(start.year, start.month + 1),
