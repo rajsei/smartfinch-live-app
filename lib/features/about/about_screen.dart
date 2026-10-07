@@ -223,6 +223,15 @@ class AboutScreen extends ConsumerWidget {
                     '${AppConstants.docsUrl}${AppConstants.policyDocsLocalePrefix(Localizations.localeOf(context).languageCode)}/acceptable-use/',
                   ),
             ),
+            // The app's own website first: for a family it is the useful one.
+            // The logo follows the language, as the name in the label does —
+            // Schlaumeise in German, Smartfinch everywhere else.
+            ListTile(
+              leading: const AppLogo(size: 24),
+              title: Text(l10n.aboutAppWebsite(l10n.appTitle)),
+              trailing: const Icon(AppIcons.openInNew),
+              onTap: () => openExternalUrl(context, AppConstants.websiteUrl),
+            ),
             ListTile(
               leading: const Icon(AppIcons.code),
               title: Text(l10n.aboutGitHub),

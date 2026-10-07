@@ -1179,7 +1179,7 @@ The switch sits in the General section beside the animation level — both decid
 
 #### `SET-06` — what "delete audio" has to include
 
-`StorageService` (`lib/features/storage/storage_service.dart`) measures and deletes; the section on the plain settings screen shows **Recordings** (size, count, how many kept), **Collection** (database, side files and the `DAT-09` backups) and **Delete recordings**.
+`StorageService` (`lib/features/storage/storage_service.dart`) measures and deletes; the storage section shows **Recordings** (size, count, how many kept), **Collection** (database, side files and the `DAT-09` backups) and **Delete recordings**.
 
 What the deletion covers was the design question, and the answer is *all of the audio*:
 
@@ -1193,6 +1193,14 @@ And what it must not touch: **the collection**, asserted by comparing detections
 Sizes are in powers of 1,000, because that is what Android and iOS show in their own storage screens, and a parent comparing the two should see the same number. Measuring and deleting walk the directories on a background isolate — static helpers again, for the reason the journal spectrogram fix taught the same week.
 
 *Not in it:* `SET-12`'s two thresholds (30 days, 100 per species) are still constants. The specification wants them adjustable; the storage section is where they would go.
+
+### Settings re-sorted: storage and the danger zone behind Advanced
+
+Decided 2026-10-07, right after `SET-06` landed on the plain screen. **Storage** and the **danger zone** (reset the introduction, reset all settings, clear all data) now sit at the end of *Advanced settings*, storage first, the danger zone last. Deleting recordings and wiping the app are things a parent goes looking for, not things a child should scroll past on the first page. **Backup stays on the plain screen**: it is the one data action that has to be easy to find, and the comment that used to justify it by its neighbour, the danger zone, now justifies it on its own.
+
+`SET-01`'s list for the plain screen changed with it (storage out, backup named), the tile that opens Advanced lists storage and resetting in all twelve languages, and a test asserts both sections are on the advanced screen, absent from the plain one, and in that order.
+
+**The rules page went the other way — out of the settings altogether.** *How do I earn stars?* (`SET-11`) opens from the **help screen** now, as a card directly under Live: it is something a child reads, not something they set, and help is where a child who wonders why a bird was worth 300 goes looking. It is a door to `RulesScreen`, not a copy of it — the page takes its numbers from `ScoringRules`, and a second text with the numbers typed in would be the one that goes wrong on the first rebalance. Moving it turned up a latent bug in the help screen: its section headings were a `Row` with an unconstrained `Text`, so a long heading at a large text size ran off the edge. They wrap now.
 
 ### What to watch during the two-week test
 

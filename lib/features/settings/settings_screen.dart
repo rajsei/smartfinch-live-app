@@ -17,7 +17,6 @@ import '../announcements/widgets/announcements_settings_section.dart';
 import '../audio/widgets/audio_source_tile.dart';
 import '../explore/explore_providers.dart';
 import '../explore/explore_tier.dart';
-import '../rules/rules_screen.dart';
 import '../scoring/scoring_blockers.dart';
 import '../scoring/scoring_providers.dart';
 import '../scoring/scoring_rules.dart';
@@ -87,11 +86,11 @@ String _detectedSpeciesSortHelp(AppLocalizations l10n, String sortMode) {
 /// the child who does not.
 enum SettingsView {
   /// What a child or a parent actually touches: appearance, language,
-  /// announcements, location, privacy, storage.
+  /// vibration, announcements, location, privacy, backup.
   plain,
 
   /// Everything else, one tap away — audio, inference, spectrogram, recording,
-  /// playback, the species filter and export.
+  /// playback, the species filter, export, storage and the danger zone.
   advanced,
 }
 
@@ -128,16 +127,20 @@ class SettingsScreen extends ConsumerWidget {
     'announcements': SettingsView.plain,
     'location': SettingsView.plain,
     'privacy': SettingsView.plain,
-    'storage': SettingsView.plain,
     'about': SettingsView.plain,
     'backup': SettingsView.plain,
-    'danger': SettingsView.plain,
     'audio': SettingsView.advanced,
     'inference': SettingsView.advanced,
     'spectrogram': SettingsView.advanced,
     'recording': SettingsView.advanced,
     'speciesFilter': SettingsView.advanced,
     'export': SettingsView.advanced,
+    // Behind Advanced since 2026-10-07: deleting recordings and resetting or
+    // wiping the app are things a parent goes looking for, not things a child
+    // should scroll past on the first page. Backup stays on the plain screen —
+    // the parent who needs it is not going looking for it.
+    'storage': SettingsView.advanced,
+    'danger': SettingsView.advanced,
   };
 
   /// Returns `true` if [section] belongs on the screen being built.
@@ -256,21 +259,9 @@ class SettingsScreen extends ConsumerWidget {
                     (v) => ref.read(hapticsEnabledProvider.notifier).set(v),
               ),
 
-              // The rules, in the child's own language (SET-11). On the plain
-              // screen and near the top, because a child who cannot find out
-              // why a number moved decides the app is arbitrary.
-              ListTile(
-                leading: const Icon(AppIcons.helpOutlineRounded),
-                title: Text(l10n.rulesTitle),
-                trailing: const Icon(AppIcons.chevronRight),
-                onTap:
-                    () => Navigator.of(context).push(
-                      MaterialPageRoute<void>(
-                        builder: (_) => const RulesScreen(),
-                      ),
-                    ),
-              ),
-
+              // No "How do I earn stars?" here any more: the rules page
+              // (SET-11) moved to the help screen on 2026-10-07. It is
+              // something a child reads, not something they set.
               SwitchListTile(
                 title: _TitleWithHelp(
                   title: l10n.settingsDynamicColor,
@@ -810,9 +801,9 @@ class SettingsScreen extends ConsumerWidget {
             //
             // On the plain screen, not behind Advanced: it is the only thing
             // standing between a broken phone and a lost collection, and the
-            // parent who needs it is not going looking for it. It sits beside
-            // the danger zone because those are the two irreversible data
-            // actions, and a parent finds both in one place.
+            // parent who needs it is not going looking for it. The danger zone
+            // it used to sit beside is behind Advanced now; saving a backup is
+            // the one data action that should be easy to find.
             if (_showSection('backup')) ...[
               const Divider(),
               ListTile(
@@ -831,8 +822,10 @@ class SettingsScreen extends ConsumerWidget {
             ],
 
             // --- Danger Zone ---
+            //
+            // Last on the advanced screen. No divider of its own: the storage
+            // section above it already ends with one.
             if (_showSection('danger')) ...[
-              const Divider(),
               _SectionHeader(
                 title: l10n.settingsDangerZone,
                 subtitle: l10n.settingsDangerZoneDescription,

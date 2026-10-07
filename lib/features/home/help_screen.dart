@@ -3,8 +3,18 @@
 // =============================================================================
 //
 // A dedicated help screen accessible from the home screen footer, in the order
-// a child meets things: listening first, then the places the finds end up,
-// then the controls every screen shares, then a few tips.
+// a child meets things: listening first, then how listening earns stars, then
+// the places the finds end up, then the controls every screen shares, then a
+// few tips.
+//
+// ### "How do I earn stars?" lives here
+//
+// The rules page (`SET-11`) used to open from the settings. It moved here on
+// 2026-10-07: it is something a child reads, not something they set, and
+// help is where a child who wonders why a bird was worth 300 goes looking.
+// It is a door to the page rather than a copy of it — the page takes its
+// numbers from `ScoringRules`, and a second text with the numbers in it would
+// be the one that goes wrong on the first rebalance.
 //
 // ### What is not here any more
 //
@@ -24,6 +34,7 @@ import '../../core/theme/app_theme.dart';
 import '../../shared/utils/session_type_visuals.dart';
 import '../../shared/widgets/content_width_constraint.dart';
 import '../live/live_session.dart';
+import '../rules/rules_screen.dart';
 
 /// What each part of the app is for.
 class HelpScreen extends StatelessWidget {
@@ -79,6 +90,19 @@ class HelpScreen extends StatelessWidget {
                       : sessionTypeContainerColor(theme, SessionType.live),
               title: l10n.helpLiveTitle,
               body: l10n.helpLiveBody,
+            ),
+            // The question listening raises first. Straight after Live, so it
+            // is on screen without scrolling.
+            _ControlCard(
+              icon: AppIcons.starRounded,
+              title: l10n.rulesTitle,
+              body: l10n.helpRulesBody,
+              onTap:
+                  () => Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      builder: (_) => const RulesScreen(),
+                    ),
+                  ),
             ),
             const SizedBox(height: 20),
 
@@ -176,10 +200,14 @@ class _SectionHeader extends StatelessWidget {
       children: [
         Icon(icon, size: 22, color: theme.colorScheme.primary),
         const SizedBox(width: 8),
-        Text(
-          title,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w600,
+        // Expanded, so a long title wraps instead of running off the edge —
+        // German at a large text size does not fit on one line (NFA-10).
+        Expanded(
+          child: Text(
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w600,
+            ),
           ),
         ),
       ],
@@ -269,11 +297,15 @@ class _ControlCard extends StatelessWidget {
     required this.icon,
     required this.title,
     required this.body,
+    this.onTap,
   });
 
   final IconData icon;
   final String title;
   final String body;
+
+  /// Makes the card a door to another page, with a chevron saying so.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -293,53 +325,67 @@ class _ControlCard extends StatelessWidget {
                 ? BorderSide(color: theme.colorScheme.outline)
                 : BorderSide.none,
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: 36,
-              height: 36,
-              decoration: BoxDecoration(
-                color:
-                    highContrast
-                        ? theme.colorScheme.surface
-                        : theme.colorScheme.primary.withAlpha(24),
-                borderRadius: BorderRadius.circular(10),
-                border:
-                    highContrast
-                        ? Border.all(color: theme.colorScheme.outline)
-                        : null,
+      clipBehavior: Clip.antiAlias,
+      child: InkWell(
+        onTap: onTap,
+        child: Padding(
+          padding: const EdgeInsets.all(14),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Container(
+                width: 36,
+                height: 36,
+                decoration: BoxDecoration(
+                  color:
+                      highContrast
+                          ? theme.colorScheme.surface
+                          : theme.colorScheme.primary.withAlpha(24),
+                  borderRadius: BorderRadius.circular(10),
+                  border:
+                      highContrast
+                          ? Border.all(color: theme.colorScheme.outline)
+                          : null,
+                ),
+                child: Icon(icon, color: theme.colorScheme.primary, size: 20),
               ),
-              child: Icon(icon, color: theme.colorScheme.primary, size: 20),
-            ),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    title,
-                    style: theme.textTheme.titleSmall?.copyWith(
-                      fontWeight: FontWeight.w600,
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: theme.textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: 4),
-                  Text(
-                    body,
-                    style: theme.textTheme.bodyMedium?.copyWith(
-                      color:
-                          highContrast
-                              ? theme.colorScheme.onSurface
-                              : theme.colorScheme.onSurface.withAlpha(180),
-                      height: 1.4,
+                    const SizedBox(height: 4),
+                    Text(
+                      body,
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color:
+                            highContrast
+                                ? theme.colorScheme.onSurface
+                                : theme.colorScheme.onSurface.withAlpha(180),
+                        height: 1.4,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+              if (onTap != null) ...[
+                const SizedBox(width: 8),
+                Padding(
+                  padding: const EdgeInsets.only(top: 6),
+                  child: Icon(
+                    AppIcons.chevronRight,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
+              ],
+            ],
+          ),
         ),
       ),
     );

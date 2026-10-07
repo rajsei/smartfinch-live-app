@@ -12,9 +12,13 @@ abstract final class AppConstants {
   /// prefixes and other places where a stable ASCII token is wanted.
   static const String appName = 'Smartfinch';
 
-  /// GitHub repository URL.
+  /// This app's source code — the Smartfinch repository, not the BirdNET Live
+  /// one it is forked from (D2).
   static const String githubUrl =
-      'https://github.com/birdnet-team/birdnet-live-app';
+      'https://github.com/rajsei/smartfinch-live-app';
+
+  /// The app's own website.
+  static const String websiteUrl = 'https://schlaumeise.org';
 
   /// Mobile application package identifier.
   static const String packageName = 'de.tu_chemnitz.mi.kahst.birdnet_live';

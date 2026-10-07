@@ -5,10 +5,12 @@ The app has one Settings screen, split in two: a plain first page, and **Advance
 ## How Settings Are Split
 
 Settings come in two screens. The first one carries what a child or a parent
-actually touches — appearance and language, announcements, location, privacy,
-backup and the danger zone. Everything else lives one tap further on, behind
+actually touches — appearance and language, vibration, announcements,
+location, privacy and backup. Everything else lives one tap further on, behind
 **Advanced settings**: audio, detection, spectrogram, recordings, the species
-filter and export. Nothing is hidden; it is only out of the way.
+filter, export, storage and the danger zone. Nothing is hidden; it is only out
+of the way — and deleting recordings or resetting the app are things you go
+looking for, not things a child should scroll past on the first page.
 
 ## When there are no stars
 
@@ -46,7 +48,7 @@ the phone's settings, as in every other app.
 
 ## Storage
 
-**Storage**, on the first settings page, shows how much room the app takes:
+**Storage**, in **Advanced settings**, shows how much room the app takes:
 
 - **Recordings** — the bird recordings, including copies made for playback and
   sharing and any older recordings nothing in the app can play any more, with
@@ -443,6 +445,8 @@ When on, every saved session captures a one-shot snapshot of local conditions (t
 The **About** row opens the in-app About screen.
 
 ## Danger Zone
+
+The last section of **Advanced settings**.
 
 ### Reset Onboarding
 

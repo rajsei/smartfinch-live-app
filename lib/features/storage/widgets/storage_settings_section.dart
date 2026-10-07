@@ -2,9 +2,11 @@
 // StorageSettingsSection — Settings → Storage (SET-06)
 // =============================================================================
 //
-// Three rows and one action, on the plain settings screen (`SET-01` lists
-// storage there): what the recordings take, what the collection takes, and
-// "Delete recordings".
+// Three rows and one action, behind Advanced settings: what the recordings
+// take, what the collection takes, and "Delete recordings". It started on the
+// plain screen, where `SET-01` listed storage, and moved on 2026-10-07 with
+// the danger zone — deleting is something a parent goes looking for, not
+// something a child should scroll past on the first page.
 //
 // The collection row is there to be compared, not acted on. Next to a hundred
 // megabytes of audio, two megabytes of species and stars is the reassurance a
@@ -26,7 +28,7 @@ import '../../journal/journal_providers.dart';
 import '../storage_providers.dart';
 import '../storage_service.dart';
 
-/// The storage section of the plain settings screen (`SET-06`).
+/// The storage section of the advanced settings screen (`SET-06`).
 class StorageSettingsSection extends ConsumerStatefulWidget {
   const StorageSettingsSection({super.key, required this.sectionHeader});
 

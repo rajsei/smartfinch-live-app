@@ -313,6 +313,15 @@
   "@aboutWebsite": {
     "description": "BirdNET website link label"
   },
+  "aboutAppWebsite": "{app} website",
+  "@aboutAppWebsite": {
+    "description": "Link label in About for the app's own website (schlaumeise.org). app is l10n.appTitle — Schlaumeise in German, Smartfinch elsewhere",
+    "placeholders": {
+      "app": {
+        "type": "String"
+      }
+    }
+  },
   "aboutGitHub": "This app on GitHub",
   "@aboutGitHub": {
     "description": "GitHub link label"
@@ -985,6 +994,10 @@
   "helpLiveBody": "In Live mode, the app listens through the microphone. At the top you see the spectrogram – a picture of sound: high notes at the top, low notes at the bottom. Below it are the birds the app recognizes, and they earn you stars. With the big button you start, pause and stop.",
   "@helpLiveBody": {
     "description": "Help body text for Live mode"
+  },
+  "helpRulesBody": "What earns stars, and why the same bird is sometimes worth more and sometimes less.",
+  "@helpRulesBody": {
+    "description": "SET-11: one line under \"How do I earn stars?\" on the help screen, which opens the rules page"
   },
   "helpExploreTitle": "Explore",
   "@helpExploreTitle": {
@@ -1764,9 +1777,9 @@
   "@settingsAdvanced": {
     "description": "Title of the advanced settings screen and of the tile that opens it"
   },
-  "settingsAdvancedDescription": "Audio, detection, spectrogram (the picture of sound), recordings and backup",
+  "settingsAdvancedDescription": "Audio, detection, spectrogram (the picture of sound), recordings, storage and resetting the app",
   "@settingsAdvancedDescription": {
-    "description": "Subtitle of the tile that opens advanced settings"
+    "description": "Subtitle of the tile that opens advanced settings: what is behind it, including storage (SET-06) and the danger zone"
   },
   "settingsAdvancedNotice": "Some settings here change what counts as a detection. Where that stops the stars, it says so before anything changes.",
   "@settingsAdvancedNotice": {
@@ -2274,7 +2287,7 @@
   },
   "settingsStorage": "Storage",
   "@settingsStorage": {
-    "description": "SET-06: heading of the storage section on the plain settings screen"
+    "description": "SET-06: heading of the storage section in advanced settings"
   },
   "settingsStorageDescription": "How much room Smartfinch takes up on this device.",
   "@settingsStorageDescription": {

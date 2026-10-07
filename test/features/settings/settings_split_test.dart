@@ -100,19 +100,58 @@ void main() {
       await pumpSettings(tester);
 
       // SET-01's list: appearance and language, sounds and haptics,
-      // location, privacy, storage.
+      // location, privacy — and backup, which a parent must not have to go
+      // looking for.
       for (final section in [
         'General',
         'Announcements',
         'Location',
         'Privacy',
-        'Storage',
-        'Danger Zone',
       ]) {
         expect(find.text(section), findsOneWidget, reason: section);
       }
+      expect(find.text('Backup'), findsOneWidget);
 
       expect(find.text('Advanced settings'), findsOneWidget);
+    });
+
+    testWidgets('storage and the danger zone are behind Advanced', (
+      tester,
+    ) async {
+      // Moved on 2026-10-07: deleting recordings and resetting or wiping the
+      // app are things a parent goes looking for, not things a child should
+      // scroll past on the first page.
+      await pumpSettings(tester);
+      expect(find.text('Storage'), findsNothing);
+      expect(find.text('Danger Zone'), findsNothing);
+      expect(find.text('Clear All Data'), findsNothing);
+
+      await pumpSettings(tester, view: SettingsView.advanced);
+      expect(find.text('Storage'), findsOneWidget);
+      expect(find.text('Danger Zone'), findsOneWidget);
+    });
+
+    testWidgets('the danger zone comes last', (tester) async {
+      await pumpSettings(tester, view: SettingsView.advanced);
+
+      final storage = tester.getRect(find.text('Storage')).top;
+      final danger = tester.getRect(find.text('Danger Zone')).top;
+      final filter = tester.getRect(find.text('Species filter').first).top;
+
+      expect(storage, greaterThan(filter));
+      expect(danger, greaterThan(storage));
+    });
+
+    testWidgets('the rules are in the help now, not in the settings', (
+      tester,
+    ) async {
+      // SET-11 moved to the help screen on 2026-10-07: something a child
+      // reads, not something they set. See help_screen_test.dart.
+      await pumpSettings(tester);
+      expect(find.text('How do I earn stars?'), findsNothing);
+
+      await pumpSettings(tester, view: SettingsView.advanced);
+      expect(find.text('How do I earn stars?'), findsNothing);
     });
 
     testWidgets('the plain screen does not carry the detection controls', (
@@ -139,8 +178,8 @@ void main() {
       // must not be here is the tile that opens it again, identified by the
       // subtitle only the tile carries.
       const tileSubtitle =
-          'Audio, detection, spectrogram (the picture of sound), recordings '
-          'and backup';
+          'Audio, detection, spectrogram (the picture of sound), recordings, '
+          'storage and resetting the app';
       expect(find.text(tileSubtitle), findsNothing);
     });
 
@@ -153,8 +192,8 @@ void main() {
 
       expect(
         find.text(
-          'Audio, detection, spectrogram (the picture of sound), recordings '
-          'and backup',
+          'Audio, detection, spectrogram (the picture of sound), recordings, '
+          'storage and resetting the app',
         ),
         findsOneWidget,
       );
@@ -242,7 +281,7 @@ void main() {
     testWidgets('shows the recordings, the collection and the way to delete', (
       tester,
     ) async {
-      await pumpSettings(tester);
+      await pumpSettings(tester, view: SettingsView.advanced);
 
       expect(find.text('Recordings'), findsOneWidget);
       expect(find.text('Collection'), findsOneWidget);
