@@ -697,7 +697,7 @@ The phase-3 list in this document was built from the requirements the transition
 | | |
 |---|---|
 | ~~`HOME-05`~~ | ~~A 7-day sparkline in the star header~~ — **done**, see below |
-| ~~`HOME-06`~~ | ~~A "Still possible today" card naming 1–2 open daily badges~~ — **done**, see below |
+| ~~`HOME-06`~~ | ~~A "Still possible today" card naming 1–2 open daily badges~~ — **done**, and **removed again** on 2026-10-07, see below |
 | ~~`STAT-03`~~ | ~~Tapping a bar in the chart jumps to that day in the journal~~ — **done**, see below |
 | ~~`STAT-04`~~ | ~~A 7 / 30 / 365 range switch on the chart~~ — **done**, see below |
 | `SAM-04b` | Per-species silhouettes for undetected cells, replacing the shared placeholder |
@@ -890,7 +890,11 @@ Its own provider (`homeSparklineProvider`, over a new `PointsRepository.dailySta
 
 It is drawn in the header's own two colours — the surface for what counts, a wash of the ink for what does not — which is the pairing the level bar underneath it already uses, so the two read as one block rather than as two charts. **It disappears with the figures when scoring is off** (`LIVE-18`): seven bars of stars is a point count like any other.
 
+**The last bar says *Today* (2026-10-07).** Labelled only "7 days", the bars read as a calendar week as easily as the seven days up to now. The word under the right end — `homeFigureToday`, the same word as the figure above it, so one day is not called two things — settles which way they run and where they stop. It is centred under the last bar while it fits that column and flush with the chart's right end when it does not (*Aujourd'hui* is wider than a bar on a phone). The alternative, fading the older days out, was turned down: a bar that pales with age reads as stars wearing off, and nothing earned ever does (principle 1). The label costs the header 18 pixels, so the phone budget in `_PortraitHomeLayout.headerHeight` went from 223 to 241; the short-phone layout, which does not draw the sparkline, is unchanged.
+
 #### `HOME-06` — what is still possible today
+
+> **Removed on 2026-10-07.** The card, `still_possible.dart`, `stillPossibleProvider`, their tests and the `homeStillPossibleTitle` string in all twelve languages are gone. Nothing sits above the Live tile any more except an open sticker pick on a short phone (`AVA-07`, `StickerPickCard`, which no longer takes a fallback); the button that starts listening is the first thing in the panel. Which daily badges are still open stays visible in the Points area. The section below is left as written, as the record of what was built and why.
 
 The specification calls this *the single best lever for daily return — without a push notification*, and the second half is the design. Nothing goes looking for a child; the card is what they find when they open the app anyway, and it answers one question: is there anything left worth going outside for?
 

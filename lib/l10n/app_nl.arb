@@ -697,7 +697,6 @@
   "pointsChartTitle": "Sterren per dag",
   "pointsChartTapHint": "Tik op een balk om die dag te openen.",
   "pointsChartBarA11y": "{date}: {stars} sterren",
-  "homeStillPossibleTitle": "Vandaag nog mogelijk",
   "homeSparklineA11y": "Sterren van de afgelopen {days} dagen",
   "helpCollectionTitle": "Verzameling, dagboek en punten",
   "helpCollectionBody": "In je verzameling staat elke soort die je al hebt gehoord. Het dagboek bewaart elke dag dat je hebt geluisterd, met je opnames om terug te luisteren. Bij Punten zie je je sterren, je badges en je niveau.",

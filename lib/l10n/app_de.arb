@@ -697,7 +697,6 @@
   "pointsChartTitle": "Sterne pro Tag",
   "pointsChartTapHint": "Tippe auf einen Balken, um den Tag zu öffnen.",
   "pointsChartBarA11y": "{date}: {stars} Sterne",
-  "homeStillPossibleTitle": "Heute noch möglich",
   "homeSparklineA11y": "Sterne der letzten {days} Tage",
   "helpCollectionTitle": "Sammlung, Tagebuch & Punkte",
   "helpCollectionBody": "In der Sammlung findest du jede Art, die du schon gehört hast. Im Tagebuch steht jeder Tag, an dem du gelauscht hast – mit deinen Aufnahmen zum Nachhören. Unter Punkte siehst du deine Sterne, deine Abzeichen und dein Level.",

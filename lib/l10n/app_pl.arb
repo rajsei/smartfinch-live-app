@@ -697,7 +697,6 @@
   "pointsChartTitle": "Gwiazdki dziennie",
   "pointsChartTapHint": "Dotknij słupka, aby otworzyć ten dzień.",
   "pointsChartBarA11y": "{date}: {stars} gwiazdek",
-  "homeStillPossibleTitle": "Dziś jeszcze możliwe",
   "homeSparklineA11y": "Gwiazdki z ostatnich {days} dni",
   "helpCollectionTitle": "Kolekcja, dziennik i punkty",
   "helpCollectionBody": "W kolekcji jest każdy gatunek, który już udało ci się usłyszeć. Dziennik przechowuje każdy dzień słuchania razem z nagraniami do odsłuchania. W Punktach widzisz swoje gwiazdki, odznaki i poziom.",

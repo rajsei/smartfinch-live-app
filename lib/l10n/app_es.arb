@@ -697,7 +697,6 @@
   "pointsChartTitle": "Estrellas por día",
   "pointsChartTapHint": "Toca una barra para abrir ese día.",
   "pointsChartBarA11y": "{date}: {stars} estrellas",
-  "homeStillPossibleTitle": "Todavía posible hoy",
   "homeSparklineA11y": "Estrellas de los últimos {days} días",
   "helpCollectionTitle": "Colección, diario y puntos",
   "helpCollectionBody": "En tu colección está cada especie que ya has oído. El diario guarda cada día que saliste a escuchar, con tus grabaciones para volver a oírlas. En Puntos ves tus estrellas, tus insignias y tu nivel.",

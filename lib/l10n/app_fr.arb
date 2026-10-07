@@ -697,7 +697,6 @@
   "pointsChartTitle": "Étoiles par jour",
   "pointsChartTapHint": "Touche une barre pour ouvrir ce jour.",
   "pointsChartBarA11y": "{date} : {stars} étoiles",
-  "homeStillPossibleTitle": "Encore possible aujourd’hui",
   "homeSparklineA11y": "Étoiles des {days} derniers jours",
   "helpCollectionTitle": "Collection, journal et points",
   "helpCollectionBody": "Dans ta collection, tu trouves chaque espèce que tu as déjà entendue. Le journal garde chaque journée où tu as écouté, avec tes enregistrements à réécouter. Dans Points, tu vois tes étoiles, tes badges et ton niveau.",

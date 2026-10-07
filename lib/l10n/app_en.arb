@@ -3006,7 +3006,7 @@
   },
   "homeFigureToday": "Today",
   "@homeFigureToday": {
-    "description": "HOME-02: label under today's figure"
+    "description": "HOME-02: label under today's figure; also under the last bar of the home sparkline (HOME-05), so the bars read as the days up to today"
   },
   "levelShort": "Level {number}",
   "@levelShort": {
@@ -3073,10 +3073,6 @@
         "type": "int"
       }
     }
-  },
-  "homeStillPossibleTitle": "Still possible today",
-  "@homeStillPossibleTitle": {
-    "description": "HOME-06: heading of the card naming the badges still open today"
   },
   "homeSparklineA11y": "Stars over the last {days} days",
   "@homeSparklineA11y": {

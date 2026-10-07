@@ -30,7 +30,6 @@ import 'package:smartfinch/features/home/widgets/home_tiles.dart';
 import 'package:smartfinch/features/journal/journal_screen.dart';
 import 'package:smartfinch/features/points/points_screen.dart';
 import 'package:smartfinch/features/home/widgets/star_header.dart';
-import 'package:smartfinch/features/home/widgets/still_possible_card.dart';
 import 'package:smartfinch/features/points/points_models.dart';
 import 'package:smartfinch/features/points/points_providers.dart';
 import 'package:smartfinch/features/live/widgets/day_summary_bar.dart';
@@ -63,10 +62,6 @@ void main() {
     Widget child, {
     StarTotals? totals,
     bool scoringPaused = false,
-    // HOME-06's suggestion is derived from the whole badge catalogue, which
-    // would mean a database for every header test. Two open badges is the
-    // ordinary case; a test that cares about the empty one passes it.
-    List<BadgeDefinition> stillPossible = const [kEveningListener, kTenInOneGo],
     List<DayStars>? sparkline,
   }) async {
     SharedPreferences.setMockInitialValues({
@@ -82,7 +77,6 @@ void main() {
       ProviderScope(
         overrides: [
           sharedPreferencesProvider.overrideWithValue(prefs),
-          stillPossibleProvider.overrideWith((ref) async => stillPossible),
           homeSparklineProvider.overrideWith(
             (ref) async => sparkline ?? _sevenDays,
           ),
@@ -358,7 +352,9 @@ void main() {
 
       expect(find.text('Total'), findsOneWidget);
       expect(find.text('30 days'), findsOneWidget);
-      expect(find.text('Today'), findsOneWidget);
+      // Twice: under today's figure, and under the sparkline's last bar,
+      // which is the same day (HOME-05).
+      expect(find.text('Today'), findsNWidgets(2));
       expect(find.text('4,200'), findsOneWidget);
     });
 
@@ -544,7 +540,8 @@ void main() {
       expect(find.byType(HomeHeader), findsOneWidget);
       expect(find.text('Total'), findsOneWidget);
       expect(find.text('30 days'), findsOneWidget);
-      expect(find.text('Today'), findsOneWidget);
+      // The figure, and the label under the sparkline's last bar (HOME-05).
+      expect(find.text('Today'), findsNWidgets(2));
       expect(find.text('345,657'), findsOneWidget);
     });
 
@@ -654,9 +651,9 @@ void main() {
 
       final panelTop = tester.getRect(find.byType(HomeHeader)).bottom;
       final tiles = tester.getRect(find.byType(HomeTiles));
-      // From the top of the *buttons*, not of `HomeTiles`: HOME-06's
-      // suggestion sits inside the same widget, above the Live tile, and it is
-      // content rather than slack.
+      // From the top of the *buttons*, not of `HomeTiles`: an open sticker
+      // pick (`AVA-07`) sits inside the same widget, above the Live tile, and
+      // it is content rather than slack.
       final buttons = tester.getRect(
         find
             .ancestor(of: find.text('Live'), matching: find.byType(Material))
@@ -762,13 +759,13 @@ void main() {
   });
 
   // ===========================================================================
-  // The two additions of 2.9 — HOME-05 and HOME-06
+  // HOME-05 — the seven-day sparkline
   // ===========================================================================
   //
-  // Both live on a screen with no spare height, so each is asserted twice:
-  // once for being there, and once for giving way when the screen is too short
-  // to carry it. `KID-04` is why — a destination pushed below the fold is not
-  // one tap away, and neither of these is worth a tile.
+  // It lives on a screen with no spare height, so it is asserted twice: once
+  // for being there, and once for giving way when the screen is too short to
+  // carry it. `KID-04` is why — a destination pushed below the fold is not one
+  // tap away, and seven bars are not worth a tile.
   // ===========================================================================
   group('HOME-05 · the seven-day sparkline', () {
     testWidgets('is in the header, with the days it covers named', (
@@ -778,6 +775,29 @@ void main() {
       await tester.pump();
 
       expect(find.text('7 days'), findsOneWidget);
+    });
+
+    testWidgets('the last bar is today, and says so', (tester) async {
+      // "7 days" alone read as a calendar week as easily as the seven days up
+      // to now. One word under the right end settles which.
+      await pump(tester, const HomeHeader());
+      await tester.pump();
+
+      final bars = find.byWidgetPredicate(
+        (widget) => widget.runtimeType.toString() == '_SparkBar',
+      );
+      expect(bars, findsNWidgets(7));
+      final lastBar = tester.getRect(bars.last);
+
+      // Two "Today"s: the figure, and the label. The label is the lower one.
+      final labels = find.text('Today');
+      expect(labels, findsNWidgets(2));
+      final label = [
+        for (var i = 0; i < 2; i++) tester.getRect(labels.at(i)),
+      ].reduce((a, b) => a.top > b.top ? a : b);
+
+      expect(label.top, greaterThanOrEqualTo(lastBar.bottom));
+      expect(label.center.dx, closeTo(lastBar.center.dx, 1));
     });
 
     testWidgets('goes when the numbers go (LIVE-18)', (tester) async {
@@ -797,45 +817,6 @@ void main() {
       expect(find.text('7 days'), findsNothing);
       // The level line, which is what the room was kept for, stays.
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
-    });
-  });
-
-  group('HOME-06 · what is still possible today', () {
-    testWidgets('names the open badges above the Live tile', (tester) async {
-      await pump(tester, const HomeTiles());
-      await tester.pump();
-
-      expect(find.text('Still possible today'), findsOneWidget);
-
-      final card = tester.getRect(find.byType(StillPossibleCard));
-      final live = tester.getRect(find.text('Live'));
-      expect(card.bottom, lessThan(live.top));
-    });
-
-    testWidgets('a short screen gets one suggestion instead of two', (
-      tester,
-    ) async {
-      await pump(tester, const HomeTiles(dense: true));
-      await tester.pump();
-      final dense = tester.getRect(find.byType(StillPossibleCard)).height;
-
-      await pump(tester, const HomeTiles());
-      await tester.pump();
-      final full = tester.getRect(find.byType(StillPossibleCard)).height;
-
-      expect(dense, lessThan(full));
-    });
-
-    testWidgets('is absent, not empty, when there is nothing to suggest', (
-      tester,
-    ) async {
-      // An encouraging placeholder would make it furniture, and furniture is
-      // not read.
-      await pump(tester, const HomeTiles(), stillPossible: const []);
-      await tester.pump();
-
-      expect(find.text('Still possible today'), findsNothing);
-      expect(tester.getRect(find.byType(StillPossibleCard)).height, 0);
     });
   });
 }

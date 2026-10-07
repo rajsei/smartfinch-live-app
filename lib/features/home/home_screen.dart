@@ -225,12 +225,18 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   /// now, on purpose: it is the one block on this screen a child must always
   /// see in full. Recalibrate this number (against `HomeHeader`'s own layout,
   /// not against a guess) if its content ever changes shape again.
+  ///
+  /// Last measured with the "Today" label under the sparkline (`HOME-05`),
+  /// which added 18: a phone header's content is 237, a tablet's 300. The
+  /// phone keeps the 4 it had to spare, and needs them — the album button
+  /// below is 44 by [StickerAlbumButton.heightFor] but 48 on screen, padded
+  /// to Material's tap target.
   static double headerHeight({
     required bool isTablet,
     bool dense = false,
     bool withAlbumButton = true,
   }) =>
-      (isTablet ? 323 : (dense ? 184 : 223)) +
+      (isTablet ? 323 : (dense ? 184 : 241)) +
       (withAlbumButton
           ? stickerButtonGap(large: isTablet) +
               StickerAlbumButton.heightFor(large: isTablet)
@@ -258,10 +264,10 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   /// Below this the screen cannot carry everything at full size.
   ///
   /// The header and the panel are both sized from the same fixed budget, so on
-  /// a short phone the two additions of 2.9 — the sparkline and the suggestion
-  /// above the Live tile — come straight out of the room the destinations need.
-  /// `KID-04` wins that argument: below this height both make themselves
-  /// smaller rather than pushing a tile below the fold.
+  /// a short phone the sparkline comes straight out of the room the
+  /// destinations need. `KID-04` wins that argument: below this height the
+  /// sparkline is not drawn and the tiles tighten, rather than a tile being
+  /// pushed below the fold.
   static const double denseBelow = 720;
 
   @override
@@ -764,9 +770,9 @@ class _TilePanelLandscape extends StatelessWidget {
                 padding: EdgeInsets.symmetric(vertical: isTablet ? 20 : 14),
                 child: Column(
                   children: [
-                    // Sideways the scarce dimension is height, so the
-                    // suggestion above the tiles takes its short form on a
-                    // phone and its full one on a tablet.
+                    // Sideways the scarce dimension is height, so the tiles
+                    // take their tighter form on a phone and their full one
+                    // on a tablet.
                     HomeTiles(
                       isTablet: isTablet,
                       compact: true,

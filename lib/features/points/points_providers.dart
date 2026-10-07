@@ -6,9 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 
 import '../scoring/scoring_providers.dart';
-import '../scoring/scoring_repository.dart';
 import 'chart_range.dart';
-import 'still_possible.dart';
 import 'points_models.dart';
 import 'points_repository.dart';
 
@@ -50,21 +48,4 @@ final homeSparklineProvider = FutureProvider<List<DayStars>>((ref) async {
   return ref
       .watch(pointsRepositoryProvider)
       .dailyStars(now: DateTime.now(), days: 7);
-});
-
-/// The one or two things still worth going outside for (`HOME-06`).
-///
-/// Derived from the same badge list the Points area shows, so the home screen
-/// cannot suggest something the catalogue already ticks off.
-final stillPossibleProvider = FutureProvider<List<BadgeDefinition>>((
-  ref,
-) async {
-  final overview = await ref.watch(pointsOverviewProvider.future);
-  final now = DateTime.now();
-
-  return stillPossibleToday(
-    todayKey: dayKeyFor(now),
-    lastEarnedOn: (key) => overview.badgeFor(key)?.lastEarnedOn,
-    hour: now.hour,
-  );
 });

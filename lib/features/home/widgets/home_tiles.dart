@@ -33,7 +33,6 @@ import '../../live/live_screen.dart';
 import '../../points/points_screen.dart';
 import '../../settings/settings_screen.dart';
 import '../../stickers/widgets/sticker_pick_card.dart';
-import 'still_possible_card.dart';
 
 /// One secondary destination.
 class _HomeTile {
@@ -98,17 +97,16 @@ class HomeTiles extends ConsumerWidget {
 
   final bool isTablet;
 
-  /// While a sticker pick is open, "Pick a sticker" takes the suggestion slot
-  /// above the Live tile (`AVA-07`) — for a screen whose album button is
-  /// behind the panel.
+  /// While a sticker pick is open, "Pick a sticker" shows above the Live tile
+  /// (`AVA-07`) — for a screen whose album button is behind the panel.
   final bool stickerCard;
 
   /// Landscape: shorter primary tile, tiles in one row.
   final bool compact;
 
-  /// A screen with no height to spare, which the suggestion above the tiles
-  /// answers by making itself shorter rather than by pushing a destination
-  /// below the fold (`KID-04`).
+  /// A screen with no height to spare, which the tiles answer by making
+  /// themselves shorter rather than by pushing a destination below the fold
+  /// (`KID-04`).
   final bool dense;
 
   @override
@@ -123,13 +121,12 @@ class HomeTiles extends ConsumerWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            // HOME-06 sits here rather than in the header, because the thing
-            // it suggests is done by the button directly underneath it. It
-            // takes no room on a day with nothing left to suggest — the gap
-            // below it belongs to the card, so an absent card leaves none.
-            stickerCard
-                ? StickerPickCard(fallback: StillPossibleCard(dense: dense))
-                : StillPossibleCard(dense: dense),
+            // An open sticker pick on a phone whose album button is behind
+            // the panel (`AVA-07`). It takes no room while nothing is open —
+            // the gap below it belongs to the card, so an absent card leaves
+            // none. Nothing else sits above the Live tile: the button that
+            // starts listening is the first thing in the panel.
+            if (stickerCard) const StickerPickCard(),
             _LiveTile(
               isTablet: isTablet,
               compact: compact,

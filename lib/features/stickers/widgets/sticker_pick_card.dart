@@ -5,14 +5,8 @@
 // On a phone too short for the album button in the header (`KID-04`: every
 // destination one tap away, without scrolling), the button lives behind the
 // tile panel and appears when the panel is pulled down. An open pick must not
-// hide there, so while one is open this card takes the slot above the Live
-// tile — the slot `HOME-06`'s "still possible today" uses.
-//
-// It *takes* the slot rather than joining it: two boxes above the Live tile
-// would push the last row of destinations below the fold, which is the whole
-// thing the short-phone layout avoids. With no pick open, [fallback] shows as
-// before. A sticker pick is a one-off that waits until chosen; the daily
-// suggestion is back the moment it is.
+// hide there, so while one is open this card sits directly above the Live
+// tile. With no pick open it is absent, and costs no room at all.
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -23,24 +17,22 @@ import '../../../shared/utils/app_icons.dart';
 import '../sticker_album_screen.dart';
 import '../sticker_providers.dart';
 
-/// "Pick a sticker" while a pick is open; otherwise [fallback].
+/// "Pick a sticker" while a pick is open; otherwise nothing.
 class StickerPickCard extends ConsumerWidget {
-  const StickerPickCard({super.key, required this.fallback});
-
-  /// What the slot shows when there is nothing to pick.
-  final Widget fallback;
+  const StickerPickCard({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // No spinner: until the picks are known, the slot is what it always was.
+    // No spinner: until the picks are known, there is nothing to announce.
     final count = ref.watch(stickerPicksProvider).value?.pickableNow ?? 0;
-    if (count == 0) return fallback;
+    if (count == 0) return const SizedBox.shrink();
 
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
     return Padding(
-      // The same bottom gap the suggestion card leaves above the Live tile.
+      // The gap to the Live tile is the card's own, so an absent card
+      // leaves none.
       padding: const EdgeInsets.only(bottom: 10),
       child: Material(
         color: theme.colorScheme.secondaryContainer,

@@ -697,7 +697,6 @@
   "pointsChartTitle": "Hvězdy za den",
   "pointsChartTapHint": "Klepni na sloupec a otevřeš ten den.",
   "pointsChartBarA11y": "{date}: {stars} hvězd",
-  "homeStillPossibleTitle": "Dnes je ještě možné",
   "homeSparklineA11y": "Hvězdy za posledních {days} dní",
   "helpCollectionTitle": "Sbírka, deník a body",
   "helpCollectionBody": "Ve sbírce najdeš každý druh, který se ti už podařilo uslyšet. Deník uchovává každý den poslechu i s nahrávkami k přehrání. V Bodech vidíš své hvězdy, odznaky a úroveň.",

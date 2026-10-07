@@ -26,6 +26,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Renaming the bird no longer risks other avatar data: the name is merged into the stored avatar state instead of replacing it.
 - Recording is one switch now, **Save recordings**, and it is on by default. The old **Full** mode is gone: it recorded a whole session into a single file that nothing in the app could play or delete, and it saved no per-detection clips, so the journal had nothing to play back. A stored *Full* becomes clips-per-detection automatically; audio files already on the device are left untouched.
 - The location settings no longer describe the species filter, which lives in Advanced settings, and say instead what the app does with a position — and that there are no stars without one.
+- The seven bars in the home header say **Today** under the last one, so they read as the last seven days up to today rather than as a calendar week.
+
+### Removed
+
+- The "Still possible today" card above the Live button. The Live button is the first thing in the tile panel again; which daily badges are still open is shown under Points, as before.
 
 ## [1.1.2] - 2026-08-11
 

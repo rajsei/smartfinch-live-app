@@ -7,7 +7,8 @@
 //   • the bird on the left, with its level on a chip
 //   • ⭐ the total, large, with its label to the right of it
 //   • a rule, then the two smaller figures side by side: 30 days, and today
-//   • seven bars for the seven days behind them (`HOME-05`)
+//   • seven bars for the seven days up to today, the last one labelled
+//     "Today" (`HOME-05`)
 //   • the level line and its bar across the full width
 //   • the sticker album button under it (`AVA-07`)
 //
@@ -349,6 +350,13 @@ class _SmallFigure extends StatelessWidget {
 /// a trend and that is the point — it shows *yesterday and the day before*,
 /// which is the span a child actually remembers.
 ///
+/// The last bar is labelled **Today**, in the same word as the figure above
+/// it. "7 days" alone read as a calendar week as easily as the seven days up
+/// to now; one word under the right end says which way the bars run and where
+/// they stop. The older days are not faded out to say the same thing: a bar
+/// that pales with age reads as stars that wear off, and nothing a child has
+/// earned ever does (principle 1).
+///
 /// Its own provider rather than the Points overview, so opening the home
 /// screen does not derive every badge and achievement to draw seven bars.
 class _Sparkline extends ConsumerWidget {
@@ -372,43 +380,79 @@ class _Sparkline extends ConsumerWidget {
       (best, day) => day.stars > best ? day.stars : best,
     );
     final barHeight = large ? 40.0 : 28.0;
+    final label = theme.textTheme.bodySmall?.copyWith(
+      color: ink.withValues(alpha: 0.75),
+    );
 
     return Semantics(
       label: l10n.homeSparklineA11y(days.length),
       excludeSemantics: true,
       child: Row(
-        crossAxisAlignment: CrossAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           // The chart's own word for this window, not a second one: the home
           // screen and the Points screen should not call seven days two
-          // different things.
-          Text(
-            l10n.chartRangeWeek,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: ink.withValues(alpha: 0.75),
+          // different things. Level with the foot of the bars, as a legend;
+          // the word under the last bar hangs below both.
+          ConstrainedBox(
+            constraints: BoxConstraints(minHeight: barHeight),
+            child: Align(
+              alignment: AlignmentDirectional.bottomStart,
+              widthFactor: 1,
+              child: Text(l10n.chartRangeWeek, style: label),
             ),
           ),
           const SizedBox(width: 12),
           Expanded(
-            child: SizedBox(
-              height: barHeight,
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  for (final day in days)
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 2),
-                        child: _SparkBar(
-                          day: day,
-                          peak: peak,
-                          maxHeight: barHeight,
-                          ink: ink,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                SizedBox(
+                  height: barHeight,
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      for (final day in days)
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 2),
+                            child: _SparkBar(
+                              day: day,
+                              peak: peak,
+                              maxHeight: barHeight,
+                              ink: ink,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 2),
+                // Centred under the last bar while the word fits its column,
+                // flush with the right end when it does not: "Aujourd'hui" is
+                // wider than a bar on a phone, and it reaches left under the
+                // day before rather than out past the chart.
+                LayoutBuilder(
+                  builder:
+                      (context, constraints) => Align(
+                        alignment: AlignmentDirectional.centerEnd,
+                        child: ConstrainedBox(
+                          constraints: BoxConstraints(
+                            minWidth: constraints.maxWidth / days.length,
+                          ),
+                          child: Text(
+                            l10n.homeFigureToday,
+                            textAlign: TextAlign.center,
+                            maxLines: 1,
+                            softWrap: false,
+                            overflow: TextOverflow.ellipsis,
+                            style: label,
+                          ),
                         ),
                       ),
-                    ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ],

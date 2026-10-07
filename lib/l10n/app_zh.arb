@@ -697,7 +697,6 @@
   "pointsChartTitle": "每日星星",
   "pointsChartTapHint": "点一下柱子，就能打开那一天。",
   "pointsChartBarA11y": "{date}：{stars} 颗星",
-  "homeStillPossibleTitle": "今天还能做到",
   "homeSparklineA11y": "最近 {days} 天的星星",
   "helpCollectionTitle": "收藏、日记和积分",
   "helpCollectionBody": "你的收藏里有你已经听到过的每一个物种。日记记录你每一次聆听的日子，还可以重新播放你的录音。在“积分”里可以看到你的星星、徽章和等级。",

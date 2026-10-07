@@ -697,7 +697,6 @@
   "pointsChartTitle": "Stjerner per dag",
   "pointsChartTapHint": "Trykk på en stolpe for å åpne dagen.",
   "pointsChartBarA11y": "{date}: {stars} stjerner",
-  "homeStillPossibleTitle": "Fortsatt mulig i dag",
   "homeSparklineA11y": "Stjerner de siste {days} dagene",
   "helpCollectionTitle": "Samling, dagbok og poeng",
   "helpCollectionBody": "I samlingen din finner du hver art du allerede har hørt. Dagboken tar vare på hver dag du har lyttet, med opptakene dine til å høre på igjen. Under Poeng ser du stjernene dine, merkene dine og nivået ditt.",
