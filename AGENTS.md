@@ -4,13 +4,13 @@ This file is for coding agents working in this repository.
 
 ## What this repository is
 
-**Smartfinch is a fork of BirdNET Live**, being rebuilt from a professional bioacoustics tool into a **collecting game for children aged 8–13**. The rebuild is in progress: most of the research app is still here, and a large part of it is scheduled for deletion.
+**Smartfinch is a fork of BirdNET Live**, rebuilt from a professional bioacoustics tool into a **collecting game for children aged 8–13**. The research modes are gone and every requirement the transition changed is built (phase 3). What is still open at P1 is listed in the transition document's audit ("What is still open at P1").
 
 Two documents govern the work and outrank anything you infer from the code:
 
 | Document | What it settles |
 |---|---|
-| `Smartfinch_App_Vision_and_Requirements Specification.md` | The product: vision, scoring rules, requirement catalogue with IDs (`PKT-`, `LIVE-`, `SAM-`, `LOG-`, `DAT-`, …) |
+| `Smartfinch_App_Vision_and_Requirements_Specification.md` | The product: vision, scoring rules, requirement catalogue with IDs (`PKT-`, `LIVE-`, `SAM-`, `LOG-`, `DAT-`, …) |
 | `BirdNET_Live_to_Smartfinch_Transition.md` | The rebuild: what is kept, changed or deleted, decisions D1–D23, and the upstream merge strategy |
 
 **When code and specification disagree, the specification wins** — the code is the app being left behind. When you touch anything scoring-related, cite the requirement ID in the commit message.
@@ -20,21 +20,19 @@ Two documents govern the work and outrank anything you infer from the code:
 - Flutter app, **Android and iOS** (Windows still builds; unmaintained, decision pending).
 - **One mode: Live.** A child listens, species are detected on-device, stars are awarded, the collection fills up.
 - Audience: children 8–13. Fully offline for every core function; no account, no ads, no purchases, no tracking.
-- Stack: Flutter 3.27+, Dart ^3.7.0, Riverpod, ONNX Runtime, Drift/SQLite (planned), Geolocator, SharedPreferences.
+- **Two names:** *Schlaumeise* in German, *Smartfinch* in every other language. Anything a person reads takes the name from `l10n.appTitle`; `test/l10n_hygiene_test.dart` fails on "Smartfinch" in a German string or "Schlaumeise" in any other. `AppConstants.appName` is for logs and file names only.
+- Stack: Flutter 3.27+, Dart ^3.7.0, Riverpod, ONNX Runtime, Drift/SQLite (`lib/core/database/app_database.dart`, schema 1; the generated `app_database.g.dart` is not committed — run `dart run build_runner build --delete-conflicting-outputs`), Geolocator, SharedPreferences.
 
 ## Where the project stands
 
-The tree does not yet match the target. Know which side of the line you are on before you write anything.
-
 | Area | State | What to do |
 |---|---|---|
-| `features/survey`, `features/aru`, `features/point_count`, `features/file_analysis` | **Scheduled for deletion** | Do not extend, do not refactor, do not add tests. Bug-fix only if it blocks something else |
-| Foreground service inside `features/survey` | **Rescue first, then delete** | Must be lifted into `shared/services/background_recording/` *before* Survey is removed (D14/D19). It is the only working screen-off recording implementation |
-| `features/history` | **Becomes the Journal** | Roughly 12,000 lines are built around a single recording and are not salvageable. Export writers, clip playback and the life list are kept — see the transition document §3.4 |
+| `features/survey`, `features/aru`, `features/point_count`, `features/file_analysis`, `features/history` | **Deleted** | Do not resurrect any of them while resolving an upstream merge. The legacy JSON session store (`features/live/session_repository.dart`) is still read by live mode; the database is the store of record |
+| Background recording | **Rescued** to `shared/services/background_recording/` (D14/D19) | The screen-off recording lives here now, not in a mode |
 | `features/explore` | **Stays Explore** | The list of all species. Changes least of everything |
-| `features/live`, `features/home`, `features/settings`, `features/onboarding` | **Reworked** | Additive where possible; the detection pipeline underneath is not touched |
+| `features/live`, `features/home`, `features/settings`, `features/onboarding`, `features/announcements` | **Reworked** | Additive where possible; the detection pipeline underneath is not touched |
 | `features/inference`, `features/audio`, `features/recording`, `features/spectrogram` | **Keep as-is** | See "Upstream merge discipline" below |
-| `features/collection`, `features/scoring`, `features/journal`, `features/awards`, `features/avatar` | **Do not exist yet** | All new Smartfinch code goes in new directories like these |
+| `features/scoring`, `features/collection`, `features/journal`, `features/points`, `features/avatar`, `features/stickers`, `features/rules`, `features/storage` | **Smartfinch** | New Smartfinch code goes here, or into a new directory beside them. `features/journal` replaced `features/history`; badges and achievements live in `features/points` |
 
 ## The rules that protect the game
 
@@ -109,6 +107,8 @@ Smartfinch keeps merging from `birdnet-team/birdnet-live-app` (D2). That only st
 - No time pressure, no countdowns, no red warnings for things the child did not do wrong (`KID-05`, principle 1).
 - Core functions must be operable without reading — icon plus colour (`KID-04`).
 - No free text may leave the device. Place names (`LOG-13`) are local and are never rendered into the shared day image (`KID-07`).
+- German addresses the reader as **du**, everywhere — including the parent-facing backup screen. A stray "Sie" is a bug.
+- **No links out of the app** except the privacy policy and the terms of use, which the stores require to be reachable. Websites and the source code are *named* as text (About → "Mehr erfahren"), never linked; there is no donation link. Whether the two policy links need a parental gate is an open decision.
 
 ## UI and Theme Constraints
 
@@ -117,21 +117,26 @@ Smartfinch keeps merging from `birdnet-team/birdnet-live-app` (D2). That only st
 - Keep score ramps and spectrogram colormaps fixed; do not remap them to dynamic color.
 - Use `AppIcons` from `lib/shared/utils/app_icons.dart`, not raw `Icons.*` or `Symbols.*`.
 - Use the error palette for destructive actions — but **not** for the "not scoring" notice (`LIVE-18`), which is information, not an error.
-- Dynamic color: with one mode left, the live=`error` mapping is the only one still in use.
+- Dynamic color: with one mode left, the live=`error` mapping is the only one still in use. The dynamic-colour switch is shown on Android only.
+- **Every vibration goes through `AppHaptics`** (`lib/shared/utils/app_haptics.dart`), which checks the vibration switch (`SET-04`). Never call `HapticFeedback` directly — `test/shared/utils/app_haptics_test.dart` greps `lib/` for it.
+- **The home screen's portrait layout is measured, not guessed.** `_PortraitHomeLayout.headerHeight` is a fixed budget calibrated against `HomeHeader`'s real content, and `denseBelow` (734) is the room *below the status bar* at which the last tile row still fits with a sticker pick open. Re-measure both when the header or the tile panel changes shape; the short-phone tests in `home_screen_test.dart` walk six heights with and without a status bar.
 
 ## Settings and Docs Discipline
 
-- Settings are **reorganised, not deleted** (D13): a plain first screen for what a child or parent touches, everything else behind **Advanced settings**. The exception is the expert inference block (pooling, sensitivity, custom species lists), which is removed outright.
+- Settings are **reorganised, not deleted** (D13): a plain first screen for what a child or parent touches, everything else behind **Advanced settings**. The exception is the expert inference block (pooling, sensitivity, custom species lists), which is removed outright — sensitivity in particular rescales the confidence itself and would lift weak detections over the scoring floor.
+- Which section sits where is `SettingsScreen.sectionViews`, and a test asserts every section is on exactly one screen. Today: the plain screen carries General (with animation level and vibration), Announcements, Location, Privacy, About and Backup; Advanced carries audio, inference, spectrogram, recording and the species filter, then **Storage** and, last, the **Danger Zone**. The rules page (`SET-11`, "How do I earn stars?") opens from **Help**, not from settings.
+- One setting, one place. Whether a backup carries the recordings is switched on the backup screen only, and is **off** by default.
 - Two settings pause scoring when moved out of range — the species filter and the confidence threshold (`PKT-20`). Both need the warning from `SET-13`, and the live notice from `LIVE-18` must appear while they are out of range. The scoring floor is **35**, a constant, not a setting.
 - For new or changed settings: update `PrefKeys` and the providers/UI, document the rationale in `docs/user/settings.md`, and record user-visible behaviour changes in `CHANGELOG.md`.
+- ⚠️ `docs/user/*.md` still describe BirdNET Live in large parts (Point Count, Survey, Session Review), and the translated pages lag behind the English ones. Do not read them as a description of the product — the specification is that. Keep the parts you touch accurate.
 
 ## Species Bundle and Assets
 
 - `assets/species_images/dummy.webp` is the hand-crafted fallback shown for species with no image. It is **not** generated by the pipeline and must never be deleted.
 - Species images are used exactly as the original app uses them (D6). The **silhouettes** for undetected species (`SAM-04`) should be derived from the same images in the same pipeline, not drawn by hand — attribution follows the image into the derivative.
 - The bundle script clears `assets/species_images/`; `dummy.webp` is preserved explicitly. Add any other hand-crafted file to `PRESERVED_OUTPUT_FILES`.
-- To refresh with a new taxonomy version: download the taxonomy JSON, point `DEFAULT_TAXONOMY_JSON` at it, run the bundle script from the repo root with the venv active.
-- `assets/species_images/` and `assets/species_data/` are generated and gitignored.
+- The bundle script is `tools/build_species_bundle.py` (requirements in `tools/requirements-species-bundle.txt`). To refresh with a new taxonomy version: download the taxonomy JSON (`tools/download_taxonomy_json.py`), point `DEFAULT_TAXONOMY_JSON` at it, run the script from the repo root with the venv active.
+- `assets/species_images/` and `assets/species_data/` are generated and gitignored: on a fresh clone there are no photos and no descriptions until the script has run. That presents as a bug; it is missing setup.
 
 ### Stickers (`AVA-07`)
 
@@ -147,13 +152,20 @@ Smartfinch keeps merging from `birdnet-team/birdnet-live-app` (D2). That only st
 - **Do not widen the `flutter_onnxruntime` pin** without re-testing on-device — see `docs/developer/onnxruntime-pin.md`.
 - ARM64 rule: sensitive compute may require FP32 casting for stable output.
 - The geo model answers `[latitude, longitude, week]` for 48 weeks worldwide. It is the source of every rarity level and therefore of every star. Treat changes to it as scoring changes.
-- Do not hardcode thresholds or model config values when constants/config already exist. Scoring rules belong in a versioned `ScoringRules` object (`DAT-04`), never scattered as constants.
+- Do not hardcode thresholds or model config values when constants/config already exist. Scoring rules belong in a versioned `ScoringRules` object (`DAT-04`), never scattered as constants — and that includes the numbers in texts: a string that names the scoring floor takes it as a placeholder from `ScoringRules.current`.
+
+### Backups (`SET-07`, `DAT-09`)
+
+- A backup is one ZIP written by `BackupService`; a restore **reinstates, it never recomputes** (`LOG-12`): frozen fields go back unchanged and levels ratchet through it. Restore always goes through `BackupService.restore`, never around it.
+- The automatic backups are the same file without recordings, three generations in `<documents>/backups` (`kAutoBackupDirectoryName`), one per day, written at app start and when a session ends. An empty collection is never written, and a day's copy is never replaced by a smaller state — those two rules are what keep a wipe from rolling the good copies out. *Clear all data* deletes them.
+- ⚠️ **Before the first schema migration:** a restore reads rows with the *current* `fromJson`. A migration that adds a non-nullable column must give `BackupService` a default for it, or every older backup — saved or automatic — will be refused.
 
 ## Audio, Maps, and Runtime Safety
 
 - Do not use `Picture.toImageSync()` for spectrogram rendering.
 - Inference runs in an isolate and the UI holds 60 fps (`NFA-13`). A rarity-scale rebuild during a live session must also run in an isolate — the Explore screen's version deliberately does not, because there it happens once on a loading screen.
 - Never block listening. Nothing — animation, popup, scale rebuild, level-up — may interrupt live detection (principle 7).
+- ⚠️ **Build every `Isolate.run` closure inside a static or top-level function.** A closure created in an instance method carries that method's whole context to the isolate — including `this` as soon as any other closure there touches the instance (`setState` does). `this` then drags an `AudioPlayer` or the database along, the send fails, and a `catch` turns it into a silent fallback. That is how the journal showed no spectrogram for every clip. See `JournalClipSheet._renderOffThread`, `BackupService._encodeOffThread`.
 - Position is requested at **coarse accuracy**, not `LocationAccuracy.high`. GPS stays as a source; a 0.1° cell needs nothing finer.
 - Use the shared OSM tile layer. OSM public tile policy: interactive use only, no offline or bulk downloads.
 
