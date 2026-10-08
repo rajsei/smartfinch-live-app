@@ -162,7 +162,7 @@
   "settingsDangerZone": "Zona di pericolo",
   "settingsGeneralDescription": "Come appare l'app, che lingua parla e cosa mostra mentre ascolti.",
   "settingsAudioDescription": "Ingresso microfono, guadagno e filtraggio. Aumenta il guadagno in ambienti silenziosi; usa il filtro passa-alto contro il rumore del vento.",
-  "settingsInferenceDescription": "Controlla come la rete neurale analizza l\u0027audio. La sensibilità sposta la curva di rilevazione — valori più alti rilevano richiami deboli ma aumentano i falsi positivi.",
+  "settingsInferenceDescription": "Controlla come la rete neurale analizza l'audio.",
   "settingsSpectrogramDescription": "Lo spettrogramma è un'immagine del suono: in orizzontale il tempo, in verticale la frequenza (gravi in basso, acuti in alto), l'intensità come colore. Valori FFT più grandi danno una risoluzione in frequenza più fine; una durata più breve lo fa scorrere più velocemente.",
   "settingsRecordingDescription": "Brevi clip di ogni uccello riconosciuto, da riascoltare nel diario.",
   "settingsLocationDescription": "L'app ricava la posizione dal GPS, oppure la imposti tu. Così sa quali uccelli ci sono adesso nella tua zona e quante stelle vale ciascuno qui. Senza posizione niente stelle.",

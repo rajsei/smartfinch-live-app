@@ -329,6 +329,12 @@ void main() {
       // no place in a scoring app.
       expect(find.text('Sensitivity'), findsNothing);
       expect(find.text('Ignore species'), findsNothing);
+      // Nor a word explaining it: the Inference subtitle described the
+      // sensitivity slider for months after the slider was gone.
+      expect(
+        find.textContaining(RegExp('sensitivity', caseSensitive: false)),
+        findsNothing,
+      );
     });
   });
 

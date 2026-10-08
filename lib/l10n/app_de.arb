@@ -186,7 +186,7 @@
   "settingsDangerZone": "Gefahrenzone",
   "settingsGeneralDescription": "Wie die App aussieht, welche Sprache sie spricht und was sie beim Lauschen zeigt.",
   "settingsAudioDescription": "Mikrofoneingabe, Verstärkung und Filterung. Verstärkung in ruhigen Umgebungen erhöhen; Hochpassfilter gegen Windgeräusche nutzen.",
-  "settingsInferenceDescription": "Steuert, wie das neuronale Netz Audio analysiert. Empfindlichkeit verschiebt die Detektionskurve — höhere Werte erkennen leise Rufe, erhöhen aber Fehldetektionen.",
+  "settingsInferenceDescription": "Steuert, wie das neuronale Netz Audio analysiert.",
   "settingsSpectrogramDescription": "Das Spektrogramm ist ein Bild vom Klang: waagerecht die Zeit, senkrecht die Frequenz (tief unten, hoch oben), die Intensität als Farbe. Größere FFT-Werte ergeben eine feinere Frequenzauflösung; eine kürzere Dauer lässt es schneller scrollen.",
   "settingsRecordingDescription": "Kurze Clips zu jedem erkannten Vogel, zum Nachhören im Tagebuch.",
   "settingsLocationDescription": "Den Standort bestimmt die App per GPS, oder du stellst ihn selbst ein. Daran erkennt sie, welche Vögel gerade in deiner Gegend vorkommen und wie viele Sterne jeder hier wert ist. Ohne Standort gibt es keine Sterne.",

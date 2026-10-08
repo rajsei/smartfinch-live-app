@@ -162,7 +162,7 @@
   "settingsDangerZone": "Zona de perigo",
   "settingsGeneralDescription": "O aspeto da app, a língua que fala e o que mostra enquanto ouves.",
   "settingsAudioDescription": "Entrada do microfone, ganho e filtragem. Aumente o ganho em ambientes silenciosos; use o filtro passa-alta contra ruído do vento.",
-  "settingsInferenceDescription": "Controla como a rede neural analisa o áudio. A sensibilidade desloca a curva de detecção — valores mais altos detectam chamados fracos, mas aumentam falsos positivos.",
+  "settingsInferenceDescription": "Controla como a rede neural analisa o áudio.",
   "settingsSpectrogramDescription": "O espectrograma é uma imagem do som: na horizontal o tempo, na vertical a frequência (grave em baixo, agudo em cima), a intensidade como cor. Valores FFT maiores dão uma resolução de frequência mais fina; uma duração mais curta faz com que role mais depressa.",
   "settingsRecordingDescription": "Clipes curtos de cada ave que a app ouve, para ouvir no diário.",
   "settingsLocationDescription": "A app obtém a localização por GPS, ou és tu que a defines. Assim sabe que aves há agora na tua zona e quantas estrelas vale cada uma aqui. Sem localização não há estrelas.",

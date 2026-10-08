@@ -186,7 +186,7 @@
   "settingsDangerZone": "Strefa zagrożenia",
   "settingsGeneralDescription": "Jak wygląda aplikacja, w jakim języku mówi i co pokazuje, gdy słuchasz.",
   "settingsAudioDescription": "Wejście mikrofonowe, wzmocnienie i filtrowanie. Zwiększ wzmocnienie w cichym otoczeniu, a filtrem górnoprzepustowym ogranicz szum wiatru.",
-  "settingsInferenceDescription": "Określa, jak sieć neuronowa analizuje dźwięk. Czułość przesuwa krzywą wykrywania: wyższe wartości wychwytują słabe głosy, ale mogą zwiększyć liczbę fałszywych trafień.",
+  "settingsInferenceDescription": "Określa, jak sieć neuronowa analizuje dźwięk.",
   "settingsSpectrogramDescription": "Spektrogram to obraz dźwięku: w poziomie czas, w pionie częstotliwość (niskie na dole, wysokie u góry), a natężenie jako kolor. Większe wartości FFT dają dokładniejszą rozdzielczość częstotliwości; krótszy czas trwania sprawia, że przewija się szybciej.",
   "settingsRecordingDescription": "Krótkie fragmenty każdego rozpoznanego ptaka, do odsłuchania w dzienniku.",
   "settingsLocationDescription": "Aplikacja ustala lokalizację przez GPS albo ustawiasz ją ręcznie. Dzięki temu wie, jakie ptaki występują teraz w twojej okolicy i ile gwiazdek można tu dostać za każdego z nich. Bez lokalizacji nie ma gwiazdek.",

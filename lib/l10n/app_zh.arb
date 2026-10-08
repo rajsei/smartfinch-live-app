@@ -186,7 +186,7 @@
   "settingsDangerZone": "危险操作",
   "settingsGeneralDescription": "应用的外观、使用的语言，以及聆听时显示的内容。",
   "settingsAudioDescription": "麦克风输入、增益与滤波。安静环境下可提高增益；使用高通滤波器可减少风噪。",
-  "settingsInferenceDescription": "控制神经网络分析音频的方式。灵敏度会平移检测曲线——数值越高越能捕捉微弱的鸣声，但可能增加误报。",
+  "settingsInferenceDescription": "控制神经网络分析音频的方式。",
   "settingsSpectrogramDescription": "声谱图是声音的图像：横轴是时间，纵轴是频率（低音在下，高音在上），颜色表示强度。FFT 值越大，频率分辨率越细；时长越短，滚动越快。",
   "settingsRecordingDescription": "每只被识别出的鸟的短录音，可以在日记里回听。",
   "settingsLocationDescription": "应用通过 GPS 获取位置，也可以由你自己设置。这样它就知道你所在的地区现在有哪些鸟，以及每种鸟在这里值多少颗星星。没有位置就没有星星。",

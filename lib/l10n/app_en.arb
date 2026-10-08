@@ -772,9 +772,9 @@
   "@settingsAudioDescription": {
     "description": "Subtitle for Audio settings section"
   },
-  "settingsInferenceDescription": "Controls how the neural network analyzes audio. Sensitivity shifts the detection curve — higher values catch faint calls but may increase false positives.",
+  "settingsInferenceDescription": "Controls how the neural network analyzes audio.",
   "@settingsInferenceDescription": {
-    "description": "Subtitle for Inference settings section"
+    "description": "Subtitle of the Inference section in advanced settings. No word about sensitivity: that control was removed with the expert block (SET-01)"
   },
   "settingsSpectrogramDescription": "The spectrogram is a picture of sound: time runs horizontally, frequency vertically (low at the bottom, high at the top), and intensity shows as color. Larger FFT values give a finer frequency resolution; a shorter duration makes it scroll faster.",
   "@settingsSpectrogramDescription": {

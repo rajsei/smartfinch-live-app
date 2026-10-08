@@ -162,7 +162,7 @@
   "settingsDangerZone": "Zone de danger",
   "settingsGeneralDescription": "L'apparence de l'app, sa langue et ce qu'elle montre pendant que tu écoutes.",
   "settingsAudioDescription": "Entrée micro, gain et filtrage. Augmentez le gain dans les environnements calmes ; utilisez le filtre passe-haut contre le bruit du vent.",
-  "settingsInferenceDescription": "Contrôle la façon dont le réseau de neurones analyse l\u0027audio. La sensibilité décale la courbe de détection — des valeurs élevées détectent les appels faibles mais augmentent les faux positifs.",
+  "settingsInferenceDescription": "Contrôle la façon dont le réseau de neurones analyse l'audio.",
   "settingsSpectrogramDescription": "Le spectrogramme est une image du son : le temps à l'horizontale, la fréquence à la verticale (grave en bas, aigu en haut), l'intensité en couleur. Des valeurs FFT plus grandes donnent une résolution en fréquence plus fine ; une durée plus courte le fait défiler plus vite.",
   "settingsRecordingDescription": "De courts extraits de chaque oiseau entendu, à réécouter dans le journal.",
   "settingsLocationDescription": "L'app trouve la localisation par GPS, ou tu la règles toi-même. Elle sait ainsi quels oiseaux sont présents en ce moment dans ta région et combien d'étoiles chacun vaut ici. Sans localisation, pas d'étoiles.",

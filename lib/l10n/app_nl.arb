@@ -186,7 +186,7 @@
   "settingsDangerZone": "Gevarenzone",
   "settingsGeneralDescription": "Hoe de app eruitziet, welke taal hij spreekt en wat hij laat zien terwijl je luistert.",
   "settingsAudioDescription": "Microfooningang, versterking en filtering. Verhoog de versterking in een stille omgeving en gebruik het hoogdoorlaatfilter om windruis te beperken.",
-  "settingsInferenceDescription": "Bepaalt hoe het neurale netwerk geluid analyseert. Gevoeligheid verschuift de detectiecurve: hogere waarden pikken zwakke roepjes op, maar kunnen meer valse detecties opleveren.",
+  "settingsInferenceDescription": "Bepaalt hoe het neurale netwerk geluid analyseert.",
   "settingsSpectrogramDescription": "Het spectrogram is een beeld van geluid: horizontaal de tijd, verticaal de frequentie (laag onder, hoog boven), de intensiteit als kleur. Grotere FFT-waarden geven een fijnere frequentieresolutie; een kortere duur laat het sneller scrollen.",
   "settingsRecordingDescription": "Korte fragmenten van elke herkende vogel, om terug te luisteren in het dagboek.",
   "settingsLocationDescription": "De app bepaalt de locatie via GPS, of je stelt die zelf in. Zo weet de app welke vogels er nu in je omgeving voorkomen en hoeveel sterren elke vogel hier waard is. Zonder locatie geen sterren.",

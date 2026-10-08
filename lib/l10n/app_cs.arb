@@ -162,7 +162,7 @@
   "settingsDangerZone": "Nebezpečná zóna",
   "settingsGeneralDescription": "Jak aplikace vypadá, jakým jazykem mluví a co ukazuje při poslechu.",
   "settingsAudioDescription": "Vstup mikrofonu, zesílení a filtrování. Zvyšte zesílení v tichém prostředí; použijte horní propust proti hluku větru.",
-  "settingsInferenceDescription": "Řídí, jak neuronová síť analyzuje zvuk. Citlivost posunuje křivku detekce — vyšší hodnoty detekují tiché hlasy, ale zvyšují falešné detekce.",
+  "settingsInferenceDescription": "Řídí, jak neuronová síť analyzuje zvuk.",
   "settingsSpectrogramDescription": "Spektrogram je obraz zvuku: vodorovně čas, svisle frekvence (nízké dole, vysoké nahoře), intenzita jako barva. Větší hodnoty FFT dávají jemnější frekvenční rozlišení; kratší doba trvání způsobí rychlejší posuv.",
   "settingsRecordingDescription": "Krátké klipy ke každému rozpoznanému ptákovi, k poslechu v deníku.",
   "settingsLocationDescription": "Polohu zjistí aplikace přes GPS, nebo ji nastavíš ručně. Podle ní pozná, kteří ptáci se teď vyskytují ve tvém okolí a kolik hvězd tu za každého dostaneš. Bez polohy nejsou žádné hvězdy.",

@@ -186,7 +186,7 @@
   "settingsDangerZone": "Faresone",
   "settingsGeneralDescription": "Hvordan appen ser ut, hvilket språk den snakker, og hva den viser mens du lytter.",
   "settingsAudioDescription": "Mikrofoninngang, Gain og filtrering. Øk Gain i stille omgivelser; bruk høypassfilteret for å redusere vindstøy.",
-  "settingsInferenceDescription": "Styrer hvordan modellen analyserer lyd. Høyere følsomhet fanger svakere lyder, men kan gi flere falske positiver.",
+  "settingsInferenceDescription": "Styrer hvordan modellen analyserer lyd.",
   "settingsSpectrogramDescription": "Spektrogrammet er et bilde av lyden: vannrett tiden, loddrett frekvensen (lav nede, høy oppe), intensiteten som farge. Større FFT-verdier gir finere frekvensoppløsning; kortere varighet får det til å rulle raskere.",
   "settingsRecordingDescription": "Korte klipp av hver fugl appen hører, til avspilling i dagboka.",
   "settingsLocationDescription": "Appen finner posisjonen med GPS, eller du stiller den inn selv. Slik vet appen hvilke fugler som finnes i området ditt akkurat nå, og hvor mange stjerner hver av dem er verdt her. Uten posisjon får du ingen stjerner.",

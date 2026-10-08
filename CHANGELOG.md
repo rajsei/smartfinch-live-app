@@ -9,6 +9,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+- The Inference section in Advanced settings no longer describes a sensitivity setting. That control was removed because it could raise weak detections over the scoring floor; its description had stayed behind.
 - On short phones the bottom row of home-screen buttons no longer runs off the edge. The seven bars in the header now give way earlier, counting only the room below the status bar; before, with a sticker waiting to be picked, the last row could be cut off by up to 17 pixels.
 - Choosing **Year** for the chart on the Points screen no longer freezes the app. Under summer time the hour the clocks went back in October made the weekly grouping start the same week over and over, until Android reported that the app was not responding. Across the clock changes the chart also counted one October day twice and left out a day in March; every day is now in it once. The same slip broke a longest streak over the March change, let the journal's day and week end an hour early or late on those two days, and labelled yesterday's journal entry "Today" on the day after the spring change.
 - The start screen on Android 12 and newer shows the app's own bird on the launcher icon's background. It still showed BirdNET Live's blue jay on BirdNET's dark blue.
