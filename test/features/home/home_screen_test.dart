@@ -36,6 +36,7 @@ import 'package:smartfinch/features/live/widgets/day_summary_bar.dart';
 import 'package:smartfinch/features/scoring/live_score_board.dart';
 import 'package:smartfinch/features/scoring/scoring_providers.dart';
 import 'package:smartfinch/features/scoring/scoring_repository.dart';
+import 'package:smartfinch/features/stickers/sticker_providers.dart';
 import 'package:smartfinch/l10n/app_localizations.dart';
 import 'package:smartfinch/shared/providers/app_providers.dart';
 
@@ -817,6 +818,109 @@ void main() {
       expect(find.text('7 days'), findsNothing);
       // The level line, which is what the room was kept for, stays.
       expect(find.byType(LinearProgressIndicator), findsOneWidget);
+    });
+  });
+
+  // ===========================================================================
+  // Short phones — the sparkline gives way before a tile does (HOME-05, KID-04)
+  // ===========================================================================
+  //
+  // The tallest the tile panel gets is with a sticker pick open above the Live
+  // tile and the album button behind the panel. Measured, the last row then
+  // ends 733 below the status bar. The threshold used to be 720 and counted
+  // the status bar as room, so on short phones that row hung off the edge.
+  // ===========================================================================
+  group('short phones', () {
+    Future<void> pumpShort(
+      WidgetTester tester, {
+      required double height,
+      double statusBar = 0,
+    }) async {
+      SharedPreferences.setMockInitialValues({});
+      final prefs = await SharedPreferences.getInstance();
+      final db = AppDatabase.forTesting(NativeDatabase.memory());
+      addTearDown(db.close);
+
+      tester.view.physicalSize = Size(360, height);
+      tester.view.devicePixelRatio = 1.0;
+      tester.view.padding = FakeViewPadding(top: statusBar);
+      addTearDown(tester.view.reset);
+
+      await tester.pumpWidget(
+        ProviderScope(
+          overrides: [
+            sharedPreferencesProvider.overrideWithValue(prefs),
+            appDatabaseProvider.overrideWithValue(db),
+            starTotalsProvider.overrideWith(
+              (ref) async => const StarTotals(total: 4200, today: 114),
+            ),
+            levelProgressProvider.overrideWith(
+              (ref) async => progressFor(stars: 4200),
+            ),
+            avatarNameProvider.overrideWith((ref) async => null),
+            // An open pick: the card above the Live tile, the panel at its
+            // tallest.
+            stickerPicksProvider.overrideWith(
+              (ref) async => const StickerPicks(openLevels: 2, available: 10),
+            ),
+          ],
+          child: MaterialApp(
+            locale: const Locale('en'),
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: const HomeScreen(),
+          ),
+        ),
+      );
+      await tester.pump();
+      await tester.pump(const Duration(seconds: 3));
+    }
+
+    for (final (height, statusBar) in [
+      (720.0, 0.0),
+      (733.0, 0.0),
+      (734.0, 0.0),
+      (740.0, 24.0),
+      (760.0, 24.0),
+      (780.0, 48.0),
+    ]) {
+      testWidgets('every tile is whole on $height px with a $statusBar px '
+          'status bar', (tester) async {
+        await pumpShort(tester, height: height, statusBar: statusBar);
+
+        for (final label in [
+          'Collection',
+          'Explore',
+          'Journal',
+          'Points',
+          'Settings',
+        ]) {
+          final tile = tester.getRect(
+            find
+                .ancestor(of: find.text(label), matching: find.byType(InkWell))
+                .first,
+          );
+          expect(
+            tile.bottom,
+            lessThanOrEqualTo(height),
+            reason: '$label ends off the bottom of the screen',
+          );
+        }
+      });
+    }
+
+    testWidgets('below the threshold the sparkline gives way', (tester) async {
+      await pumpShort(tester, height: 733);
+      expect(find.text('7 days'), findsNothing);
+
+      await pumpShort(tester, height: 734);
+      expect(find.text('7 days'), findsOneWidget);
+    });
+
+    testWidgets('the status bar is not room', (tester) async {
+      // 740 is above the threshold, but 24 of it is the status bar.
+      await pumpShort(tester, height: 740, statusBar: 24);
+      expect(find.text('7 days'), findsNothing);
     });
   });
 }

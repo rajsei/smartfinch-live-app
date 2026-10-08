@@ -914,6 +914,8 @@ Both home additions take room from a screen that had none. On a 360 × 640 phone
 
 `KID-04` decides that argument — a destination below the fold is not one tap away — so **below 720 logical pixels the additions make themselves smaller rather than pushing a tile off the screen**:
 
+*Revised 2026-10-08:* the threshold is now **734 pixels of room below the status bar**. Measured with a sticker pick open above the Live tile — the tallest the panel gets — the last row of tiles ends 733 below the status bar, so at 720 it hung up to 13 pixels off the edge. And the old check compared the whole screen, status bar included: a 740-pixel phone with a 24-pixel status bar passed it and still lost 17 pixels of the last row. Below the new threshold the sparkline gives way; a test walks six heights with and without a status bar and asserts every tile ends on screen.
+
 | | |
 |---|---|
 | The sparkline | Not drawn. It is the only thing in the header that repeats a figure shown beside it, and losing it costs less than a clipped level bar |

@@ -265,14 +265,23 @@ class _PortraitHomeLayout extends ConsumerStatefulWidget {
   /// Space between the header's last line and the top of the sticker board.
   static const double boardGap = 4;
 
-  /// Below this the screen cannot carry everything at full size.
+  /// Below this much room under the status bar, the screen cannot carry
+  /// everything at full size.
   ///
   /// The header and the panel are both sized from the same fixed budget, so on
   /// a short phone the sparkline comes straight out of the room the
   /// destinations need. `KID-04` wins that argument: below this height the
   /// sparkline is not drawn and the tiles tighten, rather than a tile being
   /// pushed below the fold.
-  static const double denseBelow = 720;
+  ///
+  /// Measured, not guessed: with a sticker pick open above the Live tile and
+  /// the album button behind the panel — the tallest the panel gets — the
+  /// last row of tiles ends 733 below the status bar. It was 720, which left
+  /// that row up to 13 pixels off the edge; and it compared the whole screen,
+  /// status bar included, so a 740-pixel phone with a 24-pixel status bar
+  /// lost 17 pixels of it even so. Hence the room *under* the status bar, and
+  /// one pixel to spare.
+  static const double denseBelow = 734;
 
   @override
   ConsumerState<_PortraitHomeLayout> createState() =>
@@ -293,7 +302,7 @@ class _PortraitHomeLayoutState extends ConsumerState<_PortraitHomeLayout> {
         builder: (context, constraints) {
           final height = constraints.maxHeight;
 
-          final dense = height < _PortraitHomeLayout.denseBelow;
+          final dense = height - topInset < _PortraitHomeLayout.denseBelow;
           final albumInHeader =
               widget.isTablet ||
               height >= _PortraitHomeLayout.albumButtonInHeaderFrom;
