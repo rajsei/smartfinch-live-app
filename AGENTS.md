@@ -108,7 +108,7 @@ Smartfinch keeps merging from `birdnet-team/birdnet-live-app` (D2). That only st
 - Core functions must be operable without reading — icon plus colour (`KID-04`).
 - No free text may leave the device. Place names (`LOG-13`) are local and are never rendered into the shared day image (`KID-07`).
 - German addresses the reader as **du**, everywhere — including the parent-facing backup screen. A stray "Sie" is a bug.
-- **No links out of the app** except the privacy policy and the terms of use, which the stores require to be reachable. Websites and the source code are *named* as text (About → "Mehr erfahren"), never linked; there is no donation link. Whether the two policy links need a parental gate is an open decision.
+- **Links out of the app live on About only**, each marked with the external-link icon: privacy policy, terms of use, the app's website, its source code, the BirdNET website and the BirdNET donation page. Do not add links anywhere else. **No parental gate** (decided 2026-10-12): the app is not listed in the stores' kids sections — no Apple Kids Category, no Teacher Approved / Kids tab on Google Play. It is still built for children, so the Play Console target audience must include the under-13 age groups (mixed audience), and the Families policy and the children's privacy laws apply all the same.
 
 ## UI and Theme Constraints
 
