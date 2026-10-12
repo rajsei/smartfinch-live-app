@@ -2,20 +2,20 @@
 // CollectionScreen — the album (SAM-02, SAM-03, SAM-04, SAM-05, SAM-17)
 // =============================================================================
 //
-// A grid of every species that occurs here, with the ones the child has found
-// showing a photo and the rest a placeholder.
+// A grid of every species the child has found, each with its photo.
 //
-// **The contrast is the feature.** `SAM-04` is explicit that the Pokédex
-// effect rests on it rather than on the artwork: a grid where some cells carry
-// a bird and others visibly do not is already the thing that makes a child
-// want to fill it. So the default view contains both, and "only mine" is a
-// filter rather than the starting state.
+// **Only what was found** (decided 2026-10-12). The species still to find are
+// not in the album at all — no placeholders, no silhouettes (`SAM-04b` is
+// struck). They are in Explore, which lists everything that occurs here and
+// ticks what is already collected; the progress line above the grid is the
+// one place in the album that says how many are still out there.
 //
-// **Every cell answers "what is this worth to me?"** before the detection, and
-// says *where* and *when* it is worth that (`SAM-03`). "Here, this week: 200 ⭐"
-// is the honest label — the value moves with the season and with the place,
-// and a child who is told that in advance reads the movement as the game
-// rather than as a bug.
+// **Every card answers "what is this worth to me?"** and says *where* and
+// *when* it is worth that (`SAM-03`). "Here, this week: 200 ⭐" is the honest
+// label — the value moves with the season and with the place, and a child who
+// is told that in advance reads the movement as the game rather than as a bug.
+// A species found in May that is not here in December stays in the album and
+// says so, rather than disappearing from it.
 //
 // **All animal groups** are collectable and filterable (`SAM-17`). A frog or a
 // field cricket in the album is a strong draw for this age group, and the
@@ -34,8 +34,8 @@ import 'collection_providers.dart';
 /// Taxon groups the album can be narrowed to (`SAM-17`).
 ///
 /// An empty selection means "all", which is the default: the album shows
-/// everything the model can hear here, and the filter is for a child who wants
-/// to look at just the frogs.
+/// everything the child has found, and the filter is for a child who wants to
+/// look at just the frogs.
 enum CollectionGroup {
   aves,
   mammalia,
@@ -68,7 +68,7 @@ class CollectionScreen extends ConsumerStatefulWidget {
 
 class _CollectionScreenState extends ConsumerState<CollectionScreen> {
   final Set<CollectionGroup> _groups = {};
-  CollectionScope _scope = CollectionScope.everything;
+  CollectionScope _scope = CollectionScope.all;
 
   @override
   Widget build(BuildContext context) {
@@ -82,12 +82,14 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
           loading: () => const Center(child: CircularProgressIndicator()),
           error: (_, _) => Center(child: Text(l10n.collectionUnavailable)),
           data: (all) {
-            final visible = [
+            final inScope = [
               for (final entry in all)
-                if ((_groups.isEmpty ||
-                        _groups.any((g) => g.csvValue == entry.taxonGroup)) &&
-                    (_scope == CollectionScope.everything ||
-                        entry.isFoundIn(_scope)))
+                if (entry.isIn(_scope)) entry,
+            ]..sort((a, b) => b.dateIn(_scope).compareTo(a.dateIn(_scope)));
+            final visible = [
+              for (final entry in inScope)
+                if (_groups.isEmpty ||
+                    _groups.any((g) => g.csvValue == entry.taxonGroup))
                   entry,
             ];
 
@@ -110,7 +112,10 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                 Expanded(
                   child:
                       visible.isEmpty
-                          ? _EmptyCollection(scope: _scope)
+                          ? _EmptyCollection(
+                            scope: _scope,
+                            filteredOut: inScope.isNotEmpty,
+                          )
                           : GridView.builder(
                             padding: const EdgeInsets.fromLTRB(12, 4, 12, 24),
                             gridDelegate:
@@ -122,10 +127,8 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
                                 ),
                             itemCount: visible.length,
                             itemBuilder:
-                                (context, index) => CollectionCard(
-                                  entry: visible[index],
-                                  scope: _scope,
-                                ),
+                                (context, index) =>
+                                    CollectionCard(entry: visible[index]),
                           ),
                 ),
               ],
@@ -138,11 +141,11 @@ class _CollectionScreenState extends ConsumerState<CollectionScreen> {
 }
 
 /// "37 of 128 species in your region" (`SAM-05`), or the year's count.
+///
+/// Hidden when there is no local list to count against — without a location
+/// "0 of 0" would say nothing true.
 class CollectionProgressBar extends ConsumerWidget {
-  const CollectionProgressBar({
-    super.key,
-    this.scope = CollectionScope.everything,
-  });
+  const CollectionProgressBar({super.key, this.scope = CollectionScope.all});
 
   final CollectionScope scope;
 
@@ -150,11 +153,10 @@ class CollectionProgressBar extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final entries = ref.watch(collectionEntriesProvider).value;
-    if (entries == null) return const SizedBox.shrink();
+    final progress = ref.watch(collectionProgressProvider).value;
+    if (progress == null || progress.total == 0) return const SizedBox.shrink();
 
-    final total = entries.length;
-    final found = entries.where((e) => e.isFoundIn(scope)).length;
+    final found = progress.collectedIn(scope);
 
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 4),
@@ -165,8 +167,8 @@ class CollectionProgressBar extends ConsumerWidget {
             // A different sentence in the year view, because the number means
             // something different: this year, not ever.
             scope == CollectionScope.thisYear
-                ? l10n.collectionProgressThisYear(found, total)
-                : l10n.collectionProgress(found, total),
+                ? l10n.collectionProgressThisYear(found, progress.total)
+                : l10n.collectionProgress(found, progress.total),
             style: theme.textTheme.titleSmall?.copyWith(
               fontWeight: FontWeight.w600,
             ),
@@ -175,7 +177,7 @@ class CollectionProgressBar extends ConsumerWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(4),
             child: LinearProgressIndicator(
-              value: total == 0 ? 0 : found / total,
+              value: progress.fractionIn(scope),
               minHeight: 6,
               backgroundColor: theme.colorScheme.surfaceContainerHighest,
             ),
@@ -186,11 +188,10 @@ class CollectionProgressBar extends ConsumerWidget {
   }
 }
 
-/// All species · My collection · This year (`SAM-16`, 3.4).
+/// All · This year (`SAM-16`, 3.4).
 ///
-/// A segmented control rather than three chips: they are three views of the
-/// same grid, not three independent filters, and only one can be true at a
-/// time.
+/// A segmented control rather than two chips: they are two collections, not
+/// two independent filters, and only one can be shown at a time.
 class _ScopeSelector extends StatelessWidget {
   const _ScopeSelector({required this.scope, required this.onChanged});
 
@@ -208,12 +209,8 @@ class _ScopeSelector extends StatelessWidget {
         child: SegmentedButton<CollectionScope>(
           segments: [
             ButtonSegment(
-              value: CollectionScope.everything,
+              value: CollectionScope.all,
               label: Text(l10n.collectionScopeAll),
-            ),
-            ButtonSegment(
-              value: CollectionScope.mine,
-              label: Text(l10n.collectionOnlyMine),
             ),
             ButtonSegment(
               value: CollectionScope.thisYear,
@@ -263,32 +260,24 @@ class _GroupFilters extends StatelessWidget {
   }
 }
 
-/// One species: a photo if it has been found, a placeholder if not (`SAM-04`).
+/// One species the child has found: its photo, its name, its worth here now.
 class CollectionCard extends ConsumerWidget {
-  const CollectionCard({
-    super.key,
-    required this.entry,
-    this.scope = CollectionScope.everything,
-  });
+  const CollectionCard({super.key, required this.entry});
 
   final CollectionEntry entry;
-
-  /// Which collection this card is part of — a species on the life list but
-  /// not yet heard this year reads as *open* in the year view (`SAM-16`).
-  final CollectionScope scope;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
-    final found = entry.isFoundIn(scope);
+    final stars = entry.stars;
 
     return Semantics(
       button: true,
       label:
-          found
-              ? l10n.collectionCardCollectedA11y(entry.commonName, entry.stars)
-              : l10n.collectionCardOpenA11y(entry.commonName, entry.stars),
+          stars != null
+              ? l10n.collectionCardCollectedA11y(entry.commonName, stars)
+              : l10n.collectionCardNotHereA11y(entry.commonName),
       excludeSemantics: true,
       child: Card(
         clipBehavior: Clip.antiAlias,
@@ -304,33 +293,34 @@ class CollectionCard extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
-              Expanded(child: _CardImage(entry: entry, found: found)),
+              Expanded(child: _CardImage(entry: entry)),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 6, 8, 8),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      // An open cell keeps its name: the album is a wanted
-                      // list, and a row of question marks is not one.
                       entry.commonName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: theme.textTheme.labelLarge?.copyWith(
                         fontWeight: FontWeight.w600,
-                        color:
-                            found
-                                ? theme.colorScheme.onSurface
-                                : theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
                     const SizedBox(height: 2),
                     // "Here, this week: 200 ⭐" — both halves of that label are
-                    // load-bearing (SAM-03).
+                    // load-bearing (SAM-03). A species with no level here this
+                    // week is worth nothing here now (D20), and says so in the
+                    // same place instead of showing a 0.
                     Text(
-                      l10n.collectionWorthHereThisWeek(entry.stars),
+                      stars != null
+                          ? l10n.collectionWorthHereThisWeek(stars)
+                          : l10n.collectionNotHereThisWeek,
                       style: theme.textTheme.labelSmall?.copyWith(
-                        color: theme.colorScheme.primary,
+                        color:
+                            stars != null
+                                ? theme.colorScheme.primary
+                                : theme.colorScheme.onSurfaceVariant,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -346,96 +336,56 @@ class CollectionCard extends ConsumerWidget {
 }
 
 class _CardImage extends StatelessWidget {
-  const _CardImage({required this.entry, required this.found});
+  const _CardImage({required this.entry});
 
   final CollectionEntry entry;
-
-  /// Whether it counts as found in the current scope.
-  final bool found;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-
-    if (!found) {
-      // The placeholder the app already ships — no pipeline work, no new
-      // assets. SAM-04b replaces it with a per-species silhouette at P1, which
-      // is what turns a grid of blanks into a wanted list.
-      return Container(
-        color: theme.colorScheme.surfaceContainerHighest,
-        child: Center(
-          child: Icon(
-            AppIcons.helpOutlineRounded,
-            size: 32,
-            color: theme.colorScheme.onSurfaceVariant.withValues(alpha: 0.5),
-          ),
-        ),
-      );
-    }
+    final empty = Container(color: theme.colorScheme.surfaceContainerHighest);
 
     final path = entry.imagePath;
-    if (path == null) {
-      return Container(color: theme.colorScheme.surfaceContainerHighest);
-    }
+    if (path == null) return empty;
 
-    return Stack(
-      fit: StackFit.expand,
-      children: [
-        Image.asset(
-          path,
-          fit: BoxFit.cover,
-          // A missing bundle must not look like a crash. Without the species
-          // bundle built, every cell falls back to this quietly.
-          errorBuilder:
-              (context, _, _) =>
-                  Container(color: theme.colorScheme.surfaceContainerHighest),
-        ),
-        Positioned(
-          top: 4,
-          right: 4,
-          child: Container(
-            padding: const EdgeInsets.all(3),
-            decoration: BoxDecoration(
-              color: theme.colorScheme.primary,
-              shape: BoxShape.circle,
-            ),
-            child: Icon(
-              AppIcons.checkCircle,
-              size: 14,
-              color: theme.colorScheme.onPrimary,
-            ),
-          ),
-        ),
-      ],
+    return Image.asset(
+      path,
+      fit: BoxFit.cover,
+      // A missing bundle must not look like a crash. Without the species
+      // bundle built, every card falls back to this quietly.
+      errorBuilder: (context, _, _) => empty,
     );
   }
 }
 
 class _EmptyCollection extends StatelessWidget {
-  const _EmptyCollection({required this.scope});
+  const _EmptyCollection({required this.scope, required this.filteredOut});
 
-  /// Which view is empty — three different facts needing three messages.
+  /// Which collection is empty.
   final CollectionScope scope;
+
+  /// Whether there is something in [scope] that the group filter hides.
+  final bool filteredOut;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final l10n = AppLocalizations.of(context)!;
 
-    // "You have nothing yet", "nothing yet this year" and "nothing in this
-    // group here" are three different facts. Telling a child the first when
-    // the third is true is discouraging for no reason — and telling them the
-    // first in January, when the life list is full, would be plainly wrong.
-    final (title, subtitle) = switch (scope) {
-      CollectionScope.mine => (
+    // "You have nothing yet", "nothing yet this year" and "nothing from this
+    // group yet" are three different facts. Telling a child the first when the
+    // third is true is discouraging for no reason — and telling them the first
+    // in January, when the life list is full, would be plainly wrong.
+    final (title, subtitle) = switch ((scope, filteredOut)) {
+      (_, true) => (l10n.collectionNoMatches, null),
+      (CollectionScope.all, false) => (
         l10n.collectionEmptyTitle,
         l10n.collectionEmptySubtitle,
       ),
-      CollectionScope.thisYear => (
+      (CollectionScope.thisYear, false) => (
         l10n.collectionEmptyThisYearTitle,
         l10n.collectionEmptyThisYearSubtitle,
       ),
-      CollectionScope.everything => (l10n.collectionNoMatches, null),
     };
 
     return Center(

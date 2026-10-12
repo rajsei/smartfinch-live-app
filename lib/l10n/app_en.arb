@@ -2076,21 +2076,21 @@
       }
     }
   },
-  "collectionOnlyMine": "Only mine",
-  "@collectionOnlyMine": {
-    "description": "Filter chip narrowing the album to species already collected"
+  "collectionNotHereThisWeek": "Not here this week",
+  "@collectionNotHereThisWeek": {
+    "description": "Value line of a collected species that is not on the local list this week and so is worth nothing here now (SAM-03, D20)"
   },
   "collectionEmptyTitle": "Your collection is still empty",
   "@collectionEmptyTitle": {
     "description": "Shown when the child has not collected anything yet"
   },
-  "collectionEmptySubtitle": "Every bird you hear lands here.",
+  "collectionEmptySubtitle": "Every bird you hear lands here. To see which ones live around you, open Explore.",
   "@collectionEmptySubtitle": {
-    "description": "Second line of the empty collection state"
+    "description": "Second line of the empty collection state; points to Explore, where the species not found yet are"
   },
-  "collectionNoMatches": "Nothing in this group here",
+  "collectionNoMatches": "Nothing from this group yet",
   "@collectionNoMatches": {
-    "description": "Shown when the group filter leaves nothing to display"
+    "description": "Shown when the group filter leaves nothing of what the child has found"
   },
   "collectionUnavailable": "The collection could not be opened.",
   "@collectionUnavailable": {
@@ -2108,15 +2108,12 @@
       }
     }
   },
-  "collectionCardOpenA11y": "{species}, not found yet, worth {stars} stars here this week",
-  "@collectionCardOpenA11y": {
-    "description": "Screen-reader label for a species not yet collected",
+  "collectionCardNotHereA11y": "{species}, collected, not here this week",
+  "@collectionCardNotHereA11y": {
+    "description": "Screen-reader label for a collected species card that is not on the local list this week",
     "placeholders": {
       "species": {
         "type": "String"
-      },
-      "stars": {
-        "type": "int"
       }
     }
   },

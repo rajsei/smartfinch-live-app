@@ -32,7 +32,7 @@ Four foundational decisions (D1–D4), then the module-by-module verdicts from t
 | # | Subject | Decision | What follows from it |
 |:---:|---|---|---|
 | **D5** | Non-bird species (340 amphibians, 268 mammals, 254 insects) | **Keep all of them.** The collection shows everything by default, with a filter by taxon group | No second album, no separate branding track — one collection, filterable. The real influence of non-birds is a question for the field test, not for the design table. New requirement `SAM-17` |
-| **D6** | Species images | **Use them exactly as the original app does.** Silhouettes are **deferred out of the MVP** | The existing bundle pipeline and its licence situation carry over unchanged — no new licensing project. `SAM-04` keeps only the photo-vs-placeholder contrast for the MVP; per-species silhouettes become `SAM-04b` at P1 and are derived from the same images rather than drawn. ⚠️ The bundle is a **gitignored build output**: without a pipeline run there are no photos and no profile texts at all — see §4 |
+| **D6** | Species images | **Use them exactly as the original app does.** Silhouettes are **deferred out of the MVP** — *and struck on 2026-10-12, see “The Collection shows what was found” in §9* | The existing bundle pipeline and its licence situation carry over unchanged — no new licensing project. `SAM-04` keeps only the photo-vs-placeholder contrast for the MVP; per-species silhouettes become `SAM-04b` at P1 and are derived from the same images rather than drawn. ⚠️ The bundle is a **gitignored build output**: without a pipeline run there are no photos and no profile texts at all — see §4 |
 | **D7** | Spectrogram | **Keep, at full size** | It is not decoration: it shows *how sound becomes a picture*, and it makes interference visible — when you talk, you can see the calls disappear underneath. That is a teaching surface, so the scoring UI is laid out around it, not on top of it |
 | **D8** | Spoken announcements (TTS) | **Keep unchanged, default off** — as they are today | Explicitly **not** reworded to "something new!". Naming the species is the point for anyone who cannot look at the screen right now. Accessibility beats the guessing game |
 | **D9** | Maps and place names | **Keep the maps** — and add child-written place names | New: a session gets a name the child types ("Oma", "Urlaub", "Schulweg"), editable afterwards, with a pick-list of names already used. This is what lets a child place their own recordings. New requirement `LOG-13` |
@@ -209,6 +209,8 @@ Nothing in BirdNET Live resembles these. This is the actual Smartfinch project.
 | **Species images** | `SAM-04`, `SAM-06` | See the warning below |
 
 > **Species images — resolved by D6, with one piece of work left.** The images are not a procurement project: `tools/build_species_bundle.py` already downloads and packs them as 480×320 WebP, and `assets/models/taxonomy.csv` carries `image_url`, `image_author` and `image_license` per species. D6 says: use them exactly as the original app does, on the same licensing basis. Nothing new to negotiate.
+>
+> ⚠️ **Struck on 2026-10-12** — the Collection shows found species only, so there is no open cell for a silhouette; see “The Collection shows what was found” in §9. The two paragraphs below are kept as the record.
 >
 > **The silhouettes are out of the MVP** (`SAM-04b`, P1). The Pokédex effect rests on the *contrast* between a filled cell and an empty one, and the placeholder the app already ships delivers that without any pipeline work. What silhouettes add is the shape of the bird you are missing — recognisably a woodpecker, a duck — which is what turns a grid of blanks into a wanted list. Worth having, not worth blocking the prototype on.
 >
@@ -487,7 +489,7 @@ Every number from chapter 2 in one `const` object: the tier→stars table, the f
 
 **⚠️ That fixed a live inconsistency.** `detectedSpeciesSetProvider` — the ticks Explore draws — was computed from the on-disk *session files*. That was right when a detection was simply a detection; it is wrong now, and on a fresh Smartfinch install (where the JSON store is empty by design, gap H) Explore would have shown nothing ticked while the album filled up. It now reads the same life list.
 
-**A resolved tension in the requirements.** `SAM-02` says the Collection "shows only what the child has actually found"; `SAM-04` rests the whole Pokédex effect on the contrast between filled and empty cells, and `SAM-05` counts "37 of 128". The grid therefore shows the local list with found/open contrast, and **"only mine" is a filter rather than the starting state** — a grid of only what you already have has nothing to fill. `SAM-02`'s sentence is about the distinction from Explore, which still holds: two destinations, two questions.
+**A resolved tension in the requirements** — *resolved the other way on 2026-10-12: the album now shows found species only, see “The Collection shows what was found” in §9.* `SAM-02` says the Collection "shows only what the child has actually found"; `SAM-04` rests the whole Pokédex effect on the contrast between filled and empty cells, and `SAM-05` counts "37 of 128". The grid therefore shows the local list with found/open contrast, and **"only mine" is a filter rather than the starting state** — a grid of only what you already have has nothing to fill. `SAM-02`'s sentence is about the distinction from Explore, which still holds: two destinations, two questions.
 
 *Two small deliberate choices.* An open cell keeps its **name** — the album is a wanted list, and a row of question marks is not one. And an empty result distinguishes "you have nothing yet" from "nothing here matches this filter", because telling a child the first when the second is true is discouraging for no reason.
 
@@ -541,7 +543,7 @@ The specification's P1, with one reordering: **pull the year list forward** (`PK
 
 **`PKT-12`** was already complete. The ×2 and the `YearSpecies` write went in with phase 1, because at that point they cost one enum value and one insert — the recommendation to consider pulling it into P0 was right, and it happened without anyone deciding to.
 
-**`SAM-16` · the year list as a second collection.** The album's "only mine" toggle became a three-way scope: **All · Only mine · This year**. A segmented control rather than a third chip, because they are three views of one grid and only one can be true. The consequence worth naming: a species on the life list but not heard since January is **found** in the collection and **open** in the year view — that difference *is* the feature, and it is what makes every spring interesting again once the local region is largely exhausted (3.4).
+**`SAM-16` · the year list as a second collection.** The album's "only mine" toggle became a three-way scope: **All · Only mine · This year**. *(Two-way since 2026-10-12 — **All · This year** — when the album stopped showing open species and "only mine" had nothing left to filter.)* A segmented control rather than a third chip, because they are three views of one grid and only one can be true. The consequence worth naming: a species on the life list but not heard since January is **found** in the collection and **open** in the year view — that difference *is* the feature, and it is what makes every spring interesting again once the local region is largely exhausted (3.4).
 
 *Two small things follow from it.* The progress line says "1 of 2 species **this year**", not the life total — the number means something different and reusing the sentence would have made it wrong. And an empty year gets its own message: in January the life list is full and the year list is not, so telling a child their collection is empty would be plainly untrue. It also says *why*, so the reset reads as the game rather than as loss.
 
@@ -700,7 +702,7 @@ The phase-3 list in this document was built from the requirements the transition
 | ~~`HOME-06`~~ | ~~A "Still possible today" card naming 1–2 open daily badges~~ — **done**, and **removed again** on 2026-10-07, see below |
 | ~~`STAT-03`~~ | ~~Tapping a bar in the chart jumps to that day in the journal~~ — **done**, see below |
 | ~~`STAT-04`~~ | ~~A 7 / 30 / 365 range switch on the chart~~ — **done**, see below |
-| `SAM-04b` | Per-species silhouettes for undetected cells, replacing the shared placeholder |
+| ~~`SAM-04b`~~ | ~~Per-species silhouettes for undetected cells, replacing the shared placeholder~~ — **struck** on 2026-10-12: the Collection shows found species only |
 | `SAM-08` | A sample call on the species page — blocked on licence-free recordings, not on code |
 | ~~`SET-04`~~ | ~~Sounds and haptics separately switchable~~ — **done**, see below |
 | ~~`SET-06`~~ | ~~Storage management: space used, delete audio~~ — **done**, see below |
@@ -1204,6 +1206,27 @@ Decided 2026-10-07, right after `SET-06` landed on the plain screen. **Storage**
 
 **The rules page went the other way — out of the settings altogether.** *How do I earn stars?* (`SET-11`) opens from the **help screen** now, as a card directly under Live: it is something a child reads, not something they set, and help is where a child who wonders why a bird was worth 300 goes looking. It is a door to `RulesScreen`, not a copy of it — the page takes its numbers from `ScoringRules`, and a second text with the numbers typed in would be the one that goes wrong on the first rebalance. Moving it turned up a latent bug in the help screen: its section headings were a `Row` with an unconstrained `Text`, so a long heading at a large text size ran off the edge. They wrap now.
 
+### The Collection shows what was found — and nothing else
+
+Decided 2026-10-12. **`SAM-04b` is struck**, and with it the open cells it was meant to fill: the album shows the species a child has found and no others. The species still to find are **Explore's** — the list of everything that occurs here, which already ticks what is collected. `SAM-02` had said exactly this ("shows only what the child has actually found"); phase 2.6 read it against `SAM-04`'s contrast argument and showed both, with *only mine* as a filter. That reading is reversed, and *only mine* went with it, because in an album of finds it had nothing left to filter. The two views are **All · This year**.
+
+**The album is now built from the life list, not from the local list** — and that fixed a bug the old design hid. The grid used to be Explore's list of what occurs here **this week**, marked found or open. A species found in May and absent in December was therefore not in it at all: a child's swallow vanished from their collection every autumn and came back in spring, and a bird found on holiday never appeared. With open cells on screen nobody could see it; with only finds on screen it would have been the first thing anyone noticed. Now every `LifeSpecies` row is a card. A found species without a level here this week keeps its card and says **Diese Woche nicht hier** where its value would be — not a 0, which would read as a mark against it, and not nothing, which would read as broken.
+
+What the local list still decides:
+
+| | |
+|---|---|
+| The value on a card (`SAM-03`) | Only species on this week's local list have a level, so only they show "Hier, diese Woche: 200 ⭐" (D20) |
+| The progress line (`SAM-05`) | "37 von 128 Arten in deiner Gegend" counts finds on the local list against its length. It is now the one place in the album that says how many are still to find. **Hidden without a location**, where "0 von 0" would say nothing |
+
+Without a location the album still opens and still shows everything found — what a child has does not depend on where they are standing. A geo model that fails to load costs the values and the progress line, not the collection.
+
+*Other things that changed with it.* The tick on every card went: in an album of finds it marked all of them. The empty album now says where the rest are (*„Welche es in deiner Gegend gibt, zeigt dir ‚Erkunden‘.“*), and a group filter with nothing in it says **„Aus dieser Gruppe noch nichts“** instead of „gibt es hier nichts“ — the old line was a claim about the region, and a child who had found no frogs would have read that there are none. The year view sorts by the first find of the year rather than of all time.
+
+*Strings:* two new keys (`collectionNotHereThisWeek`, `collectionCardNotHereA11y`), two retired (`collectionOnlyMine`, `collectionCardOpenA11y`), two reworded (`collectionNoMatches`, `collectionEmptySubtitle`), all twelve locales.
+
+*Left open:* `AUS-09`'s family sets ("all tits in your region") were specified with silhouettes for the missing members. How a set shows what is missing is now a decision for when `AUS-09` is built, not something the album provides.
+
 ### What to watch during the two-week test
 
 Not "was it used", but the four things the design is betting on:
@@ -1222,7 +1245,7 @@ Not "was it used", but the four things the design is betting on:
 1. **Pull the year list forward.** D20 leaves the year list carrying the seasonal story on its own (§5). `PKT-12`, `SAM-16` and `AUS-13` sit at P1 today; `PKT-12` is cheap and belongs in P0, and the other two should be early P1 rather than late.
 2. **⚠️ One implementation trap in `PKT-20`, worth reading before the scoring engine is written.** The pause must not touch the **life list**. If a test-mode detection were recorded there, the first-find ×3 for that species would be silently burned — the child's real nuthatch, weeks later, would score 100 instead of 300, for a reason nothing in the app could explain. That is precisely the hidden punishment principle 1 forbids. Same for `DaySpecies` (the species must still be able to score later that day) and for `recomputeAllScores()`, which has to honour the flag or it will retroactively award every test recording ever made. Written up as `DAT-11`.
 3. **Which of the 12 locales get child-register copy?** Keeping 12 locales (D4) is a UI-string decision. Rewriting species profiles in a child's register in 12 languages is a different order of magnitude — and under D5 the species pool includes amphibians, mammals and insects. Recommendation: German first, English second.
-4. **Silhouette rendering** (`SAM-04b`, P1 — deferred out of the MVP) — one pass in the bundle pipeline, plus a decision on how attribution follows a derivative image.
+4. ~~**Silhouette rendering** (`SAM-04b`, P1 — deferred out of the MVP) — one pass in the bundle pipeline, plus a decision on how attribution follows a derivative image.~~ **Struck 2026-10-12** — the Collection shows found species only.
 5. **The species bundle has to be built on every dev machine.** `assets/species_images/` and `assets/species_data/` are gitignored outputs; without a `tools/build_species_bundle.py` run there are no photos and no profile texts anywhere. Worth a line in the README, because it presents as a bug rather than as missing setup.
 6. **Windows build** — still exists, still costs CI time, not in the specification's target platforms. Decide explicitly: drop it, or keep it unmaintained behind a note.
 7. **`SET-12` defaults need a real number.** The deletion rule (most-recorded species, lowest confidence first, 30 days, 100 clips per species) is sound, but nobody has measured what a child actually accumulates in a month. Set generous defaults, then check against the field test rather than guessing now.

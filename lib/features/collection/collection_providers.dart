@@ -1,11 +1,12 @@
 // =============================================================================
-// The Collection — what the child has, and what is still open
+// The Collection — what the child has found, and nothing else
 // =============================================================================
 //
 // `SAM-02` splits this from Explore deliberately: two destinations answering
 // two questions. **Explore** is the reference list — everything that occurs
 // here, found or not. **The Collection** is the thing a child opens in the
-// evening.
+// evening, and it shows only what they have found (decided 2026-10-12: the
+// open cells went, and the silhouettes meant for them, `SAM-04b`, with them).
 //
 // ### Where "found" comes from
 //
@@ -25,6 +26,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:meta/meta.dart';
 
+import '../../shared/providers/settings_providers.dart';
 import '../explore/explore_providers.dart';
 import '../inference/geo_abundance.dart';
 import '../scoring/scoring_providers.dart';
@@ -72,16 +74,16 @@ final collectedThisYearProvider = FutureProvider<Map<String, DateTime>>((
       .collectedIn(DateTime.now().year);
 });
 
-/// One cell in the album.
+/// One card in the album — always a species the child has found.
 @immutable
 class CollectionEntry {
   const CollectionEntry({
     required this.scientificName,
     required this.commonName,
-    required this.tier,
-    required this.stars,
     required this.taxonGroup,
-    this.collectedAt,
+    required this.collectedAt,
+    this.tier,
+    this.stars,
     this.collectedThisYearAt,
     this.imagePath,
   });
@@ -89,21 +91,20 @@ class CollectionEntry {
   final String scientificName;
   final String commonName;
 
-  /// Rarity here, this week (2.1). Both halves of that matter and both are in
-  /// the label the card shows.
-  final ExploreTier tier;
-
-  /// What this species is worth **here, this week** (`SAM-03`).
-  ///
-  /// Answerable *before* the detection — "what is this bird worth to me?" is
-  /// the question the album is opened with.
-  final int stars;
-
   /// `Aves`, `Mammalia`, `Amphibia`, `Insecta` (`SAM-17`).
   final String taxonGroup;
 
-  /// Null while the species is still open.
-  final DateTime? collectedAt;
+  /// When it entered the life list.
+  final DateTime collectedAt;
+
+  /// Rarity here, this week (2.1) — or null when the species is not on the
+  /// local list this week: a summer visitor in December, a bird found on
+  /// holiday.
+  final ExploreTier? tier;
+
+  /// What this species is worth **here, this week** (`SAM-03`), or null for
+  /// the same reason as [tier]: without a local level it scores nothing (D20).
+  final int? stars;
 
   /// When it was first heard **this calendar year** (`SAM-16`).
   ///
@@ -112,71 +113,92 @@ class CollectionEntry {
   /// visible.
   final DateTime? collectedThisYearAt;
 
-  /// The bundled photo, or null to fall back to the placeholder (`SAM-04`).
+  /// The bundled photo, or null when there is none.
   final String? imagePath;
-
-  bool get isCollected => collectedAt != null;
 
   bool get isCollectedThisYear => collectedThisYearAt != null;
 
-  /// Whether this entry counts as found in [scope].
-  bool isFoundIn(CollectionScope scope) => switch (scope) {
-    CollectionScope.everything => isCollected,
-    CollectionScope.mine => isCollected,
+  /// Whether the species has a level here this week, and so a value.
+  bool get isHereThisWeek => stars != null;
+
+  /// Whether this entry belongs in [scope].
+  bool isIn(CollectionScope scope) => switch (scope) {
+    CollectionScope.all => true,
     CollectionScope.thisYear => isCollectedThisYear,
+  };
+
+  /// The find that orders [scope] — the first ever, or the first this year.
+  DateTime dateIn(CollectionScope scope) => switch (scope) {
+    CollectionScope.all => collectedAt,
+    CollectionScope.thisYear => collectedThisYearAt ?? collectedAt,
   };
 }
 
-/// Which of the three collections the album is showing (`SAM-16`, `SAM-02`).
+/// Which of the two collections the album is showing (`SAM-16`).
 enum CollectionScope {
-  /// Everything that occurs here, found or not — the default, because the
-  /// contrast between filled and empty cells is what `SAM-04` rests on.
-  everything,
-
-  /// Only what has ever been collected.
-  mine,
+  /// Everything ever collected — the life list.
+  all,
 
   /// Only what has been collected **this year**. Empties on 1 January without
   /// the life list losing anything (3.4).
   thisYear,
 }
 
-/// The album: every species that occurs here, marked collected or open.
+/// The local list by scientific name — what occurs here this week, with its
+/// level (`DAT-10`).
 ///
-/// The grid deliberately contains **both**. `SAM-04` rests the whole Pokédex
-/// effect on the contrast — "a grid where some cells carry a bird and others
-/// visibly do not is already the thing that makes a child want to fill it" —
-/// and a grid of only what you already have has nothing to fill.
+/// Empty when there is no location or the geo model cannot run. The album
+/// itself is the life list and does not depend on this; only the "here, this
+/// week" values and the progress line do, and both say less rather than fail.
+final collectionLocalSpeciesProvider =
+    FutureProvider<Map<String, ExploreSpecies>>((ref) async {
+      try {
+        final species = await ref.watch(exploreSpeciesProvider.future);
+        return {for (final s in species) s.scientificName: s};
+      } catch (_) {
+        return const {};
+      }
+    });
+
+/// The album: every species the child has found, and nothing else.
+///
+/// Built from the **life list**, not from the local list. Species not found
+/// yet are not shown at all — they are Explore's, which lists everything that
+/// occurs here (`SAM-02`). And a found species stays in the album when it is
+/// not here this week: a swallow collected in May is still collected in
+/// December, it is only worth nothing here right now.
 final collectionEntriesProvider = FutureProvider<List<CollectionEntry>>((
   ref,
 ) async {
-  final species = await ref.watch(exploreSpeciesProvider.future);
   final collected = await ref.watch(collectedSpeciesProvider.future);
   final thisYear = await ref.watch(collectedThisYearProvider.future);
+  final local = await ref.watch(collectionLocalSpeciesProvider.future);
+  final taxonomy = await ref.watch(taxonomyServiceProvider.future);
+  final speciesLocale = ref.watch(effectiveSpeciesLocaleProvider);
   final rules = ScoringRules.current;
 
-  final entries = [
-    for (final s in species)
+  final entries = <CollectionEntry>[];
+  for (final MapEntry(key: name, value: collectedAt) in collected.entries) {
+    final here = local[name];
+    final info = here?.taxonomy ?? taxonomy.lookup(name);
+    entries.add(
       CollectionEntry(
-        scientificName: s.scientificName,
-        commonName: s.commonName,
-        tier: s.tier,
-        stars: rules.starsFor(s.tier),
-        taxonGroup: s.taxonomy?.taxonGroup ?? '',
-        collectedAt: collected[s.scientificName],
-        collectedThisYearAt: thisYear[s.scientificName],
-        imagePath: s.taxonomy?.assetImagePath,
+        scientificName: name,
+        commonName:
+            info?.commonNameForLocale(speciesLocale) ?? here?.commonName ?? name,
+        taxonGroup: info?.taxonGroup ?? '',
+        collectedAt: collectedAt,
+        tier: here?.tier,
+        stars: here == null ? null : rules.starsFor(here.tier),
+        collectedThisYearAt: thisYear[name],
+        imagePath: info?.assetImagePath,
       ),
-  ];
+    );
+  }
 
-  // Collected first, then the open ones by what they are worth. A child
-  // scrolling their album sees what they have, then what is worth going out
-  // for — which is the order the screen is opened in.
-  entries.sort((a, b) {
-    if (a.isCollected != b.isCollected) return a.isCollected ? -1 : 1;
-    if (a.isCollected) return b.collectedAt!.compareTo(a.collectedAt!);
-    return b.stars.compareTo(a.stars);
-  });
+  // Newest find first: the album is opened in the evening, and what was found
+  // today is what a child looks for.
+  entries.sort((a, b) => b.collectedAt.compareTo(a.collectedAt));
 
   return entries;
 });
@@ -184,25 +206,48 @@ final collectionEntriesProvider = FutureProvider<List<CollectionEntry>>((
 /// "37 of 128 species in your region" (`SAM-05`).
 @immutable
 class CollectionProgress {
-  const CollectionProgress({required this.collected, required this.total});
+  const CollectionProgress({
+    required this.collected,
+    required this.total,
+    this.collectedThisYear = 0,
+  });
 
+  /// Species on the local list that are on the life list.
   final int collected;
+
+  /// Species on the local list that are on the year list.
+  final int collectedThisYear;
+
+  /// Species on the local list.
   final int total;
 
-  double get fraction => total == 0 ? 0 : collected / total;
+  int collectedIn(CollectionScope scope) => switch (scope) {
+    CollectionScope.all => collected,
+    CollectionScope.thisYear => collectedThisYear,
+  };
+
+  double fractionIn(CollectionScope scope) =>
+      total == 0 ? 0 : collectedIn(scope) / total;
+
+  double get fraction => fractionIn(CollectionScope.all);
 }
 
 /// Progress against the local list, not against everything the model knows.
 ///
-/// 37 of 128 is a number a child can act on. 37 of 9,789 is not.
+/// 37 of 128 is a number a child can act on. 37 of 9,789 is not. With the
+/// open species gone from the album, this line is the one place in it that
+/// says how many are still to find — the species themselves are in Explore.
 final collectionProgressProvider = FutureProvider<CollectionProgress>((
   ref,
 ) async {
-  final entries = await ref.watch(collectionEntriesProvider.future);
+  final local = await ref.watch(collectionLocalSpeciesProvider.future);
+  final collected = await ref.watch(collectedSpeciesProvider.future);
+  final thisYear = await ref.watch(collectedThisYearProvider.future);
 
   return CollectionProgress(
-    collected: entries.where((e) => e.isCollected).length,
-    total: entries.length,
+    collected: local.keys.where(collected.containsKey).length,
+    collectedThisYear: local.keys.where(thisYear.containsKey).length,
+    total: local.length,
   );
 });
 
