@@ -2362,6 +2362,57 @@
   "@storageDeleteFailed": {
     "description": "SET-06: shown when some recordings could not be deleted"
   },
+  "storageRetentionAge": "Keep at least",
+  "@storageRetentionAge": {
+    "description": "Title of the SET-12 setting: how long every recording is kept before the clean-up may delete it"
+  },
+  "storageRetentionAgeSubtitle": "Every recording stays this long, however many there are.",
+  "@storageRetentionAgeSubtitle": {
+    "description": "Subtitle of the minimum-age retention setting (SET-12)"
+  },
+  "storageRetentionDays": "{days, plural, =1{1 day} other{{days} days}}",
+  "@storageRetentionDays": {
+    "description": "A number of days in the minimum-age retention dropdown (SET-12)",
+    "placeholders": {
+      "days": {
+        "type": "int"
+      }
+    }
+  },
+  "storageRetentionCap": "Recordings per species",
+  "@storageRetentionCap": {
+    "description": "Title of the SET-12 setting: recordings per species above which the least certain are deleted"
+  },
+  "storageRetentionCapSubtitle": "If a species has more, its least certain recordings are deleted first.",
+  "@storageRetentionCapSubtitle": {
+    "description": "Subtitle of the per-species retention setting (SET-12)"
+  },
+  "storageRetentionHelp": "So that the recordings don't fill up the phone, the app tidies up every time it starts. A recording can only go once it is older than the time set here, and only when its species has more recordings than the number set here. Then the least certain go first — so the only recording of a rare bird stays. Recordings you keep are never deleted.",
+  "@storageRetentionHelp": {
+    "description": "Help text for both retention settings: when the clean-up runs, what it deletes first, that kept recordings stay (SET-12)"
+  },
+  "storageRetentionConfirmTitle": "Delete recordings now?",
+  "@storageRetentionConfirmTitle": {
+    "description": "Title of the confirmation when a stricter retention setting would delete recordings now"
+  },
+  "storageRetentionConfirmBody": "{count, plural, =1{With this setting, 1 recording is deleted now. It cannot be brought back. Recordings you keep stay.} other{With this setting, {count} recordings are deleted now. They cannot be brought back. Recordings you keep stay.}}",
+  "@storageRetentionConfirmBody": {
+    "description": "Body of that confirmation, with how many recordings the stricter setting deletes now",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "storageRetentionDone": "{count, plural, =1{1 recording deleted.} other{{count} recordings deleted.}}",
+  "@storageRetentionDone": {
+    "description": "Snack bar after a stricter retention setting deleted recordings",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "rulesTitle": "How do I earn stars?",
   "@rulesTitle": {
     "description": "SET-11: title of the rules page"

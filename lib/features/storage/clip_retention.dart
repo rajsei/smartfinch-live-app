@@ -21,6 +21,9 @@
 // Both are generous on purpose. Nobody has yet measured what a child actually
 // accumulates in a month, so chapter 9 says to set them high and check against
 // the field test rather than guess low and delete something that mattered.
+// They are settings (Advanced settings → Storage), from a fixed list each
+// ([dayOptions], [perSpeciesOptions]) rather than a free number: a cap of 0
+// typed by accident would delete every recording older than a week.
 //
 // ### Favourites are never deleted
 //
@@ -65,13 +68,33 @@ class ClipCandidate {
   final bool isFavourite;
 }
 
-/// The two thresholds, as data so they can become settings.
+/// The two thresholds, as data, set in Advanced settings → Storage.
 @immutable
 class ClipRetentionPolicy {
   const ClipRetentionPolicy({
-    this.minimumAge = const Duration(days: 30),
-    this.perSpeciesCap = 100,
+    this.minimumAge = const Duration(days: defaultDays),
+    this.perSpeciesCap = defaultPerSpeciesCap,
   });
+
+  /// The shipped minimum age, in days.
+  static const int defaultDays = 30;
+
+  /// The shipped cap per species.
+  static const int defaultPerSpeciesCap = 100;
+
+  /// What the minimum-age setting offers. Nothing under a week: a recording
+  /// from last weekend is still one a child plays back.
+  static const List<int> dayOptions = [7, 14, 30, 90, 180, 365];
+
+  /// What the per-species setting offers.
+  static const List<int> perSpeciesOptions = [20, 50, 100, 200, 500];
+
+  /// Whether this policy can delete anything [other] would keep.
+  ///
+  /// A shorter minimum age or a lower cap is stricter. Only a stricter policy
+  /// can make recordings go *now*, so only a stricter one is confirmed first.
+  bool isStricterThan(ClipRetentionPolicy other) =>
+      minimumAge < other.minimumAge || perSpeciesCap < other.perSpeciesCap;
 
   /// Nothing younger than this is ever a candidate.
   ///

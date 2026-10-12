@@ -18,6 +18,8 @@
 // Once per app start, off the critical path. Not on a timer and not on every
 // detection: nothing here is urgent, and a job that competes with inference
 // for a disk is a job that drops frames during a live session (`NFA-13`).
+// The one other time is right after a stricter setting is confirmed in
+// Advanced settings → Storage, so what the confirmation counted is what goes.
 // =============================================================================
 
 import 'package:drift/drift.dart';
@@ -76,6 +78,20 @@ class ClipRetentionJob {
           isFavourite: row.clipIsFavourite,
         ),
     ];
+  }
+
+  /// How many clips [candidate] would delete right now, deleting nothing.
+  ///
+  /// Asked before a stricter setting is saved, so the parent sees the number
+  /// before anything goes rather than finding out on the next start.
+  Future<int> wouldDelete(
+    ClipRetentionPolicy candidate, {
+    DateTime? now,
+  }) async {
+    final clips = await candidates();
+    return candidate
+        .selectForDeletion(clips, now: now ?? DateTime.now())
+        .length;
   }
 
   /// Deletes what the policy selects.

@@ -225,6 +225,42 @@ void main() {
 
       expect(patient.selectForDeletion(clips, now: now), isEmpty);
     });
+
+    test('the shipped defaults are 30 days and 100 per species', () {
+      expect(policy.minimumAge, const Duration(days: 30));
+      expect(policy.perSpeciesCap, 100);
+    });
+
+    test('the settings offer the defaults, and nothing under a week', () {
+      // The dropdowns are built from these lists; a default missing from them
+      // would show a value the parent cannot pick back.
+      expect(
+        ClipRetentionPolicy.dayOptions,
+        contains(ClipRetentionPolicy.defaultDays),
+      );
+      expect(
+        ClipRetentionPolicy.perSpeciesOptions,
+        contains(ClipRetentionPolicy.defaultPerSpeciesCap),
+      );
+      expect(ClipRetentionPolicy.dayOptions.every((d) => d >= 7), isTrue);
+      expect(ClipRetentionPolicy.perSpeciesOptions.every((c) => c > 0), isTrue);
+    });
+
+    test('shorter or lower is stricter; longer and higher is not', () {
+      // Only a stricter policy can delete anything now, so only a stricter
+      // one is confirmed before it is saved.
+      const shorter = ClipRetentionPolicy(minimumAge: Duration(days: 7));
+      const lower = ClipRetentionPolicy(perSpeciesCap: 20);
+      const looser = ClipRetentionPolicy(
+        minimumAge: Duration(days: 90),
+        perSpeciesCap: 500,
+      );
+
+      expect(shorter.isStricterThan(policy), isTrue);
+      expect(lower.isStricterThan(policy), isTrue);
+      expect(looser.isStricterThan(policy), isFalse);
+      expect(policy.isStricterThan(policy), isFalse);
+    });
   });
 
   group('the clip path reaches the database', () {

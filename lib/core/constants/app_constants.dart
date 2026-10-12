@@ -191,6 +191,13 @@ abstract final class PrefKeys {
   /// Total clip length = analysis window (e.g. 3 s) + 2 × clipContext.
   static const String clipContext = 'clip_context';
 
+  /// Days every clip is kept before the clean-up may delete it (`SET-12`).
+  static const String clipRetentionDays = 'clip_retention_days';
+
+  /// Clips of one species above which the clean-up trims the weakest
+  /// (`SET-12`).
+  static const String clipRetentionPerSpecies = 'clip_retention_per_species';
+
   // Export settings
   /// Deprecated since 0.12.0 — superseded by [exportSelection]. Kept only
   /// for one-time migration of pre-0.12.0 installs.

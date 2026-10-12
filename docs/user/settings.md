@@ -63,9 +63,36 @@ marked to keep in the journal stay too, unless you tick the box in the
 confirmation that deletes them as well. It does not run while the app is
 listening; stop listening first.
 
-Recordings are also cleaned up automatically once a species has many of them,
-starting with the oldest and weakest — see the journal's keep switch for the
-recordings you want to hold on to.
+### Automatic clean-up
+
+Every time the app starts it tidies up the recordings, so that they do not fill
+the phone. Two settings, between the sizes and **Delete recordings**, decide
+how much it keeps:
+
+- **Keep at least** (7, 14, 30, 90, 180 or 365 days; default **30 days**) —
+  no recording younger than this is ever deleted, however many there are. A
+  recording from this morning is the one a child most wants to play back
+  tonight.
+- **Recordings per species** (20, 50, 100, 200 or 500; default **100**) — only
+  once a species has more recordings than this does the clean-up touch it.
+
+When both say a species has too many, its **least certain** recordings go
+first, and among equally certain ones the oldest. So the hundredth unclear
+blackbird goes before the only nuthatch — a plain oldest-first rule would
+delete exactly the recordings a child was most excited about. Recordings marked
+**Keep** in the journal are never deleted; they still count towards the number
+per species.
+
+The values are a fixed list rather than a free number because the clean-up
+deletes: a cap of 0 typed by accident would remove every recording older than
+a week. The defaults are generous on purpose — nobody has measured yet what a
+child records in a month.
+
+**Raising** either value deletes nothing. **Lowering** one can make recordings
+go at once, so the app first counts how many and asks — *"With this setting,
+312 recordings are deleted now"* — and only on **Delete** saves the value and
+runs the clean-up straight away. **Cancel** keeps the old value. If the new
+value deletes nothing, it is saved without asking.
 
 ## Backup
 

@@ -1,9 +1,9 @@
 // =============================================================================
-// StorageSettingsSection — Settings → Storage (SET-06)
+// StorageSettingsSection — Settings → Storage (SET-06, SET-12)
 // =============================================================================
 //
-// Three rows and one action, behind Advanced settings: what the recordings
-// take, what the collection takes, and "Delete recordings". It started on the
+// Behind Advanced settings: what the recordings take, what the collection
+// takes, the clean-up's two thresholds, and "Delete recordings". It started on the
 // plain screen, where `SET-01` listed storage, and moved on 2026-10-07 with
 // the danger zone — deleting is something a parent goes looking for, not
 // something a child should scroll past on the first page.
@@ -16,6 +16,13 @@
 // Measured each time the screen opens, and shown without a spinner: a row with
 // no number yet is better than a progress indicator for a figure nobody is
 // waiting on.
+//
+// **The thresholds (`SET-12`) sit between the sizes and the button** — the
+// gentle way to make room, next to the blunt one. Loosening one deletes
+// nothing. Tightening one can make recordings go at once, so the app counts
+// them first, asks with that number, and on a yes runs the clean-up straight
+// away: what the question counted is what goes, not something discovered on
+// the next start.
 // =============================================================================
 
 import 'package:flutter/material.dart';
@@ -25,16 +32,27 @@ import '../../../l10n/app_localizations.dart';
 import '../../../shared/utils/app_haptics.dart';
 import '../../../shared/utils/app_icons.dart';
 import '../../journal/journal_providers.dart';
+import '../../scoring/scoring_providers.dart';
+import '../clip_retention.dart';
+import '../clip_retention_settings.dart';
 import '../storage_providers.dart';
 import '../storage_service.dart';
 
 /// The storage section of the advanced settings screen (`SET-06`).
 class StorageSettingsSection extends ConsumerStatefulWidget {
-  const StorageSettingsSection({super.key, required this.sectionHeader});
+  const StorageSettingsSection({
+    super.key,
+    required this.sectionHeader,
+    required this.titleWithHelp,
+  });
 
   /// The settings screen's own section header, so this one looks the same.
   final Widget Function({required String title, required String subtitle})
   sectionHeader;
+
+  /// The settings screen's title with its help button, for the thresholds.
+  final Widget Function({required String title, String? helpBody})
+  titleWithHelp;
 
   @override
   ConsumerState<StorageSettingsSection> createState() =>
@@ -44,6 +62,11 @@ class StorageSettingsSection extends ConsumerStatefulWidget {
 class _StorageSettingsSectionState
     extends ConsumerState<StorageSettingsSection> {
   bool _deleting = false;
+
+  /// A stricter threshold is being counted, confirmed or applied.
+  bool _trimming = false;
+
+  bool get _busy => _deleting || _trimming;
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +86,8 @@ class _StorageSettingsSectionState
                 l10n.storageRecordingsKept(usage.keptCount),
             ].join(' · ');
 
-    final canDelete = usage != null && usage.recordingBytes > 0 && !_deleting;
+    final canDelete = usage != null && usage.recordingBytes > 0 && !_busy;
+    final policy = ref.watch(clipRetentionPolicyProvider);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -83,6 +107,30 @@ class _StorageSettingsSectionState
           title: Text(l10n.storageCollection),
           subtitle: Text(l10n.storageCollectionDetail),
           trailing: _Amount(usage == null ? null : size(usage.collectionBytes)),
+        ),
+        // SET-12 · how long every recording stays, however many there are.
+        _ThresholdTile(
+          title: widget.titleWithHelp(
+            title: l10n.storageRetentionAge,
+            helpBody: l10n.storageRetentionHelp,
+          ),
+          subtitle: l10n.storageRetentionAgeSubtitle,
+          value: policy.minimumAge.inDays,
+          options: ClipRetentionPolicy.dayOptions,
+          label: l10n.storageRetentionDays,
+          onChanged: _busy ? null : (days) => _changeThreshold(days: days),
+        ),
+        // SET-12 · how many of one species before the least certain go.
+        _ThresholdTile(
+          title: widget.titleWithHelp(
+            title: l10n.storageRetentionCap,
+            helpBody: l10n.storageRetentionHelp,
+          ),
+          subtitle: l10n.storageRetentionCapSubtitle,
+          value: policy.perSpeciesCap,
+          options: ClipRetentionPolicy.perSpeciesOptions,
+          label: (cap) => '$cap',
+          onChanged: _busy ? null : (cap) => _changeThreshold(cap: cap),
         ),
         // The error palette, like the danger zone's actions: this one cannot
         // be undone either.
@@ -124,14 +172,7 @@ class _StorageSettingsSectionState
           .read(storageServiceProvider)
           .deleteRecordings(includeKept: includeKept);
       if (!mounted) return;
-
-      // The journal caches its days; without this a day opened next would
-      // still offer to play recordings that are gone.
-      ref
-        ..invalidate(storageUsageProvider)
-        ..invalidate(journalDaysProvider)
-        ..invalidate(journalBucketsProvider)
-        ..invalidate(journalDayProvider);
+      _refreshAfterDeleting();
 
       _say(
         result.failed > 0
@@ -149,6 +190,100 @@ class _StorageSettingsSectionState
     } finally {
       if (mounted) setState(() => _deleting = false);
     }
+  }
+
+  /// Saves a threshold, after asking when a stricter one deletes something.
+  Future<void> _changeThreshold({int? days, int? cap}) async {
+    final l10n = AppLocalizations.of(context)!;
+    final current = ref.read(clipRetentionPolicyProvider);
+    final next = ClipRetentionPolicy(
+      minimumAge: days == null ? current.minimumAge : Duration(days: days),
+      perSpeciesCap: cap ?? current.perSpeciesCap,
+    );
+
+    setState(() => _trimming = true);
+    try {
+      // Only a stricter policy can make anything go now, and it says how much
+      // before it is saved — a parent who lowers the cap from 100 to 20 should
+      // see the number before the recordings are gone, not after.
+      var doomed = 0;
+      if (next.isStricterThan(current)) {
+        doomed = await ref.read(clipRetentionJobProvider).wouldDelete(next);
+        if (!mounted) return;
+        if (doomed > 0 && !await _confirmThreshold(doomed)) return;
+      }
+
+      if (days != null) {
+        await ref.read(clipRetentionDaysProvider.notifier).set(days);
+      }
+      if (cap != null) {
+        await ref.read(clipRetentionPerSpeciesProvider.notifier).set(cap);
+      }
+      if (doomed == 0) return;
+
+      // The job provider has rebuilt with the new thresholds.
+      final result = await ref.read(clipRetentionJobProvider).run();
+      if (!mounted) return;
+      _refreshAfterDeleting();
+      _say(
+        result.failed > 0
+            ? l10n.storageDeleteFailed
+            : l10n.storageRetentionDone(result.deleted),
+      );
+    } catch (error, stack) {
+      debugPrint(
+        '[Storage] applying a retention threshold failed: $error\n$stack',
+      );
+      _say(l10n.storageDeleteFailed);
+    } finally {
+      if (mounted) setState(() => _trimming = false);
+    }
+  }
+
+  /// Whether the parent agrees to [count] recordings going now.
+  Future<bool> _confirmThreshold(int count) async {
+    final l10n = AppLocalizations.of(context)!;
+
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (dialogContext) {
+        final theme = Theme.of(dialogContext);
+        return AlertDialog(
+          title: Text(l10n.storageRetentionConfirmTitle),
+          content: Text(l10n.storageRetentionConfirmBody(count)),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(dialogContext).pop(false),
+              child: Text(l10n.cancel),
+            ),
+            // The error palette, like "Delete recordings": this cannot be
+            // undone either.
+            FilledButton.tonal(
+              style: FilledButton.styleFrom(
+                backgroundColor: theme.colorScheme.errorContainer,
+                foregroundColor: theme.colorScheme.onErrorContainer,
+              ),
+              onPressed: () {
+                AppHaptics.mediumImpact(dialogContext);
+                Navigator.of(dialogContext).pop(true);
+              },
+              child: Text(l10n.storageDeleteAction),
+            ),
+          ],
+        );
+      },
+    );
+    return confirmed ?? false;
+  }
+
+  /// The journal caches its days; without this a day opened next would still
+  /// offer to play recordings that are gone.
+  void _refreshAfterDeleting() {
+    ref
+      ..invalidate(storageUsageProvider)
+      ..invalidate(journalDaysProvider)
+      ..invalidate(journalBucketsProvider)
+      ..invalidate(journalDayProvider);
   }
 
   /// Null when cancelled; otherwise whether the kept recordings go too.
@@ -216,6 +351,56 @@ class _StorageSettingsSectionState
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+}
+
+/// One retention threshold: a title, what it does, and a short list to pick
+/// from.
+class _ThresholdTile extends StatelessWidget {
+  const _ThresholdTile({
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.options,
+    required this.label,
+    required this.onChanged,
+  });
+
+  final Widget title;
+  final String subtitle;
+  final int value;
+  final List<int> options;
+  final String Function(int value) label;
+
+  /// Null while something is being deleted.
+  final ValueChanged<int>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    // A stored value this build does not offer is shown rather than snapped:
+    // the dropdown must contain it, and quietly moving it would change what
+    // the clean-up deletes.
+    final values = {...options, value}.toList()..sort();
+    final changed = onChanged;
+
+    return ListTile(
+      title: title,
+      subtitle: Text(subtitle),
+      trailing: DropdownButton<int>(
+        value: value,
+        underline: const SizedBox.shrink(),
+        items: [
+          for (final v in values)
+            DropdownMenuItem(value: v, child: Text(label(v))),
+        ],
+        onChanged:
+            changed == null
+                ? null
+                : (v) {
+                  if (v != null && v != value) changed(v);
+                },
+      ),
+    );
   }
 }
 

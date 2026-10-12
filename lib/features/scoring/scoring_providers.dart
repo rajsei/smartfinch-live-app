@@ -18,6 +18,7 @@ import '../../shared/providers/settings_providers.dart';
 import '../explore/explore_providers.dart';
 import '../live/live_providers.dart';
 import '../storage/clip_retention_job.dart';
+import '../storage/clip_retention_settings.dart';
 import 'live_score_board.dart';
 import 'live_scoring_coordinator.dart';
 import 'rarity_scale_provider.dart';
@@ -66,13 +67,16 @@ final liveScoringCoordinatorProvider = FutureProvider<LiveScoringCoordinator>((
   return coordinator;
 });
 
-/// The `SET-12` clip clean-up.
+/// The `SET-12` clip clean-up, with the thresholds from Advanced settings →
+/// Storage.
 ///
-/// Not watched by any screen: it is a job, and it is read once at startup.
+/// Not watched by any screen: it is a job, read once at startup and once more
+/// when a stricter threshold is confirmed.
 final clipRetentionJobProvider = Provider<ClipRetentionJob>((ref) {
   return ClipRetentionJob(
     db: ref.watch(appDatabaseProvider),
     recordings: ref.watch(recordingServiceProvider),
+    policy: ref.watch(clipRetentionPolicyProvider),
   );
 });
 

@@ -1196,7 +1196,7 @@ And what it must not touch: **the collection**, asserted by comparing detections
 
 Sizes are in powers of 1,000, because that is what Android and iOS show in their own storage screens, and a parent comparing the two should see the same number. Measuring and deleting walk the directories on a background isolate — static helpers again, for the reason the journal spectrogram fix taught the same week.
 
-*Not in it:* `SET-12`'s two thresholds (30 days, 100 per species) are still constants. The specification wants them adjustable; the storage section is where they would go.
+*Not in it:* ~~`SET-12`'s two thresholds (30 days, 100 per species) are still constants. The specification wants them adjustable; the storage section is where they would go.~~ **Done 2026-10-12**, see “`SET-12` — the two thresholds become settings” below.
 
 ### Settings re-sorted: storage and the danger zone behind Advanced
 
@@ -1226,6 +1226,20 @@ Without a location the album still opens and still shows everything found — wh
 *Strings:* two new keys (`collectionNotHereThisWeek`, `collectionCardNotHereA11y`), two retired (`collectionOnlyMine`, `collectionCardOpenA11y`), two reworded (`collectionNoMatches`, `collectionEmptySubtitle`), all twelve locales.
 
 *Left open:* `AUS-09`'s family sets ("all tits in your region") were specified with silhouettes for the missing members. How a set shows what is missing is now a decision for when `AUS-09` is built, not something the album provides.
+
+### `SET-12` — the two thresholds become settings
+
+**Done** ✅ — 16 new tests. The clean-up's rule was already a pure function over two numbers (`ClipRetentionPolicy`); what was missing was anyone being able to change them. They sit in the storage section, between the sizes and *Delete recordings* — the gentle way to make room next to the blunt one — as **Mindestens behalten** (7, 14, 30, 90, 180 or 365 days) and **Aufnahmen pro Art** (20, 50, 100, 200 or 500). The defaults stay 30 and 100.
+
+**A list, not a number field.** The job deletes. A cap of 0, typed by accident or left behind by a bug, would take every recording older than the minimum age; so the values are picked from fixed lists, and a stored value that is not positive falls back to the default rather than widening the clean-up. A stored value the lists do not offer — from a later build, say — is shown as it is rather than silently moved, because moving it would change what gets deleted.
+
+**Loosening is free; tightening asks with a number.** Raising either value can only keep more, so it is saved without a word. Lowering one can delete at once, so the screen first runs the policy **dry** over the same clips the job reads (`ClipRetentionJob.wouldDelete`), and asks: *„Mit dieser Einstellung werden jetzt 312 Aufnahmen gelöscht."* A parent who drops the cap from 100 to 20 should see that number before the recordings go, not find out on the next start. On *Löschen* the value is saved and the clean-up runs straight away — what the question counted is what goes. *Abbrechen* keeps the old value. A stricter value that would delete nothing is saved without asking, because a confirmation for nothing teaches people to click through confirmations.
+
+*Kept recordings* stay exempt and still count towards the cap, as before; the help text says both. The clean-up still runs at every app start; the settings only change what it keeps.
+
+*Two decisions not taken.* There is no "never delete" option: that would exempt `LIVE-14` from `NFA-05` rather than reconcile them, which is the opposite of what `SET-12` is for. And the thresholds are not per species — one rule a parent can read in a sentence beats a table of a thousand.
+
+*Strings:* nine new keys in all twelve locales.
 
 ### What to watch during the two-week test
 

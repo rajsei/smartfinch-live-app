@@ -723,12 +723,15 @@ class SettingsScreen extends ConsumerWidget {
               const Divider(),
             ],
 
-            // --- Storage (SET-06) ---
+            // --- Storage (SET-06, SET-12) ---
             if (_showSection('storage'))
               StorageSettingsSection(
                 sectionHeader:
                     ({required String title, required String subtitle}) =>
                         _SectionHeader(title: title, subtitle: subtitle),
+                titleWithHelp:
+                    ({required String title, String? helpBody}) =>
+                        _TitleWithHelp(title: title, helpBody: helpBody),
               ),
 
             // --- Advanced settings ---
