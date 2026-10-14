@@ -155,6 +155,12 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
   /// Notices when a badge that was not earned before is earned now.
   final BadgeWatcher _badgeWatcher = BadgeWatcher();
 
+  /// Carries the spectrogram across a rotation. Portrait and landscape put it
+  /// at different depths of the tree, so without a key Flutter would dispose
+  /// it and build an empty one — wiping the audio already on screen while
+  /// recording carries on underneath.
+  final GlobalKey _spectrogramKey = GlobalKey();
+
   /// Duration after which a warning dialog is shown to the user.
   static const _warningDuration = Duration(minutes: 10);
 
@@ -1028,6 +1034,7 @@ class _LiveScreenState extends ConsumerState<LiveScreen>
     // instead (LIVE-18).
     final daySummary = (isActive || isPaused) ? const DaySummaryBar() : null;
     final spectrogram = Container(
+      key: _spectrogramKey,
       color: theme.colorScheme.surfaceContainerLowest,
       child: _LiveSpectrogram(isCapturing: isCapturing),
     );
